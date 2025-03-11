@@ -1,36 +1,179 @@
 <!DOCTYPE html>
 <html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ category_name }} - Магазин Одягу</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ category }} - Магазин Жіночого Одягу</title>
+        <link rel="stylesheet" href="/static/style.css">
+        <!-- Додавання елегантного шрифту -->
+        <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Monsieur+La+Doulaise&family=Rochester&display=swap" rel="stylesheet">
+           <style>
+        .store-title {
+            width: 100%;
+            text-align: center;
+            font-family: 'Great Vibes', cursive;
+            font-size: 48px;
+            color: #2E8B57;
+            margin: 10px 0;
+            padding: 10px 0;
+            border-bottom: 2px solid #2E8B57;
+            background-color: #FDF5E6;
+        }
+        /* Оновлений стиль для назви категорії з Monsieur La Doulaise */
+        header h1 {
+            font-family: 'Rochester', cursive;
+            font-size: 40px; /* Зменшуємо розмір для тоншого вигляду */
+            font-weight: 100; /* Спроба встановити найлегшу вагу, хоча ефект може бути мінімальним */
+            color: #FFFFFF;
+            text-align: center;
+            margin: 10px 0;
+            background-color: #2E8B57;
+            padding: 10px 0;
+            border-top: 2px solid #FDF5E6;
+            border-bottom: 2px solid #FDF5E6;
+            display: block;
+            opacity: 0.9; /* Додаємо легку прозорість для ефекту тонкості */
+        }
+        /* Стиль для вирівнювання "На головну" і пошукової панелі */
+        .nav-and-search {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .back-arrow {
+            font-size: 24px;
+            color: #2E8B57;
+            text-decoration: none;
+        }
+        /* Адаптивність */
+        @media (max-width: 480px) {
+            .nav-and-search {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-bar {
+                width: 100%;
+            }
+            .back-arrow {
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>{{ category_name }}</h1>
-    </header>
+    <!-- Назва магазину вгорі -->
+    <div class="store-title">Elizabeth’s Elegance</div>
 
+    <!-- Контейнер для вирівнювання -->
+    <div class="nav-and-search">
+        <!-- Стрілочка назад -->
+        <a href="/" class="back-arrow">← На головну</a>
+
+        <!-- Пошук -->
+        <div class="search-bar">
+            <form method="GET" action="/#sorting-bar">
+                <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
+                <button type="submit">Шукати</button>
+                {% for key, value in request.query_params.items() if key not in ['search'] %}
+                    <input type="hidden" name="{{ key }}" value="{{ value }}">
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+
+    <!-- Категорії -->
     <div class="category-buttons">
-        {% for category in categories %}
-            <a href="/category/{{ category }}" class="category-button">
-                <button>{{ category }}</button>
+        {% for cat in categories %}
+            <a href="/category/{{ cat|lower }}#sorting-bar" class="category-button">
+                <button {% if cat == category %}style="background: #224B40;"{% endif %}>{{ cat }}</button>
             </a>
         {% endfor %}
     </div>
 
-    <section>
+    <!-- Назва категорії -->
+    <header>
+        <h1>{{ category }}</h1>
+    </header>
+
+    <!-- Сортування -->
+    <div class="sorting-bar" id="sorting-bar">
+        <form method="GET" action="/category/{{ category|lower }}#sorting-bar" id="sorting-form">
+            <div class="sorting-container">
+                <div class="sort-options">
+                    <label>Сортувати:</label>
+                    <select name="sort_by" onchange="this.form.submit()">
+                        <option value="" {% if not sort_by %}selected{% endif %}>Без сортування</option>
+                        <option value="rating_desc" {% if sort_by == "rating_desc" %}selected{% endif %}>Рейтинг ▼</option>
+                        <option value="rating_asc" {% if sort_by == "rating_asc" %}selected{% endif %}>Рейтинг ▲</option>
+                        <option value="reviews_desc" {% if sort_by == "reviews_desc" %}selected{% endif %}>Відгуки ▼</option>
+                        <option value="reviews_asc" {% if sort_by == "reviews_asc" %}selected{% endif %}>Відгуки ▲</option>
+                        <option value="id_desc" {% if sort_by == "id_desc" %}selected{% endif %}>ID ▼</option>
+                        <option value="id_asc" {% if sort_by == "id_asc" %}selected{% endif %}>ID ▲</option>
+                    </select>
+                </div>
+                <div class="items-per-page">
+                    <label>На сторінці:</label>
+                    <select name="items_per_page" onchange="this.form.submit()">
+                        {% for key, value in [('12', 12), ('24', 24), ('36', 36), ('48', 48), ('60', 60), ('96', 96)] %}
+                            <option value="{{ key }}" {% if request.query_params.get('items_per_page') == key %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            {% for key, value in request.query_params.items() if key not in ['sort_by', 'items_per_page'] %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+            {% endfor %}
+        </form>
+    </div>
+
+    <!-- Товари -->
+    <section class="filtered-products">
         <div class="product-list">
             {% for product in products %}
-            <div class="product">
-                <a href="/product/{{ product.clothing_id }}">
-                    <h3>{{ product.title }}</h3>
-                </a>
-                <p>Рейтинг: {{ "%.2f"|format(product.rating) if product.rating is not none else 'Немає' }}</p>
-                <p>Відгуків: {{ product.positive_feedback_count }}</p>
-            </div>
+                <div class="product">
+                    <img src="/static/1.jpg" alt="{{ product.class_name }}" class="product-image" onerror="this.src='https://via.placeholder.com/150.jpg'">
+                    <h3><a href="/product/{{ product.clothing_id }}?category={{ category|lower }}#sorting-bar">ID: {{ product.clothing_id }}</a></h3>
+                    <p>{{ product.class_name }}</p>
+                    <p>Рейтинг: {{ "%.2f"|format(product.rating) if product.rating is not none else 'Немає' }}</p>
+                    <p>Відгуків: {{ product.positive_feedback_count }}</p>
+                </div>
             {% endfor %}
         </div>
+        <p class="items-info">Відображено: {{ products|length }} з {{ total_products }} загалом ({{ items_per_page }} на сторінку)</p>
+
+        {% if total_pages > 1 %}
+            <div class="pagination">
+                {% if current_page > 1 %}
+                    <a href="/category/{{ category|lower }}?page={{ current_page - 1 }}{% for key, value in request.query_params.items() if key != 'page' %}&{{ key }}={{ value }}{% endfor %}#sorting-bar">←</a>
+                {% endif %}
+                {% for p in pagination_pages %}
+                    {% if p == "..." %}
+                        <span>...</span>
+                    {% elif p == current_page %}
+                        <span class="active">{{ p }}</span>
+                    {% else %}
+                        <a href="/category/{{ category|lower }}?page={{ p }}{% for key, value in request.query_params.items() if key != 'page' %}&{{ key }}={{ value }}{% endfor %}#sorting-bar">{{ p }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if current_page < total_pages %}
+                    <a href="/category/{{ category|lower }}?page={{ current_page + 1 }}{% for key, value in request.query_params.items() if key != 'page' %}&{{ key }}={{ value }}{% endfor %}#sorting-bar">→</a>
+                {% endif %}
+            </div>
+        {% endif %}
     </section>
-</body>
+
+    <script>
+        window.onload = function() {
+            if (window.location.hash === '#sorting-bar') {
+                const sortingBar = document.getElementById('sorting-bar');
+                if (sortingBar) {
+                    sortingBar.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        };
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91eb90df2f2cb0d0',t:'MTc0MTcwMTQ5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

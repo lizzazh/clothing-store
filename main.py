@@ -85,7 +85,7 @@ async def get_home(
         # Будуємо базовий запит для товарів із групуванням лише за clothing_id
         base_query = db.query(
             Product.clothing_id,
-            func.max(Product.class_name).label("class_name"),  # Вибираємо перше значення
+            func.max(Product.class_name).label("class_name"),
             func.max(Product.title).label("title"),
             func.max(Product.division_name).label("division_name"),
             func.max(Product.department_name).label("department_name"),
@@ -173,3 +173,132 @@ async def get_home(
     except Exception as e:
         logger.error(f"Error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
+
+@app.get("/category/{category}", response_class=HTMLResponse)
+async def get_category(
+    request: Request,
+    category: str,
+    sort_by: str | None = None,
+    items_per_page: str = "12",
+    page: int = 1,
+    search: str | None = None,
+    db: Session = Depends(get_db),
+):
+    items_per_page_value = get_items_per_page(items_per_page)
+
+    try:
+        # Перевірка, чи категорія існує
+        categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
+        if category not in categories and category.lower() not in [c.lower() for c in categories]:
+            logger.warning(f"Category '{category}' not found in available categories: {categories}")
+            raise HTTPException(status_code=404, detail=f"Категорія '{category}' не знайдена")
+
+        # Базовий запит для товарів у вибраній категорії
+        base_query = db.query(
+            Product.clothing_id,
+            func.max(Product.title).label("title"),
+            func.max(Product.class_name).label("class_name"),
+            func.max(Product.division_name).label("division_name"),
+            func.max(Product.department_name).label("department_name"),
+            func.avg(Product.rating).label("rating"),
+            func.sum(Product.positive_feedback_count).label("positive_feedback_count"),
+        ).group_by(Product.clothing_id).having(func.lower(func.max(Product.class_name)).like(func.lower(category)))
+
+        if search:
+            base_query = base_query.filter(func.max(Product.title).ilike(f"%{search}%"))
+
+        # Сортування
+        sort_options = {
+            "rating_desc": func.avg(Product.rating).desc(),
+            "rating_asc": func.avg(Product.rating).asc(),
+            "reviews_desc": func.sum(Product.positive_feedback_count).desc(),
+            "reviews_asc": func.sum(Product.positive_feedback_count).asc(),
+            "id_desc": Product.clothing_id.desc(),
+            "id_asc": Product.clothing_id.asc(),
+        }
+        order_by_clause = sort_options.get(sort_by, Product.clothing_id.asc())
+        base_query = base_query.order_by(order_by_clause)
+
+        # Підрахунок загальної кількості
+        total_products_query = db.query(func.count()).select_from(
+            db.query(
+                Product.clothing_id,
+                func.max(Product.title).label("title"),
+                func.max(Product.class_name).label("class_name"),
+                func.max(Product.division_name).label("division_name"),
+                func.max(Product.department_name).label("department_name"),
+                func.avg(Product.rating).label("rating"),
+                func.sum(Product.positive_feedback_count).label("positive_feedback_count"),
+            ).group_by(Product.clothing_id)
+            .having(func.lower(func.max(Product.class_name)).like(func.lower(category)))
+            .subquery()
+        )
+        total_products = total_products_query.scalar()
+        logger.info(f"Total products in category '{category}': {total_products}")
+        if total_products == 0:
+            logger.warning(f"No products found for category '{category}'")
+
+        page, offset = adjust_page_and_offset(page, total_products, items_per_page_value)
+        products = base_query.offset(offset).limit(items_per_page_value).all()
+
+        pagination_pages = generate_pagination(page, total_products, items_per_page_value)
+
+        template = env.get_template("category.html")
+        html_content = template.render(
+            request=request,
+            category=category,
+            products=products,
+            total_products=total_products,
+            total_pages=(total_products + items_per_page_value - 1) // items_per_page_value if total_products > 0 else 1,
+            current_page=page,
+            items_per_page=items_per_page_value,
+            categories=categories,
+            search=search,
+            sort_by=sort_by,
+            pagination_pages=pagination_pages,
+        )
+        return HTMLResponse(content=html_content)
+
+    except Exception as e:
+        logger.error(f"Error in category route: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
+
+@app.get("/product/{clothing_id}", response_class=HTMLResponse)
+async def get_product(
+    request: Request,
+    clothing_id: int,
+    db: Session = Depends(get_db),
+):
+    try:
+        # Отримуємо продукт
+        product = db.query(
+            Product.clothing_id,
+            func.max(Product.title).label("title"),
+            func.max(Product.class_name).label("class_name"),
+            func.max(Product.division_name).label("division_name"),
+            func.max(Product.department_name).label("department_name"),
+            func.avg(Product.rating).label("rating"),
+            func.sum(Product.positive_feedback_count).label("positive_feedback_count"),
+        ).filter(Product.clothing_id == clothing_id).group_by(Product.clothing_id).first()
+
+        if not product:
+            raise HTTPException(status_code=404, detail="Товар не знайдено")
+
+        # Унікальні категорії
+        categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
+
+        template = env.get_template("product.html")
+        html_content = template.render(
+            request=request,
+            product=product,
+            categories=categories,
+        )
+        return HTMLResponse(content=html_content)
+
+    except Exception as e:
+        logger.error(f"Error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

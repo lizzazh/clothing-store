@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, Float, Boolean
+from sqlalchemy import Column, Integer, String, Text, Float, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -14,4 +14,16 @@ class Product(Base):
     rating = Column(Float, nullable=True)
     recommended_ind = Column(Boolean, nullable=True)
     positive_feedback_count = Column(Integer, default=0)
-   
+    reviews = relationship("Review", back_populates="product")
+
+class Review(Base):
+    __tablename__ = "reviews"
+    number = Column(Integer, primary_key=True, index=True)
+    clothing_id = Column(Integer, ForeignKey("products.clothing_id"), index=True)
+    age = Column(Integer, nullable=True)
+    title = Column(String, nullable=True)
+    review_text = Column(Text, nullable=True)
+    rating = Column(Integer, nullable=True)
+    recommended_ind = Column(Boolean, nullable=True)
+    positive_feedback_count = Column(Integer, default=0)
+    product = relationship("Product", back_populates="reviews")

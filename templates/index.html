@@ -5,27 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Магазин Жіночого Одягу</title>
     <link rel="stylesheet" href="/static/style.css">
+    <!-- Додавання елегантного шрифту -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        .store-title {
+            width: 100%;
+            text-align: center;
+            font-family: 'Great Vibes', cursive;
+            font-size: 48px;
+            color: #2E8B57;
+            margin: 10px 0;
+            padding: 10px 0;
+            border-bottom: 2px solid #2E8B57;
+            background-color: #FDF5E6;
+        }
+        /* Стиль для вирівнювання "На головну" і пошукової панелі */
+        .nav-and-search {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .back-arrow {
+            font-size: 24px;
+            color: #2E8B57;
+            text-decoration: none;
+        }
+        /* Адаптивність */
+        @media (max-width: 480px) {
+            .nav-and-search {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-bar {
+                width: 100%;
+            }
+            .back-arrow {
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Назва магазину вгорі -->
+    <div class="store-title">Elizabeth’s Elegance</div>
+
     <header>
         <h1>Ласкаво просимо до магазину жіночого одягу!</h1>
     </header>
 
-    <!-- Пошук -->
-    <div class="search-bar">
-        <form method="GET" action="/#sorting-bar">
-            <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
-            <button type="submit">Шукати</button>
-            {% for key, value in request.query_params.items() if key not in ['search'] %}
-                <input type="hidden" name="{{ key }}" value="{{ value }}">
-            {% endfor %}
-        </form>
+    <!-- Контейнер для вирівнювання -->
+    <div class="nav-and-search">
+        <!-- Порожнє місце зліва для узгодженості -->
+        <div class="back-arrow-placeholder"></div>
+
+        <!-- Пошук -->
+        <div class="search-bar">
+            <form method="GET" action="/#sorting-bar">
+                <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
+                <button type="submit">Шукати</button>
+                {% for key, value in request.query_params.items() if key not in ['search'] %}
+                    <input type="hidden" name="{{ key }}" value="{{ value }}">
+                {% endfor %}
+            </form>
+        </div>
     </div>
 
     <!-- Категорії -->
     <div class="category-buttons">
         {% for category in categories %}
-            <a href="/category/{{ category }}#sorting-bar" class="category-button">
+            <a href="/category/{{ category|lower }}#sorting-bar" class="category-button">
                 <button>{{ category }}</button>
             </a>
         {% endfor %}
@@ -205,13 +256,11 @@
     <script>
         function scrollSlider(id, direction) {
             const slider = document.getElementById(id);
-            if (!slider) return; // Перевірка, чи слайдер існує
+            if (!slider) return;
 
-            // Отримуємо ширину одного товару (враховуємо gap 20px)
             const product = slider.querySelector('.product');
             const productWidth = product ? product.offsetWidth + 20 : slider.offsetWidth / 3;
 
-            // Прокрутка на ширину одного товару
             slider.scrollBy({
                 left: direction === 'left' ? -productWidth : productWidth,
                 behavior: 'smooth'
@@ -278,7 +327,6 @@
             rangeTrack.style.width = (maxPercent - minPercent) + '%';
         }
 
-        // Прокрутка до sorting-bar після завантаження сторінки
         window.onload = function() {
             updateRange();
             if (window.location.hash === '#sorting-bar') {
@@ -289,5 +337,5 @@
             }
         };
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91eb9b949944749c',t:'MTc0MTcwMTkzNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

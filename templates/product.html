@@ -3,83 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Товар {{ product.clothing_id }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-        .back-arrow {
-            display: inline-block;
-            margin-bottom: 20px;
-            font-size: 24px;
-            text-decoration: none;
-            color: #007BFF;
-        }
-        .back-arrow:hover {
-            color: #0056b3;
-        }
-        .category-menu {
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
-        .category-section {
-            margin-top: 10px;
-        }
-        .category-item {
-            display: block;
-            margin: 5px 0;
-            text-decoration: none;
-            color: #007BFF;
-        }
-        .category-item:hover {
-            color: #0056b3;
-        }
-        .product-detail {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .product-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-    </style>
+    <title>Товар {{ product.clothing_id|default('Невідомо') }} - Магазин Жіночого Одягу</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/prod.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Стрілочка для повернення на головну -->
-    <a href="/" class="back-arrow">←</a>
+    <div class="store-title">Elizabeth’s Elegance</div>
 
-    <h1>Товар ID: {{ product.clothing_id }}</h1>
-
-    <!-- Меню категорій -->
-    <div class="category-menu">
-        <a href="/" class="category-item">Пошук за назвою</a>
-        <div class="category-section">
-            <span>Жінки</span>
-            {% for category in categories %}
-                <a href="/category/{{ category }}" class="category-item">{{ category }}</a>
-            {% endfor %}
+    <div class="nav-and-search">
+        {% if request.query_params.get('category') %}
+            <a href="/category/{{ request.query_params.get('category') }}#sorting-bar" class="back-arrow">← Назад до категорії</a>
+        {% else %}
+            <a href="/" class="back-arrow">← На головну</a>
+        {% endif %}
+        <div class="search-bar">
+            <form method="GET" action="/#sorting-bar">
+                <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
+                <button type="submit">Шукати</button>
+                {% for key, value in request.query_params.items() if key not in ['search'] %}
+                    <input type="hidden" name="{{ key }}" value="{{ value }}">
+                {% endfor %}
+            </form>
         </div>
     </div>
 
-    <div class="product-detail">
-        <img src="/static/1.jpg" alt="{{ product.class_name }}" class="product-image" onerror="this.src='https://via.placeholder.com/300.jpg'">
-        <h2>{{ product.title }}</h2>
-        <p><strong>Категорія:</strong> {{ product.class_name }}</p>
-        <p><strong>Підрозділ:</strong> {{ product.division_name }}</p>
-        <p><strong>Відділ:</strong> {{ product.department_name }}</p>
-        <p><strong>Рейтинг:</strong> {{ "%.2f"|format(product.rating) if product.rating is not none else 'Немає' }}</p>
-        <p><strong>Відгуків:</strong> {{ product.positive_feedback_count }}</p>
+    <div class="category-buttons">
+        {% for category in categories %}
+            <a href="/category/{{ category|lower }}#sorting-bar" class="category-button">
+                <button>{{ category }}</button>
+            </a>
+        {% endfor %}
+    </div>
+
+    <header>
+        <h1>Товар ID: {{ product.clothing_id|default('Невідомо') }}</h1>
+    </header>
+
+    <div class="product-container">
+        <div class="product-image-large">
+            <img src="/static/1.jpg" alt="{{ product.class_name|default('Невідомо') }}" onerror="this.src='https://via.placeholder.com/500.jpg'">
+        </div>
+        <div class="product-details">
+            <p><strong>Категорія:</strong> {{ product.class_name|default('Невідомо') }}</p>
+            <p><strong>Підрозділ:</strong> {{ product.division_name|default('Невідомо') }}</p>
+            <p><strong>Відділ:</strong> {{ product.department_name|default('Невідомо') }}</p>
+            <p class="rating"><strong>Рейтинг:</strong> {{ "%.2f"|format(product.rating) if product.rating is not none else 'Немає' }}</p>
+            <p class="feedback"><strong>Відгуків:</strong> {{ product.positive_feedback_count|default('0') }}</p>
+        </div>
+    </div>
+
+    <div class="reviews-section">
+        <h3>Відгуки</h3>
+        {% if reviews|length > 0 %}
+            {% for review in reviews %}
+                <div class="review-item">
+                    <h4>Покупець №{{ review.number }}</h4>
+                    <p>Вік: {{ review.Age|default('Невідомо') }}</p>
+                    <p class="recommendation">
+                        {% if review.Recommended_IND == 1 %}
+                            Рекомендовано покупцем
+                        {% else %}
+                            Не рекомендовано покупцем
+                        {% endif %}
+                    </p>
+                    <p class="stars">
+                        {% for i in range(1, 6) %}
+                            {% if i <= review.Rating|int %}
+                                ★
+                            {% else %}
+                                ☆
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p><strong>{{ review.Title|default('Без назви') }}</strong></p>
+                    <p>{{ review.Review_Text|default('Відгук відсутній') }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Відгуків не знайдено.</p>
+        {% endif %}
     </div>
 </body>
 </html>
