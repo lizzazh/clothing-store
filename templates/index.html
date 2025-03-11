@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин Жіночого Одягу</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>Ласкаво просимо до магазину жіночого одягу!</h1>
+    </header>
+
+    <!-- Пошук -->
+    <div class="search-bar">
+        <form method="GET" action="/#sorting-bar">
+            <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
+            <button type="submit">Шукати</button>
+            {% for key, value in request.query_params.items() if key not in ['search'] %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+            {% endfor %}
+        </form>
+    </div>
+
+    <!-- Категорії -->
+    <div class="category-buttons">
+        {% for category in categories %}
+            <a href="/category/{{ category }}#sorting-bar" class="category-button">
+                <button>{{ category }}</button>
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- Топ 5 за рейтингом -->
+    <section class="top-products">
+        <h2>Топ 5 за середнім рейтингом</h2>
+        <div class="arrow-controls">
+            <button onclick="scrollSlider('top-rated', 'left')">←</button>
+            <button onclick="scrollSlider('top-rated', 'right')">→</button>
+        </div>
+        <div class="product-slider" id="top-rated">
+            {% for product in top_by_average_score %}
+                <div class="product">
+                    <img src="/static/1.jpg" alt="{{ product.class_name }}" class="product-image" onerror="this.src='https://via.placeholder.com/150.jpg'">
+                    <h3><a href="/product/{{ product.clothing_id }}#sorting-bar">ID: {{ product.clothing_id }}</a></h3>
+                    <p>{{ product.class_name }}</p>
+                    <p>Рейтинг: {{ "%.2f"|format(product.average_rating) }}</p>
+                    <p>Відгуків: {{ product.review_count }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Топ 5 за відгуками -->
+    <section class="top-products">
+        <h2>Топ 5 за кількістю відгуків</h2>
+        <div class="arrow-controls">
+            <button onclick="scrollSlider('popular', 'left')">←</button>
+            <button onclick="scrollSlider('popular', 'right')">→</button>
+        </div>
+        <div class="product-slider" id="popular">
+            {% for product in top_by_reviews %}
+                <div class="product">
+                    <img src="/static/1.jpg" alt="{{ product.class_name }}" class="product-image" onerror="this.src='https://via.placeholder.com/150.jpg'">
+                    <h3><a href="/product/{{ product.clothing_id }}#sorting-bar">ID: {{ product.clothing_id }}</a></h3>
+                    <p>{{ product.class_name }}</p>
+                    <p>Рейтинг: {{ "%.2f"|format(product.average_rating) }}</p>
+                    <p>Відгуків: {{ product.review_count }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Контейнер -->
+    <div class="container">
+        <!-- Фільтр -->
+        <div class="sidebar">
+            <h3>Фільтр</h3>
+            <form method="GET" action="/#sorting-bar">
+                <div class="filter-section">
+                    <label>Рейтинг:</label>
+                    <div class="range-wrapper">
+                        <input type="range" name="min_rating" min="0" max="5" step="0.1" value="{{ min_rating or '0' }}" id="min-range" oninput="updateRange()">
+                        <input type="range" name="max_rating" min="0" max="5" step="0.1" value="{{ max_rating or '5' }}" id="max-range" oninput="updateRange()">
+                        <div class="range-track" id="range-track"></div>
+                    </div>
+                    <div class="range-values">
+                        <input type="number" name="min_rating_input" id="min-value" value="{{ min_rating or '0' }}" min="0" max="5" step="0.1" oninput="updateRangeFromInput(this)">
+                        <input type="number" name="max_rating_input" id="max-value" value="{{ max_rating or '5' }}" min="0" max="5" step="0.1" oninput="updateRangeFromInput(this)">
+                    </div>
+                </div>
+                <div class="filter-section">
+                    <label>Division:</label>
+                    <div class="filter-list">
+                        {% for division in divisions %}
+                            <label>
+                                <input type="checkbox" name="division" value="{{ division }}"
+                                       {% if division in request.query_params.getlist('division') %}checked{% endif %}>
+                                {{ division }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="filter-section">
+                    <label>Department:</label>
+                    <div class="filter-list">
+                        {% for department in departments %}
+                            <label>
+                                <input type="checkbox" name="department" value="{{ department }}"
+                                       {% if department in request.query_params.getlist('department') %}checked{% endif %}>
+                                {{ department }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="filter-section">
+                    <label>Category:</label>
+                    <div class="filter-list">
+                        {% for category in categories %}
+                            <label>
+                                <input type="checkbox" name="category" value="{{ category }}"
+                                       {% if category in request.query_params.getlist('category') %}checked{% endif %}>
+                                {{ category }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <button type="submit">Фільтрувати</button>
+                {% for key, value in request.query_params.items() if key not in ['division', 'department', 'category', 'min_rating', 'max_rating'] %}
+                    <input type="hidden" name="{{ key }}" value="{{ value }}">
+                {% endfor %}
+            </form>
+        </div>
+
+        <!-- Товари -->
+        <div class="main-content">
+            <section class="filtered-products">
+                <h2>Усі товари</h2>
+                <div class="sorting-bar" id="sorting-bar">
+                    <form method="GET" action="/#sorting-bar" id="sorting-form">
+                        <div class="sorting-container">
+                            <div class="sort-options">
+                                <label>Сортувати:</label>
+                                <select name="sort_by" onchange="this.form.submit()">
+                                    <option value="" {% if not sort_by %}selected{% endif %}>Без сортування</option>
+                                    <option value="rating_desc" {% if sort_by == "rating_desc" %}selected{% endif %}>Рейтинг ▼</option>
+                                    <option value="rating_asc" {% if sort_by == "rating_asc" %}selected{% endif %}>Рейтинг ▲</option>
+                                    <option value="reviews_desc" {% if sort_by == "reviews_desc" %}selected{% endif %}>Відгуки ▼</option>
+                                    <option value="reviews_asc" {% if sort_by == "reviews_asc" %}selected{% endif %}>Відгуки ▲</option>
+                                    <option value="id_desc" {% if sort_by == "id_desc" %}selected{% endif %}>ID ▼</option>
+                                    <option value="id_asc" {% if sort_by == "id_asc" %}selected{% endif %}>ID ▲</option>
+                                </select>
+                            </div>
+                            <div class="items-per-page">
+                                <label>На сторінці:</label>
+                                <select name="items_per_page" onchange="this.form.submit()">
+                                    {% for key, value in [('12', 12), ('24', 24), ('36', 36), ('48', 48), ('60', 60), ('96', 96)] %}
+                                        <option value="{{ key }}" {% if request.query_params.get('items_per_page') == key %}selected{% endif %}>{{ value }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {% for key, value in request.query_params.items() if key not in ['sort_by', 'items_per_page'] %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endfor %}
+                    </form>
+                </div>
+
+                <div class="product-list">
+                    {% for product in products %}
+                        <div class="product">
+                            <img src="/static/1.jpg" alt="{{ product.class_name }}" class="product-image" onerror="this.src='https://via.placeholder.com/150.jpg'">
+                            <h3><a href="/product/{{ product.clothing_id }}#sorting-bar">ID: {{ product.clothing_id }}</a></h3>
+                            <p>{{ product.class_name }}</p>
+                            <p>Рейтинг: {{ "%.2f"|format(product.rating) if product.rating is not none else 'Немає' }}</p>
+                            <p>Відгуків: {{ product.positive_feedback_count }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <p class="items-info">Відображено: {{ products|length }} з {{ total_products }} загалом ({{ items_per_page }} на сторінку)</p>
+
+                {% if total_pages > 1 %}
+                    <div class="pagination">
+                        {% if current_page > 1 %}
+                            <a href="?page={{ current_page - 1 }}{% for key, value in request.query_params.items() if key != 'page' %}&{{ key }}={{ value }}{% endfor %}#sorting-bar">←</a>
+                        {% endif %}
+                        {% for p in pagination_pages %}
+                            {% if p == "..." %}
+                                <span>...</span>
+                            {% elif p == current_page %}
+                                <span class="active">{{ p }}</span>
+                            {% else %}
+                                <a href="?page={{ p }}{% for key, value in request.query_params.items() if key != 'page' %}&{{ key }}={{ value }}{% endfor %}#sorting-bar">{{ p }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        {% if current_page < total_pages %}
+                            <a href="?page={{ current_page + 1 }}{% for key, value in request.query_params.items() if key != 'page' %}&{{ key }}={{ value }}{% endfor %}#sorting-bar">→</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+
+    <script>
+        function scrollSlider(id, direction) {
+            const slider = document.getElementById(id);
+            if (!slider) return; // Перевірка, чи слайдер існує
+
+            // Отримуємо ширину одного товару (враховуємо gap 20px)
+            const product = slider.querySelector('.product');
+            const productWidth = product ? product.offsetWidth + 20 : slider.offsetWidth / 3;
+
+            // Прокрутка на ширину одного товару
+            slider.scrollBy({
+                left: direction === 'left' ? -productWidth : productWidth,
+                behavior: 'smooth'
+            });
+        }
+
+        function updateRange() {
+            const minRange = document.getElementById('min-range');
+            const maxRange = document.getElementById('max-range');
+            const minValue = document.getElementById('min-value');
+            const maxValue = document.getElementById('max-value');
+            const rangeTrack = document.getElementById('range-track');
+
+            let minVal = parseFloat(minRange.value);
+            let maxVal = parseFloat(maxRange.value);
+
+            if (minVal > maxVal) {
+                minVal = maxVal;
+                minRange.value = maxVal;
+            }
+            if (maxVal < minVal) {
+                maxVal = minVal;
+                maxRange.value = minVal;
+            }
+
+            minValue.value = minVal.toFixed(1);
+            maxValue.value = maxVal.toFixed(1);
+
+            const rangeWrapper = document.querySelector('.range-wrapper');
+            const minPercent = (minVal / 5) * 100;
+            const maxPercent = (maxVal / 5) * 100;
+            rangeTrack.style.left = minPercent + '%';
+            rangeTrack.style.width = (maxPercent - minPercent) + '%';
+        }
+
+        function updateRangeFromInput(inputElement) {
+            const minRange = document.getElementById('min-range');
+            const maxRange = document.getElementById('max-range');
+            const minValue = document.getElementById('min-value');
+            const maxValue = document.getElementById('max-value');
+            const rangeTrack = document.getElementById('range-track');
+
+            let minVal = parseFloat(minValue.value) || 0;
+            let maxVal = parseFloat(maxValue.value) || 5;
+
+            if (minVal < 0) minVal = 0;
+            if (maxVal > 5) maxVal = 5;
+            if (minVal > maxVal) {
+                minVal = maxVal;
+                minValue.value = minVal.toFixed(1);
+            }
+            if (maxVal < minVal) {
+                maxVal = minVal;
+                maxValue.value = maxVal.toFixed(1);
+            }
+
+            minRange.value = minVal;
+            maxRange.value = maxVal;
+
+            const rangeWrapper = document.querySelector('.range-wrapper');
+            const minPercent = (minVal / 5) * 100;
+            const maxPercent = (maxVal / 5) * 100;
+            rangeTrack.style.left = minPercent + '%';
+            rangeTrack.style.width = (maxPercent - minPercent) + '%';
+        }
+
+        // Прокрутка до sorting-bar після завантаження сторінки
+        window.onload = function() {
+            updateRange();
+            if (window.location.hash === '#sorting-bar') {
+                const sortingBar = document.getElementById('sorting-bar');
+                if (sortingBar) {
+                    sortingBar.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        };
+    </script>
+</body>
+</html>

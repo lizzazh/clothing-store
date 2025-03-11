@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category_name }} - Магазин Одягу</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>{{ category_name }}</h1>
+    </header>
+
+    <div class="category-buttons">
+        {% for category in categories %}
+            <a href="/category/{{ category }}" class="category-button">
+                <button>{{ category }}</button>
+            </a>
+        {% endfor %}
+    </div>
+
+    <section>
+        <div class="product-list">
+            {% for product in products %}
+            <div class="product">
+                <a href="/product/{{ product.clothing_id }}">
+                    <h3>{{ product.title }}</h3>
+                </a>
+                <p>Рейтинг: {{ "%.2f"|format(product.rating) if product.rating is not none else 'Немає' }}</p>
+                <p>Відгуків: {{ product.positive_feedback_count }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</body>
+</html>

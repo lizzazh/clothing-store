@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Товар {{ product.clothing_id }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .back-arrow {
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+        .back-arrow:hover {
+            color: #0056b3;
+        }
+        .category-menu {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .category-section {
+            margin-top: 10px;
+        }
+        .category-item {
+            display: block;
+            margin: 5px 0;
+            text-decoration: none;
+            color: #007BFF;
+        }
+        .category-item:hover {
+            color: #0056b3;
+        }
+        .product-detail {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .product-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Стрілочка для повернення на головну -->
+    <a href="/" class="back-arrow">←</a>
+
+    <h1>Товар ID: {{ product.clothing_id }}</h1>
+
+    <!-- Меню категорій -->
+    <div class="category-menu">
+        <a href="/" class="category-item">Пошук за назвою</a>
+        <div class="category-section">
+            <span>Жінки</span>
+            {% for category in categories %}
+                <a href="/category/{{ category }}" class="category-item">{{ category }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="product-detail">
+        <img src="/static/1.jpg" alt="{{ product.class_name }}" class="product-image" onerror="this.src='https://via.placeholder.com/300.jpg'">
+        <h2>{{ product.title }}</h2>
+        <p><strong>Категорія:</strong> {{ product.class_name }}</p>
+        <p><strong>Підрозділ:</strong> {{ product.division_name }}</p>
+        <p><strong>Відділ:</strong> {{ product.department_name }}</p>
+        <p><strong>Рейтинг:</strong> {{ "%.2f"|format(product.rating) if product.rating is not none else 'Немає' }}</p>
+        <p><strong>Відгуків:</strong> {{ product.positive_feedback_count }}</p>
+    </div>
+</body>
+</html>
