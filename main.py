@@ -2,7 +2,8 @@ from fastapi import FastAPI, Depends, Request, HTTPException, Query
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, or_, literal_column
+from sqlalchemy import String
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 from models import Product
 from db import SessionLocal
@@ -23,18 +24,12 @@ env = Environment(loader=FileSystemLoader("templates"))
 
 @app.middleware("http")
 async def set_language(request: Request, call_next):
-    """
-    Middleware для встановлення мови на основі заголовка accept-language.
-    """
     language = request.headers.get("accept-language", "uk-UA")
     response = await call_next(request)
     response.headers["Content-Language"] = language
     return response
 
 def get_db():
-    """
-    Залежність для отримання сесії бази даних.
-    """
     db = SessionLocal()
     try:
         yield db
@@ -55,14 +50,10 @@ async def get_home(
     search: str | None = Query(None),
     db: Session = Depends(get_db),
 ):
-    """
-    Головна сторінка з фільтрами, сортуванням і пагінацією.
-    """
     items_per_page_value = get_items_per_page(items_per_page)
     logger.info(f"Requested items_per_page: {items_per_page}, items_per_page_value: {items_per_page_value}")
 
     try:
-        # Топ 5 за рейтингом
         top_by_average_score = (
             db.query(
                 Product.clothing_id,
@@ -77,7 +68,6 @@ async def get_home(
             .all()
         )
 
-        # Топ 5 за відгуками
         top_by_reviews = (
             db.query(
                 Product.clothing_id,
@@ -92,7 +82,6 @@ async def get_home(
             .all()
         )
 
-        # Будуємо базовий запит для товарів із групуванням лише за clothing_id
         base_query = db.query(
             Product.clothing_id,
             func.max(Product.class_name).label("class_name"),
@@ -103,9 +92,6 @@ async def get_home(
             func.sum(Product.positive_feedback_count).label("positive_feedback_count"),
         ).group_by(Product.clothing_id)
 
-        # Додаємо умови фільтрації з використанням HAVING для агрегатних функцій
-        if search:
-            base_query = base_query.having(func.max(Product.title).ilike(f"%{search}%"))
         if division:
             base_query = base_query.having(func.max(Product.division_name).in_(division))
         if department:
@@ -117,7 +103,6 @@ async def get_home(
         if max_rating is not None:
             base_query = base_query.having(func.avg(Product.rating) <= max_rating)
 
-        # Визначаємо порядок сортування
         sort_options = {
             "rating_desc": func.avg(Product.rating).desc(),
             "rating_asc": func.avg(Product.rating).asc(),
@@ -129,37 +114,17 @@ async def get_home(
         order_by_clause = sort_options.get(sort_by, Product.clothing_id.asc())
         base_query = base_query.order_by(order_by_clause)
 
-        # Підрахунок загальної кількості унікальних продуктів
         total_products = base_query.count()
-        logger.info(f"Total products after filtering: {total_products}")
-
-        # Коригуємо номер сторінки та зміщення
         page, offset = adjust_page_and_offset(page, total_products, items_per_page_value)
-        logger.info(f"Page: {page}, Offset: {offset}")
-
-        # Застосовуємо пагінацію до згрупованих результатів
         products = base_query.offset(offset).limit(items_per_page_value).all()
-        logger.info(f"Returned products: {len(products)} (expected: {min(items_per_page_value, total_products - offset)})")
 
-        # Перевірка невідповідності
-        expected_products = min(items_per_page_value, total_products - offset)
-        if len(products) < expected_products and total_products > offset:
-            logger.warning(f"Mismatch: Expected {expected_products} products, got {len(products)}")
-
-        # Отримуємо унікальні категорії, відділи та підрозділи
         categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
         divisions = [d[0] for d in db.query(Product.division_name).distinct().all() if d[0]]
         departments = [d[0] for d in db.query(Product.department_name).distinct().all() if d[0]]
 
-        # Генеруємо сторінки для пагінації
         pagination_pages = generate_pagination(page, total_products, items_per_page_value)
 
-        # Рендеринг шаблону
-        try:
-            template = env.get_template("index.html")
-        except TemplateNotFound:
-            return HTMLResponse(content="<h1>Шаблон index.html не знайдено</h1>")
-
+        template = env.get_template("index.html")
         html_content = template.render(
             request=request,
             products=products,
@@ -194,19 +159,14 @@ async def get_category(
     search: str | None = Query(None),
     db: Session = Depends(get_db),
 ):
-    """
-    Сторінка категорії з фільтрами, сортуванням і пагінацією.
-    """
     items_per_page_value = get_items_per_page(items_per_page)
 
     try:
-        # Перевірка, чи категорія існує
         categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
         if category not in categories and category.lower() not in [c.lower() for c in categories]:
             logger.warning(f"Category '{category}' not found in available categories: {categories}")
             raise HTTPException(status_code=404, detail=f"Категорія '{category}' не знайдена")
 
-        # Базовий запит для товарів у вибраній категорії
         base_query = db.query(
             Product.clothing_id,
             func.max(Product.title).label("title"),
@@ -217,10 +177,6 @@ async def get_category(
             func.sum(Product.positive_feedback_count).label("positive_feedback_count"),
         ).group_by(Product.clothing_id).having(func.lower(func.max(Product.class_name)).like(func.lower(category)))
 
-        if search:
-            base_query = base_query.having(func.max(Product.title).ilike(f"%{search}%"))
-
-        # Сортування
         sort_options = {
             "rating_desc": func.avg(Product.rating).desc(),
             "rating_asc": func.avg(Product.rating).asc(),
@@ -232,12 +188,7 @@ async def get_category(
         order_by_clause = sort_options.get(sort_by, Product.clothing_id.asc())
         base_query = base_query.order_by(order_by_clause)
 
-        # Підрахунок загальної кількості
         total_products = base_query.count()
-        logger.info(f"Total products in category '{category}': {total_products}")
-        if total_products == 0:
-            logger.warning(f"No products found for category '{category}'")
-
         page, offset = adjust_page_and_offset(page, total_products, items_per_page_value)
         products = base_query.offset(offset).limit(items_per_page_value).all()
 
@@ -279,11 +230,7 @@ async def get_product(
     max_age_range: float | None = Query(None, ge=0.0),
     db: Session = Depends(get_db),
 ):
-    """
-    Сторінка продукту з відгуками, сортуванням, фільтрацією та пагінацією.
-    """
     try:
-        # Отримуємо основну інформацію про продукт (агреговані дані)
         product = db.query(
             Product.clothing_id,
             func.max(Product.class_name).label("class_name"),
@@ -296,7 +243,6 @@ async def get_product(
         if not product:
             raise HTTPException(status_code=404, detail="Товар не знайдено")
 
-        # Перетворюємо параметри в потрібний тип
         recommended_int = None
         if recommended and recommended.strip():
             recommended_int = int(recommended)
@@ -309,10 +255,8 @@ async def get_product(
         if max_age and max_age.strip():
             max_age_int = int(max_age)
 
-        # Базовий запит для відгуків
         reviews_query = db.query(Product).filter(Product.clothing_id == clothing_id)
 
-        # Фільтрація відгуків
         if review_rating:
             reviews_query = reviews_query.filter(Product.rating.in_(review_rating))
         if recommended_int is not None:
@@ -328,7 +272,6 @@ async def get_product(
         if min_age_range is not None and max_age_range is not None:
             reviews_query = reviews_query.filter(Product.age.between(int(min_age_range), int(max_age_range)))
 
-        # Сортування відгуків
         sort_options = {
             "number_asc": Product.number.asc(),
             "number_desc": Product.number.desc(),
@@ -338,24 +281,18 @@ async def get_product(
         order_by_clause = sort_options.get(review_sort_by, Product.number.asc())
         reviews_query = reviews_query.order_by(order_by_clause)
 
-        # Отримуємо загальну кількість відгуків після фільтрації
         total_reviews = reviews_query.count()
-
-        # Кількість відгуків на сторінку
         items_per_page = 10
         total_pages = ceil(total_reviews / items_per_page)
         if page > total_pages:
             page = total_pages if total_reviews > 0 else 1
 
-        # Отримуємо відгуки з пагінацією
         offset = (page - 1) * items_per_page
         reviews = reviews_query.offset(offset).limit(items_per_page).all()
 
-        # Унікальні категорії та максимальний вік
         categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
-        max_age_value = db.query(func.max(Product.age)).scalar() or 100  # Максимальний вік за замовчуванням 100
+        max_age_value = db.query(func.max(Product.age)).scalar() or 100
 
-        # Генеруємо сторінки для пагінації
         pagination_pages = generate_pagination(page, total_reviews, items_per_page)
 
         template = env.get_template("product.html")
@@ -385,6 +322,107 @@ async def get_product(
 
     except Exception as e:
         logger.error(f"Error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
+
+@app.get("/search", response_class=HTMLResponse)
+async def get_search_results(
+    request: Request,
+    search: str = Query(..., min_length=1),
+    sort_by: str | None = Query(None),
+    items_per_page: str = Query("12"),
+    page: int = Query(1),
+    db: Session = Depends(get_db),
+):
+    items_per_page_value = get_items_per_page(items_per_page)
+    logger.info(f"Search query: {search}, items_per_page: {items_per_page_value}, page: {page}")
+
+    try:
+        base_query = db.query(
+            Product.clothing_id,
+            func.max(Product.class_name).label("class_name"),
+            func.max(Product.title).label("title"),
+            func.max(Product.division_name).label("division_name"),
+            func.max(Product.department_name).label("department_name"),
+            func.avg(Product.rating).label("rating"),
+            func.sum(Product.positive_feedback_count).label("positive_feedback_count"),
+        ).group_by(Product.clothing_id)
+
+        search_lower = search.lower()
+        search_str = f"%{search}%"
+
+        # Отримуємо всі унікальні категорії з бази даних
+        all_categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
+
+        # Перевіряємо, чи введений рядок є числом або частиною числа
+        if search.isdigit():
+            # Конвертуємо search у рядок для пошуку за наявністю цифр
+            search_pattern = f"%{search}%"
+            base_query = base_query.having(func.cast(Product.clothing_id, String).ilike(search_pattern))
+        else:
+            if len(search) == 1:  # Якщо введено одну літеру
+                # Фільтруємо категорії, які починаються на цю літеру
+                matching_categories = [cat for cat in all_categories if cat.lower().startswith(search_lower)]
+                if matching_categories:
+                    category_conditions = [func.max(Product.class_name).ilike(f"{cat}%") for cat in matching_categories]
+                    base_query = base_query.having(or_(*category_conditions))
+                else:
+                    # Використовуємо умову, сумісну з SQL Server
+                    base_query = base_query.having(literal_column("0") == 1)
+            else:
+                # Перевіряємо, чи це повна назва категорії
+                if search_lower in [cat.lower() for cat in all_categories]:
+                    exact_category = next(cat for cat in all_categories if cat.lower() == search_lower)
+                    base_query = base_query.having(func.max(Product.class_name).ilike(f"{exact_category}%"))
+                else:
+                    # Для часткових збігів шукаємо по division_name, department_name, class_name
+                    base_query = base_query.having(
+                        or_(
+                            func.max(Product.division_name).ilike(search_str),
+                            func.max(Product.department_name).ilike(search_str),
+                            func.max(Product.class_name).ilike(search_str),
+                        )
+                    )
+
+        sort_options = {
+            "rating_desc": func.avg(Product.rating).desc(),
+            "rating_asc": func.avg(Product.rating).asc(),
+            "reviews_desc": func.sum(Product.positive_feedback_count).desc(),
+            "reviews_asc": func.sum(Product.positive_feedback_count).asc(),
+            "id_desc": Product.clothing_id.desc(),
+            "id_asc": Product.clothing_id.asc(),
+        }
+        order_by_clause = sort_options.get(sort_by, Product.clothing_id.asc())
+        base_query = base_query.order_by(order_by_clause)
+
+        total_products = base_query.count()
+        page, offset = adjust_page_and_offset(page, total_products, items_per_page_value)
+        products = base_query.offset(offset).limit(items_per_page_value).all()
+
+        categories = all_categories
+        divisions = [d[0] for d in db.query(Product.division_name).distinct().all() if d[0]]
+        departments = [d[0] for d in db.query(Product.department_name).distinct().all() if d[0]]
+
+        pagination_pages = generate_pagination(page, total_products, items_per_page_value)
+
+        template = env.get_template("search_results.html")
+        html_content = template.render(
+            request=request,
+            products=products,
+            total_products=total_products,
+            total_pages=(total_products + items_per_page_value - 1) // items_per_page_value if total_products > 0 else 1,
+            current_page=page,
+            items_per_page=items_per_page_value,
+            categories=categories,
+            divisions=divisions,
+            departments=departments,
+            search=search,
+            sort_by=sort_by,
+            pagination_pages=pagination_pages,
+        )
+        return HTMLResponse(content=html_content)
+
+    except Exception as e:
+        logger.error(f"Error in search: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
 
 if __name__ == "__main__":

@@ -541,15 +541,3 @@ form button:hover {
 .filter-section .range-values input:hover {
     box-shadow: 0 0 5px rgba(46, 139, 87, 0.5); /* Смарагдова тінь */
 }
-.back-arrow {
-    font-size: 24px;
-    color: #2E8B57;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-}
-
-.back-arrow::before {
-    content: "←";
-    margin-right: 5px;
-}

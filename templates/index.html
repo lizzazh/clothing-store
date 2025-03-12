@@ -63,7 +63,7 @@
 
         <!-- Пошук -->
         <div class="search-bar">
-            <form method="GET" action="/#sorting-bar">
+            <form method="GET" action="/search">
                 <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
                 <button type="submit">Шукати</button>
                 {% for key, value in request.query_params.items() if key not in ['search'] %}

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результати пошуку - {{ search }}</title>
+    <link rel="stylesheet" href="/static/style.css"> <!-- Використовуємо style.css для узгодженості -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        .store-title {
+            width: 100%;
+            text-align: center;
+            font-family: 'Great Vibes', cursive;
+            font-size: 48px;
+            color: #2E8B57;
+            margin: 10px 0;
+            padding: 10px 0;
+            border-bottom: 2px solid #2E8B57;
+            background-color: #FDF5E6;
+        }
+        .nav-and-search {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .back-arrow {
+            font-size: 24px;
+            color: #2E8B57;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        .back-arrow::before {
+            content: "←";
+            margin-right: 5px;
+        }
+        @media (max-width: 480px) {
+            .nav-and-search {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-bar {
+                width: 100%;
+            }
+            .back-arrow {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Назва магазину вгорі -->
+    <div class="store-title">Elizabeth’s Elegance</div>
+
+    <!-- Стрілочка назад і пошук на одній лінії -->
+    <div class="nav-and-search">
+        <a href="/" class="back-arrow">На головну</a>
+        <div class="search-bar">
+            <form method="GET" action="/search">
+                <input type="text" name="search" value="" placeholder="Пошук за назвою">
+                <button type="submit">Шукати</button>
+                {% for key, value in request.query_params.items() if key not in ['search'] %}
+                    <input type="hidden" name="{{ key }}" value="{{ value }}">
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+
+    <!-- Категорії -->
+    <div class="category-buttons">
+        {% for category in categories %}
+            <a href="/category/{{ category|lower }}#sorting-bar" class="category-button">
+                <button>{{ category }}</button>
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- Результати пошуку -->
+    <div class="container">
+        <div class="main-content">
+            <section class="filtered-products">
+                <h2>Результати пошуку для "{{ search }}"</h2>
+                <div class="sorting-bar" id="sorting-bar">
+                    <form method="GET" action="/search#sorting-bar" id="sorting-form">
+                        <div class="sorting-container">
+                            <div class="sort-options">
+                                <label>Сортувати:</label>
+                                <select name="sort_by" onchange="this.form.submit()">
+                                    <option value="" {% if not sort_by %}selected{% endif %}>Без сортування</option>
+                                    <option value="rating_desc" {% if sort_by == "rating_desc" %}selected{% endif %}>Рейтинг ▼</option>
+                                    <option value="rating_asc" {% if sort_by == "rating_asc" %}selected{% endif %}>Рейтинг ▲</option>
+                                    <option value="reviews_desc" {% if sort_by == "reviews_desc" %}selected{% endif %}>Відгуки ▼</option>
+                                    <option value="reviews_asc" {% if sort_by == "reviews_asc" %}selected{% endif %}>Відгуки ▲</option>
+                                    <option value="id_desc" {% if sort_by == "id_desc" %}selected{% endif %}>ID ▼</option>
+                                    <option value="id_asc" {% if sort_by == "id_asc" %}selected{% endif %}>ID ▲</option>
+                                </select>
+                            </div>
+                            <div class="items-per-page">
+                                <label>На сторінці:</label>
+                                <select name="items_per_page" onchange="this.form.submit()">
+                                    {% for key, value in [('12', 12), ('24', 24), ('36', 36), ('48', 48), ('60', 60), ('96', 96)] %}
+                                        <option value="{{ key }}" {% if request.query_params.get('items_per_page') == key %}selected{% endif %}>{{ value }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {% for key, value in request.query_params.items() if key not in ['sort_by', 'items_per_page'] %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endfor %}
+                    </form>
+                </div>
+
+                <div class="product-list">
+                    {% for product in products %}
+                        <div class="product">
+                            <img src="/static/1.jpg" alt="{{ product.class_name }}" class="product-image" onerror="this.src='https://via.placeholder.com/150.jpg'">
+                            <h3><a href="/product/{{ product.clothing_id }}#sorting-bar">ID: {{ product.clothing_id }}</a></h3>
+                            <p>{{ product.class_name }}</p>
+                            <p>Рейтинг: {{ "%.2f"|format(product.rating) if product.rating is not none else 'Немає' }}</p>
+                            <p>Відгуків: {{ product.positive_feedback_count }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <p class="items-info">Відображено: {{ products|length }} з {{ total_products }} загалом ({{ items_per_page }} на сторінку)</p>
+
+                {% if total_pages > 1 %}
+                    <div class="pagination">
+                        {% if current_page > 1 %}
+                            <a href="/search?page={{ current_page - 1 }}{% for key, value in request.query_params.items() if key != 'page' %}&{{ key }}={{ value }}{% endfor %}#sorting-bar">←</a>
+                        {% endif %}
+                        {% for p in pagination_pages %}
+                            {% if p == "..." %}
+                                <span>...</span>
+                            {% elif p == current_page %}
+                                <span class="active">{{ p }}</span>
+                            {% else %}
+                                <a href="/search?page={{ p }}{% for key, value in request.query_params.items() if key != 'page' %}&{{ key }}={{ value }}{% endfor %}#sorting-bar">{{ p }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        {% if current_page < total_pages %}
+                            <a href="/search?page={{ current_page + 1 }}{% for key, value in request.query_params.items() if key != 'page' %}&{{ key }}={{ value }}{% endfor %}#sorting-bar">→</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            if (window.location.hash === '#sorting-bar') {
+                const sortingBar = document.getElementById('sorting-bar');
+                if (sortingBar) {
+                    sortingBar.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        };
+    </script>
+</body>
+</html>
