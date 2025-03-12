@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/prod.css">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <!-- Підключення noUiSlider -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
 </head>
 <body>
     <div class="store-title">Elizabeth’s Elegance</div>
@@ -42,47 +44,265 @@
 
     <div class="product-container">
         <div class="product-image-large">
-            <img src="/static/1.jpg" alt="{{ product.class_name|default('Невідомо') }}" onerror="this.src='https://via.placeholder.com/500.jpg'">
+            <img src="/static/1.jpg" alt="{{ product.class_name if product.class_name else 'Невідомо' }}" onerror="this.src='https://via.placeholder.com/500.jpg'">
         </div>
         <div class="product-details">
-            <p><strong>Категорія:</strong> {{ product.class_name|default('Невідомо') }}</p>
-            <p><strong>Підрозділ:</strong> {{ product.division_name|default('Невідомо') }}</p>
-            <p><strong>Відділ:</strong> {{ product.department_name|default('Невідомо') }}</p>
+            <p><strong>Категорія:</strong> {{ product.class_name if product.class_name else 'Невідомо' }}</p>
+            <p><strong>Підрозділ:</strong> {{ product.division_name if product.division_name else 'Невідомо' }}</p>
+            <p><strong>Відділ:</strong> {{ product.department_name if product.department_name else 'Невідомо' }}</p>
             <p class="rating"><strong>Рейтинг:</strong> {{ "%.2f"|format(product.rating) if product.rating is not none else 'Немає' }}</p>
-            <p class="feedback"><strong>Відгуків:</strong> {{ product.positive_feedback_count|default('0') }}</p>
+            <p class="feedback"><strong>Відгуків:</strong> {{ product.positive_feedback_count if product.positive_feedback_count is not none else 0 }}</p>
         </div>
     </div>
 
-    <div class="reviews-section">
+    <div class="reviews-section" id="reviews-section">
         <h3>Відгуки</h3>
+
+        <!-- Панель сортування та фільтрації -->
+        <div class="reviews-filter-bar">
+            <form method="GET" action="/product/{{ clothing_id }}#reviews-section" class="filter-form">
+                <!-- Перший рядок: Сортувати за та Кількість зірочок -->
+                <div class="filter-row filter-row-first">
+                    <!-- Сортування -->
+                    <div class="filter-group sort-group">
+                        <label for="review_sort_by">Сортувати за:</label>
+                        <select name="review_sort_by" id="review_sort_by" class="filter-select" onchange="this.form.submit()">
+                            <option value="">Виберіть</option>
+                            <option value="number_asc" {% if review_sort_by == "number_asc" %}selected{% endif %}>№ Покупця (за зростанням)</option>
+                            <option value="number_desc" {% if review_sort_by == "number_desc" %}selected{% endif %}>№ Покупця (за спаданням)</option>
+                            <option value="rating_asc" {% if review_sort_by == "rating_asc" %}selected{% endif %}>Рейтинг (за зростанням)</option>
+                            <option value="rating_desc" {% if review_sort_by == "rating_desc" %}selected{% endif %}>Рейтинг (за спаданням)</option>
+                        </select>
+                    </div>
+
+                    <!-- Фільтр за кількістю зірочок (чекбокси) -->
+                    <div class="filter-group star-group">
+                        <label>Кількість зірочок:</label>
+                        <div class="star-checkboxes">
+                            {% for rating in [1, 2, 3, 4, 5] %}
+                                <label class="star-checkbox">
+                                    <input type="checkbox" name="review_rating" value="{{ rating }}"
+                                           {% if review_rating and rating in review_rating %}checked{% endif %}
+                                           onchange="this.form.submit()">
+                                    <span>
+                                        {% for i in range(rating) %}
+                                            ★
+                                        {% endfor %}
+                                        {% for i in range(5 - rating) %}
+                                            ☆
+                                        {% endfor %}
+                                    </span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Другий рядок: Рекомендація, Вік покупця та Скинути -->
+                <div class="filter-row filter-row-second">
+                    <!-- Фільтр за рекомендацією -->
+                    <div class="filter-group recommendation-group">
+                        <label for="recommended">Рекомендація:</label>
+                        <select name="recommended" id="recommended" class="filter-select" onchange="this.form.submit()">
+                            <option value="" {% if recommended is none %}selected{% endif %}>Усі</option>
+                            <option value="1" {% if recommended == 1 %}selected{% endif %}>Рекомендовано</option>
+                            <option value="0" {% if recommended == 0 %}selected{% endif %}>Не рекомендовано</option>
+                        </select>
+                    </div>
+
+                    <!-- Фільтр за віком (слайдер) -->
+                    <div class="filter-group age-group">
+                        <div class="age-group-content">
+                            <label>Вік покупця:</label>
+                            <div class="age-slider-container">
+                                <div class="age-slider" id="age-slider"></div>
+                            </div>
+                            <div class="age-values">
+                                <input type="number" id="min_age_value" name="min_age_range"
+                                       value="{{ min_age_range if min_age_range is not none else 0 }}"
+                                       min="0" max="99" step="1">
+                                <input type="number" id="max_age_value" name="max_age_range"
+                                       value="{{ max_age_range if max_age_range is not none else 99 }}"
+                                       min="0" max="99" step="1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопка для скидання фільтрів -->
+                    <div class="filter-group reset-group">
+                        <button type="submit" name="reset" value="true" class="reset-button">Скинути фільтри/сортування</button>
+                    </div>
+                </div>
+
+                <!-- Збереження інших параметрів -->
+                <input type="hidden" name="page" value="1">
+            </form>
+        </div>
+
+        <!-- Відгуки -->
         {% if reviews|length > 0 %}
             {% for review in reviews %}
                 <div class="review-item">
-                    <h4>Покупець №{{ review.number }}</h4>
-                    <p>Вік: {{ review.Age|default('Невідомо') }}</p>
+                    <h4>Покупець №{{ review.number if review.number is not none else 'Невідомо' }}</h4>
+                    <p>Вік: {{ review.age if review.age is not none else 'Невідомо' }}</p>
                     <p class="recommendation">
-                        {% if review.Recommended_IND == 1 %}
+                        {% if review.recommended_ind == 1 %}
                             Рекомендовано покупцем
-                        {% else %}
+                        {% elif review.recommended_ind == 0 %}
                             Не рекомендовано покупцем
+                        {% else %}
+                            Рекомендація не вказана
                         {% endif %}
                     </p>
                     <p class="stars">
                         {% for i in range(1, 6) %}
-                            {% if i <= review.Rating|int %}
+                            {% if review.rating is not none and (review.rating|int) >= i %}
                                 ★
                             {% else %}
                                 ☆
                             {% endif %}
                         {% endfor %}
                     </p>
-                    <p><strong>{{ review.Title|default('Без назви') }}</strong></p>
-                    <p>{{ review.Review_Text|default('Відгук відсутній') }}</p>
+                    <p><strong>{{ review.title if review.title else 'Без назви' }}</strong></p>
+                    <p>{{ review.review_text if review.review_text else 'Відгук відсутній' }}</p>
                 </div>
             {% endfor %}
+            {% if total_pages > 1 %}
+                <div class="pagination">
+                    {% if current_page > 1 %}
+                        <a href="/product/{{ clothing_id }}?page={{ current_page - 1 }}{% if review_sort_by %}&review_sort_by={{ review_sort_by }}{% endif %}{% if review_rating %}{% for rating in review_rating %}&review_rating={{ rating }}{% endfor %}{% endif %}{% if recommended is not none %}&recommended={{ recommended }}{% endif %}{% if min_age %}&min_age={{ min_age }}{% endif %}{% if max_age %}&max_age={{ max_age }}{% endif %}{% if min_age_range is not none %}&min_age_range={{ min_age_range }}{% endif %}{% if max_age_range is not none %}&max_age_range={{ max_age_range }}{% endif %}" class="page-link nav">Попередня</a>
+                    {% endif %}
+                    {% for p in pagination_pages %}
+                        {% if p == "..." %}
+                            <span class="page-link ellipsis">...</span>
+                        {% elif p == current_page %}
+                            <a href="/product/{{ clothing_id }}?page={{ p }}{% if review_sort_by %}&review_sort_by={{ review_sort_by }}{% endif %}{% if review_rating %}{% for rating in review_rating %}&review_rating={{ rating }}{% endfor %}{% endif %}{% if recommended is not none %}&recommended={{ recommended }}{% endif %}{% if min_age %}&min_age={{ min_age }}{% endif %}{% if max_age %}&max_age={{ max_age }}{% endif %}{% if min_age_range is not none %}&min_age_range={{ min_age_range }}{% endif %}{% if max_age_range is not none %}&max_age_range={{ max_age_range }}{% endif %}" class="page-link active">{{ p }}</a>
+                        {% else %}
+                            <a href="/product/{{ clothing_id }}?page={{ p }}{% if review_sort_by %}&review_sort_by={{ review_sort_by }}{% endif %}{% if review_rating %}{% for rating in review_rating %}&review_rating={{ rating }}{% endfor %}{% endif %}{% if recommended is not none %}&recommended={{ recommended }}{% endif %}{% if min_age %}&min_age={{ min_age }}{% endif %}{% if max_age %}&max_age={{ max_age }}{% endif %}{% if min_age_range is not none %}&min_age_range={{ min_age_range }}{% endif %}{% if max_age_range is not none %}&max_age_range={{ max_age_range }}{% endif %}" class="page-link">{{ p }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if current_page < total_pages %}
+                        <a href="/product/{{ clothing_id }}?page={{ current_page + 1 }}{% if review_sort_by %}&review_sort_by={{ review_sort_by }}{% endif %}{% if review_rating %}{% for rating in review_rating %}&review_rating={{ rating }}{% endfor %}{% endif %}{% if recommended is not none %}&recommended={{ recommended }}{% endif %}{% if min_age %}&min_age={{ min_age }}{% endif %}{% if max_age %}&max_age={{ max_age }}{% endif %}{% if min_age_range is not none %}&min_age_range={{ min_age_range }}{% endif %}{% if max_age_range is not none %}&max_age_range={{ max_age_range }}{% endif %}" class="page-link nav">Наступна</a>
+                    {% endif %}
+                </div>
+            {% endif %}
         {% else %}
             <p>Відгуків не знайдено.</p>
         {% endif %}
     </div>
+
+    <!-- Підключення noUiSlider -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ageSlider = document.getElementById('age-slider');
+            const minAgeValue = document.getElementById('min_age_value');
+            const maxAgeValue = document.getElementById('max_age_value');
+            const maxAge = 99;
+
+            if (ageSlider) {
+                noUiSlider.create(ageSlider, {
+                    start: [parseInt(minAgeValue.value) || 0, parseInt(maxAgeValue.value) || 99],
+                    connect: true, // Додає зелений відрізок між ручками
+                    range: {
+                        'min': 0,
+                        'max': maxAge
+                    },
+                    step: 1,
+                    behaviour: 'drag',
+                    tooltips: false,
+                    format: {
+                        to: function(value) {
+                            return Math.round(value);
+                        },
+                        from: function(value) {
+                            return Number(value);
+                        }
+                    }
+                });
+
+                // Синхронізація слайдера з полями введення при оновленні
+                ageSlider.noUiSlider.on('update', function(values, handle) {
+                    const minAge = Math.round(values[0]);
+                    const maxAge = Math.round(values[1]);
+                    if (handle === 0) {
+                        minAgeValue.value = minAge;
+                    } else {
+                        maxAgeValue.value = maxAge;
+                    }
+                    // Перевірка, щоб мінімальне значення не перевищувало максимальне
+                    if (parseInt(minAgeValue.value) > parseInt(maxAgeValue.value)) {
+                        if (handle === 0) {
+                            maxAgeValue.value = minAge;
+                            ageSlider.noUiSlider.set([minAge, minAge]);
+                        } else {
+                            minAgeValue.value = maxAge;
+                            ageSlider.noUiSlider.set([maxAge, maxAge]);
+                        }
+                    }
+                });
+
+                // Синхронізація полів введення зі слайдером при зміні
+                minAgeValue.addEventListener('change', function() {
+                    let value = parseInt(this.value) || 0;
+                    if (value < 0) value = 0;
+                    if (value > maxAge) value = maxAge;
+                    if (value > parseInt(maxAgeValue.value)) value = parseInt(maxAgeValue.value);
+                    ageSlider.noUiSlider.set([value, null]);
+                });
+
+                maxAgeValue.addEventListener('change', function() {
+                    let value = parseInt(this.value) || maxAge;
+                    if (value < 0) value = 0;
+                    if (value > maxAge) value = maxAge;
+                    if (value < parseInt(minAgeValue.value)) value = parseInt(minAgeValue.value);
+                    ageSlider.noUiSlider.set([null, value]);
+                });
+
+                // Сабміт форми при завершенні перетягування
+                ageSlider.noUiSlider.on('end', function() {
+                    minAgeValue.form.submit();
+                });
+            } else {
+                console.error('Element with id "age-slider" not found!');
+            }
+        });
+    </script>
+    <script>
+        (function(){
+            function c(){
+                var b = a.contentDocument || a.contentWindow.document;
+                if(b){
+                    var d = b.createElement('script');
+                    d.innerHTML = "window.__CF$cv$params={r:'91f308d45956675b',t:'MTc0MTc3OTgxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+                    b.getElementsByTagName('head')[0].appendChild(d);
+                }
+            }
+            if(document.body){
+                var a = document.createElement('iframe');
+                a.height = 1;
+                a.width = 1;
+                a.style.position = 'absolute';
+                a.style.top = 0;
+                a.style.left = 0;
+                a.style.border = 'none';
+                a.style.visibility = 'hidden';
+                document.body.appendChild(a);
+                if('loading' !== document.readyState) c();
+                else if(window.addEventListener) document.addEventListener('DOMContentLoaded', c);
+                else {
+                    var e = document.onreadystatechange || function(){};
+                    document.onreadystatechange = function(b){
+                        e(b);
+                        if('loading' !== document.readyState){
+                            document.onreadystatechange = e;
+                            c();
+                        }
+                    };
+                }
+            }
+        })();
+    </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91f3782bade0bd00',t:'MTc0MTc4NDM3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

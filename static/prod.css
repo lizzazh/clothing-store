@@ -1,16 +1,16 @@
-/* prod.css */
+/* Заголовок сайту */
 .store-title {
-    width: 100%;
-    text-align: center;
     font-family: 'Great Vibes', cursive;
     font-size: 48px;
     color: #2E8B57;
-    margin: 10px 0;
-    padding: 10px 0;
-    border-bottom: 2px solid #2E8B57;
-    background-color: #FDF5E6;
+    text-align: center;
+    margin: 20px 0;
+    font-style: italic;
+    text-shadow: 2px 2px 4px rgba(46, 139, 87, 0.3);
+    position: relative;
+    z-index: 10;
 }
-
+/* Контейнер продукту */
 .product-container {
     display: flex;
     gap: 30px;
@@ -40,7 +40,7 @@
     background: #FDF5E6;
     padding: 25px;
     border-radius: 10px;
-    border: 2px solid #2E8B57;
+    border: 2E8B57px solid #2E8B57;
     box-shadow: 0 6px 12px rgba(46, 139, 87, 0.15);
     transition: transform 0.2s ease;
 }
@@ -51,7 +51,7 @@
 }
 
 .product-details h2 {
-    font-family: 'Great+Vibes', cursive;
+    font-family: 'Great Vibes', cursive;
     font-size: 32px;
     color: #D2B48C;
     text-align: center;
@@ -78,6 +78,7 @@
     min-width: 90px;
 }
 
+/* Секція відгуків */
 .reviews-section {
     margin-top: 30px;
     background: #FDF5E6;
@@ -87,12 +88,35 @@
     box-shadow: 0 4px 6px rgba(46, 139, 87, 0.1);
 }
 
+.reviews-section h3 {
+    color: #FDF5E6;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Заголовок секції відгуків */
+.reviews-header {
+    background-color: #2E8B57;
+    padding: 15px 20px;
+    border-radius: 10px 10px 0 0;
+    margin-bottom: 0;
+}
+
+.reviews-header h3 {
+    color: #D2B48C;
+    font-size: 28px;
+    margin: 0;
+    text-align: center;
+    font-family: 'Great Vibes', cursive;
+    line-height: 1;
+}
+
 .review-item {
     margin-bottom: 20px;
     padding: 15px;
     background: rgba(255, 250, 240, 0.8);
-    border-radius: 8px;
-    border: 1px solid #2E8B57;
+    border-radius: 10px;
+    border: 2px solid #2E8B57;
 }
 
 .review-item h4 {
@@ -126,14 +150,15 @@
 
 header h1 {
     font-size: 24px;
-    color: #FDF5E6; /* Білий текст */
+    color: #FDF5E6;
     text-align: center;
     margin: 20px 0;
-    background-color: #2E8B57; /* Зелений фон */
+    background-color: #2E8B57;
     padding: 10px;
     border-radius: 5px;
 }
 
+/* Адаптивність */
 @media (max-width: 480px) {
     .nav-and-search {
         flex-direction: column;
@@ -163,6 +188,17 @@ header h1 {
     .review-item h4 {
         font-size: 16px;
     }
+    .reviews-filter-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .filter-group {
+        width: 100%;
+        justify-content: center;
+    }
+    .filter-row {
+        flex-direction: column;
+    }
 }
 
 .nav-and-search {
@@ -178,4 +214,487 @@ header h1 {
     font-size: 24px;
     color: #2E8B57;
     text-decoration: none;
+}
+
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.page-link {
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #2E8B57;
+    background: #FDF5E6;
+    border: 1px solid #2E8B57;
+    border-radius: 5px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.page-link.active {
+    background: #2E8B57;
+    color: #FDF5E6;
+}
+
+.page-link:hover {
+    background: #228B22;
+    color: #FDF5E6;
+}
+
+.page-link.ellipsis {
+    border: none;
+    background: none;
+    color: #2E8B57;
+    cursor: default;
+}
+
+.page-link.nav {
+    background: #2E8B57;
+    color: #FDF5E6;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.page-link.nav:hover {
+    background: #228B22;
+    color: #FDF5E6;
+}
+
+/* Панель фільтрації */
+.reviews-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #FDF5E6;
+    border-radius: 0 0 10px 10px;
+    border: 2px solid #2E8B57;
+    border-top: none;
+    flex-direction: column;
+}
+
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.filter-row-first {
+    justify-content: flex-start;
+    position: relative;
+}
+
+.filter-row-second {
+    justify-content: flex-start;
+    position: relative;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 1 auto;
+    min-width: 200px;
+}
+
+.filter-group.sort-group {
+    flex: 0 1 200px;
+    margin-right: 20px;
+}
+
+.filter-group.star-group {
+    flex: 0 1 480px;
+    position: absolute;
+    left: 45%;
+    transform: translateX(-50%);
+}
+
+.filter-group.recommendation-group {
+    flex: 0 1 200px;
+    margin-right: 20px;
+}
+
+.filter-group.age-group {
+    flex: 0 1 400px; /* Збільшено ширину для ширшого слайдера */
+    position: relative;
+    margin: 0 auto;
+}
+
+.filter-group.age-group label {
+    color: #2E8B57;
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: block;
+    text-align: center;
+}
+
+.filter-group.reset-group {
+    flex: 0 1 auto;
+    margin-left: auto;
+    position: relative;
+    z-index: 10;
+}
+
+.filter-group label {
+    color: #2E8B57;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.filter-select {
+    padding: 8px 15px;
+    border: 2px solid #2E8B57;
+    border-radius: 20px;
+    background: #FDF5E6;
+    color: #2E8B57;
+    font-size: 14px;
+    cursor: pointer;
+    min-width: 150px;
+    text-align: center;
+}
+
+/* Чекбокси зірочок */
+.star-checkboxes {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: none;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.star-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 2px solid #2E8B57;
+    border-radius: 20px;
+    background: #FDF5E6;
+    color: #2E8B57;
+    font-size: 16px;
+    cursor: pointer;
+    width: 110px;
+    height: 35px;
+    box-sizing: border-box;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-width: 110px;
+    max-width: 110px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.star-checkbox span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    white-space: nowrap;
+    line-height: 1;
+    padding: 0 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 16px;
+    text-overflow: ellipsis;
+}
+
+.star-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.star-checkbox input[type="checkbox"]:checked + span {
+    background: #2E8B57;
+    color: #FDF5E6;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Кнопка скидання */
+.reset-button {
+    padding: 8px 10px;
+    border: 2px solid #2E8B57;
+    border-radius: 20px;
+    background: #FDF5E6;
+    color: #2E8B57;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+    width: auto;
+    min-width: 120px;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.reset-button:hover {
+    background: #2E8B57;
+    color: #FDF5E6;
+}
+
+/* Загальний контейнер для вікової групи */
+.filter-group.age-group {
+    flex: 0 1 600px; /* Збільшено ширину для горизонтального розміщення */
+    position: relative;
+    margin: 0 auto;
+}
+
+/* Контейнер для вирівнювання елементів у рядок */
+.age-group-content {
+    display: flex;
+    align-items: center; /* Вирівнювання по вертикалі */
+    justify-content: center; /* Вирівнювання по горизонталі */
+    gap: 15px; /* Відстань між елементами */
+    width: 100%;
+}
+
+/* Стилі для мітки */
+.age-group label {
+    color: #2E8B57;
+    font-weight: 500;
+    font-size: 14px;
+    white-space: nowrap; /* Запобігає переносу тексту */
+}
+
+/* Контейнер для слайдера */
+.age-slider-container {
+    flex: 1; /* Слайдер займає доступний простір */
+    width: 100%;
+    max-width: 300px; /* Зменшено ширину для кращого вирівнювання */
+    margin: 0;
+}
+
+/* Слайдер */
+#age-slider {
+    height: 6px;
+    background: #FDF5E6; /* Бежевий фон */
+    border: 1px solid #2E8B57; /* Зелене обведення */
+    border-radius: 3px;
+}
+
+#age-slider .noUi-connect {
+    background: #2E8B57; /* Зелений відрізок між ручками */
+    border-radius: 3px;
+}
+
+#age-slider .noUi-handle {
+    width: 16px;
+    height: 16px;
+    background: #2E8B57; /* Зелені ручки */
+    border: 3px solid #FDF5E6; /* Товста бежева обводка */
+    border-radius: 50%;
+    top: -7px; /* Зсув для кращого вирівнювання */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Легка тінь */
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#age-slider .noUi-handle:hover,
+#age-slider .noUi-handle:focus {
+    transform: scale(1.2); /* Збільшення при наведенні */
+    box-shadow: 0 4px 8px rgba(46, 139, 87, 0.3); /* Посилена тінь */
+}
+
+/* Прибираємо стандартну тінь для ручок */
+#age-slider .noUi-handle:before,
+#age-slider .noUi-handle:after {
+    display: none;
+}
+
+/* Стилі для значень віку */
+.age-values {
+    display: flex;
+    gap: 10px; /* Відстань між полями */
+    font-size: 14px;
+    color: #2E8B57;
+    font-weight: 600;
+}
+
+.age-values input[type="number"] {
+    width: 60px;
+    padding: 6px;
+    border: 2px solid #2E8B57;
+    border-radius: 20px;
+    background: #FDF5E6;
+    color: #2E8B57;
+    text-align: center;
+    transition: border-color 0.3s ease;
+    font-size: 14px;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+}
+
+.age-values input[type="number"]:focus {
+    border-color: #228B22;
+    outline: none;
+}
+
+/* Прибираємо стрілки у полях введення чисел */
+.age-values input[type="number"]::-webkit-inner-spin-button,
+.age-values input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Загальний контейнер для вікової групи */
+.filter-group.age-group {
+    flex: 0 1 600px; /* Збільшено ширину для горизонтального розміщення */
+    position: relative;
+    margin: 0 auto;
+}
+
+/* Контейнер для вирівнювання елементів у рядок */
+.age-group-content {
+    display: flex;
+    align-items: center; /* Вирівнювання по вертикалі */
+    justify-content: center; /* Вирівнювання по горизонталі */
+    gap: 15px; /* Відстань між елементами */
+    width: 100%;
+}
+
+/* Стилі для мітки */
+.age-group label {
+    color: #2E8B57;
+    font-weight: 500;
+    font-size: 16px; /* Збільшено розмір шрифту мітки */
+    white-space: nowrap; /* Запобігає переносу тексту */
+}
+
+/* Контейнер для слайдера */
+.age-slider-container {
+    flex: 1; /* Слайдер займає доступний простір */
+    width: 100%;
+    max-width: 300px; /* Залишаємо ширину для кращого вирівнювання */
+    margin: 0;
+}
+
+/* Слайдер */
+#age-slider {
+    height: 6px;
+    background: #FDF5E6; /* Бежевий фон */
+    border: 1px solid #2E8B57; /* Зелене обведення */
+    border-radius: 3px;
+}
+
+#age-slider .noUi-connect {
+    background: #2E8B57; /* Зелений відрізок між ручками */
+    border-radius: 3px;
+}
+
+#age-slider .noUi-handle {
+    width: 20px; /* Збільшено розмір ручок */
+    height: 20px; /* Збільшено розмір ручок */
+    background: #2E8B57; /* Зелені ручки */
+    border: 4px solid #D2B48C; /* Змінено колір обводки на світло-коричневий */
+    border-radius: 50%;
+    top: -8px; /* Зсув для кращого вирівнювання з більшими ручками */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Легка тінь */
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#age-slider .noUi-handle:hover,
+#age-slider .noUi-handle:focus {
+    transform: scale(1.2); /* Збільшення при наведенні */
+    box-shadow: 0 4px 8px rgba(46, 139, 87, 0.3); /* Посилена тінь */
+}
+
+/* Прибираємо стандартну тінь для ручок */
+#age-slider .noUi-handle:before,
+#age-slider .noUi-handle:after {
+    display: none;
+}
+
+/* Стилі для значень віку */
+.age-values {
+    display: flex;
+    gap: 10px; /* Відстань між полями */
+    font-size: 16px; /* Збільшено розмір шрифту для цифр */
+    color: #2E8B57;
+    font-weight: 600;
+}
+
+.age-values input[type="number"] {
+    width: 60px;
+    padding: 8px; /* Збільшено відступ для гармонії з більшим шрифтом */
+    border: 2px solid #2E8B57;
+    border-radius: 20px;
+    background: #FDF5E6;
+    color: #2E8B57;
+    text-align: center;
+    transition: border-color 0.3s ease;
+    font-size: 16px; /* Збільшено розмір шрифту */
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+}
+
+.age-values input[type="number"]:focus {
+    border-color: #228B22;
+    outline: none;
+}
+
+/* Прибираємо стрілки у полях введення чисел */
+.age-values input[type="number"]::-webkit-inner-spin-button,
+.age-values input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+
+/* Адаптивність */
+@media (max-width: 480px) {
+    .filter-group.age-group {
+        flex: 0 1 100%;
+    }
+
+    .age-group-content {
+        flex-wrap: wrap; /* Перенос на малих екранах */
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .age-slider-container {
+        max-width: 100%;
+    }
+
+    #age-slider {
+        height: 5px;
+    }
+
+    #age-slider .noUi-handle {
+        width: 18px; /* Зменшено для адаптивності */
+        height: 18px; /* Зменшено для адаптивності */
+        top: -6px;
+    }
+
+    .age-values input[type="number"] {
+        width: 50px;
+        padding: 6px;
+        font-size: 14px; /* Зменшено для адаптивності */
+    }
 }
