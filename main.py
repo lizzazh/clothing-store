@@ -564,6 +564,13 @@ async def category_stats(
     except Exception as e:
         logger.error(f"Error in category_stats: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
+    
+@app.get("/debug", response_class=HTMLResponse)
+async def debug(db: Session = Depends(get_db)):
+    start_time = time.time()
+    total_products = db.query(Product).count()
+    end_time = time.time()
+    return f"Total products: {total_products}, Query time: {end_time - start_time:.2f} seconds"
 
 if __name__ == "__main__":
     import uvicorn
