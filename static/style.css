@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
 html, body {
     height: 100%;
@@ -27,6 +28,20 @@ body {
     box-sizing: border-box;
 }
 
+/* Назва магазину */
+.store-title {
+    width: 100%;
+    text-align: center;
+    font-family: 'Great+Vibes', cursive;
+    font-size: 48px;
+    color: #2E8B57;
+    margin: 10px 0;
+    padding: 10px 0;
+    border-bottom: 2px solid #2E8B57;
+    background-color: #FDF5E6;
+    font-weight: 400; /* Легкий стиль для елегантності */
+}
+
 /* Заголовки */
 h1, h2, h3 {
     color: #FDF5E6; /* Світліший бежевий текст */
@@ -39,92 +54,127 @@ h1, h2, h3 {
     box-shadow: 0 2px 4px rgba(46, 139, 87, 0.2); /* Смарагдова тінь */
 }
 
-/* Контейнер */
-.container {
+/* Стиль для вирівнювання "На головну", пошукової панелі та блоку рекомендацій за віком */
+.nav-and-search {
     display: flex;
-    gap: 30px;
-    margin-top: 30px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-/* Сайдбар */
-.sidebar {
-    flex: 1;
-    min-width: 200px;
-    max-width: 250px;
-    background: #FDF5E6; /* Світліший бежевий фон */
-    padding: 20px;
-    border-radius: 10px;
-    border: 2px solid #2E8B57; /* Смарагдова обводка */
-    box-shadow: 0 4px 6px rgba(46, 139, 87, 0.1); /* Смарагдова тінь */
-}
-
-.main-content {
-    flex: 4;
-    min-width: 0;
-}
-
-/* Пошук */
-.search-bar {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.search-bar form {
-    display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    margin: 20px 0;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Контейнер для пошуку та блоку віку */
+.search-and-age {
+    display: flex;
+    align-items: center; /* Вирівнювання по вертикалі */
+    gap: 15px; /* Відстань між окремими блоками форм */
+    flex-wrap: wrap; /* Дозволяє переносити на новий рядок при необхідності */
+    justify-content: center; /* Центрування по горизонталі */
+}
+
+/* Стиль для обох форм (пошук і рекомендації за віком) */
+.search-bar form,
+.age-recommendation-form form {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Відстань між полем введення та кнопкою */
+}
+
+/* Поля введення */
+.age-recommendation-form input[type="number"] {
+    padding: 10px 15px; /* Відступи всередині поля */
+    border: 2px solid #2E8B57; /* Смарагдова обводка */
+    border-radius: 20px; /* Округлі краї з усіх сторін */
+    width: 150px; /* Стандартна ширина для віку */
+    background: #ffffff; /* Білий фон */
+    color: #333; /* Темний текст */
+    font-size: 16px; /* Розмір шрифту */
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box; /* Включаємо padding у ширину */
 }
 
 .search-bar input {
-    padding: 12px;
-    width: 250px;
+    padding: 10px 15px; /* Відступи всередині поля */
     border: 2px solid #2E8B57; /* Смарагдова обводка */
-    border-radius: 25px;
-    font-size: 16px;
-    background: #ffffff;
+    border-radius: 20px; /* Округлі краї з усіх сторін */
+    width: 250px; /* Збільшена ширина для пошуку */
+    background: #ffffff; /* Білий фон */
+    color: #333; /* Темний текст */
+    font-size: 16px; /* Розмір шрифту */
     transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box; /* Включаємо padding у ширину */
 }
 
-.search-bar input:focus {
+.search-bar input:focus,
+.age-recommendation-form input[type="number"]:focus {
     border-color: #224B40; /* Темніший смарагдовий */
     box-shadow: 0 0 5px rgba(46, 139, 87, 0.5); /* Смарагдова тінь */
     outline: none;
 }
 
-.search-bar input:hover {
+.search-bar input:hover,
+.age-recommendation-form input[type="number"]:hover {
     box-shadow: 0 0 5px rgba(46, 139, 87, 0.5); /* Смарагдова тінь */
 }
 
-/* Кнопка "Шукати" */
-.search-bar button {
+/* Кнопки */
+.search-bar button,
+.age-recommendation-form button {
+    padding: 10px 15px; /* Відступи всередині кнопки */
+    border: 2px solid #2E8B57; /* Смарагдова обводка */
+    border-radius: 20px; /* Округлі краї з усіх сторін */
     background: #2E8B57; /* Смарагдовий фон */
     color: #FDF5E6; /* Світліший бежевий текст */
-    padding: 10px 20px;
-    border: 2px solid transparent;
-    border-radius: 25px;
-    margin: 5px 0;
     cursor: pointer;
-    transition: transform 0.2s, background 0.3s, border-color 0.3s, box-shadow 0.3s;
-    font-size: 14px;
-    white-space: nowrap;
-    width: auto;
-    min-width: 80px;
+    transition: background 0.3s, transform 0.2s, border-color 0.3s, box-shadow 0.3s;
+    font-size: 16px; /* Розмір шрифту */
+    box-sizing: border-box; /* Включаємо padding у ширину */
 }
 
-.search-bar button:hover {
+.search-bar button:hover,
+.age-recommendation-form button:hover {
+    background: #224B40; /* Темніший смарагдовий при наведенні */
     transform: scale(1.05);
-    background: #224B40; /* Темніший смарагдовий */
-    border-color: #2E8B57; /* Смарагдова обводка */
     box-shadow: 0 0 5px rgba(46, 139, 87, 0.5); /* Смарагдова тінь */
+}
+
+/* Адаптивність для малих екранів */
+@media (max-width: 480px) {
+    .nav-and-search {
+        flex-direction: column;
+        align-items: center; /* Центрування для малих екранів */
+    }
+    .search-and-age {
+        flex-direction: column; /* Переносимо блоки вертикально на малих екранах */
+        align-items: center;
+        width: 100%;
+    }
+    .search-bar form,
+    .age-recommendation-form form {
+        width: 100%; /* Повна ширина на малих екранах */
+        justify-content: center; /* Центрування елементів форми */
+    }
+    .search-bar input,
+    .age-recommendation-form input[type="number"] {
+        width: 70%; /* Зменшена ширина для кращого вигляду */
+        max-width: 250px; /* Максимальна ширина для пошуку */
+    }
+    .search-bar button,
+    .age-recommendation-form button {
+        width: 30%; /* Зменшена ширина для кнопки */
+        max-width: 100px; /* Максимальна ширина */
+    }
 }
 
 /* Категорії */
 .category-buttons {
     text-align: center;
     margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .category-buttons button {
@@ -232,6 +282,32 @@ h1, h2, h3 {
     height: auto;
     border-radius: 5px;
     border: 1px solid #2E8B57; /* Смарагдова обводка для зображень */
+}
+
+/* Контейнер */
+.container {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Сайдбар */
+.sidebar {
+    flex: 1;
+    min-width: 200px;
+    max-width: 250px;
+    background: #FDF5E6; /* Світліший бежевий фон */
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #2E8B57; /* Смарагдова обводка */
+    box-shadow: 0 4px 6px rgba(46, 139, 87, 0.1); /* Смарагдова тінь */
+}
+
+.main-content {
+    flex: 4;
+    min-width: 0;
 }
 
 /* Товари */
@@ -422,34 +498,6 @@ form button:hover {
     border: 2px solid #2E8B57; /* Смарагдова обводка */
 }
 
-/* Адаптивність */
-@media (max-width: 1024px) {
-    .product-list {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .container { flex-direction: column; }
-    .sidebar { max-width: 100%; }
-    .sorting-bar { flex-direction: column; gap: 15px; }
-    .sorting-container { flex-direction: column; width: 100%; }
-    .product-list {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .search-bar form { flex-direction: column; gap: 15px; }
-    .search-bar input { width: 100%; }
-    .search-bar button { width: auto; min-width: 80px; }
-}
-
-@media (max-width: 480px) {
-    .product-list {
-        grid-template-columns: 1fr;
-    }
-    .product-slider .product { flex: 0 0 100%; }
-    .arrow-controls button { padding: 8px; }
-}
-
 /* Повзунок (range slider) з двома точками */
 .filter-section .range-wrapper {
     position: relative;
@@ -541,15 +589,59 @@ form button:hover {
 .filter-section .range-values input:hover {
     box-shadow: 0 0 5px rgba(46, 139, 87, 0.5); /* Смарагдова тінь */
 }
-.back-arrow {
-    font-size: 24px;
-    color: #2E8B57;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
+
+/* Адаптивність */
+@media (max-width: 1024px) {
+    .product-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
-.back-arrow::before {
-    content: "←";
-    margin-right: 5px;
+@media (max-width: 768px) {
+    .container { flex-direction: column; }
+    .sidebar { max-width: 100%; }
+    .sorting-bar { flex-direction: column; gap: 15px; }
+    .sorting-container { flex-direction: column; width: 100%; }
+    .product-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .product-list {
+        grid-template-columns: 1fr;
+    }
+    .product-slider .product { flex: 0 0 100%; }
+    .arrow-controls button { padding: 8px; }
+    .nav-and-search {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-and-age {
+        flex-direction: column;
+        width: 100%;
+        align-items: stretch;
+    }
+    .search-bar, .age-recommendation-form {
+        width: 100%;
+        justify-content: center;
+    }
+    .search-bar input, .age-recommendation-form input[type="number"] {
+        width: 100%;
+    }
+}
+.top-products h2 {
+    color: #FDF5E6;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.product p a {
+    color: #224B40; /* Смарагдовий колір */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.product p a:hover {
+    color: #2E8B57; /* Темніший смарагдовий при наведенні */
+    text-decoration: underline;
 }

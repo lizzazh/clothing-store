@@ -19,7 +19,7 @@
             border-bottom: 2px solid #2E8B57;
             background-color: #FDF5E6;
         }
-        /* Стиль для вирівнювання "На головну" і пошукової панелі */
+        /* Стиль для вирівнювання "На головну", пошукової панелі та блоку рекомендацій за віком */
         .nav-and-search {
             display: flex;
             align-items: center;
@@ -39,8 +39,9 @@
                 flex-direction: column;
                 align-items: stretch;
             }
-            .search-bar {
+            .search-bar, .age-recommendation-form {
                 width: 100%;
+                text-align: center;
             }
             .back-arrow {
                 text-align: center;
@@ -55,21 +56,31 @@
     <header>
         <h1>Ласкаво просимо до магазину жіночого одягу!</h1>
     </header>
-
-    <!-- Контейнер для вирівнювання -->
+    
     <div class="nav-and-search">
-        <!-- Порожнє місце зліва для узгодженості -->
+        <!-- Порожнє місце для узгодженості -->
         <div class="back-arrow-placeholder"></div>
-
-        <!-- Пошук -->
-        <div class="search-bar">
-            <form method="GET" action="/search">
-                <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
-                <button type="submit">Шукати</button>
-                {% for key, value in request.query_params.items() if key not in ['search'] %}
-                    <input type="hidden" name="{{ key }}" value="{{ value }}">
-                {% endfor %}
-            </form>
+    
+        <!-- Контейнер для пошуку та блоку віку -->
+        <div class="search-and-age">
+            <!-- Пошук за віком (зліва) -->
+            <div class="age-recommendation-form">
+                <form method="GET" action="/age-recommendations">
+                    <input type="number" id="age" name="age" min="0" max="120" placeholder="Вік" required>
+                    <button type="submit">Отримати</button>
+                </form>
+            </div>
+    
+            <!-- Пошук (справа) -->
+            <div class="search-bar">
+                <form method="GET" action="/search">
+                    <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
+                    <button type="submit">Шукати</button>
+                    {% for key, value in request.query_params.items() if key not in ['search'] %}
+                        <input type="hidden" name="{{ key }}" value="{{ value }}">
+                    {% endfor %}
+                </form>
+            </div>
         </div>
     </div>
 
@@ -96,7 +107,7 @@
                     <h3><a href="/product/{{ product.clothing_id }}#sorting-bar">ID: {{ product.clothing_id }}</a></h3>
                     <p>{{ product.class_name }}</p>
                     <p>Рейтинг: {{ "%.2f"|format(product.average_rating) }}</p>
-                    <p>Відгуків: {{ product.review_count }}</p>
+                    <p><a href="/product/{{ product.clothing_id }}#reviews-section">Відгуків: {{ product.review_count }}</a></p>
                 </div>
             {% endfor %}
         </div>
@@ -116,7 +127,7 @@
                     <h3><a href="/product/{{ product.clothing_id }}#sorting-bar">ID: {{ product.clothing_id }}</a></h3>
                     <p>{{ product.class_name }}</p>
                     <p>Рейтинг: {{ "%.2f"|format(product.average_rating) }}</p>
-                    <p>Відгуків: {{ product.review_count }}</p>
+                    <p><a href="/product/{{ product.clothing_id }}#reviews-section">Відгуків: {{ product.review_count }}</a></p>
                 </div>
             {% endfor %}
         </div>
@@ -224,7 +235,7 @@
                             <h3><a href="/product/{{ product.clothing_id }}#sorting-bar">ID: {{ product.clothing_id }}</a></h3>
                             <p>{{ product.class_name }}</p>
                             <p>Рейтинг: {{ "%.2f"|format(product.rating) if product.rating is not none else 'Немає' }}</p>
-                            <p>Відгуків: {{ product.positive_feedback_count }}</p>
+                            <p><a href="/product/{{ product.clothing_id }}#reviews-section">Відгуків: {{ product.positive_feedback_count }}</a></p>
                         </div>
                     {% endfor %}
                 </div>
@@ -337,5 +348,7 @@
             }
         };
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91eb9b949944749c',t:'MTc0MTcwMTkzNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91eb9b949944749c',t:'MTc0MTcwMTkzNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92031d233fc30202',t:'MTc0MTk0ODQxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
 </html>

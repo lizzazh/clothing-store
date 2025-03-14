@@ -69,18 +69,27 @@
 
     <!-- Контейнер для вирівнювання -->
     <div class="nav-and-search">
-        <!-- Стрілочка назад -->
-        <a href="/" class="back-arrow">← На головну</a>
-
-        <!-- Пошук -->
-        <div class="search-bar">
-            <form method="GET" action="/search">
-                <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
-                <button type="submit">Шукати</button>
-                {% for key, value in request.query_params.items() if key not in ['search'] %}
-                    <input type="hidden" name="{{ key }}" value="{{ value }}">
-                {% endfor %}
-            </form>
+        {% if request.query_params.get('category') %}
+            <a href="/category/{{ request.query_params.get('category') }}#sorting-bar" class="back-arrow">← Назад до категорії</a>
+        {% else %}
+            <a href="/" class="back-arrow">← На головну</a>
+        {% endif %}
+        <div class="search-and-age">
+            <div class="age-recommendation-form">
+                <form method="GET" action="/age-recommendations">
+                    <input type="number" id="age" name="age" min="0" max="120" placeholder="Вік" required>
+                    <button type="submit">Отримати</button>
+                </form>
+            </div>
+            <div class="search-bar">
+                <form method="GET" action="/search">
+                    <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
+                    <button type="submit">Шукати</button>
+                    {% for key, value in request.query_params.items() if key not in ['search'] %}
+                        <input type="hidden" name="{{ key }}" value="{{ value }}">
+                    {% endfor %}
+                </form>
+            </div>
         </div>
     </div>
 
@@ -138,7 +147,7 @@
                     <h3><a href="/product/{{ product.clothing_id }}?category={{ category|lower }}#sorting-bar">ID: {{ product.clothing_id }}</a></h3>
                     <p>{{ product.class_name }}</p>
                     <p>Рейтинг: {{ "%.2f"|format(product.rating) if product.rating is not none else 'Немає' }}</p>
-                    <p>Відгуків: {{ product.positive_feedback_count }}</p>
+                    <p><a href="/product/{{ product.clothing_id }}#reviews-section">Відгуків: {{ product.positive_feedback_count }}</a></p>
                 </div>
             {% endfor %}
         </div>

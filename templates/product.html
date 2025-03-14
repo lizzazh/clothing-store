@@ -13,20 +13,29 @@
 <body>
     <div class="store-title">Elizabeth’s Elegance</div>
 
+    <!-- Контейнер для вирівнювання -->
     <div class="nav-and-search">
         {% if request.query_params.get('category') %}
             <a href="/category/{{ request.query_params.get('category') }}#sorting-bar" class="back-arrow">← Назад до категорії</a>
         {% else %}
             <a href="/" class="back-arrow">← На головну</a>
         {% endif %}
-        <div class="search-bar">
-            <form method="GET" action="/search">
-                <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
-                <button type="submit">Шукати</button>
-                {% for key, value in request.query_params.items() if key not in ['search'] %}
-                    <input type="hidden" name="{{ key }}" value="{{ value }}">
-                {% endfor %}
-            </form>
+        <div class="search-and-age">
+            <div class="age-recommendation-form">
+                <form method="GET" action="/age-recommendations">
+                    <input type="number" id="age" name="age" min="0" max="120" placeholder="Вік" required>
+                    <button type="submit">Отримати</button>
+                </form>
+            </div>
+            <div class="search-bar">
+                <form method="GET" action="/search">
+                    <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
+                    <button type="submit">Шукати</button>
+                    {% for key, value in request.query_params.items() if key not in ['search'] %}
+                        <input type="hidden" name="{{ key }}" value="{{ value }}">
+                    {% endfor %}
+                </form>
+            </div>
         </div>
     </div>
 
@@ -54,6 +63,33 @@
             <p class="feedback"><strong>Відгуків:</strong> {{ product.positive_feedback_count if product.positive_feedback_count is not none else 0 }}</p>
         </div>
     </div>
+
+    <section class="top-products">
+        <h2>Схожі товари</h2>
+        <div class="arrow-controls">
+            <button onclick="scrollSlider('similar', 'left')">←</button>
+            <button onclick="scrollSlider('similar', 'right')">→</button>
+        </div>
+        <div class="product-slider" id="similar">
+            {% if similar_products %}
+                    {% for similar in similar_products %}
+                        <a href="/product/{{ similar.clothing_id }}">
+                            <div class="product">
+                                <img src="/static/1.jpg" alt="{{ similar.title }}" class="product-image">
+                                <h3><a href="/product/{{ similar.clothing_id }}#sorting-bar">ID: {{ similar.clothing_id }}</a></h3>
+                                <div class="product-info">
+                                    <p>Категорія: {{ similar.class_name if similar.class_name else 'Невідомо' }}</p>
+                                    <p>Рейтинг: {{ "{:.1f}".format(similar.rating if similar.rating is not none else 0) }}</p>
+                                    <p><a href="/product/{{ similar.clothing_id }}#reviews-section">Відгуків: {{ similar.positive_feedback_count if similar.positive_feedback_count is not none else 0 }}</a></p>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                {% else %}
+                <p>Схожих товарів не знайдено.</p>
+            {% endif %}
+        </div>
+    </section>
 
     <div class="reviews-section" id="reviews-section">
         <h3>Відгуки</h3>
@@ -191,6 +227,21 @@
         {% endif %}
     </div>
 
+    <script>
+        function scrollSlider(id, direction) {
+            const slider = document.getElementById(id);
+            if (!slider) return;
+    
+            const product = slider.querySelector('.product');
+            const productWidth = product ? product.offsetWidth + 15 : slider.offsetWidth / 5;
+    
+            slider.scrollBy({
+                left: direction === 'left' ? -productWidth : productWidth,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+
     <!-- Підключення noUiSlider -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
     <script>
@@ -203,7 +254,7 @@
             if (ageSlider) {
                 noUiSlider.create(ageSlider, {
                     start: [parseInt(minAgeValue.value) || 0, parseInt(maxAgeValue.value) || 99],
-                    connect: true, // Додає зелений відрізок між ручками
+                    connect: true,
                     range: {
                         'min': 0,
                         'max': maxAge
@@ -221,47 +272,63 @@
                     }
                 });
 
-                // Синхронізація слайдера з полями введення при оновленні
+                // Оновлення значень полів при русі повзунка
                 ageSlider.noUiSlider.on('update', function(values, handle) {
                     const minAge = Math.round(values[0]);
                     const maxAge = Math.round(values[1]);
-                    if (handle === 0) {
-                        minAgeValue.value = minAge;
-                    } else {
-                        maxAgeValue.value = maxAge;
-                    }
-                    // Перевірка, щоб мінімальне значення не перевищувало максимальне
-                    if (parseInt(minAgeValue.value) > parseInt(maxAgeValue.value)) {
-                        if (handle === 0) {
-                            maxAgeValue.value = minAge;
-                            ageSlider.noUiSlider.set([minAge, minAge]);
-                        } else {
-                            minAgeValue.value = maxAge;
-                            ageSlider.noUiSlider.set([maxAge, maxAge]);
-                        }
-                    }
+                    minAgeValue.value = minAge;
+                    maxAgeValue.value = maxAge;
                 });
 
-                // Синхронізація полів введення зі слайдером при зміні
+                // Обробка завершення переміщення повзунка
+                ageSlider.noUiSlider.on('end', function() {
+                    minAgeValue.form.submit(); // Надсилаємо форму після завершення переміщення
+                });
+
+                // Обробка ручного введення для min_age_value
                 minAgeValue.addEventListener('change', function() {
                     let value = parseInt(this.value) || 0;
                     if (value < 0) value = 0;
                     if (value > maxAge) value = maxAge;
                     if (value > parseInt(maxAgeValue.value)) value = parseInt(maxAgeValue.value);
-                    ageSlider.noUiSlider.set([value, null]);
+                    ageSlider.noUiSlider.set([value, null]); // Оновлюємо повзунок
                 });
 
+                // Обробка ручного введення для max_age_value
                 maxAgeValue.addEventListener('change', function() {
                     let value = parseInt(this.value) || maxAge;
                     if (value < 0) value = 0;
                     if (value > maxAge) value = maxAge;
                     if (value < parseInt(minAgeValue.value)) value = parseInt(minAgeValue.value);
-                    ageSlider.noUiSlider.set([null, value]);
+                    ageSlider.noUiSlider.set([null, value]); // Оновлюємо повзунок
                 });
 
-                // Сабміт форми при завершенні перетягування
-                ageSlider.noUiSlider.on('end', function() {
-                    minAgeValue.form.submit();
+                // Надсилання форми при натисканні Enter або втраті фокусу
+                [minAgeValue, maxAgeValue].forEach(input => {
+                    input.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            let minValue = parseInt(minAgeValue.value) || 0;
+                            let maxValue = parseInt(maxAgeValue.value) || maxAge;
+                            if (minValue > maxValue) {
+                                minAgeValue.value = maxValue;
+                                minValue = maxValue;
+                            }
+                            ageSlider.noUiSlider.set([minValue, maxValue]);
+                            this.form.submit(); // Надсилаємо форму
+                        }
+                    });
+
+                    input.addEventListener('blur', function() {
+                        let minValue = parseInt(minAgeValue.value) || 0;
+                        let maxValue = parseInt(maxAgeValue.value) || maxAge;
+                        if (minValue > maxValue) {
+                            minAgeValue.value = maxValue;
+                            minValue = maxValue;
+                        }
+                        ageSlider.noUiSlider.set([minValue, maxValue]);
+                        this.form.submit(); // Надсилаємо форму при втраті фокусу
+                    });
                 });
             } else {
                 console.error('Element with id "age-slider" not found!');
