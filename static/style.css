@@ -645,3 +645,22 @@ form button:hover {
     color: #2E8B57; /* Темніший смарагдовий при наведенні */
     text-decoration: underline;
 }
+.product {
+    border: 2px solid #2E8B57;
+    padding: 20px;
+    background: #FDF5E6;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(46, 139, 87, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product img {
+    width: 300px; /* Фіксована ширина */
+    height: 500px; /* Фіксована висота */
+    object-fit: cover; /* Масштабування без спотворення */
+    border-radius: 5px;
+    border: 1px solid #2E8B57;
+    display: block;
+    margin: 0 auto 10px;
+}

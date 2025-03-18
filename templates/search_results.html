@@ -123,7 +123,7 @@
                 <div class="product-list">
                     {% for product in products %}
                         <div class="product">
-                            <img src="/static/1.jpg" alt="{{ product.class_name }}" class="product-image" onerror="this.src='https://via.placeholder.com/150.jpg'">
+                            <img src="/static/{{ product.clothing_id }}.jpg" alt="{{ product.title if product.title else product.class_name if product.class_name else 'Невідомо' }}" onerror="this.src='https://via.placeholder.com/150.jpg'">
                             <h3><a href="/product/{{ product.clothing_id }}#sorting-bar">ID: {{ product.clothing_id }}</a></h3>
                             <p>{{ product.class_name }}</p>
                             <p>Рейтинг: {{ "%.2f"|format(product.rating) if product.rating is not none else 'Немає' }}</p>

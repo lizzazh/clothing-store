@@ -53,7 +53,7 @@
 
     <div class="product-container">
         <div class="product-image-large">
-            <img src="/static/1.jpg" alt="{{ product.class_name if product.class_name else 'Невідомо' }}" onerror="this.src='https://via.placeholder.com/500.jpg'">
+            <img src="/static/{{ product.clothing_id }}.jpg" alt="{{ product.title if product.title else product.class_name if product.class_name else 'Невідомо' }}" onerror="this.src='https://via.placeholder.com/150.jpg'">
         </div>
         <div class="product-details">
             <p><strong>Категорія:</strong> {{ product.class_name if product.class_name else 'Невідомо' }}</p>
@@ -75,7 +75,7 @@
                     {% for similar in similar_products %}
                         <a href="/product/{{ similar.clothing_id }}">
                             <div class="product">
-                                <img src="/static/1.jpg" alt="{{ similar.title }}" class="product-image">
+                                <img src="/static/{{ similar.clothing_id }}.jpg" alt="{{ product.title if product.title else product.class_name if product.class_name else 'Невідомо' }}" onerror="this.src='https://via.placeholder.com/150.jpg'">
                                 <h3><a href="/product/{{ similar.clothing_id }}#sorting-bar">ID: {{ similar.clothing_id }}</a></h3>
                                 <div class="product-info">
                                     <p>Категорія: {{ similar.class_name if similar.class_name else 'Невідомо' }}</p>
