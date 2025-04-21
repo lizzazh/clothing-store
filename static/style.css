@@ -54,7 +54,6 @@ h1, h2, h3 {
     box-shadow: 0 2px 4px rgba(46, 139, 87, 0.2); /* Смарагдова тінь */
 }
 
-/* Стиль для вирівнювання "На головну", пошукової панелі та блоку рекомендацій за віком */
 .nav-and-search {
     display: flex;
     align-items: center;
@@ -64,6 +63,53 @@ h1, h2, h3 {
     gap: 15px;
 }
 
+.nav-and-search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Вирівнюємо всі елементи по лівій стороні */
+    margin: 20px 0;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Контейнер для навігаційних посилань */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0; /* Кнопки "На головну" і "Переглянути статистику" впритул */
+}
+
+/* Стиль для "На головну" і кнопки статистики */
+.back-arrow, .stats-button {
+    font-size: 24px;
+    color: #2E8B57;
+    text-decoration: none;
+}
+
+.back-arrow {
+    display: flex;
+    align-items: center;
+}
+
+.back-arrow::before {
+    content: "←";
+    margin-right: 5px;
+}
+
+.stats-button {
+    font-size: 18px;
+    padding: 8px 16px;
+    border: 2px solid #2E8B57;
+    border-radius: 5px;
+    background-color: #FDF5E6;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+.stats-button:hover {
+    background-color: #2E8B57;
+    color: #FFF;
+}
 /* Контейнер для пошуку та блоку віку */
 .search-and-age {
     display: flex;
@@ -663,4 +709,88 @@ form button:hover {
     border: 1px solid #2E8B57;
     display: block;
     margin: 0 auto 10px;
+}
+
+/* Стилі для графіків */
+.stats-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #FDF5E6; /* Світліший бежевий фон */
+    border-radius: 10px;
+    border: 2px solid #2E8B57; /* Смарагдова обводка */
+    box-shadow: 0 4px 6px rgba(46, 139, 87, 0.1); /* Смарагдова тінь */
+}
+
+.chart-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.chart-controls select {
+    padding: 10px 15px;
+    border: 2px solid #2E8B57; /* Смарагдова обводка */
+    border-radius: 25px; /* Як у .sort-options select */
+    background: #ffffff;
+    color: #333;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.chart-controls select:focus {
+    border-color: #224B40; /* Темніший смарагдовий */
+    box-shadow: 0 0 5px rgba(46, 139, 87, 0.5); /* Смарагдова тінь */
+    outline: none;
+}
+
+.chart-controls select:hover {
+    box-shadow: 0 0 5px rgba(46, 139, 87, 0.5); /* Смарагдова тінь */
+}
+
+.chart-controls button {
+    padding: 10px 15px;
+    border: 2px solid #2E8B57; /* Смарагдова обводка */
+    border-radius: 25px;
+    background: #2E8B57; /* Смарагдовий фон */
+    color: #FDF5E6; /* Світліший бежевий текст */
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s, border-color 0.3s, box-shadow 0.3s;
+    font-size: 16px;
+}
+
+.chart-controls button:hover {
+    background: #224B40; /*ਰ: #224B40 /* Темніший смарагдовий при наведенні */
+    transform: scale(1.05);
+    box-shadow: 0 0 5px rgba(46, 139, 87, 0.5); /* Смарагдова тінь */
+}
+
+.chart-section {
+    margin-bottom: 40px;
+}
+
+.chart-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 480px) {
+    .chart-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    .chart-controls select, .chart-controls button {
+        width: 100%;
+        max-width: 300px;
+        margin-bottom: 10px;
+    }
 }

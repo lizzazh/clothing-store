@@ -28,10 +28,22 @@
             flex-wrap: wrap;
             gap: 15px;
         }
-        .back-arrow {
+        .back-arrow, .stats-button {
             font-size: 24px;
             color: #2E8B57;
             text-decoration: none;
+        }
+        .stats-button {
+            font-size: 18px;
+            padding: 8px 16px;
+            border: 2px solid #2E8B57;
+            border-radius: 5px;
+            background-color: #FDF5E6;
+            transition: background-color 0.3s;
+        }
+        .stats-button:hover {
+            background-color: #2E8B57;
+            color: #FFF;
         }
         /* Адаптивність */
         @media (max-width: 480px) {
@@ -43,7 +55,7 @@
                 width: 100%;
                 text-align: center;
             }
-            .back-arrow {
+            .back-arrow, .stats-button {
                 text-align: center;
             }
         }
@@ -58,8 +70,8 @@
     </header>
     
     <div class="nav-and-search">
-        <!-- Порожнє місце для узгодженості -->
-        <div class="back-arrow-placeholder"></div>
+        <!-- Кнопка статистики -->
+        <a href="/category-stats" class="stats-button">Переглянути статистику</a>
     
         <!-- Контейнер для пошуку та блоку віку -->
         <div class="search-and-age">
@@ -350,5 +362,5 @@
     </script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91eb9b949944749c',t:'MTc0MTcwMTkzNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92031d233fc30202',t:'MTc0MTk0ODQxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'933e008e9a6ab036',t:'MTc0NTI1MDI2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
