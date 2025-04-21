@@ -9,19 +9,27 @@ from models import Product
 from db import SessionLocal
 from pagination_utils import get_items_per_page, generate_pagination, adjust_page_and_offset
 import logging
+import time
+import webbrowser
 from math import ceil
 
-# Налаштування логування
+# Налаштування логування для відстеження роботи додатку
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Увімкнення логування SQL-запитів
+# Увімкнення логування SQL-запитів для дебагінгу бази даних
 logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
+# Ініціалізація FastAPI-додатку
 app = FastAPI()
+
+# Монтування статичних файлів (CSS, JavaScript тощо)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Налаштування Jinja2 для рендерингу HTML-шаблонів
 env = Environment(loader=FileSystemLoader("templates"))
 
+# Мідлвар для встановлення мови на основі заголовка Accept-Language
 @app.middleware("http")
 async def set_language(request: Request, call_next):
     language = request.headers.get("accept-language", "uk-UA")
@@ -29,6 +37,7 @@ async def set_language(request: Request, call_next):
     response.headers["Content-Language"] = language
     return response
 
+# Функція для отримання сесії бази даних
 def get_db():
     db = SessionLocal()
     try:
@@ -36,6 +45,7 @@ def get_db():
     finally:
         db.close()
 
+# Головна сторінка з фільтрами, сортуванням і пагінацією
 @app.get("/", response_class=HTMLResponse)
 async def get_home(
     request: Request,
@@ -54,12 +64,13 @@ async def get_home(
     logger.info(f"Requested items_per_page: {items_per_page}, items_per_page_value: {items_per_page_value}")
 
     try:
+        # Топ-5 товарів за середнім рейтингом
         top_by_average_score = (
             db.query(
                 Product.clothing_id,
                 Product.class_name,
                 func.avg(Product.rating).label("average_rating"),
-                func.count(Product.clothing_id).label("review_count"),  # Змінено на count
+                func.count(Product.clothing_id).label("review_count"),
             )
             .group_by(Product.clothing_id, Product.class_name)
             .having(func.avg(Product.rating) >= 3.0)
@@ -68,12 +79,13 @@ async def get_home(
             .all()
         )
 
+        # Топ-5 товарів за кількістю відгуків
         top_by_reviews = (
             db.query(
                 Product.clothing_id,
                 Product.class_name,
                 func.avg(Product.rating).label("average_rating"),
-                func.count(Product.clothing_id).label("review_count"),  # Змінено на count
+                func.count(Product.clothing_id).label("review_count"),
             )
             .group_by(Product.clothing_id, Product.class_name)
             .having(func.avg(Product.rating) >= 3.0)
@@ -82,6 +94,7 @@ async def get_home(
             .all()
         )
 
+        # Базовий запит для продуктів із групуванням
         base_query = db.query(
             Product.clothing_id,
             func.max(Product.class_name).label("class_name"),
@@ -89,9 +102,10 @@ async def get_home(
             func.max(Product.division_name).label("division_name"),
             func.max(Product.department_name).label("department_name"),
             func.avg(Product.rating).label("rating"),
-            func.count(Product.clothing_id).label("positive_feedback_count"),  # Змінено на count
+            func.count(Product.clothing_id).label("positive_feedback_count"),
         ).group_by(Product.clothing_id)
 
+        # Фільтри за параметрами
         if division:
             base_query = base_query.having(func.max(Product.division_name).in_(division))
         if department:
@@ -103,6 +117,7 @@ async def get_home(
         if max_rating is not None:
             base_query = base_query.having(func.avg(Product.rating) <= max_rating)
 
+        # Сортування
         sort_options = {
             "rating_desc": func.avg(Product.rating).desc(),
             "rating_asc": func.avg(Product.rating).asc(),
@@ -114,16 +129,19 @@ async def get_home(
         order_by_clause = sort_options.get(sort_by, Product.clothing_id.asc())
         base_query = base_query.order_by(order_by_clause)
 
+        # Пагінація
         total_products = base_query.count()
         page, offset = adjust_page_and_offset(page, total_products, items_per_page_value)
         products = base_query.offset(offset).limit(items_per_page_value).all()
 
+        # Унікальні категорії, підрозділи, департаменти
         categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
         divisions = [d[0] for d in db.query(Product.division_name).distinct().all() if d[0]]
         departments = [d[0] for d in db.query(Product.department_name).distinct().all() if d[0]]
 
         pagination_pages = generate_pagination(page, total_products, items_per_page_value)
 
+        # Рендеринг шаблону
         template = env.get_template("index.html")
         html_content = template.render(
             request=request,
@@ -146,9 +164,10 @@ async def get_home(
         return HTMLResponse(content=html_content)
 
     except Exception as e:
-        logger.error(f"Error: {str(e)}")
+        logger.error(f"Error in get_home: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
 
+# Сторінка категорії з фільтрами та пагінацією
 @app.get("/category/{category}", response_class=HTMLResponse)
 async def get_category(
     request: Request,
@@ -174,7 +193,7 @@ async def get_category(
             func.max(Product.division_name).label("division_name"),
             func.max(Product.department_name).label("department_name"),
             func.avg(Product.rating).label("rating"),
-            func.count(Product.clothing_id).label("positive_feedback_count"),  # Змінено на count
+            func.count(Product.clothing_id).label("positive_feedback_count"),
         ).group_by(Product.clothing_id).having(func.lower(func.max(Product.class_name)).like(func.lower(category)))
 
         sort_options = {
@@ -211,11 +230,10 @@ async def get_category(
         return HTMLResponse(content=html_content)
 
     except Exception as e:
-        logger.error(f"Error in category route: {str(e)}")
+        logger.error(f"Error in get_category: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
 
-import time
-
+# Сторінка товару з відгуками та схожими товарами
 @app.get("/product/{clothing_id}", response_class=HTMLResponse)
 async def get_product(
     request: Request,
@@ -237,7 +255,6 @@ async def get_product(
         start_time = time.time()
         logger.info(f"Starting product query for clothing_id: {clothing_id}")
 
-        # Отримуємо товар за ID
         product = db.query(
             Product.clothing_id,
             func.max(Product.class_name).label("class_name"),
@@ -251,14 +268,13 @@ async def get_product(
         if not product:
             raise HTTPException(status_code=404, detail="Товар не знайдено")
 
-        # Схожі товари (виправлено дублювання)
         start_time = time.time()
         similar_products = db.query(
             Product.clothing_id,
             func.max(Product.class_name).label("class_name"),
             func.max(Product.title).label("title"),
             func.avg(Product.rating).label("rating"),
-            func.count(Product.clothing_id).label("positive_feedback_count")  # Змінено з func.sum на func.count
+            func.count(Product.clothing_id).label("positive_feedback_count")
         ).filter(
             Product.class_name == product.class_name,
             Product.clothing_id != clothing_id
@@ -269,7 +285,6 @@ async def get_product(
         ).limit(7).all()
         logger.info(f"Similar products query took {time.time() - start_time:.2f} seconds")
 
-        # Скидання фільтрів
         if reset:
             review_sort_by = None
             review_rating = None
@@ -293,7 +308,6 @@ async def get_product(
         if max_age and max_age.strip():
             max_age_int = int(max_age)
 
-        # Фільтрація відгуків
         start_time = time.time()
         reviews_query = db.query(Product).filter(Product.clothing_id == clothing_id)
 
@@ -371,9 +385,10 @@ async def get_product(
         return HTMLResponse(content=html_content)
 
     except Exception as e:
-        logger.error(f"Error: {str(e)}")
+        logger.error(f"Error in get_product: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
 
+# Пошук товарів
 @app.get("/search", response_class=HTMLResponse)
 async def get_search_results(
     request: Request,
@@ -394,37 +409,30 @@ async def get_search_results(
             func.max(Product.division_name).label("division_name"),
             func.max(Product.department_name).label("department_name"),
             func.avg(Product.rating).label("rating"),
-            func.count(Product.clothing_id).label("positive_feedback_count"),  # Змінено на count
+            func.count(Product.clothing_id).label("positive_feedback_count"),
         ).group_by(Product.clothing_id)
 
         search_lower = search.lower()
         search_str = f"%{search}%"
 
-        # Отримуємо всі унікальні категорії з бази даних
         all_categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
 
-        # Перевіряємо, чи введений рядок є числом або частиною числа
         if search.isdigit():
-            # Конвертуємо search у рядок для пошуку за наявністю цифр
             search_pattern = f"%{search}%"
             base_query = base_query.having(func.cast(Product.clothing_id, String).ilike(search_pattern))
         else:
-            if len(search) == 1:  # Якщо введено одну літеру
-                # Фільтруємо категорії, які починаються на цю літеру
+            if len(search) == 1:
                 matching_categories = [cat for cat in all_categories if cat.lower().startswith(search_lower)]
                 if matching_categories:
                     category_conditions = [func.max(Product.class_name).ilike(f"{cat}%") for cat in matching_categories]
                     base_query = base_query.having(or_(*category_conditions))
                 else:
-                    # Використовуємо умову, сумісну з SQL Server
                     base_query = base_query.having(literal_column("0") == 1)
             else:
-                # Перевіряємо, чи це повна назва категорії
                 if search_lower in [cat.lower() for cat in all_categories]:
                     exact_category = next(cat for cat in all_categories if cat.lower() == search_lower)
                     base_query = base_query.having(func.max(Product.class_name).ilike(f"{exact_category}%"))
                 else:
-                    # Для часткових збігів шукаємо по division_name, department_name, class_name
                     base_query = base_query.having(
                         or_(
                             func.max(Product.division_name).ilike(search_str),
@@ -472,7 +480,7 @@ async def get_search_results(
         return HTMLResponse(content=html_content)
 
     except Exception as e:
-        logger.error(f"Error in search: {str(e)}")
+        logger.error(f"Error in get_search_results: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
 
 # Рекомендації за віком
@@ -483,11 +491,9 @@ async def age_recommendations(
     db: Session = Depends(get_db)
 ):
     try:
-        # Визначаємо віковий діапазон ±5 років
         min_age = age - 5
         max_age = age + 5
 
-        # CTE для підрахунку відгуків у віковому діапазоні
         age_specific_cte = (
             db.query(Product.clothing_id, func.count(Product.clothing_id).label("age_specific_count"))
             .filter(Product.age.between(min_age, max_age))
@@ -495,22 +501,19 @@ async def age_recommendations(
             .cte("age_specific")
         )
 
-        # Основний запит без фільтру по віку
         products_query = (
             db.query(
                 Product.clothing_id,
                 func.max(Product.class_name).label("class_name"),
                 func.avg(Product.rating).label("rating"),
-                func.count(Product.clothing_id).label("positive_feedback_count"),  # Загальна кількість відгуків
-                func.coalesce(age_specific_cte.c.age_specific_count, 0).label("age_specific_feedback_count")  # Відгуки у віковому діапазоні
+                func.count(Product.clothing_id).label("positive_feedback_count"),
+                func.coalesce(age_specific_cte.c.age_specific_count, 0).label("age_specific_feedback_count")
             )
             .outerjoin(age_specific_cte, Product.clothing_id == age_specific_cte.c.clothing_id)
-            # Видаляємо .filter(Product.age.between(min_age, max_age)) звідси
             .group_by(Product.clothing_id, age_specific_cte.c.age_specific_count)
             .order_by(func.coalesce(age_specific_cte.c.age_specific_count, 0).desc(), func.avg(Product.rating).desc())
         )
 
-        # Обмежуємо до продуктів, які мають хоча б один відгук у віковому діапазоні
         products = (
             products_query
             .having(func.coalesce(age_specific_cte.c.age_specific_count, 0) > 0)
@@ -532,39 +535,80 @@ async def age_recommendations(
         logger.error(f"Error in age_recommendations: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
 
-# Сторінка статистики (для гістограми популярності категорій)
+# Сторінка статистики категорій із графіками
 @app.get("/category-stats", response_class=HTMLResponse)
 async def category_stats(
     request: Request,
     db: Session = Depends(get_db)
 ):
     try:
-        # Дані для гістограми: кількість товарів у кожній категорії
-        category_stats = (
+        # Отримуємо всі категорії
+        categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
+        categories.sort()
+
+        # Кількість товарів за категоріями
+        item_counts_query = (
             db.query(
                 Product.class_name,
-                func.count(Product.clothing_id).label("item_count")
+                func.count(func.distinct(Product.clothing_id)).label("item_count")
             )
             .group_by(Product.class_name)
+            .order_by(Product.class_name)
             .all()
         )
-        categories_list = [stat.class_name for stat in category_stats]
-        item_counts = [stat.item_count for stat in category_stats]
+        item_counts = [0] * len(categories)
+        for cat, count in item_counts_query:
+            if cat in categories:
+                item_counts[categories.index(cat)] = count
 
-        categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
+        # Кількість позитивних відгуків за категоріями (recommended_ind = 1)
+        feedback_counts_query = (
+            db.query(
+                Product.class_name,
+                func.count(Product.clothing_id).label("feedback_count")
+            )
+            .filter(Product.recommended_ind == 1)
+            .group_by(Product.class_name)
+            .order_by(Product.class_name)
+            .all()
+        )
+        feedback_counts = [0] * len(categories)
+        for cat, count in feedback_counts_query:
+            if cat in categories:
+                feedback_counts[categories.index(cat)] = count
+
+        # Середній рейтинг за категоріями
+        avg_ratings_query = (
+            db.query(
+                Product.class_name,
+                func.avg(Product.rating).label("avg_rating")
+            )
+            .group_by(Product.class_name)
+            .order_by(Product.class_name)
+            .all()
+        )
+        avg_ratings = [0.0] * len(categories)
+        for cat, avg in avg_ratings_query:
+            if cat in categories:
+                avg_ratings[categories.index(cat)] = round(float(avg), 2) if avg is not None else 0.0
+
+        # Рендеринг шаблону зі статистикою
         template = env.get_template("category_stats.html")
         html_content = template.render(
             request=request,
             categories=categories,
-            categories_list=categories_list,
-            item_counts=item_counts
+            categories_list=categories,
+            item_counts=item_counts,
+            feedback_counts=feedback_counts,
+            avg_ratings=avg_ratings,
         )
         return HTMLResponse(content=html_content)
 
     except Exception as e:
         logger.error(f"Error in category_stats: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
-    
+
+# Дебаг-ендпоінт для перевірки кількості продуктів
 @app.get("/debug", response_class=HTMLResponse)
 async def debug(db: Session = Depends(get_db)):
     start_time = time.time()
@@ -572,6 +616,23 @@ async def debug(db: Session = Depends(get_db)):
     end_time = time.time()
     return f"Total products: {total_products}, Query time: {end_time - start_time:.2f} seconds"
 
+# Запуск сервера з автоматичним відкриттям браузера
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Встановлюємо хост і порт
+    host = "0.0.0.0"
+    port = 8000
+    # Виводимо чітке посилання для локального доступу
+    print(f"Starting server at http://127.0.0.1:{port}")
+    print(f"Statistics page available at http://127.0.0.1:{port}/category-stats")
+    # Запускаємо сервер
+    try:
+        # Чекаємо 1 секунду, щоб сервер ініціалізувався
+        time.sleep(1)
+        # Автоматично відкриваємо браузер зі сторінкою статистики
+        webbrowser.open(f"http://127.0.0.1:{port}/category-stats")
+        # Запускаємо uvicorn із режимом reload для розробки
+        uvicorn.run(app, host=host, port=port, reload=True)
+    except Exception as e:
+        print(f"Failed to start server: {str(e)}")
+        logger.error(f"Server startup error: {str(e)}")

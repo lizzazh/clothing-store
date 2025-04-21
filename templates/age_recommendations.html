@@ -17,22 +17,6 @@
             border-bottom: 2px solid #2E8B57;
             background-color: #FDF5E6;
         }
-        /* Оновлений стиль для назви категорії з Monsieur La Doulaise */
-        header h1 {
-            font-family: 'Rochester', cursive;
-            font-size: 40px; /* Зменшуємо розмір для тоншого вигляду */
-            font-weight: 100; /* Спроба встановити найлегшу вагу, хоча ефект може бути мінімальним */
-            color: #FFFFFF;
-            text-align: center;
-            margin: 10px 0;
-            background-color: #2E8B57;
-            padding: 10px 0;
-            border-top: 2px solid #FDF5E6;
-            border-bottom: 2px solid #FDF5E6;
-            display: block;
-            opacity: 0.9; /* Додаємо легку прозорість для ефекту тонкості */
-        }
-        /* Стиль для вирівнювання "На головну" і пошукової панелі */
         .nav-and-search {
             display: flex;
             align-items: center;
@@ -45,8 +29,13 @@
             font-size: 24px;
             color: #2E8B57;
             text-decoration: none;
+            display: flex;
+            align-items: center;
         }
-        /* Адаптивність */
+        .back-arrow::before {
+            content: "←";
+            margin-right: 5px;
+        }
         @media (max-width: 480px) {
             .nav-and-search {
                 flex-direction: column;
@@ -59,33 +48,194 @@
                 text-align: center;
             }
         }
-    </style>
-</head>
-<body>
-    <div class="store-title">Elizabeth’s Elegance</div>
-
-    <div class="nav-and-search">
-        <a href="/" class="back-arrow">←На головну</a>
-
-        <div class="search-and-age">
-            <div class="age-recommendation-form">
-                <form method="GET" action="/age-recommendations" id="age-form">
-                    <input type="number" id="age" name="age" min="0" max="120" placeholder="Вік" required>
-                    <button type="submit">Отримати</button>
-                </form>
+              .nav-and-search {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin: 20px 0;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+        
+            /* Контейнер для навігаційних посилань */
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 17px; /* Прибираємо проміжок між "На головну" і "Переглянути статистику" */
+            }
+        
+            /* Стиль для "На головну" і кнопки статистики */
+            .back-arrow, .stats-button {
+                font-size: 24px;
+                color: #2E8B57;
+                text-decoration: none;
+            }
+        
+            .back-arrow {
+                display: flex;
+                align-items: center;
+            }
+        
+            .back-arrow::before {
+                content: "←";
+                margin-right: 5px;
+            }
+        
+            .stats-button {
+                font-size: 18px;
+                padding: 8px 16px;
+                border: 2px solid #2E8B57;
+                border-radius: 5px;
+                background-color: #FDF5E6;
+                transition: background-color 0.3s;
+                cursor: pointer;
+            }
+        
+            .stats-button:hover {
+                background-color: #2E8B57;
+                color: #FFF;
+            }
+        
+            /* Контейнер для пошуку та блоку віку */
+            .search-and-age {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        
+            /* Стиль для обох форм (пошук і рекомендації за віком) */
+            .search-bar form,
+            .age-recommendation-form form {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+        
+            /* Поля введення */
+            .age-recommendation-form input[type="number"] {
+                padding: 10px 15px;
+                border: 2px solid #2E8B57;
+                border-radius: 20px;
+                width: 150px;
+                background: #ffffff;
+                color: #333;
+                font-size: 16px;
+                transition: border-color 0.3s, box-shadow 0.3s;
+                box-sizing: border-box;
+            }
+        
+            .search-bar input {
+                padding: 10px 15px;
+                border: 2px solid #2E8B57;
+                border-radius: 20px;
+                width: 250px;
+                background: #ffffff;
+                color: #333;
+                font-size: 16px;
+                transition: border-color 0.3s, box-shadow 0.3s;
+                box-sizing: border-box;
+            }
+        
+            .search-bar input:focus,
+            .age-recommendation-form input[type="number"]:focus {
+                border-color: #224B40;
+                box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
+                outline: none;
+            }
+        
+            .search-bar input:hover,
+            .age-recommendation-form input[type="number"]:hover {
+                box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
+            }
+        
+            /* Кнопки */
+            .search-bar button,
+            .age-recommendation-form button {
+                padding: 10px 15px;
+                border: 2px solid #2E8B57;
+                border-radius: 20px;
+                background: #2E8B57;
+                color: #FDF5E6;
+                cursor: pointer;
+                transition: background 0.3s, transform 0.2s, border-color 0.3s, box-shadow 0.3s;
+                font-size: 16px;
+                box-sizing: border-box;
+            }
+        
+            .search-bar button:hover,
+            .age-recommendation-form button:hover {
+                background: #224B40;
+                transform: scale(1.05);
+                box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
+            }
+        
+            /* Адаптивність */
+            @media (max-width: 480px) {
+                .nav-and-search {
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .nav-links {
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
+                }
+                .back-arrow, .stats-button {
+                    text-align: center;
+                    width: 100%;
+                    max-width: 200px;
+                }
+                .search-and-age {
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
+                }
+                .search-bar form,
+                .age-recommendation-form form {
+                    width: 100%;
+                    justify-content: center;
+                }
+                .search-bar input,
+                .age-recommendation-form input[type="number"] {
+                    width: 70%;
+                    max-width: 250px;
+                }
+                .search-bar button,
+                .age-recommendation-form button {
+                    width: 30%;
+                    max-width: 100px;
+                }
+            }
+        </style>
+        </head>
+        <body>
+            <div class="store-title">Elizabeth’s Elegance</div>
+        
+            <div class="nav-and-search">
+                <div class="nav-links">
+                    <a href="/" class="back-arrow">На головну</a>
+                    <a href="/category-stats" class="stats-button">Переглянути статистику</a>
+                </div>
+                <div class="search-and-age">
+                    <div class="age-recommendation-form">
+                        <form method="GET" action="/age-recommendations">
+                            <input type="number" id="age" name="age" min="0" max="120" placeholder="Вік" required>
+                            <button type="submit">Отримати</button>
+                        </form>
+                    </div>
+                    <div class="search-bar">
+                        <form method="GET" action="/search">
+                            <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
+                            <button type="submit">Шукати</button>
+                            {% for key, value in request.query_params.items() if key not in ['search'] %}
+                                <input type="hidden" name="{{ key }}" value="{{ value }}">
+                            {% endfor %}
+                        </form>
+                    </div>
+                </div>
             </div>
-
-            <div class="search-bar">
-                <form method="GET" action="/search" id="search-form">
-                    <input type="text" name="search" placeholder="Пошук за назвою">
-                    <button type="submit">Шукати</button>
-                    {% for key, value in request.query_params.items() if key not in ['search'] %}
-                        <input type="hidden" name="{{ key }}" value="{{ value }}">
-                    {% endfor %}
-                </form>
-            </div>
-        </div>
-    </div>
 
     <div class="category-buttons">
         {% for category in categories %}

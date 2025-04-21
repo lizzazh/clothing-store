@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Статистика категорій жіночого одягу в магазині Elizabeth’s Elegance: кількість товарів, позитивні відгуки, середній рейтинг.">
+    <meta name="keywords" content="жіночий одяг, статистика, Elizabeth’s Elegance, відгуки, рейтинг">
+    <title>Статистика категорій - Elizabeth’s Elegance</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .store-title {
+            width: 100%;
+            text-align: center;
+            font-family: 'Great Vibes', cursive;
+            font-size: 48px;
+            color: #2E8B57;
+            margin: 10px 0;
+            padding: 10px 0;
+            border-bottom: 2px solid #2E8B57;
+            background-color: #FDF5E6;
+        }
+        .nav-and-search {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .back-arrow {
+            font-size: 24px;
+            color: #2E8B57;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        .back-arrow::before {
+            content: "←";
+            margin-right: 5px;
+        }
+        @media (max-width: 480px) {
+            .nav-and-search {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-bar {
+                width: 100%;
+            }
+            .back-arrow {
+                text-align: center;
+            }
+        }
+              .nav-and-search {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin: 20px 0;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+        
+            /* Контейнер для навігаційних посилань */
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 17px; /* Прибираємо проміжок між "На головну" і "Переглянути статистику" */
+            }
+        
+            /* Стиль для "На головну" і кнопки статистики */
+            .back-arrow, .stats-button {
+                font-size: 24px;
+                color: #2E8B57;
+                text-decoration: none;
+            }
+        
+            .back-arrow {
+                display: flex;
+                align-items: center;
+            }
+        
+            .back-arrow::before {
+                content: "←";
+                margin-right: 5px;
+            }
+        
+            .stats-button {
+                font-size: 18px;
+                padding: 8px 16px;
+                border: 2px solid #2E8B57;
+                border-radius: 5px;
+                background-color: #FDF5E6;
+                transition: background-color 0.3s;
+                cursor: pointer;
+            }
+        
+            .stats-button:hover {
+                background-color: #2E8B57;
+                color: #FFF;
+            }
+        
+            /* Контейнер для пошуку та блоку віку */
+            .search-and-age {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        
+            /* Стиль для обох форм (пошук і рекомендації за віком) */
+            .search-bar form,
+            .age-recommendation-form form {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+        
+            /* Поля введення */
+            .age-recommendation-form input[type="number"] {
+                padding: 10px 15px;
+                border: 2px solid #2E8B57;
+                border-radius: 20px;
+                width: 150px;
+                background: #ffffff;
+                color: #333;
+                font-size: 16px;
+                transition: border-color 0.3s, box-shadow 0.3s;
+                box-sizing: border-box;
+            }
+        </style>
+        </head>
+        <body>
+            <div class="store-title">Elizabeth’s Elegance</div>
+        
+            <div class="nav-and-search">
+                <div class="nav-links">
+                    <a href="/" class="back-arrow">На головну</a>
+                </div>
+                <div class="search-and-age">
+                    <div class="age-recommendation-form">
+                        <form method="GET" action="/age-recommendations">
+                            <input type="number" id="age" name="age" min="0" max="120" placeholder="Вік" required>
+                            <button type="submit">Отримати</button>
+                        </form>
+                    </div>
+                    <div class="search-bar">
+                        <form method="GET" action="/search">
+                            <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
+                            <button type="submit">Шукати</button>
+                            {% for key, value in request.query_params.items() if key not in ['search'] %}
+                                <input type="hidden" name="{{ key }}" value="{{ value }}">
+                            {% endfor %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+    <div class="category-buttons">
+        {% for category in categories %}
+            <a href="/category/{{ category|lower }}#sorting-bar" class="category-button">
+                <button>{{ category }}</button>
+            </a>
+        {% endfor %}
+    </div>
+
+    <div class="stats-container">
+        <div class="chart-section">
+            <h2>Інтерактивний графік</h2>
+            <div class="chart-controls">
+                <select id="chartType" aria-label="Вибір типу графіку">
+                    <option value="bar">Стовпчикова</option>
+                    <option value="pie">Кругова</option>
+                    <option value="line">Лінійна</option>
+                </select>
+                <select id="dataType" aria-label="Вибір типу даних">
+                    <option value="itemCount">Кількість товарів</option>
+                    <option value="positiveFeedback">Позитивні відгуки</option>
+                    <option value="avgRating">Середній рейтинг</option>
+                </select>
+                <button onclick="updateChart()" aria-label="Оновити графік">Оновити графік</button>
+            </div>
+            <canvas id="interactiveChart" aria-label="Інтерактивний графік статистики категорій"></canvas>
+        </div>
+
+        <div class="chart-section">
+            <h2>Кількість позитивних відгуків</h2>
+            <canvas id="positiveFeedbackChart" aria-label="Графік кількості позитивних відгуків за категоріями"></canvas>
+        </div>
+
+        <div class="chart-section">
+            <h2>Середній рейтинг</h2>
+            <canvas id="avgRatingChart" aria-label="Графік середнього рейтингу за категоріями"></canvas>
+        </div>
+    </div>
+
+    <script>
+        let chartData = null;
+        let interactiveChart, positiveFeedbackChart, avgRatingChart;
+
+        async function fetchChartData() {
+            try {
+                const response = await fetch('/category-stats-data');
+                chartData = await response.json();
+                initializeCharts();
+            } catch (error) {
+                console.error('Помилка завантаження даних:', error);
+                alert('Не вдалося завантажити дані для графіків.');
+            }
+        }
+
+        function initializeCharts() {
+            if (!chartData || !chartData.categories || chartData.categories.length !== chartData.itemCount.length ||
+                chartData.categories.length !== chartData.positiveFeedback.length ||
+                chartData.categories.length !== chartData.avgRating.length) {
+                console.error('Невірні дані для графіків');
+                return;
+            }
+
+            const ctxInteractive = document.getElementById('interactiveChart').getContext('2d');
+            const ctxPositiveFeedback = document.getElementById('positiveFeedbackChart').getContext('2d');
+            const ctxAvgRating = document.getElementById('avgRatingChart').getContext('2d');
+
+            interactiveChart = new Chart(ctxInteractive, {
+                type: 'bar',
+                data: {
+                    labels: chartData.categories,
+                    datasets: [{
+                        label: 'Кількість товарів',
+                        data: chartData.itemCount,
+                        backgroundColor: 'rgba(46, 139, 87, 0.6)',
+                        borderColor: 'rgba(46, 139, 87, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Кількість товарів' } },
+                        x: { title: { display: true, text: 'Категорія' } }
+                    }
+                }
+            });
+
+            positiveFeedbackChart = new Chart(ctxPositiveFeedback, {
+                type: 'bar',
+                data: {
+                    labels: chartData.categories,
+                    datasets: [{
+                        label: 'Позитивні відгуки',
+                        data: chartData.positiveFeedback,
+                        backgroundColor: 'rgba(255, 165, 0, 0.6)',
+                        borderColor: 'rgba(255, 165, 0, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Кількість позитивних відгуків' } },
+                        x: { title: { display: true, text: 'Категорія' } }
+                    }
+                }
+            });
+
+            avgRatingChart = new Chart(ctxAvgRating, {
+                type: 'bar',
+                data: {
+                    labels: chartData.categories,
+                    datasets: [{
+                        label: 'Середній рейтинг',
+                        data: chartData.avgRating,
+                        backgroundColor: 'rgba(0, 128, 128, 0.6)',
+                        borderColor: 'rgba(0, 128, 128, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, max: 5, title: { display: true, text: 'Середній рейтинг' } },
+                        x: { title: { display: true, text: 'Категорія' } }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            const chartType = document.getElementById('chartType').value;
+            const dataType = document.getElementById('dataType').value;
+
+            let dataset, label, color;
+            if (dataType === 'itemCount') {
+                dataset = chartData.itemCount;
+                label = 'Кількість товарів';
+                color = 'rgba(46, 139, 87, 0.6)';
+            } else if (dataType === 'positiveFeedback') {
+                dataset = chartData.positiveFeedback;
+                label = 'Позитивні відгуки';
+                color = 'rgba(255, 165, 0, 0.6)';
+            } else {
+                dataset = chartData.avgRating;
+                label = 'Середній рейтинг';
+                color = 'rgba(0, 128, 128, 0.6)';
+            }
+
+            if (interactiveChart) interactiveChart.destroy();
+
+            const ctxInteractive = document.getElementById('interactiveChart').getContext('2d');
+            interactiveChart = new Chart(ctxInteractive, {
+                type: chartType,
+                data: {
+                    labels: chartData.categories,
+                    datasets: [{
+                        label: label,
+                        data: dataset,
+                        backgroundColor: color,
+                        borderColor: color.replace('0.6', '1'),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: chartType !== 'pie' ? {
+                        y: {
+                            beginAtZero: true,
+                            max: dataType === 'avgRating' ? 5 : undefined,
+                            title: { display: true, text: label }
+                        },
+                        x: { title: { display: true, text: 'Категорія' } }
+                    } : {},
+                    plugins: {
+                        legend: { display: chartType === 'pie' }
+                    }
+                }
+            });
+        }
+
+        window.onload = fetchChartData;
+    </script>
+</body>
+</html>
