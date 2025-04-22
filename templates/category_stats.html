@@ -7,7 +7,7 @@
     <meta name="keywords" content="жіночий одяг, статистика, Elizabeth’s Elegance, відгуки, рейтинг">
     <title>Статистика категорій - Elizabeth’s Elegance</title>
     <link rel="stylesheet" href="/static/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great_Vibes&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .store-title {
@@ -311,13 +311,13 @@
             align-items: center;
         }
 
-        .chart-type, .x-axis-data, .y-axis-data, .filter-data, .sort-data {
+        .chart-type, .x-axis-data, .y-axis-data, .sort-data {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .chart-type select, .x-axis-data select, .y-axis-data select, .filter-data select, .sort-data select {
+        .chart-type select, .x-axis-data select, .y-axis-data select, .sort-data select {
             padding: 8px;
             border: 2px solid #2E8B57;
             border-radius: 5px;
@@ -370,11 +370,11 @@
                 flex-direction: column;
                 align-items: center;
             }
-            .chart-type, .x-axis-data, .y-axis-data, .filter-data, .sort-data {
+            .chart-type, .x-axis-data, .y-axis-data, .sort-data {
                 width: 100%;
                 justify-content: center;
             }
-            .chart-type select, .x-axis-data select, .y-axis-data select, .filter-data select, .sort-data select {
+            .chart-type select, .x-axis-data select, .y-axis-data select, .sort-data select {
                 width: 100%;
                 max-width: 300px;
             }
@@ -473,8 +473,6 @@
                         </select>
                     </div>
 
-                   
-
                     <!-- Кнопка для оновлення графіку -->
                     <button onclick="updateChart()" aria-label="Оновити графік">Оновити графік</button>
 
@@ -572,38 +570,6 @@
             });
         }
 
-        function applyFilter(data) {
-            const filter = document.getElementById('filter').value;
-            if (filter === 'none') return data;
-
-            let filteredData = {
-                categories: [],
-                itemCount: [],
-                positiveFeedback: [],
-                totalReviews: [],
-                positiveFeedbackPercentage: [],
-                avgRating: [],
-                avgPrice: data.avgPrice ? [] : undefined,
-                salesCount: data.salesCount ? [] : undefined
-            };
-
-            for (let i = 0; i < data.categories.length; i++) {
-                if (filter === 'ratingAbove4' && data.avgRating[i] <= 4.0) continue;
-                if (filter === 'salesAbove100' && (!data.salesCount || data.salesCount[i] <= 100)) continue;
-
-                filteredData.categories.push(data.categories[i]);
-                filteredData.itemCount.push(data.itemCount[i]);
-                filteredData.positiveFeedback.push(data.positiveFeedback[i]);
-                filteredData.totalReviews.push(data.totalReviews[i]);
-                filteredData.positiveFeedbackPercentage.push(data.positiveFeedbackPercentage[i]);
-                filteredData.avgRating.push(data.avgRating[i]);
-                if (data.avgPrice) filteredData.avgPrice.push(data.avgPrice[i]);
-                if (data.salesCount) filteredData.salesCount.push(data.salesCount[i]);
-            }
-
-            return filteredData;
-        }
-
         function applySorting(data) {
             const sort = document.getElementById('sort').value;
             const yAxis = document.getElementById('yAxis').value;
@@ -659,9 +625,8 @@
             const xAxis = document.getElementById('xAxis').value;
             const yAxis = document.getElementById('yAxis').value;
 
-            // Застосовуємо фільтр і сортування
-            let filteredData = applyFilter(chartData);
-            filteredData = applySorting(filteredData);
+            // Застосовуємо лише сортування
+            let filteredData = applySorting(chartData);
 
             // Визначаємо мітки (labels) для осі X
             let labels;
@@ -902,5 +867,6 @@
 
         window.onload = fetchChartData;
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9345a17c48c07bb1',t:'MTc0NTMzMDI1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9345a17c48c07bb1',t:'MTc0NTMzMDI1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9345d4fea80553b6',t:'MTc0NTMzMjM2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
 </html>
