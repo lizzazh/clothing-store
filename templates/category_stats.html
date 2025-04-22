@@ -52,110 +52,276 @@
                 text-align: center;
             }
         }
-              .nav-and-search {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin: 20px 0;
-                flex-wrap: wrap;
-                gap: 15px;
-            }
+        .nav-and-search {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
         
-            /* Контейнер для навігаційних посилань */
+        /* Контейнер для навігаційних посилань */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 17px; /* Прибираємо проміжок між "На головну" і "Переглянути статистику" */
+        }
+        
+        /* Стиль для "На головну" і кнопки статистики */
+        .back-arrow, .stats-button {
+            font-size: 24px;
+            color: #2E8B57;
+            text-decoration: none;
+        }
+        
+        .back-arrow {
+            display: flex;
+            align-items: center;
+        }
+        
+        .back-arrow::before {
+            content: "←";
+            margin-right: 5px;
+        }
+        
+        .stats-button {
+            font-size: 18px;
+            padding: 8px 16px;
+            border: 2px solid #2E8B57;
+            border-radius: 5px;
+            background-color: #FDF5E6;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        
+        .stats-button:hover {
+            background-color: #2E8B57;
+            color: #FFF;
+        }
+        
+        /* Контейнер для пошуку та блоку віку */
+        .search-and-age {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        /* Стиль для обох форм (пошук і рекомендації за віком) */
+        .search-bar form,
+        .age-recommendation-form form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Поля введення */
+        .age-recommendation-form input[type="number"] {
+            padding: 10px 15px;
+            border: 2px solid #2E8B57;
+            border-radius: 20px;
+            width: 150px;
+            background: #ffffff;
+            color: #333;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .search-bar input {
+            padding: 10px 15px;
+            border: 2px solid #2E8B57;
+            border-radius: 20px;
+            width: 250px;
+            background: #ffffff;
+            color: #333;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .search-bar input:focus,
+        .age-recommendation-form input[type="number"]:focus {
+            border-color: #224B40;
+            box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
+            outline: none;
+        }
+        
+        .search-bar input:hover,
+        .age-recommendation-form input[type="number"]:hover {
+            box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
+        }
+        
+        /* Кнопки */
+        .search-bar button,
+        .age-recommendation-form button {
+            padding: 10px 15px;
+            border: 2px solid #2E8B57;
+            border-radius: 20px;
+            background: #2E8B57;
+            color: #FDF5E6;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s, border-color 0.3s, box-shadow 0.3s;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .search-bar button:hover,
+        .age-recommendation-form button:hover {
+            background: #224B40;
+            transform: scale(1.05);
+            box-shadow: 0 0 5px rgba(46, 139, 87, 0.5);
+        }
+        
+        /* Адаптивність */
+        @media (max-width: 480px) {
+            .nav-and-search {
+                flex-direction: column;
+                align-items: center;
+            }
             .nav-links {
-                display: flex;
+                flex-direction: column;
                 align-items: center;
-                gap: 17px; /* Прибираємо проміжок між "На головну" і "Переглянути статистику" */
+                width: 100%;
             }
-        
-            /* Стиль для "На головну" і кнопки статистики */
             .back-arrow, .stats-button {
-                font-size: 24px;
-                color: #2E8B57;
-                text-decoration: none;
+                text-align: center;
+                width: 100%;
+                max-width: 200px;
             }
-        
-            .back-arrow {
-                display: flex;
-                align-items: center;
-            }
-        
-            .back-arrow::before {
-                content: "←";
-                margin-right: 5px;
-            }
-        
-            .stats-button {
-                font-size: 18px;
-                padding: 8px 16px;
-                border: 2px solid #2E8B57;
-                border-radius: 5px;
-                background-color: #FDF5E6;
-                transition: background-color 0.3s;
-                cursor: pointer;
-            }
-        
-            .stats-button:hover {
-                background-color: #2E8B57;
-                color: #FFF;
-            }
-        
-            /* Контейнер для пошуку та блоку віку */
             .search-and-age {
-                display: flex;
+                flex-direction: column;
                 align-items: center;
-                gap: 15px;
-                flex-wrap: wrap;
-                justify-content: center;
+                width: 100%;
             }
-        
-            /* Стиль для обох форм (пошук і рекомендації за віком) */
             .search-bar form,
             .age-recommendation-form form {
-                display: flex;
-                align-items: center;
-                gap: 10px;
+                width: 100%;
+                justify-content: center;
             }
-        
-            /* Поля введення */
+            .search-bar input,
             .age-recommendation-form input[type="number"] {
-                padding: 10px 15px;
-                border: 2px solid #2E8B57;
-                border-radius: 20px;
-                width: 150px;
-                background: #ffffff;
-                color: #333;
-                font-size: 16px;
-                transition: border-color 0.3s, box-shadow 0.3s;
-                box-sizing: border-box;
+                width: 70%;
+                max-width: 250px;
             }
-        </style>
-        </head>
-        <body>
-            <div class="store-title">Elizabeth’s Elegance</div>
-        
-            <div class="nav-and-search">
-                <div class="nav-links">
-                    <a href="/" class="back-arrow">На головну</a>
-                </div>
-                <div class="search-and-age">
-                    <div class="age-recommendation-form">
-                        <form method="GET" action="/age-recommendations">
-                            <input type="number" id="age" name="age" min="0" max="120" placeholder="Вік" required>
-                            <button type="submit">Отримати</button>
-                        </form>
-                    </div>
-                    <div class="search-bar">
-                        <form method="GET" action="/search">
-                            <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
-                            <button type="submit">Шукати</button>
-                            {% for key, value in request.query_params.items() if key not in ['search'] %}
-                                <input type="hidden" name="{{ key }}" value="{{ value }}">
-                            {% endfor %}
-                        </form>
-                    </div>
-                </div>
+            .search-bar button,
+            .age-recommendation-form button {
+                width: 30%;
+                max-width: 100px;
+            }
+        }
+
+        /* Стилі для модального вікна */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #FDF5E6; /* Бежевий фон */
+            margin: 5% auto; /* Зменшено верхній відступ для центрування */
+            padding: 60px; /* Збільшено бежеву рамку (padding) */
+            border: 1px solid #888;
+            width: 90%; /* Збільшено ширину модального вікна */
+            max-width: 1200px; /* Максимальна ширина для великих екранів */
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto; /* Центрування зображення */
+        }
+
+        .modal-content h2 {
+            color: #FDF5E6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-content p {
+            color: #333;
+            line-height: 1.6;
+            text-align: justify;
+            font-size: 22px;
+            font-weight: 500; /* Додає трохи товщини тексту */
+        }
+
+        .close {
+            position: absolute;
+            top: 5px; /* Перенесли хрестик трохи вище */
+            right: 30px; /* Перенесли хрестик вправо */
+            color: #aaa;
+            font-size: 40px; /* Збільшено розмір хрестика */
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .pdf-chart {
+            margin: 20px 0;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .pdf-chart img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .pdf-chart:hover {
+            transform: scale(1.05);
+        }
+
+        .pdf-chart h3 {
+            color: #FDF5E6;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="store-title">Elizabeth’s Elegance</div>
+
+    <div class="nav-and-search">
+        <div class="nav-links">
+            <a href="/" class="back-arrow">На головну</a>
+            <a href="/category-stats" class="stats-button">Переглянути статистику</a>
+        </div>
+        <div class="search-and-age">
+            <div class="age-recommendation-form">
+                <form method="GET" action="/age-recommendations">
+                    <input type="number" id="age" name="age" min="0" max="120" placeholder="Вік" required>
+                    <button type="submit">Отримати</button>
+                </form>
             </div>
+            <div class="search-bar">
+                <form method="GET" action="/search">
+                    <input type="text" name="search" value="{{ search or '' }}" placeholder="Пошук за назвою">
+                    <button type="submit">Шукати</button>
+                    {% for key, value in request.query_params.items() if key not in ['search'] %}
+                        <input type="hidden" name="{{ key }}" value="{{ value }}">
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="category-buttons">
         {% for category in categories %}
@@ -166,51 +332,71 @@
     </div>
 
     <div class="stats-container">
+        <!-- Інтерактивний графік -->
         <div class="chart-section">
             <h2>Інтерактивний графік</h2>
             <div class="chart-controls">
-                <select id="chartType" aria-label="Вибір типу графіку">
-                    <option value="bar">Стовпчикова</option>
-                    <option value="pie">Кругова</option>
-                    <option value="line">Лінійна</option>
-                </select>
-                <select id="dataType" aria-label="Вибір типу даних">
-                    <option value="itemCount">Кількість товарів</option>
-                    <option value="positiveFeedback">Позитивні відгуки</option>
-                    <option value="avgRating">Середній рейтинг</option>
-                </select>
+                <div class="chart-type">
+                    <label for="chartType">Тип графіку:</label>
+                    <select id="chartType" aria-label="Вибір типу графіку">
+                        <option value="bar">Стовпчикова</option>
+                        <option value="line">Лінійна</option>
+                    </select>
+                </div>
+                <div class="data-type">
+                    <label>Тип даних:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="itemCount" value="itemCount" checked> Кількість товарів</label>
+                        <label><input type="checkbox" id="positiveFeedback" value="positiveFeedback"> Позитивні відгуки</label>
+                        <label><input type="checkbox" id="avgRating" value="avgRating"> Середній рейтинг</label>
+                    </div>
+                </div>
                 <button onclick="updateChart()" aria-label="Оновити графік">Оновити графік</button>
             </div>
             <canvas id="interactiveChart" aria-label="Інтерактивний графік статистики категорій"></canvas>
         </div>
 
+        <!-- Статичні графіки з PDF -->
         <div class="chart-section">
-            <h2>Кількість позитивних відгуків</h2>
-            <canvas id="positiveFeedbackChart" aria-label="Графік кількості позитивних відгуків за категоріями"></canvas>
+            <h2>Статистика з PDF-звіту</h2>
+            <div class="pdf-charts">
+                {% for chart in charts_info %}
+                <div class="pdf-chart" onclick="openModal('{{ chart.filename }}', '{{ chart.title }}', '{{ chart.description }}')">
+                    <h3>{{ chart.title }}</h3>
+                    <img src="/static/{{ chart.filename }}" alt="{{ chart.title }}" style="max-width: 100%; height: auto;">
+                    <p>{{ chart.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
         </div>
+    </div>
 
-        <div class="chart-section">
-            <h2>Середній рейтинг</h2>
-            <canvas id="avgRatingChart" aria-label="Графік середнього рейтингу за категоріями"></canvas>
+    <!-- Модальне вікно -->
+    <div id="chartModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">×</span>
+            <h2 id="modalTitle"></h2>
+            <img id="modalImage" src="" alt="Chart">
+            <p id="modalDescription"></p>
         </div>
     </div>
 
     <script>
         let chartData = null;
-        let interactiveChart, positiveFeedbackChart, avgRatingChart;
+        let interactiveChart;
 
         async function fetchChartData() {
             try {
                 const response = await fetch('/category-stats-data');
                 chartData = await response.json();
-                initializeCharts();
+                initializeChart();
             } catch (error) {
                 console.error('Помилка завантаження даних:', error);
                 alert('Не вдалося завантажити дані для графіків.');
             }
         }
 
-        function initializeCharts() {
+        function initializeChart() {
             if (!chartData || !chartData.categories || chartData.categories.length !== chartData.itemCount.length ||
                 chartData.categories.length !== chartData.positiveFeedback.length ||
                 chartData.categories.length !== chartData.avgRating.length) {
@@ -219,9 +405,6 @@
             }
 
             const ctxInteractive = document.getElementById('interactiveChart').getContext('2d');
-            const ctxPositiveFeedback = document.getElementById('positiveFeedbackChart').getContext('2d');
-            const ctxAvgRating = document.getElementById('avgRatingChart').getContext('2d');
-
             interactiveChart = new Chart(ctxInteractive, {
                 type: 'bar',
                 data: {
@@ -237,49 +420,7 @@
                 options: {
                     responsive: true,
                     scales: {
-                        y: { beginAtZero: true, title: { display: true, text: 'Кількість товарів' } },
-                        x: { title: { display: true, text: 'Категорія' } }
-                    }
-                }
-            });
-
-            positiveFeedbackChart = new Chart(ctxPositiveFeedback, {
-                type: 'bar',
-                data: {
-                    labels: chartData.categories,
-                    datasets: [{
-                        label: 'Позитивні відгуки',
-                        data: chartData.positiveFeedback,
-                        backgroundColor: 'rgba(255, 165, 0, 0.6)',
-                        borderColor: 'rgba(255, 165, 0, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: { beginAtZero: true, title: { display: true, text: 'Кількість позитивних відгуків' } },
-                        x: { title: { display: true, text: 'Категорія' } }
-                    }
-                }
-            });
-
-            avgRatingChart = new Chart(ctxAvgRating, {
-                type: 'bar',
-                data: {
-                    labels: chartData.categories,
-                    datasets: [{
-                        label: 'Середній рейтинг',
-                        data: chartData.avgRating,
-                        backgroundColor: 'rgba(0, 128, 128, 0.6)',
-                        borderColor: 'rgba(0, 128, 128, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: { beginAtZero: true, max: 5, title: { display: true, text: 'Середній рейтинг' } },
+                        y: { beginAtZero: true, title: { display: true, text: 'Значення' } },
                         x: { title: { display: true, text: 'Категорія' } }
                     }
                 }
@@ -288,21 +429,42 @@
 
         function updateChart() {
             const chartType = document.getElementById('chartType').value;
-            const dataType = document.getElementById('dataType').value;
+            const itemCountChecked = document.getElementById('itemCount').checked;
+            const positiveFeedbackChecked = document.getElementById('positiveFeedback').checked;
+            const avgRatingChecked = document.getElementById('avgRating').checked;
 
-            let dataset, label, color;
-            if (dataType === 'itemCount') {
-                dataset = chartData.itemCount;
-                label = 'Кількість товарів';
-                color = 'rgba(46, 139, 87, 0.6)';
-            } else if (dataType === 'positiveFeedback') {
-                dataset = chartData.positiveFeedback;
-                label = 'Позитивні відгуки';
-                color = 'rgba(255, 165, 0, 0.6)';
-            } else {
-                dataset = chartData.avgRating;
-                label = 'Середній рейтинг';
-                color = 'rgba(0, 128, 128, 0.6)';
+            const datasets = [];
+            if (itemCountChecked) {
+                datasets.push({
+                    label: 'Кількість товарів',
+                    data: chartData.itemCount,
+                    backgroundColor: 'rgba(46, 139, 87, 0.6)',
+                    borderColor: 'rgba(46, 139, 87, 1)',
+                    borderWidth: 1
+                });
+            }
+            if (positiveFeedbackChecked) {
+                datasets.push({
+                    label: 'Позитивні відгуки',
+                    data: chartData.positiveFeedback,
+                    backgroundColor: 'rgba(255, 165, 0, 0.6)',
+                    borderColor: 'rgba(255, 165, 0, 1)',
+                    borderWidth: 1
+                });
+            }
+            if (avgRatingChecked) {
+                datasets.push({
+                    label: 'Середній рейтинг',
+                    data: chartData.avgRating,
+                    backgroundColor: 'rgba(0, 128, 128, 0.6)',
+                    borderColor: 'rgba(0, 128, 128, 1)',
+                    borderWidth: 1
+                });
+            }
+
+            if (datasets.length === 0) {
+                alert('Будь ласка, виберіть хоча б один тип даних.');
+                return;
             }
 
             if (interactiveChart) interactiveChart.destroy();
@@ -312,32 +474,49 @@
                 type: chartType,
                 data: {
                     labels: chartData.categories,
-                    datasets: [{
-                        label: label,
-                        data: dataset,
-                        backgroundColor: color,
-                        borderColor: color.replace('0.6', '1'),
-                        borderWidth: 1
-                    }]
+                    datasets: datasets
                 },
                 options: {
                     responsive: true,
-                    scales: chartType !== 'pie' ? {
+                    scales: {
                         y: {
                             beginAtZero: true,
-                            max: dataType === 'avgRating' ? 5 : undefined,
-                            title: { display: true, text: label }
+                            title: { display: true, text: 'Значення' }
                         },
                         x: { title: { display: true, text: 'Категорія' } }
-                    } : {},
+                    },
                     plugins: {
-                        legend: { display: chartType === 'pie' }
+                        legend: { display: true }
                     }
                 }
             });
         }
 
+        // Функції для модального вікна
+        function openModal(filename, title, description) {
+            document.getElementById('modalImage').src = `/static/${filename}`;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDescription').textContent = description;
+            document.getElementById('chartModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('chartModal').style.display = 'none';
+        }
+
+        // Закриття модального вікна при натисканні поза ним
+        window.onclick = function(event) {
+            const modal = document.getElementById('chartModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
         window.onload = fetchChartData;
     </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93441e494862ed87',t:'MTc0NTMxNDM5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
+
+
+
