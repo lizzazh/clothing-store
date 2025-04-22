@@ -298,19 +298,26 @@
         /* Стилі для інтерактивного графіку */
         .chart-controls {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 15px;
-            justify-content: center;
             margin-bottom: 20px;
         }
 
-        .chart-type, .x-axis-data, .y-axis-data {
+        .chart-controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chart-type, .x-axis-data, .y-axis-data, .filter-data, .sort-data {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .chart-type select, .x-axis-data select, .y-axis-data select {
+        .chart-type select, .x-axis-data select, .y-axis-data select, .filter-data select, .sort-data select {
             padding: 8px;
             border: 2px solid #2E8B57;
             border-radius: 5px;
@@ -320,6 +327,17 @@
             cursor: pointer;
         }
 
+        /* Додаємо ширший вигляд для осі Y */
+        .y-axis-data select {
+            width: 200px;
+        }
+
+        /* Стиль для вибраного елемента в списку */
+        .chart-controls select option:checked {
+            background-color: #2E8B57;
+            color: #FFF;
+        }
+        
         .chart-controls button {
             padding: 10px 15px;
             border: 2px solid #2E8B57;
@@ -335,6 +353,36 @@
             background: #224B40;
             transform: scale(1.05);
         }
+
+        .chart-controls .export-button {
+            background: #FF8C00; /* Помаранчевий колір для кнопки експорту */
+            border: 2px solid #FF8C00;
+        }
+
+        .chart-controls .export-button:hover {
+            background: #D2691E;
+            transform: scale(1.05);
+        }
+
+        /* Адаптивність для малих екранів */
+        @media (max-width: 768px) {
+            .chart-controls-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .chart-type, .x-axis-data, .y-axis-data, .filter-data, .sort-data {
+                width: 100%;
+                justify-content: center;
+            }
+            .chart-type select, .x-axis-data select, .y-axis-data select, .filter-data select, .sort-data select {
+                width: 100%;
+                max-width: 300px;
+            }
+            .chart-controls button {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -343,7 +391,6 @@
     <div class="nav-and-search">
         <div class="nav-links">
             <a href="/" class="back-arrow">На головну</a>
-            <a href="/category-stats" class="stats-button">Переглянути статистику</a>
         </div>
         <div class="search-and-age">
             <div class="age-recommendation-form">
@@ -377,40 +424,63 @@
         <div class="chart-section">
             <h2>Інтерактивний графік</h2>
             <div class="chart-controls">
-                <!-- Вибір типу графіку -->
-                <div class="chart-type">
-                    <label for="chartType">Тип графіку:</label>
-                    <select id="chartType" aria-label="Вибір типу графіку">
-                        <option value="bar">Стовпчикова</option>
-                        <option value="line">Лінійна</option>
-                        <option value="scatter">Точкова</option>
-                        <option value="pie">Кругова</option>
-                    </select>
+                <!-- Перший рядок -->
+                <div class="chart-controls-row">
+                    <!-- Вибір типу графіку -->
+                    <div class="chart-type">
+                        <label for="chartType">Тип графіку:</label>
+                        <select id="chartType" aria-label="Вибір типу графіку">
+                            <option value="bar">Стовпчикова</option>
+                            <option value="line">Лінійна</option>
+                            <option value="scatter">Точкова</option>
+                            <option value="pie">Кругова</option>
+                            <option value="radar">Радарна</option>
+                        </select>
+                    </div>
+
+                    <!-- Вибір даних для осі X -->
+                    <div class="x-axis-data">
+                        <label for="xAxis">Дані для осі X:</label>
+                        <select id="xAxis" aria-label="Вибір даних для осі X">
+                            <option value="categories">Категорії</option>
+                            <option value="avgRating">Середній рейтинг</option>
+                            <option value="avgPrice">Середня ціна</option>
+                        </select>
+                    </div>
+
+                    <!-- Вибір даних для осі Y -->
+                    <div class="y-axis-data">
+                        <label for="yAxis">Дані для осі Y:</label>
+                        <select id="yAxis" aria-label="Вибір даних для осі Y">
+                            <option value="itemCount">Кількість товару</option>
+                            <option value="positiveFeedback">Позитивні відгуки</option>
+                            <option value="totalReviews">Загальна кількість відгуків</option>
+                            <option value="positiveFeedbackPercentage">Відсоток позитивних відгуків</option>
+                            <option value="avgRating">Середній рейтинг</option>
+                        </select>
+                    </div>
                 </div>
 
-                <!-- Вибір даних для осі X -->
-                <div class="x-axis-data">
-                    <label for="xAxis">Дані для осі X:</label>
-                    <select id="xAxis" aria-label="Вибір даних для осі X">
-                        <option value="categories">Категорії</option>
-                        <option value="avgRating">Середній рейтинг</option>
-                    </select>
-                </div>
+                <!-- Другий рядок -->
+                <div class="chart-controls-row">
+                    <!-- Сортування даних -->
+                    <div class="sort-data">
+                        <label for="sort">Сортування:</label>
+                        <select id="sort" aria-label="Сортування даних">
+                            <option value="none">Без сортування</option>
+                            <option value="asc">За зростанням</option>
+                            <option value="desc">За спаданням</option>
+                        </select>
+                    </div>
 
-                <!-- Вибір даних для осі Y -->
-                <div class="y-axis-data">
-                    <label for="yAxis">Дані для осі Y:</label>
-                    <select id="yAxis" aria-label="Вибір даних для осі Y">
-                        <option value="itemCount">Кількість товарів</option>
-                        <option value="positiveFeedback">Позитивні відгуки</option>
-                        <option value="totalReviews">Загальна кількість відгуків</option>
-                        <option value="positiveFeedbackPercentage">Відсоток позитивних відгуків</option>
-                        <option value="avgRating">Середній рейтинг</option>
-                    </select>
-                </div>
+                   
 
-                <!-- Кнопка для оновлення графіку -->
-                <button onclick="updateChart()" aria-label="Оновити графік">Оновити графік</button>
+                    <!-- Кнопка для оновлення графіку -->
+                    <button onclick="updateChart()" aria-label="Оновити графік">Оновити графік</button>
+
+                    <!-- Кнопка для експорту -->
+                    <button onclick="exportChart()" class="export-button" aria-label="Експортувати графік">Експортувати</button>
+                </div>
             </div>
             <canvas id="interactiveChart" aria-label="Інтерактивний графік статистики категорій"></canvas>
         </div>
@@ -460,7 +530,9 @@
                 chartData.categories.length !== chartData.positiveFeedback.length ||
                 chartData.categories.length !== chartData.avgRating.length ||
                 chartData.categories.length !== chartData.totalReviews.length ||
-                chartData.categories.length !== chartData.positiveFeedbackPercentage.length) {
+                chartData.categories.length !== chartData.positiveFeedbackPercentage.length ||
+                (chartData.avgPrice && chartData.categories.length !== chartData.avgPrice.length) ||
+                (chartData.salesCount && chartData.categories.length !== chartData.salesCount.length)) {
                 console.error('Невірні дані для графіків');
                 return;
             }
@@ -471,7 +543,7 @@
                 data: {
                     labels: chartData.categories,
                     datasets: [{
-                        label: 'Кількість товарів',
+                        label: 'Кількість товару',
                         data: chartData.itemCount,
                         backgroundColor: 'rgba(46, 139, 87, 0.6)',
                         borderColor: 'rgba(46, 139, 87, 1)',
@@ -481,11 +553,105 @@
                 options: {
                     responsive: true,
                     scales: {
-                        y: { beginAtZero: true, title: { display: true, text: 'Кількість товарів' } },
+                        y: { beginAtZero: true, title: { display: true, text: 'Кількість товару' } },
                         x: { title: { display: true, text: 'Категорія' } }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    label += context.raw;
+                                    return label;
+                                }
+                            }
+                        }
                     }
                 }
             });
+        }
+
+        function applyFilter(data) {
+            const filter = document.getElementById('filter').value;
+            if (filter === 'none') return data;
+
+            let filteredData = {
+                categories: [],
+                itemCount: [],
+                positiveFeedback: [],
+                totalReviews: [],
+                positiveFeedbackPercentage: [],
+                avgRating: [],
+                avgPrice: data.avgPrice ? [] : undefined,
+                salesCount: data.salesCount ? [] : undefined
+            };
+
+            for (let i = 0; i < data.categories.length; i++) {
+                if (filter === 'ratingAbove4' && data.avgRating[i] <= 4.0) continue;
+                if (filter === 'salesAbove100' && (!data.salesCount || data.salesCount[i] <= 100)) continue;
+
+                filteredData.categories.push(data.categories[i]);
+                filteredData.itemCount.push(data.itemCount[i]);
+                filteredData.positiveFeedback.push(data.positiveFeedback[i]);
+                filteredData.totalReviews.push(data.totalReviews[i]);
+                filteredData.positiveFeedbackPercentage.push(data.positiveFeedbackPercentage[i]);
+                filteredData.avgRating.push(data.avgRating[i]);
+                if (data.avgPrice) filteredData.avgPrice.push(data.avgPrice[i]);
+                if (data.salesCount) filteredData.salesCount.push(data.salesCount[i]);
+            }
+
+            return filteredData;
+        }
+
+        function applySorting(data) {
+            const sort = document.getElementById('sort').value;
+            const yAxis = document.getElementById('yAxis').value;
+            if (sort === 'none') return data;
+
+            let sortedData = {
+                categories: [],
+                itemCount: [],
+                positiveFeedback: [],
+                totalReviews: [],
+                positiveFeedbackPercentage: [],
+                avgRating: [],
+                avgPrice: data.avgPrice ? [] : undefined,
+                salesCount: data.salesCount ? [] : undefined
+            };
+
+            let dataToSort = [];
+            for (let i = 0; i < data.categories.length; i++) {
+                let value;
+                if (yAxis === 'itemCount') value = data.itemCount[i];
+                else if (yAxis === 'positiveFeedback') value = data.positiveFeedback[i];
+                else if (yAxis === 'totalReviews') value = data.totalReviews[i];
+                else if (yAxis === 'positiveFeedbackPercentage') value = data.positiveFeedbackPercentage[i];
+                else if (yAxis === 'avgRating') value = data.avgRating[i];
+                else if (yAxis === 'avgPrice') value = data.avgPrice[i];
+                else if (yAxis === 'salesCount') value = data.salesCount[i];
+
+                dataToSort.push({
+                    index: i,
+                    value: value
+                });
+            }
+
+            dataToSort.sort((a, b) => sort === 'asc' ? a.value - b.value : b.value - a.value);
+
+            dataToSort.forEach(item => {
+                const i = item.index;
+                sortedData.categories.push(data.categories[i]);
+                sortedData.itemCount.push(data.itemCount[i]);
+                sortedData.positiveFeedback.push(data.positiveFeedback[i]);
+                sortedData.totalReviews.push(data.totalReviews[i]);
+                sortedData.positiveFeedbackPercentage.push(data.positiveFeedbackPercentage[i]);
+                sortedData.avgRating.push(data.avgRating[i]);
+                if (data.avgPrice) sortedData.avgPrice.push(data.avgPrice[i]);
+                if (data.salesCount) sortedData.salesCount.push(data.salesCount[i]);
+            });
+
+            return sortedData;
         }
 
         function updateChart() {
@@ -493,67 +659,99 @@
             const xAxis = document.getElementById('xAxis').value;
             const yAxis = document.getElementById('yAxis').value;
 
+            // Застосовуємо фільтр і сортування
+            let filteredData = applyFilter(chartData);
+            filteredData = applySorting(filteredData);
+
             // Визначаємо мітки (labels) для осі X
             let labels;
             if (xAxis === 'categories') {
-                labels = chartData.categories;
+                labels = filteredData.categories;
             } else if (xAxis === 'avgRating') {
-                labels = chartData.avgRating.map(rating => rating.toFixed(2));
+                labels = filteredData.avgRating.map(rating => rating.toFixed(2));
+            } else if (xAxis === 'avgPrice') {
+                labels = filteredData.avgPrice ? filteredData.avgPrice.map(price => price.toFixed(2)) : [];
             }
 
-            // Визначаємо дані для осі Y
+            // Формуємо набір даних
             let dataset;
+            const colors = [
+                { bg: 'rgba(46, 139, 87, 0.6)', border: 'rgba(46, 139, 87, 1)' },
+                { bg: 'rgba(255, 165, 0, 0.6)', border: 'rgba(255, 165, 0, 1)' },
+                { bg: 'rgba(75, 192, 192, 0.6)', border: 'rgba(75, 192, 192, 1)' },
+                { bg: 'rgba(153, 102, 255, 0.6)', border: 'rgba(153, 102, 255, 1)' },
+                { bg: 'rgba(0, 128, 128, 0.6)', border: 'rgba(0, 128, 128, 1)' },
+                { bg: 'rgba(255, 99, 132, 0.6)', border: 'rgba(255, 99, 132, 1)' },
+                { bg: 'rgba(54, 162, 235, 0.6)', border: 'rgba(54, 162, 235, 1)' },
+                { bg: 'rgba(255, 206, 86, 0.6)', border: 'rgba(255, 206, 86, 1)' }
+            ];
+
             if (yAxis === 'itemCount') {
                 dataset = {
-                    label: 'Кількість товарів',
-                    data: chartData.itemCount,
-                    backgroundColor: 'rgba(46, 139, 87, 0.6)',
-                    borderColor: 'rgba(46, 139, 87, 1)',
+                    label: 'Кількість товару',
+                    data: filteredData.itemCount,
+                    backgroundColor: colors[0].bg,
+                    borderColor: colors[0].border,
                     borderWidth: 1
                 };
             } else if (yAxis === 'positiveFeedback') {
                 dataset = {
                     label: 'Позитивні відгуки',
-                    data: chartData.positiveFeedback,
-                    backgroundColor: 'rgba(255, 165, 0, 0.6)',
-                    borderColor: 'rgba(255, 165, 0, 1)',
+                    data: filteredData.positiveFeedback,
+                    backgroundColor: colors[1].bg,
+                    borderColor: colors[1].border,
                     borderWidth: 1
                 };
             } else if (yAxis === 'totalReviews') {
                 dataset = {
                     label: 'Загальна кількість відгуків',
-                    data: chartData.totalReviews,
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    data: filteredData.totalReviews,
+                    backgroundColor: colors[2].bg,
+                    borderColor: colors[2].border,
                     borderWidth: 1
                 };
             } else if (yAxis === 'positiveFeedbackPercentage') {
                 dataset = {
                     label: 'Відсоток позитивних відгуків',
-                    data: chartData.positiveFeedbackPercentage,
-                    backgroundColor: 'rgba(153, 102, 255, 0.6)',
-                    borderColor: 'rgba(153, 102, 255, 1)',
+                    data: filteredData.positiveFeedbackPercentage,
+                    backgroundColor: colors[3].bg,
+                    borderColor: colors[3].border,
                     borderWidth: 1
                 };
             } else if (yAxis === 'avgRating') {
                 dataset = {
                     label: 'Середній рейтинг',
-                    data: chartData.avgRating,
-                    backgroundColor: 'rgba(0, 128, 128, 0.6)',
-                    borderColor: 'rgba(0, 128, 128, 1)',
+                    data: filteredData.avgRating,
+                    backgroundColor: colors[4].bg,
+                    borderColor: colors[4].border,
+                    borderWidth: 1
+                };
+            } else if (yAxis === 'avgPrice') {
+                dataset = {
+                    label: 'Середня ціна',
+                    data: filteredData.avgPrice || [],
+                    backgroundColor: colors[0].bg,
+                    borderColor: colors[0].border,
+                    borderWidth: 1
+                };
+            } else if (yAxis === 'salesCount') {
+                dataset = {
+                    label: 'Кількість продажів',
+                    data: filteredData.salesCount || [],
+                    backgroundColor: colors[1].bg,
+                    borderColor: colors[1].border,
                     borderWidth: 1
                 };
             }
 
-            // Якщо для осі X обрано середній рейтинг, потрібно сортувати дані
+            // Сортування даних для числових осей X
             let dataPoints = [];
-            if (xAxis === 'avgRating' && chartType !== 'pie') {
-                for (let i = 0; i < chartData.categories.length; i++) {
-                    dataPoints.push({
-                        x: chartData.avgRating[i],
-                        y: dataset.data[i],
-                        label: chartData.categories[i]
-                    });
+            if ((xAxis === 'avgRating' || xAxis === 'avgPrice') && chartType !== 'pie' && chartType !== 'radar') {
+                for (let i = 0; i < filteredData.categories.length; i++) {
+                    let point = { label: filteredData.categories[i] };
+                    point.x = xAxis === 'avgRating' ? filteredData.avgRating[i] : filteredData.avgPrice[i];
+                    point.y = dataset.data[i];
+                    dataPoints.push(point);
                 }
                 dataPoints.sort((a, b) => a.x - b.x);
                 labels = dataPoints.map(point => point.x.toFixed(2));
@@ -563,78 +761,68 @@
             if (interactiveChart) interactiveChart.destroy();
 
             const ctxInteractive = document.getElementById('interactiveChart').getContext('2d');
-            
+
             // Налаштування для кругового графіку
             if (chartType === 'pie') {
+                // Генеруємо масиви кольорів для кожної категорії
+                const backgroundColors = filteredData.categories.map((_, index) => colors[index % colors.length].bg);
+                const borderColors = filteredData.categories.map((_, index) => colors[index % colors.length].border);
+
                 interactiveChart = new Chart(ctxInteractive, {
                     type: 'pie',
                     data: {
-                        labels: chartData.categories,
+                        labels: filteredData.categories,
                         datasets: [{
                             label: dataset.label,
                             data: dataset.data,
-                            backgroundColor: [
-                                'rgba(46, 139, 87, 0.6)',
-                                'rgba(255, 165, 0, 0.6)',
-                                'rgba(75, 192, 192, 0.6)',
-                                'rgba(153, 102, 255, 0.6)',
-                                'rgba(0, 128, 128, 0.6)',
-                                'rgba(255, 99, 132, 0.6)',
-                                'rgba(54, 162, 235, 0.6)',
-                                'rgba(255, 206, 86, 0.6)',
-                                'rgba(75, 192, 192, 0.6)',
-                                'rgba(153, 102, 255, 0.6)',
-                                'rgba(255, 159, 64, 0.6)',
-                                'rgba(199, 199, 199, 0.6)',
-                                'rgba(83, 102, 255, 0.6)',
-                                'rgba(255, 99, 132, 0.6)',
-                                'rgba(54, 162, 235, 0.6)',
-                                'rgba(255, 206, 86, 0.6)',
-                                'rgba(75, 192, 192, 0.6)',
-                                'rgba(153, 102, 255, 0.6)',
-                                'rgba(255, 159, 64, 0.6)',
-                            ],
-                            borderColor: [
-                                'rgba(46, 139, 87, 1)',
-                                'rgba(255, 165, 0, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(0, 128, 128, 1)',
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)',
-                                'rgba(199, 199, 199, 1)',
-                                'rgba(83, 102, 255, 1)',
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)',
-                            ],
-                            borderWidth: 1
+                            backgroundColor: backgroundColors,
+                            borderColor: borderColors,
+                            borderWidth: 1,
+                            hoverOffset: 20 // Додаємо ефект зміщення при наведенні
                         }]
                     },
                     options: {
                         responsive: true,
                         plugins: {
-                            legend: {
-                                position: 'top',
-                            },
+                            legend: { position: 'top' },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
                                         let label = context.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
+                                        if (label) label += ': ';
                                         label += context.raw;
-                                        if (yAxis === 'positiveFeedbackPercentage') {
-                                            label += '%';
-                                        }
+                                        if (yAxis === 'positiveFeedbackPercentage') label += '%';
+                                        // Додаємо відсоток від загальної суми
+                                        const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
+                                        const percentage = ((context.raw / total) * 100).toFixed(2);
+                                        label += ` (${percentage}%)`;
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } else if (chartType === 'radar') {
+                interactiveChart = new Chart(ctxInteractive, {
+                    type: 'radar',
+                    data: {
+                        labels: filteredData.categories,
+                        datasets: [dataset]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            r: { beginAtZero: true }
+                        },
+                        plugins: {
+                            legend: { display: true },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) label += ': ';
+                                        label += context.raw;
                                         return label;
                                     }
                                 }
@@ -654,8 +842,11 @@
                         responsive: true,
                         scales: {
                             x: {
-                                title: { display: true, text: xAxis === 'categories' ? 'Категорія' : 'Середній рейтинг' },
-                                type: xAxis === 'avgRating' ? 'linear' : 'category'
+                                title: { 
+                                    display: true, 
+                                    text: xAxis === 'categories' ? 'Категорія' : xAxis === 'avgRating' ? 'Середній рейтинг' : 'Середня ціна' 
+                                },
+                                type: xAxis === 'categories' ? 'category' : 'linear'
                             },
                             y: {
                                 beginAtZero: true,
@@ -663,11 +854,30 @@
                             }
                         },
                         plugins: {
-                            legend: { display: true }
+                            legend: { display: true },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) label += ': ';
+                                        label += context.raw;
+                                        return label;
+                                    }
+                                }
+                            }
                         }
                     }
                 });
             }
+        }
+
+        function exportChart() {
+            if (!interactiveChart) return;
+
+            const link = document.createElement('a');
+            link.href = interactiveChart.toBase64Image();
+            link.download = 'chart.png';
+            link.click();
         }
 
         // Функції для модального вікна
@@ -692,5 +902,5 @@
 
         window.onload = fetchChartData;
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93441e494862ed87',t:'MTc0NTMxNDM5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93446de5cdc8675e',t:'MTc0NTMxNzY1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9345a17c48c07bb1',t:'MTc0NTMzMDI1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
