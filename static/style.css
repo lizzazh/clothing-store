@@ -32,7 +32,7 @@ body {
 .store-title {
     width: 100%;
     text-align: center;
-    font-family: 'Great+Vibes', cursive;
+    font-family: 'Great Vibes', cursive;
     font-size: 48px;
     color: #2E8B57;
     margin: 10px 0;
@@ -110,6 +110,7 @@ h1, h2, h3 {
     background-color: #2E8B57;
     color: #FFF;
 }
+
 /* Контейнер для пошуку та блоку віку */
 .search-and-age {
     display: flex;
@@ -189,7 +190,7 @@ h1, h2, h3 {
 @media (max-width: 480px) {
     .nav-and-search {
         flex-direction: column;
-        align-items: center; /* Центрування для малих екранів */
+        align-items: center; /* Центру eius: center; /* Центрування для малих екранів */
     }
     .search-and-age {
         flex-direction: column; /* Переносимо блоки вертикально на малих екранах */
@@ -676,11 +677,13 @@ form button:hover {
         width: 100%;
     }
 }
+
 .top-products h2 {
     color: #FDF5E6;
     font-size: 24px;
     margin-bottom: 20px;
 }
+
 .product p a {
     color: #224B40; /* Смарагдовий колір */
     text-decoration: none;
@@ -691,6 +694,7 @@ form button:hover {
     color: #2E8B57; /* Темніший смарагдовий при наведенні */
     text-decoration: underline;
 }
+
 .product {
     border: 2px solid #2E8B57;
     padding: 20px;
@@ -764,7 +768,7 @@ form button:hover {
 }
 
 .chart-controls button:hover {
-    background: #224B40; /*ਰ: #224B40 /* Темніший смарагдовий при наведенні */
+    background: #224B40; /* Темніший смарагдовий при наведенні */
     transform: scale(1.05);
     box-shadow: 0 0 5px rgba(46, 139, 87, 0.5); /* Смарагдова тінь */
 }
@@ -783,7 +787,124 @@ canvas {
     height: auto;
 }
 
-@media (max-width: 480px) {
+/* Секція PDF-графіків */
+.pdf-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.pdf-chart {
+    background-color: #FDF5E6; /* Світліший бежевий фон */
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #2E8B57; /* Смарагдова обводка */
+    box-shadow: 0 4px 10px rgba(46, 139, 87, 0.1); /* Смарагдова тінь */
+    transition: transform 0.2s ease-in-out;
+    position: relative;
+    cursor: pointer;
+}
+
+.pdf-chart h3 {
+    color: #FDF5E6;
+    background: #2E8B57;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    text-align: center;
+}
+
+.pdf-chart:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 15px;
+    right: 15px;
+    height: 1px;
+    background-color: #2E8B57; /* Смарагдовий колір для лінії */
+}
+
+.pdf-chart:hover {
+    transform: translateY(-5px);
+}
+
+.pdf-chart img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.pdf-chart p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333; /* Темний текст для опису */
+}
+
+/* Модальне вікно */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: #FDF5E6;
+    margin: 5% auto;
+    padding: 20px;
+    border: 2px solid #2E8B57;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 700px;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(46, 139, 87, 0.3);
+}
+
+.modal-content h2 {
+    color: #FDF5E6;
+    background: #2E8B57;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 0;
+    text-align: center;
+}
+
+.modal-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.modal-content p {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.close {
+    color: #2E8B57;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #224B40;
+}
+
+/* Адаптивність для графіків */
+@media (max-width: 768px) {
     .chart-controls {
         flex-direction: column;
         align-items: center;
@@ -792,5 +913,16 @@ canvas {
         width: 100%;
         max-width: 300px;
         margin-bottom: 10px;
+    }
+    .pdf-charts {
+        grid-template-columns: 1fr;
+    }
+    .pdf-chart:not(:last-child)::after {
+        left: 0;
+        right: 0;
+    }
+    .modal-content {
+        width: 90%;
+        margin: 10% auto;
     }
 }

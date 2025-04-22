@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func, or_, literal_column
 from sqlalchemy import String
-from jinja2 import Environment, FileSystemLoader, TemplateNotFound
+from jinja2 import Environment, FileSystemLoader
 from models import Product
 from db import SessionLocal
 from pagination_utils import get_items_per_page, generate_pagination, adjust_page_and_offset
@@ -12,6 +12,11 @@ import logging
 import time
 import webbrowser
 from math import ceil
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import pandas as pd
+import os
 
 # Налаштування логування для відстеження роботи додатку
 logging.basicConfig(level=logging.INFO)
@@ -44,6 +49,155 @@ def get_db():
         yield db
     finally:
         db.close()
+
+# Функція для генерації всіх графіків
+def generate_charts(db: Session):
+    # Переконайтеся, що папка static існує
+    if not os.path.exists("static"):
+        os.makedirs("static")
+
+    # Отримуємо всі категорії
+    categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
+    categories.sort()
+
+    # 1. Гістограма розподілу кількості відгуків за віком (Задача 2)
+    ages = [row[0] for row in db.query(Product.age).all() if row[0] is not None]
+    plt.figure(figsize=(10, 6))
+    sns.histplot(ages, bins=50, color='green', kde=False)
+    plt.title('Гістограма розподілу кількості відгуків за віком', fontsize=18)
+    plt.xlabel('Вік', fontsize=14)
+    plt.ylabel('Кількість відгуків', fontsize=14)
+    plt.tight_layout()
+    plt.savefig('static/age_feedback_histogram.png')
+    plt.close()
+
+    # 2. Гістограма кількості позитивних відгуків за категоріями (Задача 3)
+    feedback_counts_query = (
+        db.query(
+            Product.class_name,
+            func.count(Product.clothing_id).label("feedback_count")
+        )
+        .filter(Product.recommended_ind == 1)
+        .group_by(Product.class_name)
+        .order_by(Product.class_name)
+        .all()
+    )
+    feedback_df = pd.DataFrame(feedback_counts_query, columns=['class_name', 'feedback_count'])
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x='feedback_count', y='class_name', data=feedback_df, color='green')
+    plt.title('Кількість позитивних відгуків за категоріями товарів', fontsize=18)
+    plt.xlabel('Кількість позитивних відгуків', fontsize=14)
+    plt.ylabel('Назва категорії', fontsize=14)
+    plt.tight_layout()
+    plt.savefig('static/positive_feedback_by_category.png')
+    plt.close()
+
+    # 3. Гістограма кількості позитивних відгуків по департаментах (Задача 4)
+    dept_query = (
+        db.query(
+            Product.department_name,
+            Product.class_name,
+            func.count(Product.clothing_id).label("feedback_count")
+        )
+        .filter(Product.recommended_ind == 1)
+        .group_by(Product.department_name, Product.class_name)
+        .all()
+    )
+    dept_df = pd.DataFrame(dept_query, columns=['Department', 'Category', 'PositiveFeedback'])
+    plt.figure(figsize=(10, 6))
+    sns.histplot(data=dept_df, x='Department', weights='PositiveFeedback', hue='Category', multiple='stack')
+    plt.title('Кількість позитивних відгуків по департаментах категорій', fontsize=18)
+    plt.xlabel('Департамент', fontsize=14)
+    plt.ylabel('Кількість позитивних відгуків', fontsize=14)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig('static/positive_feedback_by_department.png')
+    plt.close()
+
+    # 4. Кругова діаграма розподілу кількості товарів по рейтингах (Задача 5)
+    ratings_query = (
+        db.query(
+            Product.rating,
+            func.count(func.distinct(Product.clothing_id)).label("item_count")
+        )
+        .group_by(Product.rating)
+        .all()
+    )
+    ratings_df = pd.DataFrame(ratings_query, columns=['rating', 'item_count'])
+    total_items = ratings_df['item_count'].sum()
+    ratings_df['percentage'] = (ratings_df['item_count'] / total_items) * 100
+    labels = [str(int(r)) for r in ratings_df['rating']]
+    ratings = ratings_df['percentage'].tolist()
+    colors = ['green', 'blue', 'yellow', 'red', 'cyan']
+    plt.figure(figsize=(8, 8))
+    plt.pie(ratings, labels=labels, colors=colors[:len(ratings)], autopct='%1.2f%%', startangle=140, textprops={'fontsize': 14})
+    plt.title('Розподіл кількості товарів по рейтингах', fontsize=18)
+    plt.tight_layout()
+    plt.savefig('static/rating_distribution.png')
+    plt.close()
+
+    # 5. Кругова діаграма розподілу рекомендацій (Задача 6)
+    recommendations_query = (
+        db.query(
+            Product.recommended_ind,
+            func.count(func.distinct(Product.clothing_id)).label("item_count")
+        )
+        .group_by(Product.recommended_ind)
+        .all()
+    )
+    recommendations_df = pd.DataFrame(recommendations_query, columns=['recommended_ind', 'item_count'])
+    total_items = recommendations_df['item_count'].sum()
+    recommendations_df['percentage'] = (recommendations_df['item_count'] / total_items) * 100
+    recommendations = recommendations_df['percentage'].tolist()
+    labels = ['Рекомендовано (1)', 'Не рекомендовано (0)']
+    colors = ['green', 'cyan']
+    plt.figure(figsize=(8, 8))
+    plt.pie(recommendations, labels=labels, colors=colors, autopct='%1.2f%%', startangle=140, textprops={'fontsize': 14})
+    plt.title('Розподіл рекомендацій', fontsize=18)
+    plt.tight_layout()
+    plt.savefig('static/recommendation_distribution.png')
+    plt.close()
+
+    # 6. Графік відсотка рекомендованих товарів по категоріях (Задача 7)
+    recommendation_percent_query = (
+        db.query(
+            Product.class_name,
+            (func.sum(Product.recommended_ind) * 100.0 / func.count(Product.clothing_id)).label("recommendation_percentage")
+        )
+        .group_by(Product.class_name)
+        .order_by(Product.class_name)
+        .all()
+    )
+    recommendation_df = pd.DataFrame(recommendation_percent_query, columns=['class_name', 'recommendation_percentage'])
+    plt.figure(figsize=(12, 6))
+    plt.plot(recommendation_df['class_name'], recommendation_df['recommendation_percentage'], marker='o', color='green')
+    plt.title('Висота рекомендацій по назвах категорій', fontsize=18)
+    plt.xlabel('Назва категорії', fontsize=14)
+    plt.ylabel('Відсоток рекомендованих', fontsize=14)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig('static/recommendation_height_by_category.png')
+    plt.close()
+
+    # 7. Гістограма середнього рейтингу по категоріях (Задача 8)
+    avg_ratings_query = (
+        db.query(
+            Product.class_name,
+            func.avg(Product.rating).label("avg_rating")
+        )
+        .group_by(Product.class_name)
+        .order_by(Product.class_name)
+        .all()
+    )
+    avg_ratings_df = pd.DataFrame(avg_ratings_query, columns=['class_name', 'avg_rating'])
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x='avg_rating', y='class_name', data=avg_ratings_df, color='green')
+    plt.title('Середній рейтинг категорій по назвах', fontsize=18)
+    plt.xlabel('Середній рейтинг', fontsize=14)
+    plt.ylabel('Назва категорії', fontsize=14)
+    plt.tight_layout()
+    plt.savefig('static/average_rating_by_category.png')
+    plt.close()
 
 # Головна сторінка з фільтрами, сортуванням і пагінацією
 @app.get("/", response_class=HTMLResponse)
@@ -592,6 +746,45 @@ async def category_stats(
             if cat in categories:
                 avg_ratings[categories.index(cat)] = round(float(avg), 2) if avg is not None else 0.0
 
+        # Дані для графіків (назви файлів, заголовки, описи)
+        charts_info = [
+            {
+                'filename': 'age_feedback_histogram.png',
+                'title': 'Розподіл кількості відгуків за віком',
+                'description': 'Цей графік показує розподіл кількості відгуків залежно від віку клієнтів. Більшість відгуків залишають клієнти віком від 30 до 50 років, з піком у віковій групі близько 40 років.'
+            },
+            {
+                'filename': 'positive_feedback_by_category.png',
+                'title': 'Кількість позитивних відгуків за категоріями',
+                'description': 'Графік відображає кількість позитивних відгуків для кожної категорії. Найбільше позитивних відгуків у категорії Dresses (понад 6 тисяч), найменше – у Chemises.'
+            },
+            {
+                'filename': 'positive_feedback_by_department.png',
+                'title': 'Кількість позитивних відгуків по департаментах',
+                'description': 'Цей графік показує розподіл позитивних відгуків по департаментах. Найбільше відгуків у департаменті Tops, за ним йдуть Dresses і Bottoms.'
+            },
+            {
+                'filename': 'rating_distribution.png',
+                'title': 'Розподіл кількості товарів по рейтингах',
+                'description': 'Кругова діаграма показує частку товарів за їх рейтингом. Більшість товарів мають рейтинг 5 (55.91%), тоді як найменше – рейтинг 1 (3.59%).'
+            },
+            {
+                'filename': 'recommendation_distribution.png',
+                'title': 'Розподіл рекомендацій',
+                'description': 'Кругова діаграма відображає частку товарів, які рекомендуються (82.24%) і не рекомендуються (17.76%).'
+            },
+            {
+                'filename': 'recommendation_height_by_category.png',
+                'title': 'Частка рекомендованих товарів по категоріях',
+                'description': 'Цей графік показує частку рекомендацій (0 або 1) для кожної категорії. Більшість категорій мають високу частку рекомендацій, особливо Casual bottoms.'
+            },
+            {
+                'filename': 'average_rating_by_category.png',
+                'title': 'Середній рейтинг по категоріях',
+                'description': 'Графік відображає середній рейтинг товарів у кожній категорії. Найвищий середній рейтинг у Casual bottoms (4.0), найнижчий – у Trend (3.8).'
+            }
+        ]
+
         # Рендеринг шаблону зі статистикою
         template = env.get_template("category_stats.html")
         html_content = template.render(
@@ -601,6 +794,7 @@ async def category_stats(
             item_counts=item_counts,
             feedback_counts=feedback_counts,
             avg_ratings=avg_ratings,
+            charts_info=charts_info  # Передаємо дані про графіки
         )
         return HTMLResponse(content=html_content)
 
@@ -619,6 +813,9 @@ async def debug(db: Session = Depends(get_db)):
 # Запуск сервера з автоматичним відкриттям браузера
 if __name__ == "__main__":
     import uvicorn
+    # Генеруємо графіки перед запуском сервера
+    with SessionLocal() as db:
+        generate_charts(db)
     # Встановлюємо хост і порт
     host = "0.0.0.0"
     port = 8000
