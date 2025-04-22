@@ -60,18 +60,18 @@ def generate_charts(db: Session):
     categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
     categories.sort()
 
-    # 1. Гістограма розподілу кількості відгуків за віком (Задача 2)
+    # 1. Гістограса розподілу кількості відгуків за віком (Задача 2)
     ages = [row[0] for row in db.query(Product.age).all() if row[0] is not None]
     plt.figure(figsize=(10, 6))
     sns.histplot(ages, bins=50, color='green', kde=False)
-    plt.title('Гістограма розподілу кількості відгуків за віком', fontsize=18)
+    plt.title('Гістограса розподілу кількості відгуків за віком', fontsize=18)
     plt.xlabel('Вік', fontsize=14)
     plt.ylabel('Кількість відгуків', fontsize=14)
     plt.tight_layout()
     plt.savefig('static/age_feedback_histogram.png')
     plt.close()
 
-    # 2. Гістограма кількості позитивних відгуків за категоріями (Задача 3)
+    # 2. Гістограса кількості позитивних відгуків за категоріями (Задача 3)
     feedback_counts_query = (
         db.query(
             Product.class_name,
@@ -92,7 +92,7 @@ def generate_charts(db: Session):
     plt.savefig('static/positive_feedback_by_category.png')
     plt.close()
 
-    # 3. Гістограма кількості позитивних відгуків по департаментах (Задача 4)
+    # 3. Гістограса кількості позитивних відгуків по департаментах (Задача 4)
     dept_query = (
         db.query(
             Product.department_name,
@@ -179,7 +179,7 @@ def generate_charts(db: Session):
     plt.savefig('static/recommendation_height_by_category.png')
     plt.close()
 
-    # 7. Гістограма середнього рейтингу по категоріях (Задача 8)
+    # 7. Гістограса середнього рейтингу по категоріях (Задача 8)
     avg_ratings_query = (
         db.query(
             Product.class_name,
@@ -809,6 +809,97 @@ async def debug(db: Session = Depends(get_db)):
     total_products = db.query(Product).count()
     end_time = time.time()
     return f"Total products: {total_products}, Query time: {end_time - start_time:.2f} seconds"
+
+# Ендпоінт для даних інтерактивного графіку
+@app.get("/category-stats-data")
+async def get_category_stats_data(db: Session = Depends(get_db)):
+    try:
+        # Отримуємо всі категорії
+        categories = [c[0] for c in db.query(Product.class_name).distinct().all() if c[0]]
+        categories.sort()
+
+        # Кількість товарів за категоріями
+        item_counts_query = (
+            db.query(
+                Product.class_name,
+                func.count(func.distinct(Product.clothing_id)).label("item_count")
+            )
+            .group_by(Product.class_name)
+            .order_by(Product.class_name)
+            .all()
+        )
+        item_counts = [0] * len(categories)
+        for cat, count in item_counts_query:
+            if cat in categories:
+                item_counts[categories.index(cat)] = count
+
+        # Кількість позитивних відгуків за категоріями
+        feedback_counts_query = (
+            db.query(
+                Product.class_name,
+                func.count(Product.clothing_id).label("feedback_count")
+            )
+            .filter(Product.recommended_ind == 1)
+            .group_by(Product.class_name)
+            .order_by(Product.class_name)
+            .all()
+        )
+        positive_feedback_counts = [0] * len(categories)
+        for cat, count in feedback_counts_query:
+            if cat in categories:
+                positive_feedback_counts[categories.index(cat)] = count
+
+        # Загальна кількість відгуків за категоріями
+        total_reviews_query = (
+            db.query(
+                Product.class_name,
+                func.count(Product.clothing_id).label("total_reviews")
+            )
+            .group_by(Product.class_name)
+            .order_by(Product.class_name)
+            .all()
+        )
+        total_reviews = [0] * len(categories)
+        for cat, count in total_reviews_query:
+            if cat in categories:
+                total_reviews[categories.index(cat)] = count
+
+        # Відсоток позитивних відгуків (positive feedback percentage)
+        positive_feedback_percentage = [0.0] * len(categories)
+        for i in range(len(categories)):
+            if total_reviews[i] > 0:
+                positive_feedback_percentage[i] = (positive_feedback_counts[i] / total_reviews[i]) * 100
+            else:
+                positive_feedback_percentage[i] = 0.0
+            positive_feedback_percentage[i] = round(positive_feedback_percentage[i], 2)
+
+        # Середній рейтинг за категоріями
+        avg_ratings_query = (
+            db.query(
+                Product.class_name,
+                func.avg(Product.rating).label("avg_rating")
+            )
+            .group_by(Product.class_name)
+            .order_by(Product.class_name)
+            .all()
+        )
+        avg_ratings = [0.0] * len(categories)
+        for cat, avg in avg_ratings_query:
+            if cat in categories:
+                avg_ratings[categories.index(cat)] = round(float(avg), 2) if avg is not None else 0.0
+
+        return {
+            "categories": categories,
+            "itemCount": item_counts,
+            "positiveFeedback": positive_feedback_counts,
+            "totalReviews": total_reviews,
+            "positiveFeedbackPercentage": positive_feedback_percentage,
+            "avgRating": avg_ratings
+        }
+
+    except Exception as e:
+        logger.error(f"Error in get_category_stats_data: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Помилка: {str(e)}")
 
 # Запуск сервера з автоматичним відкриттям браузера
 if __name__ == "__main__":
