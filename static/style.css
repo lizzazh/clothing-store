@@ -506,8 +506,25 @@ button[type="submit"]:hover, .category-button button:hover, .sidebar button:hove
 .star-checkbox input[type="checkbox"] { display: none; }
 .star-checkbox input[type="checkbox"]:checked + span { background: var(--primary-color); color: white; }
 
-.reset-button { margin-left: auto; background: white; color: var(--primary-color); border: 1px solid var(--primary-color); }
-.reset-button:hover { background: rgba(42,92,67,0.1); color: var(--primary-color); }
+.reset-button {
+    margin-left: auto;
+    padding: 10px 24px;
+    border: 2px solid var(--primary-color);
+    border-radius: 30px;
+    background: white;
+    color: var(--primary-color);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.reset-button:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(42,92,67,0.2);
+}
 
 /* noUiSlider customizations */
 #age-slider { height: 8px; border: none; background: rgba(42,92,67,0.1); border-radius: 4px; margin: 0 15px; flex: 1; min-width: 200px; }
@@ -558,6 +575,9 @@ button[type="submit"]:hover, .category-button button:hover, .sidebar button:hove
 .close:hover { transform: rotate(90deg); }
 
 /* --- Адаптивність --- */
+@media (min-width: 1250px) {
+    .top5-arrows { display: none !important; } /* Ховаємо стрілочки Топ-5 тільки на великих екранах */
+}
 @media (max-width: 1024px) {
     .product-list .product { flex: 0 0 calc(50% - 13px); }
     .product-slider .product { flex: 0 0 calc((100% - 50px) / 3); }
@@ -579,5 +599,5 @@ button[type="submit"]:hover, .category-button button:hover, .sidebar button:hove
     .search-and-age { flex-direction: column; width: 100%; }
     .search-bar input { width: 100%; }
     .product-slider .product { flex: 0 0 100%; }
-    .arrow-controls { display: none; } /* Приховуємо стрілки на мобільних, працює свайп */
+    .arrow-controls { display: none !important; } /* Приховуємо стрілки на мобільних, працює свайп */
 }

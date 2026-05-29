@@ -43,7 +43,7 @@
     <!-- Основна інформація -->
     <div class="product-container">
         <div class="product-image-large">
-            <img id="product-img" src="" alt="Товар" onerror="this.src='https://via.placeholder.com/300.jpg'">
+            <img id="product-img" src="" alt="Товар" onerror="this.onerror=null; this.src='https://via.placeholder.com/300.jpg'">
         </div>
         <div class="product-details">
             <h2 id="product-cat">—</h2>
@@ -141,147 +141,152 @@
     let minAge = 0, maxAge = 99;
 
     async function init() {
-        const params = new URLSearchParams(window.location.search);
-        currentProductId = parseInt(params.get('id'));
-        if (!currentProductId) {
-            document.getElementById('product-header').textContent = 'Товар не знайдено';
-            return;
-        }
-
-        // Завантажуємо продукти і відгуки паралельно
-        let productsResp, reviewsResp;
         try {
-            [productsResp, reviewsResp] = await Promise.all([
-                fetch('data/products.json'),
-                fetch('data/reviews.json')
-            ]);
-        } catch (e) {
-            alert("Помилка завантаження даних (CORS). Будь ласка, запустіть сайт через локальний сервер.");
-            document.getElementById('product-header').textContent = "Помилка завантаження даних";
-            return;
-        }
-        if (!productsResp.ok || !reviewsResp.ok) {
-            alert("Помилка HTTP: " + productsResp.status);
-            return;
-        }
-        allProducts = await productsResp.ok ? await productsResp.json() : [];
-        const allReviews = await reviewsResp.ok ? await reviewsResp.json() : {};
-        productReviews = allReviews[String(currentProductId)] || [];
+            const params = new URLSearchParams(window.location.search);
+            currentProductId = parseInt(params.get('id'));
+            if (!currentProductId) {
+                document.getElementById('product-header').textContent = 'Товар не знайдено';
+                return;
+            }
 
-        const product = allProducts.find(p => p.clothing_id === currentProductId);
+            // Завантажуємо продукти і відгуки паралельно
+            let productsResp, reviewsResp;
+            try {
+                [productsResp, reviewsResp] = await Promise.all([
+                    fetch('data/products.json'),
+                    fetch('data/reviews.json')
+                ]);
+            } catch (e) {
+                alert("Помилка завантаження даних (CORS). Будь ласка, запустіть сайт через локальний сервер.");
+                document.getElementById('product-header').textContent = "Помилка завантаження даних";
+                return;
+            }
+            if (!productsResp.ok || !reviewsResp.ok) {
+                alert("Помилка HTTP: " + productsResp.status);
+                return;
+            }
+            allProducts = await productsResp.json();
+            const allReviews = await reviewsResp.json();
+            productReviews = allReviews[String(currentProductId)] || [];
 
-        // Кнопки категорій
-        const cats = [...new Set(allProducts.map(p => p.class_name).filter(Boolean))].sort();
-        document.getElementById('category-buttons').innerHTML = cats.map(cat =>
-            `<a href="category.html?cat=${encodeURIComponent(cat.toLowerCase())}" class="category-button">
-                <button>${cat}</button>
-            </a>`
-        ).join('');
+            const product = allProducts.find(p => p.clothing_id === currentProductId);
 
-        if (!product) {
-            document.getElementById('product-header').textContent = `Товар ID: ${currentProductId} не знайдено`;
-            return;
-        }
+            // Кнопки категорій
+            const cats = [...new Set(allProducts.map(p => p.class_name).filter(Boolean))].sort();
+            document.getElementById('category-buttons').innerHTML = cats.map(cat =>
+                `<a href="category.html?cat=${encodeURIComponent(cat.toLowerCase())}" class="category-button">
+                    <button>${cat}</button>
+                </a>`
+            ).join('');
 
-        // Заповнюємо інформацію
-        document.getElementById('page-title').textContent = `Товар ${product.clothing_id} - Магазин Жіночого Одягу`;
-        document.getElementById('product-header').textContent = `Товар ID: ${product.clothing_id}`;
-        document.getElementById('product-img').src = `static/${product.clothing_id}.jpg`;
-        document.getElementById('product-img').alt = product.class_name || 'Товар';
-        document.getElementById('product-cat').textContent = product.class_name || product.title || 'Товар';
-        document.getElementById('detail-class').textContent = product.class_name || 'Невідомо';
-        document.getElementById('detail-division').textContent = product.division_name || 'Невідомо';
-        document.getElementById('detail-department').textContent = product.department_name || 'Невідомо';
-        document.getElementById('detail-rating').textContent = product.avg_rating !== null ? product.avg_rating.toFixed(2) : 'Немає';
-        document.getElementById('detail-reviews').textContent = product.review_count;
+            if (!product) {
+                document.getElementById('product-header').textContent = `Товар ID: ${currentProductId} не знайдено`;
+                return;
+            }
 
-        // Схожі товари (та сама категорія, не цей товар)
-        const similar = allProducts
-            .filter(p => p.class_name === product.class_name && p.clothing_id !== product.clothing_id)
-            .sort((a, b) => (b.avg_rating || 0) - (a.avg_rating || 0))
-            .slice(0, 10);
+            // Заповнюємо інформацію
+            document.getElementById('page-title').textContent = `Товар ${product.clothing_id} - Магазин Жіночого Одягу`;
+            document.getElementById('product-header').textContent = `Товар ID: ${product.clothing_id}`;
+            document.getElementById('product-img').src = `static/${product.clothing_id}.jpg`;
+            document.getElementById('product-img').alt = product.class_name || 'Товар';
+            document.getElementById('product-cat').textContent = product.class_name || product.title || 'Товар';
+            document.getElementById('detail-class').textContent = product.class_name || 'Невідомо';
+            document.getElementById('detail-division').textContent = product.division_name || 'Невідомо';
+            document.getElementById('detail-department').textContent = product.department_name || 'Невідомо';
+            document.getElementById('detail-rating').textContent = product.avg_rating !== null ? product.avg_rating.toFixed(2) : 'Немає';
+            document.getElementById('detail-reviews').textContent = product.review_count;
 
-        if (similar.length > 0) {
-            document.getElementById('similar').innerHTML = similar.map(p => {
-                const r = p.avg_rating !== null ? p.avg_rating.toFixed(1) : '0';
-                const n = p.class_name || 'Невідомо';
-                return `<a href="product.html?id=${p.clothing_id}#sorting-bar" class="product" style="text-decoration:none; color:inherit; display:flex; flex-direction:column;">
-                    <img src="static/${p.clothing_id}.jpg" alt="${n}" onerror="this.src='https://via.placeholder.com/150.jpg'">
-                    <h3>ID: ${p.clothing_id}</h3>
-                    <p>Категорія: ${n}</p>
-                    <p>Рейтинг: ${r}</p>
-                    <p>Відгуків: ${p.review_count}</p>
-                </a>`;
-            }).join('');
-        } else {
-            document.getElementById('similar').innerHTML = '<p>Схожих товарів не знайдено.</p>';
-        }
+            // Схожі товари (та сама категорія, не цей товар)
+            const similar = allProducts
+                .filter(p => p.class_name === product.class_name && p.clothing_id !== product.clothing_id)
+                .sort((a, b) => (b.avg_rating || 0) - (a.avg_rating || 0))
+                .slice(0, 10);
 
-        // Ініціалізуємо age slider
-        const ageSliderEl = document.getElementById('age-slider');
-        const minAgeInput = document.getElementById('min_age_value');
-        const maxAgeInput = document.getElementById('max_age_value');
+            if (similar.length > 0) {
+                document.getElementById('similar').innerHTML = similar.map(p => {
+                    const r = p.avg_rating !== null ? p.avg_rating.toFixed(1) : '0';
+                    const n = p.class_name || 'Невідомо';
+                    return `<a href="product.html?id=${p.clothing_id}#sorting-bar" class="product" style="text-decoration:none; color:inherit; display:flex; flex-direction:column;">
+                        <img src="static/${p.clothing_id}.jpg" alt="${n}" onerror="this.onerror=null; this.src='https://via.placeholder.com/150.jpg'">
+                        <h3>ID: ${p.clothing_id}</h3>
+                        <p>Категорія: ${n}</p>
+                        <p>Рейтинг: ${r}</p>
+                        <p>Відгуків: ${p.review_count}</p>
+                    </a>`;
+                }).join('');
+            } else {
+                document.getElementById('similar').innerHTML = '<p>Схожих товарів не знайдено.</p>';
+            }
 
-        if (ageSliderEl) {
-            ageSliderObj = noUiSlider.create(ageSliderEl, {
-                start: [0, 99],
-                connect: true,
-                range: { min: 0, max: 99 },
-                step: 1,
-                behaviour: 'drag',
-                tooltips: false,
-                format: {
-                    to: value => Math.round(value),
-                    from: value => Number(value)
-                }
-            });
+            // Ініціалізуємо age slider
+            const ageSliderEl = document.getElementById('age-slider');
+            const minAgeInput = document.getElementById('min_age_value');
+            const maxAgeInput = document.getElementById('max_age_value');
 
-            ageSliderObj.on('update', function(values, handle) {
-                minAgeInput.value = Math.round(values[0]);
-                maxAgeInput.value = Math.round(values[1]);
-            });
-            ageSliderObj.on('end', function() {
-                minAge = parseInt(minAgeInput.value) || 0;
-                maxAge = parseInt(maxAgeInput.value) || 99;
-                reviewPage = 1;
-                renderReviews();
-            });
-
-            minAgeInput.addEventListener('change', function() {
-                let v = parseInt(this.value) || 0;
-                if (v < 0) v = 0;
-                if (v > 99) v = 99;
-                if (v > parseInt(maxAgeInput.value)) v = parseInt(maxAgeInput.value);
-                ageSliderObj.set([v, null]);
-                minAge = v; reviewPage = 1; renderReviews();
-            });
-            maxAgeInput.addEventListener('change', function() {
-                let v = parseInt(this.value) || 99;
-                if (v < 0) v = 0;
-                if (v > 99) v = 99;
-                if (v < parseInt(minAgeInput.value)) v = parseInt(minAgeInput.value);
-                ageSliderObj.set([null, v]);
-                maxAge = v; reviewPage = 1; renderReviews();
-            });
-
-            [minAgeInput, maxAgeInput].forEach(input => {
-                input.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        let minV = parseInt(minAgeInput.value) || 0;
-                        let maxV = parseInt(maxAgeInput.value) || 99;
-                        if (minV > maxV) { minAgeInput.value = maxV; minV = maxV; }
-                        ageSliderObj.set([minV, maxV]);
-                        minAge = minV; maxAge = maxV; reviewPage = 1; renderReviews();
+            if (ageSliderEl) {
+                ageSliderObj = noUiSlider.create(ageSliderEl, {
+                    start: [0, 99],
+                    connect: true,
+                    range: { min: 0, max: 99 },
+                    step: 1,
+                    behaviour: 'drag',
+                    tooltips: false,
+                    format: {
+                        to: value => Math.round(value),
+                        from: value => Number(value)
                     }
                 });
-            });
-        }
 
-        renderReviews();
+                ageSliderObj.on('update', function(values, handle) {
+                    minAgeInput.value = Math.round(values[0]);
+                    maxAgeInput.value = Math.round(values[1]);
+                });
+                ageSliderObj.on('end', function() {
+                    minAge = parseInt(minAgeInput.value) || 0;
+                    maxAge = parseInt(maxAgeInput.value) || 99;
+                    reviewPage = 1;
+                    renderReviews();
+                });
 
-        if (window.location.hash === '#reviews-section') {
-            document.getElementById('reviews-section')?.scrollIntoView({ behavior: 'smooth' });
+                minAgeInput.addEventListener('change', function() {
+                    let v = parseInt(this.value) || 0;
+                    if (v < 0) v = 0;
+                    if (v > 99) v = 99;
+                    if (v > parseInt(maxAgeInput.value)) v = parseInt(maxAgeInput.value);
+                    ageSliderObj.set([v, null]);
+                    minAge = v; reviewPage = 1; renderReviews();
+                });
+                maxAgeInput.addEventListener('change', function() {
+                    let v = parseInt(this.value) || 99;
+                    if (v < 0) v = 0;
+                    if (v > 99) v = 99;
+                    if (v < parseInt(minAgeInput.value)) v = parseInt(minAgeInput.value);
+                    ageSliderObj.set([null, v]);
+                    maxAge = v; reviewPage = 1; renderReviews();
+                });
+
+                [minAgeInput, maxAgeInput].forEach(input => {
+                    input.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            let minV = parseInt(minAgeInput.value) || 0;
+                            let maxV = parseInt(maxAgeInput.value) || 99;
+                            if (minV > maxV) { minAgeInput.value = maxV; minV = maxV; }
+                            ageSliderObj.set([minV, maxV]);
+                            minAge = minV; maxAge = maxV; reviewPage = 1; renderReviews();
+                        }
+                    });
+                });
+            }
+
+            renderReviews();
+
+            if (window.location.hash === '#reviews-section') {
+                document.getElementById('reviews-section')?.scrollIntoView({ behavior: 'smooth' });
+            }
+        } catch (error) {
+            console.error("Помилка ініціалізації:", error);
+            alert("Помилка ініціалізації сторінки: " + error.message + "\n" + error.stack);
         }
     }
 
