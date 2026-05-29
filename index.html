@@ -6,7 +6,6 @@
     <meta name="description" content="Elizabeth's Elegance — магазин жіночого одягу з широким асортиментом. Перегляд товарів, відгуків і рейтингів.">
     <title>Магазин Жіночого Одягу — Elizabeth's Elegance</title>
     <link rel="stylesheet" href="static/style.css">
-    <link rel="stylesheet" href="static/prod.css">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -158,7 +157,17 @@
         filterMaxRating = parseFloat(params.get('max_rating') || '5');
 
         // Завантажуємо дані
-        const resp = await fetch('data/products.json');
+        let resp;
+        try {
+            resp = await fetch('data/products.json');
+        } catch (e) {
+            alert("Помилка завантаження даних (CORS). Будь ласка, запустіть сайт через локальний сервер.");
+            return;
+        }
+        if (!resp.ok) {
+            alert("Помилка HTTP завантаження даних.");
+            return;
+        }
         allProducts = await resp.json();
 
         buildSidebar();
@@ -294,13 +303,13 @@
     function productCard(p) {
         const rating = p.avg_rating !== null ? p.avg_rating.toFixed(2) : 'Немає';
         const name = p.class_name || 'Невідомо';
-        return `<div class="product">
+        return `<a href="product.html?id=${p.clothing_id}#sorting-bar" class="product" style="text-decoration:none; color:inherit; display:flex; flex-direction:column;">
             <img src="static/${p.clothing_id}.jpg" alt="${name}" onerror="this.src='https://via.placeholder.com/150.jpg'">
-            <h3><a href="product.html?id=${p.clothing_id}#sorting-bar">ID: ${p.clothing_id}</a></h3>
+            <h3>ID: ${p.clothing_id}</h3>
             <p>${name}</p>
             <p>Рейтинг: ${rating}</p>
-            <p><a href="product.html?id=${p.clothing_id}#reviews-section">Відгуків: ${p.review_count}</a></p>
-        </div>`;
+            <p>Відгуків: ${p.review_count}</p>
+        </a>`;
     }
 
     // =========================================================
@@ -362,13 +371,13 @@
         const rating = (showAvgRating ? p.avg_rating : p.avg_rating);
         const rStr = rating !== null ? rating.toFixed(2) : 'Немає';
         const name = p.class_name || 'Невідомо';
-        return `<div class="product">
+        return `<a href="product.html?id=${p.clothing_id}#sorting-bar" class="product" style="text-decoration:none; color:inherit; display:flex; flex-direction:column;">
             <img src="static/${p.clothing_id}.jpg" alt="${name}" onerror="this.src='https://via.placeholder.com/150.jpg'">
-            <h3><a href="product.html?id=${p.clothing_id}#sorting-bar">ID: ${p.clothing_id}</a></h3>
+            <h3>ID: ${p.clothing_id}</h3>
             <p>${name}</p>
             <p>Рейтинг: ${rStr}</p>
-            <p><a href="product.html?id=${p.clothing_id}#reviews-section">Відгуків: ${p.review_count}</a></p>
-        </div>`;
+            <p>Відгуків: ${p.review_count}</p>
+        </a>`;
     }
 
     // =========================================================

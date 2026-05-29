@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Рекомендації за віком - Elizabeth's Elegance</title>
     <link rel="stylesheet" href="static/style.css">
-    <link rel="stylesheet" href="static/prod.css">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -50,11 +49,24 @@
         const params = new URLSearchParams(window.location.search);
         const age = parseInt(params.get('age') || '0');
 
-        // Завантажуємо продукти і відгуки паралельно
-        const [productsResp, reviewsResp] = await Promise.all([
-            fetch('data/products.json'),
-            fetch('data/reviews.json')
-        ]);
+        let productsResp, reviewsResp;
+        try {
+            // Завантажуємо продукти і відгуки паралельно
+            [productsResp, reviewsResp] = await Promise.all([
+                fetch('data/products.json'),
+                fetch('data/reviews.json')
+            ]);
+        } catch (e) {
+            alert("Помилка завантаження даних (CORS). Будь ласка, запустіть сайт через локальний сервер.");
+            document.getElementById('rec-title').textContent = "Помилка завантаження даних";
+            return;
+        }
+
+        if (!productsResp.ok || !reviewsResp.ok) {
+            alert("Помилка HTTP завантаження даних.");
+            return;
+        }
+
         const allProducts = await productsResp.json();
         const allReviews = await reviewsResp.json();
 
@@ -104,14 +116,14 @@
         slider.innerHTML = products.map(p => {
             const rating = p.avg_rating !== null ? p.avg_rating.toFixed(2) : 'Немає';
             const name = p.class_name || 'Невідомо';
-            return `<div class="product">
+            return `<a href="product.html?id=${p.clothing_id}#sorting-bar" class="product" style="text-decoration:none; color:inherit; display:flex; flex-direction:column;">
                 <img src="static/${p.clothing_id}.jpg" alt="${name}" onerror="this.src='https://via.placeholder.com/150.jpg'">
-                <h3><a href="product.html?id=${p.clothing_id}#sorting-bar">ID: ${p.clothing_id}</a></h3>
+                <h3>ID: ${p.clothing_id}</h3>
                 <p>Категорія: ${name}</p>
                 <p>Рейтинг: ${rating}</p>
-                <p><a href="product.html?id=${p.clothing_id}#reviews-section">Всього відгуків: ${p.review_count}</a></p>
+                <p>Всього відгуків: ${p.review_count}</p>
                 <p>Відгуків для віку ${age}: ${p.age_specific_feedback_count}</p>
-            </div>`;
+            </a>`;
         }).join('');
     }
 

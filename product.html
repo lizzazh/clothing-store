@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Товар - Магазин Жіночого Одягу</title>
     <link rel="stylesheet" href="static/style.css">
-    <link rel="stylesheet" href="static/prod.css">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
 </head>
@@ -150,12 +149,23 @@
         }
 
         // Завантажуємо продукти і відгуки паралельно
-        const [productsResp, reviewsResp] = await Promise.all([
-            fetch('data/products.json'),
-            fetch('data/reviews.json')
-        ]);
-        allProducts = await productsResp.json();
-        const allReviews = await reviewsResp.json();
+        let productsResp, reviewsResp;
+        try {
+            [productsResp, reviewsResp] = await Promise.all([
+                fetch('data/products.json'),
+                fetch('data/reviews.json')
+            ]);
+        } catch (e) {
+            alert("Помилка завантаження даних (CORS). Будь ласка, запустіть сайт через локальний сервер.");
+            document.getElementById('product-header').textContent = "Помилка завантаження даних";
+            return;
+        }
+        if (!productsResp.ok || !reviewsResp.ok) {
+            alert("Помилка HTTP: " + productsResp.status);
+            return;
+        }
+        allProducts = await productsResp.ok ? await productsResp.json() : [];
+        const allReviews = await reviewsResp.ok ? await reviewsResp.json() : {};
         productReviews = allReviews[String(currentProductId)] || [];
 
         const product = allProducts.find(p => p.clothing_id === currentProductId);
@@ -195,16 +205,12 @@
             document.getElementById('similar').innerHTML = similar.map(p => {
                 const r = p.avg_rating !== null ? p.avg_rating.toFixed(1) : '0';
                 const n = p.class_name || 'Невідомо';
-                return `<a href="product.html?id=${p.clothing_id}">
-                    <div class="product">
-                        <img src="static/${p.clothing_id}.jpg" alt="${n}" onerror="this.src='https://via.placeholder.com/150.jpg'">
-                        <h3><a href="product.html?id=${p.clothing_id}#sorting-bar">ID: ${p.clothing_id}</a></h3>
-                        <div class="product-info">
-                            <p>Категорія: ${n}</p>
-                            <p>Рейтинг: ${r}</p>
-                            <p><a href="product.html?id=${p.clothing_id}#reviews-section">Відгуків: ${p.review_count}</a></p>
-                        </div>
-                    </div>
+                return `<a href="product.html?id=${p.clothing_id}#sorting-bar" class="product" style="text-decoration:none; color:inherit; display:flex; flex-direction:column;">
+                    <img src="static/${p.clothing_id}.jpg" alt="${n}" onerror="this.src='https://via.placeholder.com/150.jpg'">
+                    <h3>ID: ${p.clothing_id}</h3>
+                    <p>Категорія: ${n}</p>
+                    <p>Рейтинг: ${r}</p>
+                    <p>Відгуків: ${p.review_count}</p>
                 </a>`;
             }).join('');
         } else {
