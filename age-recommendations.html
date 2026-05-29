@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рекомендації за віком - Elizabeth's Elegance</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/prod.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="store-title">Elizabeth's Elegance</div>
+
+    <div class="nav-and-search">
+        <div class="nav-links">
+            <a href="index.html" class="back-arrow">На головну</a>
+            <a href="category-stats.html" class="stats-button">Переглянути статистику</a>
+        </div>
+        <div class="search-and-age">
+            <div class="age-recommendation-form">
+                <form onsubmit="goAgeRec(event)">
+                    <input type="number" id="age-input" min="0" max="120" placeholder="Вік" required>
+                    <button type="submit">Отримати</button>
+                </form>
+            </div>
+            <div class="search-bar">
+                <form onsubmit="goSearch(event)">
+                    <input type="text" id="search-input" placeholder="Пошук за назвою">
+                    <button type="submit">Шукати</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Категорії -->
+    <div class="category-buttons" id="category-buttons"></div>
+
+    <!-- Рекомендовані товари -->
+    <section class="top-products">
+        <h2 id="rec-title">Рекомендовані товари</h2>
+        <div class="arrow-controls">
+            <button class="prev-btn" onclick="scrollSlider('age-recommendations','left')">←</button>
+            <button class="next-btn" onclick="scrollSlider('age-recommendations','right')">→</button>
+        </div>
+        <div class="product-slider" id="age-recommendations"></div>
+    </section>
+
+    <script>
+    async function init() {
+        const params = new URLSearchParams(window.location.search);
+        const age = parseInt(params.get('age') || '0');
+
+        // Завантажуємо продукти і відгуки паралельно
+        const [productsResp, reviewsResp] = await Promise.all([
+            fetch('data/products.json'),
+            fetch('data/reviews.json')
+        ]);
+        const allProducts = await productsResp.json();
+        const allReviews = await reviewsResp.json();
+
+        // Кнопки категорій
+        const cats = [...new Set(allProducts.map(p => p.class_name).filter(Boolean))].sort();
+        document.getElementById('category-buttons').innerHTML = cats.map(cat =>
+            `<a href="category.html?cat=${encodeURIComponent(cat.toLowerCase())}" class="category-button">
+                <button>${cat}</button>
+            </a>`
+        ).join('');
+
+        if (!age || age <= 0) {
+            document.getElementById('rec-title').textContent = 'Введіть вік для рекомендацій';
+            document.getElementById('age-recommendations').innerHTML = '<p>Вік не вказано.</p>';
+            return;
+        }
+
+        document.getElementById('rec-title').textContent = `Рекомендовані товари для віку - ${age}`;
+
+        // Логіка рекомендацій: знаходимо відгуки від покупців цього ж віку
+        // і рахуємо їх кількість для кожного товару (age_specific_feedback_count)
+        const ageSpecificCounts = {};
+        Object.entries(allReviews).forEach(([cid, reviews]) => {
+            const count = reviews.filter(r => r.age === age).length;
+            if (count > 0) ageSpecificCounts[parseInt(cid)] = count;
+        });
+
+        // Фільтруємо товари, де є відгуки від покупців цього віку
+        const recommendedIds = new Set(Object.keys(ageSpecificCounts).map(Number));
+        let products = allProducts
+            .filter(p => recommendedIds.has(p.clothing_id))
+            .map(p => ({
+                ...p,
+                age_specific_feedback_count: ageSpecificCounts[p.clothing_id] || 0
+            }))
+            .sort((a, b) =>
+                b.age_specific_feedback_count - a.age_specific_feedback_count ||
+                (b.avg_rating || 0) - (a.avg_rating || 0)
+            );
+
+        const slider = document.getElementById('age-recommendations');
+        if (products.length === 0) {
+            slider.innerHTML = '<p>Товари для вашого віку не знайдено.</p>';
+            return;
+        }
+
+        slider.innerHTML = products.map(p => {
+            const rating = p.avg_rating !== null ? p.avg_rating.toFixed(2) : 'Немає';
+            const name = p.class_name || 'Невідомо';
+            return `<div class="product">
+                <img src="static/${p.clothing_id}.jpg" alt="${name}" onerror="this.src='https://via.placeholder.com/150.jpg'">
+                <h3><a href="product.html?id=${p.clothing_id}#sorting-bar">ID: ${p.clothing_id}</a></h3>
+                <p>Категорія: ${name}</p>
+                <p>Рейтинг: ${rating}</p>
+                <p><a href="product.html?id=${p.clothing_id}#reviews-section">Всього відгуків: ${p.review_count}</a></p>
+                <p>Відгуків для віку ${age}: ${p.age_specific_feedback_count}</p>
+            </div>`;
+        }).join('');
+    }
+
+    function scrollSlider(id, direction) {
+        const slider = document.getElementById(id);
+        if (!slider) return;
+        const product = slider.querySelector('.product');
+        const productWidth = product ? product.offsetWidth + 20 : slider.offsetWidth / 3;
+        slider.scrollBy({ left: direction === 'left' ? -productWidth : productWidth, behavior: 'smooth' });
+    }
+
+    function goSearch(e) {
+        e.preventDefault();
+        const q = document.getElementById('search-input').value.trim();
+        if (q) window.location.href = `search.html?search=${encodeURIComponent(q)}`;
+    }
+
+    function goAgeRec(e) {
+        e.preventDefault();
+        const age = document.getElementById('age-input').value;
+        if (age) window.location.href = `age-recommendations.html?age=${encodeURIComponent(age)}`;
+    }
+
+    window.onload = init;
+    </script>
+</body>
+</html>

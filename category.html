@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Категорія - Магазин Жіночого Одягу</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/prod.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Monsieur+La+Doulaise&family=Rochester&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="store-title">Elizabeth's Elegance</div>
+
+    <div class="nav-and-search">
+        <div class="nav-links">
+            <a href="index.html" class="back-arrow">На головну</a>
+            <a href="category-stats.html" class="stats-button">Переглянути статистику</a>
+        </div>
+        <div class="search-and-age">
+            <div class="age-recommendation-form">
+                <form onsubmit="goAgeRec(event)">
+                    <input type="number" id="age-input" min="0" max="120" placeholder="Вік" required>
+                    <button type="submit">Отримати</button>
+                </form>
+            </div>
+            <div class="search-bar">
+                <form onsubmit="goSearch(event)">
+                    <input type="text" id="search-input" placeholder="Пошук за назвою">
+                    <button type="submit">Шукати</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Категорії -->
+    <div class="category-buttons" id="category-buttons"></div>
+
+    <!-- Назва категорії -->
+    <header>
+        <h1 id="category-title"></h1>
+    </header>
+
+    <!-- Сортування -->
+    <div class="sorting-bar" id="sorting-bar">
+        <div class="sorting-container">
+            <div class="sort-options">
+                <label>Сортувати:</label>
+                <select id="sort-select" onchange="applySort()">
+                    <option value="">Без сортування</option>
+                    <option value="rating_desc">Рейтинг ▼</option>
+                    <option value="rating_asc">Рейтинг ▲</option>
+                    <option value="reviews_desc">Відгуки ▼</option>
+                    <option value="reviews_asc">Відгуки ▲</option>
+                    <option value="id_desc">ID ▼</option>
+                    <option value="id_asc">ID ▲</option>
+                </select>
+            </div>
+            <div class="items-per-page">
+                <label>На сторінці:</label>
+                <select id="per-page-select" onchange="applyPerPage()">
+                    <option value="12">12</option>
+                    <option value="24">24</option>
+                    <option value="36">36</option>
+                    <option value="48">48</option>
+                    <option value="60">60</option>
+                    <option value="96">96</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Товари -->
+    <section class="filtered-products">
+        <div class="product-list" id="product-list"></div>
+        <p class="items-info" id="items-info"></p>
+        <div class="pagination" id="pagination"></div>
+    </section>
+
+    <script>
+    let allProducts = [];
+    let categoryProducts = [];
+    let currentCategory = '';
+    let currentPage = 1;
+    let itemsPerPage = 12;
+    let sortBy = '';
+
+    async function init() {
+        const params = new URLSearchParams(window.location.search);
+        currentCategory = (params.get('cat') || '').toLowerCase();
+        currentPage = parseInt(params.get('page') || '1');
+        itemsPerPage = parseInt(params.get('items_per_page') || '12');
+        sortBy = params.get('sort_by') || '';
+
+        const resp = await fetch('data/products.json');
+        allProducts = await resp.json();
+
+        // Фільтруємо по категорії (case-insensitive)
+        categoryProducts = allProducts.filter(p =>
+            p.class_name && p.class_name.toLowerCase() === currentCategory
+        );
+
+        const displayName = categoryProducts.length > 0
+            ? categoryProducts[0].class_name
+            : currentCategory;
+
+        document.getElementById('page-title').textContent = `${displayName} - Магазин Жіночого Одягу`;
+        document.getElementById('category-title').textContent = displayName;
+
+        // Кнопки категорій
+        const cats = [...new Set(allProducts.map(p => p.class_name).filter(Boolean))].sort();
+        const catBtns = document.getElementById('category-buttons');
+        catBtns.innerHTML = cats.map(cat =>
+            `<a href="category.html?cat=${encodeURIComponent(cat.toLowerCase())}" class="category-button">
+                <button ${cat.toLowerCase() === currentCategory ? 'class="active"' : ''}>${cat}</button>
+            </a>`
+        ).join('');
+
+        document.getElementById('sort-select').value = sortBy;
+        document.getElementById('per-page-select').value = String(itemsPerPage);
+
+        applySort(false);
+
+        if (window.location.hash === '#sorting-bar') {
+            document.getElementById('sorting-bar')?.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    function getSorted() {
+        const arr = [...categoryProducts];
+        switch (sortBy) {
+            case 'rating_desc': return arr.sort((a, b) => (b.avg_rating||0) - (a.avg_rating||0));
+            case 'rating_asc': return arr.sort((a, b) => (a.avg_rating||0) - (b.avg_rating||0));
+            case 'reviews_desc': return arr.sort((a, b) => b.review_count - a.review_count);
+            case 'reviews_asc': return arr.sort((a, b) => a.review_count - b.review_count);
+            case 'id_desc': return arr.sort((a, b) => b.clothing_id - a.clothing_id);
+            case 'id_asc': return arr.sort((a, b) => a.clothing_id - b.clothing_id);
+            default: return arr.sort((a, b) => a.clothing_id - b.clothing_id);
+        }
+    }
+
+    function applySort(push = true) {
+        sortBy = document.getElementById('sort-select').value;
+        currentPage = 1;
+        render();
+        if (push) { pushState(); document.getElementById('sorting-bar')?.scrollIntoView({ behavior: 'smooth' }); }
+    }
+
+    function applyPerPage() {
+        itemsPerPage = parseInt(document.getElementById('per-page-select').value);
+        currentPage = 1;
+        render();
+        pushState();
+        document.getElementById('sorting-bar')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function render() {
+        const sorted = getSorted();
+        const total = sorted.length;
+        const totalPages = Math.max(1, Math.ceil(total / itemsPerPage));
+        if (currentPage > totalPages) currentPage = totalPages;
+        const page = sorted.slice((currentPage-1)*itemsPerPage, currentPage*itemsPerPage);
+
+        document.getElementById('product-list').innerHTML = page.map(p => {
+            const rating = p.avg_rating !== null ? p.avg_rating.toFixed(2) : 'Немає';
+            const name = p.class_name || 'Невідомо';
+            return `<div class="product">
+                <img src="static/${p.clothing_id}.jpg" alt="${name}" onerror="this.src='https://via.placeholder.com/150.jpg'">
+                <h3><a href="product.html?id=${p.clothing_id}#sorting-bar">ID: ${p.clothing_id}</a></h3>
+                <p>${name}</p>
+                <p>Рейтинг: ${rating}</p>
+                <p><a href="product.html?id=${p.clothing_id}#reviews-section">Відгуків: ${p.review_count}</a></p>
+            </div>`;
+        }).join('');
+
+        document.getElementById('items-info').textContent =
+            `Відображено: ${page.length} з ${total} загалом (${itemsPerPage} на сторінку)`;
+
+        renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+        if (totalPages <= 1) { document.getElementById('pagination').innerHTML = ''; return; }
+        const pages = generatePagination(currentPage, totalPages);
+        let html = '';
+        if (currentPage > 1) html += `<a onclick="goPage(${currentPage-1})">←</a>`;
+        pages.forEach(p => {
+            if (p === '...') html += '<span class="ellipsis">...</span>';
+            else if (p === currentPage) html += `<span class="active">${p}</span>`;
+            else html += `<a onclick="goPage(${p})">${p}</a>`;
+        });
+        if (currentPage < totalPages) html += `<a onclick="goPage(${currentPage+1})">→</a>`;
+        document.getElementById('pagination').innerHTML = html;
+    }
+
+    function generatePagination(current, total) {
+        if (total <= 7) return Array.from({length: total}, (_, i) => i + 1);
+        const pages = [1];
+        if (current > 3) pages.push('...');
+        for (let i = Math.max(2, current-1); i <= Math.min(total-1, current+1); i++) pages.push(i);
+        if (current < total-2) pages.push('...');
+        pages.push(total);
+        return pages;
+    }
+
+    function goPage(p) {
+        currentPage = p;
+        render();
+        pushState();
+        document.getElementById('sorting-bar')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function pushState() {
+        const params = new URLSearchParams();
+        params.set('cat', currentCategory);
+        if (currentPage > 1) params.set('page', currentPage);
+        if (itemsPerPage !== 12) params.set('items_per_page', itemsPerPage);
+        if (sortBy) params.set('sort_by', sortBy);
+        history.pushState({}, '', '?' + params.toString());
+    }
+
+    function goSearch(e) {
+        e.preventDefault();
+        const q = document.getElementById('search-input').value.trim();
+        if (q) window.location.href = `search.html?search=${encodeURIComponent(q)}`;
+    }
+
+    function goAgeRec(e) {
+        e.preventDefault();
+        const age = document.getElementById('age-input').value;
+        if (age) window.location.href = `age-recommendations.html?age=${encodeURIComponent(age)}`;
+    }
+
+    window.onload = init;
+    </script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Elizabeth's Elegance — магазин жіночого одягу з широким асортиментом. Перегляд товарів, відгуків і рейтингів.">
+    <title>Магазин Жіночого Одягу — Elizabeth's Elegance</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/prod.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="store-title">Elizabeth's Elegance</div>
+
+    <header>
+        <h1>Ласкаво просимо до магазину жіночого одягу!</h1>
+    </header>
+
+    <div class="nav-and-search">
+        <a href="category-stats.html" class="stats-button">Переглянути статистику</a>
+        <div class="search-and-age">
+            <div class="age-recommendation-form">
+                <form onsubmit="goAgeRec(event)">
+                    <input type="number" id="age-input" min="0" max="120" placeholder="Вік" required>
+                    <button type="submit">Отримати</button>
+                </form>
+            </div>
+            <div class="search-bar">
+                <form onsubmit="goSearch(event)">
+                    <input type="text" id="search-input" placeholder="Пошук за назвою">
+                    <button type="submit">Шукати</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Категорії -->
+    <div class="category-buttons" id="category-buttons"></div>
+
+    <!-- Топ 5 за рейтингом -->
+    <section class="top-products">
+        <h2>Топ 5 за середнім рейтингом</h2>
+        <div class="arrow-controls">
+            <button onclick="scrollSlider('top-rated','left')">←</button>
+            <button onclick="scrollSlider('top-rated','right')">→</button>
+        </div>
+        <div class="product-slider" id="top-rated"></div>
+    </section>
+
+    <!-- Топ 5 за відгуками -->
+    <section class="top-products">
+        <h2>Топ 5 за кількістю відгуків</h2>
+        <div class="arrow-controls">
+            <button onclick="scrollSlider('popular','left')">←</button>
+            <button onclick="scrollSlider('popular','right')">→</button>
+        </div>
+        <div class="product-slider" id="popular"></div>
+    </section>
+
+    <!-- Контейнер -->
+    <div class="container">
+        <!-- Фільтр -->
+        <div class="sidebar">
+            <h3>Фільтр</h3>
+            <div class="filter-section">
+                <label>Рейтинг:</label>
+                <div class="range-wrapper">
+                    <input type="range" name="min_rating" min="0" max="5" step="0.1" value="0" id="min-range" oninput="updateRange()">
+                    <input type="range" name="max_rating" min="0" max="5" step="0.1" value="5" id="max-range" oninput="updateRange()">
+                    <div class="range-track" id="range-track"></div>
+                </div>
+                <div class="range-values">
+                    <input type="number" id="min-value" value="0" min="0" max="5" step="0.1" oninput="updateRangeFromInput(this)">
+                    <input type="number" id="max-value" value="5" min="0" max="5" step="0.1" oninput="updateRangeFromInput(this)">
+                </div>
+            </div>
+            <div class="filter-section">
+                <label>Division:</label>
+                <div class="filter-list" id="division-list"></div>
+            </div>
+            <div class="filter-section">
+                <label>Department:</label>
+                <div class="filter-list" id="department-list"></div>
+            </div>
+            <div class="filter-section">
+                <label>Category:</label>
+                <div class="filter-list" id="category-list"></div>
+            </div>
+            <button type="button" onclick="applyFilters()">Фільтрувати</button>
+        </div>
+
+        <!-- Товари -->
+        <div class="main-content">
+            <section class="filtered-products">
+                <h2>Усі товари</h2>
+                <div class="sorting-bar" id="sorting-bar">
+                    <div class="sorting-container">
+                        <div class="sort-options">
+                            <label>Сортувати:</label>
+                            <select id="sort-select" onchange="applySort()">
+                                <option value="">Без сортування</option>
+                                <option value="rating_desc">Рейтинг ▼</option>
+                                <option value="rating_asc">Рейтинг ▲</option>
+                                <option value="reviews_desc">Відгуки ▼</option>
+                                <option value="reviews_asc">Відгуки ▲</option>
+                                <option value="id_desc">ID ▼</option>
+                                <option value="id_asc">ID ▲</option>
+                            </select>
+                        </div>
+                        <div class="items-per-page">
+                            <label>На сторінці:</label>
+                            <select id="per-page-select" onchange="applyPerPage()">
+                                <option value="12">12</option>
+                                <option value="24">24</option>
+                                <option value="36">36</option>
+                                <option value="48">48</option>
+                                <option value="60">60</option>
+                                <option value="96">96</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-list" id="product-list"></div>
+                <p class="items-info" id="items-info"></p>
+                <div class="pagination" id="pagination"></div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+    // =========================================================
+    // Стан сторінки
+    // =========================================================
+    let allProducts = [];
+    let filteredProducts = [];
+    let currentPage = 1;
+    let itemsPerPage = 12;
+    let sortBy = '';
+    let filterDivisions = [];
+    let filterDepartments = [];
+    let filterCategories = [];
+    let filterMinRating = 0;
+    let filterMaxRating = 5;
+
+    // =========================================================
+    // Ініціалізація
+    // =========================================================
+    async function init() {
+        // Відновлюємо стан з URL
+        const params = new URLSearchParams(window.location.search);
+        currentPage = parseInt(params.get('page') || '1');
+        itemsPerPage = parseInt(params.get('items_per_page') || '12');
+        sortBy = params.get('sort_by') || '';
+        filterDivisions = params.getAll('division');
+        filterDepartments = params.getAll('department');
+        filterCategories = params.getAll('category');
+        filterMinRating = parseFloat(params.get('min_rating') || '0');
+        filterMaxRating = parseFloat(params.get('max_rating') || '5');
+
+        // Завантажуємо дані
+        const resp = await fetch('data/products.json');
+        allProducts = await resp.json();
+
+        buildSidebar();
+        applyAll();
+        buildTopSliders();
+
+        // Відновлюємо UI-контролери
+        document.getElementById('sort-select').value = sortBy;
+        document.getElementById('per-page-select').value = String(itemsPerPage);
+        document.getElementById('min-range').value = filterMinRating;
+        document.getElementById('max-range').value = filterMaxRating;
+        document.getElementById('min-value').value = filterMinRating;
+        document.getElementById('max-value').value = filterMaxRating;
+        updateRange();
+
+        // Scroll якщо є hash
+        if (window.location.hash === '#sorting-bar') {
+            document.getElementById('sorting-bar')?.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    // =========================================================
+    // Бокова панель
+    // =========================================================
+    function buildSidebar() {
+        const divisions = [...new Set(allProducts.map(p => p.division_name).filter(Boolean))].sort();
+        const departments = [...new Set(allProducts.map(p => p.department_name).filter(Boolean))].sort();
+        const categories = [...new Set(allProducts.map(p => p.class_name).filter(Boolean))].sort();
+
+        fillCheckboxList('division-list', divisions, filterDivisions);
+        fillCheckboxList('department-list', departments, filterDepartments);
+        fillCheckboxList('category-list', categories, filterCategories);
+
+        // Кнопки категорій (верхній рядок)
+        const catBtns = document.getElementById('category-buttons');
+        catBtns.innerHTML = categories.map(cat =>
+            `<a href="category.html?cat=${encodeURIComponent(cat.toLowerCase())}" class="category-button">
+                <button>${cat}</button>
+            </a>`
+        ).join('');
+    }
+
+    function fillCheckboxList(elId, items, checked) {
+        const el = document.getElementById(elId);
+        el.innerHTML = items.map(item =>
+            `<label><input type="checkbox" value="${item}" ${checked.includes(item) ? 'checked' : ''}
+                onchange=""> ${item}</label>`
+        ).join('');
+    }
+
+    // =========================================================
+    // Фільтрація і сортування
+    // =========================================================
+    function applyAll() {
+        let result = [...allProducts];
+
+        // Фільтр Division
+        if (filterDivisions.length) result = result.filter(p => filterDivisions.includes(p.division_name));
+        // Фільтр Department
+        if (filterDepartments.length) result = result.filter(p => filterDepartments.includes(p.department_name));
+        // Фільтр Category
+        if (filterCategories.length) result = result.filter(p => filterCategories.includes(p.class_name));
+        // Фільтр Rating
+        if (filterMinRating > 0) result = result.filter(p => p.avg_rating !== null && p.avg_rating >= filterMinRating);
+        if (filterMaxRating < 5) result = result.filter(p => p.avg_rating !== null && p.avg_rating <= filterMaxRating);
+
+        // Сортування
+        result = sortProducts(result, sortBy);
+
+        filteredProducts = result;
+        renderProducts();
+    }
+
+    function sortProducts(arr, by) {
+        const sorted = [...arr];
+        switch (by) {
+            case 'rating_desc': return sorted.sort((a, b) => (b.avg_rating || 0) - (a.avg_rating || 0));
+            case 'rating_asc': return sorted.sort((a, b) => (a.avg_rating || 0) - (b.avg_rating || 0));
+            case 'reviews_desc': return sorted.sort((a, b) => b.review_count - a.review_count);
+            case 'reviews_asc': return sorted.sort((a, b) => a.review_count - b.review_count);
+            case 'id_desc': return sorted.sort((a, b) => b.clothing_id - a.clothing_id);
+            case 'id_asc': return sorted.sort((a, b) => a.clothing_id - b.clothing_id);
+            default: return sorted.sort((a, b) => a.clothing_id - b.clothing_id);
+        }
+    }
+
+    function applyFilters() {
+        filterDivisions = [...document.querySelectorAll('#division-list input:checked')].map(el => el.value);
+        filterDepartments = [...document.querySelectorAll('#department-list input:checked')].map(el => el.value);
+        filterCategories = [...document.querySelectorAll('#category-list input:checked')].map(el => el.value);
+        filterMinRating = parseFloat(document.getElementById('min-range').value);
+        filterMaxRating = parseFloat(document.getElementById('max-range').value);
+        currentPage = 1;
+        applyAll();
+        pushState();
+    }
+
+    function applySort() {
+        sortBy = document.getElementById('sort-select').value;
+        currentPage = 1;
+        applyAll();
+        pushState();
+        document.getElementById('sorting-bar')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function applyPerPage() {
+        itemsPerPage = parseInt(document.getElementById('per-page-select').value);
+        currentPage = 1;
+        renderProducts();
+        pushState();
+        document.getElementById('sorting-bar')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // =========================================================
+    // Рендер товарів
+    // =========================================================
+    function renderProducts() {
+        const total = filteredProducts.length;
+        const totalPages = Math.max(1, Math.ceil(total / itemsPerPage));
+        if (currentPage > totalPages) currentPage = totalPages;
+        const offset = (currentPage - 1) * itemsPerPage;
+        const page = filteredProducts.slice(offset, offset + itemsPerPage);
+
+        const list = document.getElementById('product-list');
+        list.innerHTML = page.map(p => productCard(p)).join('');
+
+        document.getElementById('items-info').textContent =
+            `Відображено: ${page.length} з ${total} загалом (${itemsPerPage} на сторінку)`;
+
+        renderPagination(totalPages);
+    }
+
+    function productCard(p) {
+        const rating = p.avg_rating !== null ? p.avg_rating.toFixed(2) : 'Немає';
+        const name = p.class_name || 'Невідомо';
+        return `<div class="product">
+            <img src="static/${p.clothing_id}.jpg" alt="${name}" onerror="this.src='https://via.placeholder.com/150.jpg'">
+            <h3><a href="product.html?id=${p.clothing_id}#sorting-bar">ID: ${p.clothing_id}</a></h3>
+            <p>${name}</p>
+            <p>Рейтинг: ${rating}</p>
+            <p><a href="product.html?id=${p.clothing_id}#reviews-section">Відгуків: ${p.review_count}</a></p>
+        </div>`;
+    }
+
+    // =========================================================
+    // Пагінація
+    // =========================================================
+    function renderPagination(totalPages) {
+        if (totalPages <= 1) { document.getElementById('pagination').innerHTML = ''; return; }
+
+        const pages = generatePagination(currentPage, totalPages);
+        let html = '';
+        if (currentPage > 1) html += `<a onclick="goPage(${currentPage-1})">←</a>`;
+        pages.forEach(p => {
+            if (p === '...') html += '<span class="ellipsis">...</span>';
+            else if (p === currentPage) html += `<span class="active">${p}</span>`;
+            else html += `<a onclick="goPage(${p})">${p}</a>`;
+        });
+        if (currentPage < totalPages) html += `<a onclick="goPage(${currentPage+1})">→</a>`;
+        document.getElementById('pagination').innerHTML = html;
+    }
+
+    function generatePagination(current, total) {
+        if (total <= 7) return Array.from({length: total}, (_, i) => i + 1);
+        const pages = [];
+        pages.push(1);
+        if (current > 3) pages.push('...');
+        for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) pages.push(i);
+        if (current < total - 2) pages.push('...');
+        pages.push(total);
+        return pages;
+    }
+
+    function goPage(p) {
+        currentPage = p;
+        renderProducts();
+        pushState();
+        document.getElementById('sorting-bar')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // =========================================================
+    // Топ слайдери
+    // =========================================================
+    function buildTopSliders() {
+        // Топ 5 за рейтингом (avg_rating >= 3.0)
+        const byRating = [...allProducts]
+            .filter(p => p.avg_rating !== null && p.avg_rating >= 3.0)
+            .sort((a, b) => b.avg_rating - a.avg_rating || b.review_count - a.review_count)
+            .slice(0, 5);
+
+        const byReviews = [...allProducts]
+            .filter(p => p.avg_rating !== null && p.avg_rating >= 3.0)
+            .sort((a, b) => b.review_count - a.review_count || b.avg_rating - a.avg_rating)
+            .slice(0, 5);
+
+        document.getElementById('top-rated').innerHTML = byRating.map(p => sliderCard(p, true)).join('');
+        document.getElementById('popular').innerHTML = byReviews.map(p => sliderCard(p, false)).join('');
+    }
+
+    function sliderCard(p, showAvgRating) {
+        const rating = (showAvgRating ? p.avg_rating : p.avg_rating);
+        const rStr = rating !== null ? rating.toFixed(2) : 'Немає';
+        const name = p.class_name || 'Невідомо';
+        return `<div class="product">
+            <img src="static/${p.clothing_id}.jpg" alt="${name}" onerror="this.src='https://via.placeholder.com/150.jpg'">
+            <h3><a href="product.html?id=${p.clothing_id}#sorting-bar">ID: ${p.clothing_id}</a></h3>
+            <p>${name}</p>
+            <p>Рейтинг: ${rStr}</p>
+            <p><a href="product.html?id=${p.clothing_id}#reviews-section">Відгуків: ${p.review_count}</a></p>
+        </div>`;
+    }
+
+    // =========================================================
+    // Навігація і URL
+    // =========================================================
+    function pushState() {
+        const params = new URLSearchParams();
+        if (currentPage > 1) params.set('page', currentPage);
+        if (itemsPerPage !== 12) params.set('items_per_page', itemsPerPage);
+        if (sortBy) params.set('sort_by', sortBy);
+        filterDivisions.forEach(d => params.append('division', d));
+        filterDepartments.forEach(d => params.append('department', d));
+        filterCategories.forEach(d => params.append('category', d));
+        if (filterMinRating > 0) params.set('min_rating', filterMinRating);
+        if (filterMaxRating < 5) params.set('max_rating', filterMaxRating);
+        history.pushState({}, '', '?' + params.toString());
+    }
+
+    function goSearch(e) {
+        e.preventDefault();
+        const q = document.getElementById('search-input').value.trim();
+        if (q) window.location.href = `search.html?search=${encodeURIComponent(q)}`;
+    }
+
+    function goAgeRec(e) {
+        e.preventDefault();
+        const age = document.getElementById('age-input').value;
+        if (age) window.location.href = `age-recommendations.html?age=${encodeURIComponent(age)}`;
+    }
+
+    function scrollSlider(id, direction) {
+        const slider = document.getElementById(id);
+        if (!slider) return;
+        const product = slider.querySelector('.product');
+        const productWidth = product ? product.offsetWidth + 20 : slider.offsetWidth / 3;
+        slider.scrollBy({ left: direction === 'left' ? -productWidth : productWidth, behavior: 'smooth' });
+    }
+
+    // =========================================================
+    // Range slider
+    // =========================================================
+    function updateRange() {
+        const minRange = document.getElementById('min-range');
+        const maxRange = document.getElementById('max-range');
+        const minValue = document.getElementById('min-value');
+        const maxValue = document.getElementById('max-value');
+        const rangeTrack = document.getElementById('range-track');
+        let minVal = parseFloat(minRange.value);
+        let maxVal = parseFloat(maxRange.value);
+        if (minVal > maxVal) { minVal = maxVal; minRange.value = maxVal; }
+        if (maxVal < minVal) { maxVal = minVal; maxRange.value = minVal; }
+        minValue.value = minVal.toFixed(1);
+        maxValue.value = maxVal.toFixed(1);
+        const minPercent = (minVal / 5) * 100;
+        const maxPercent = (maxVal / 5) * 100;
+        rangeTrack.style.left = minPercent + '%';
+        rangeTrack.style.width = (maxPercent - minPercent) + '%';
+    }
+
+    function updateRangeFromInput(inputElement) {
+        const minRange = document.getElementById('min-range');
+        const maxRange = document.getElementById('max-range');
+        const minValue = document.getElementById('min-value');
+        const maxValue = document.getElementById('max-value');
+        const rangeTrack = document.getElementById('range-track');
+        let minVal = parseFloat(minValue.value) || 0;
+        let maxVal = parseFloat(maxValue.value) || 5;
+        if (minVal < 0) minVal = 0;
+        if (maxVal > 5) maxVal = 5;
+        if (minVal > maxVal) { minVal = maxVal; minValue.value = minVal.toFixed(1); }
+        if (maxVal < minVal) { maxVal = minVal; maxValue.value = maxVal.toFixed(1); }
+        minRange.value = minVal;
+        maxRange.value = maxVal;
+        const minPercent = (minVal / 5) * 100;
+        const maxPercent = (maxVal / 5) * 100;
+        rangeTrack.style.left = minPercent + '%';
+        rangeTrack.style.width = (maxPercent - minPercent) + '%';
+    }
+
+    window.onload = function() {
+        updateRange();
+        init();
+    };
+    </script>
+</body>
+</html>

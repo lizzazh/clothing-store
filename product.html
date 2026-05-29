@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Товар - Магазин Жіночого Одягу</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/prod.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
+</head>
+<body>
+    <div class="store-title">Elizabeth's Elegance</div>
+
+    <div class="nav-and-search">
+        <div class="nav-links">
+            <a href="index.html" class="back-arrow">На головну</a>
+            <a href="category-stats.html" class="stats-button">Переглянути статистику</a>
+        </div>
+        <div class="search-and-age">
+            <div class="age-recommendation-form">
+                <form onsubmit="goAgeRec(event)">
+                    <input type="number" id="age-input" min="0" max="120" placeholder="Вік" required>
+                    <button type="submit">Отримати</button>
+                </form>
+            </div>
+            <div class="search-bar">
+                <form onsubmit="goSearch(event)">
+                    <input type="text" id="search-input" placeholder="Пошук за назвою">
+                    <button type="submit">Шукати</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Категорії -->
+    <div class="category-buttons" id="category-buttons"></div>
+
+    <!-- Заголовок товару -->
+    <header>
+        <h1 id="product-header">Товар</h1>
+    </header>
+
+    <!-- Основна інформація -->
+    <div class="product-container">
+        <div class="product-image-large">
+            <img id="product-img" src="" alt="Товар" onerror="this.src='https://via.placeholder.com/300.jpg'">
+        </div>
+        <div class="product-details">
+            <h2 id="product-cat">—</h2>
+            <p><strong>Категорія:</strong> <span id="detail-class">—</span></p>
+            <p><strong>Підрозділ:</strong> <span id="detail-division">—</span></p>
+            <p><strong>Відділ:</strong> <span id="detail-department">—</span></p>
+            <p class="rating"><strong>Рейтинг:</strong> <span id="detail-rating">—</span></p>
+            <p class="feedback"><strong>Відгуків:</strong> <span id="detail-reviews">—</span></p>
+        </div>
+    </div>
+
+    <!-- Схожі товари -->
+    <section class="top-products">
+        <h2>Схожі товари</h2>
+        <div class="arrow-controls">
+            <button onclick="scrollSlider('similar','left')">←</button>
+            <button onclick="scrollSlider('similar','right')">→</button>
+        </div>
+        <div class="product-slider" id="similar"></div>
+    </section>
+
+    <!-- Секція відгуків -->
+    <div class="reviews-section" id="reviews-section">
+        <div class="reviews-header"><h3>Відгуки</h3></div>
+
+        <!-- Фільтр відгуків -->
+        <div class="reviews-filter-bar">
+            <div class="filter-form">
+                <!-- Рядок 1: Сортування + Зірки -->
+                <div class="filter-row filter-row-first">
+                    <div class="filter-group sort-group">
+                        <label>Сортувати за:</label>
+                        <select id="review-sort" class="filter-select" onchange="renderReviews()">
+                            <option value="">Виберіть</option>
+                            <option value="number_asc">№ Покупця (за зростанням)</option>
+                            <option value="number_desc">№ Покупця (за спаданням)</option>
+                            <option value="rating_asc">Рейтинг (за зростанням)</option>
+                            <option value="rating_desc">Рейтинг (за спаданням)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group star-group">
+                        <label>Кількість зірочок:</label>
+                        <div class="star-checkboxes">
+                            <label class="star-checkbox"><input type="checkbox" value="1" onchange="renderReviews()"><span>★☆☆☆☆</span></label>
+                            <label class="star-checkbox"><input type="checkbox" value="2" onchange="renderReviews()"><span>★★☆☆☆</span></label>
+                            <label class="star-checkbox"><input type="checkbox" value="3" onchange="renderReviews()"><span>★★★☆☆</span></label>
+                            <label class="star-checkbox"><input type="checkbox" value="4" onchange="renderReviews()"><span>★★★★☆</span></label>
+                            <label class="star-checkbox"><input type="checkbox" value="5" onchange="renderReviews()"><span>★★★★★</span></label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Рядок 2: Рекомендація + Вік + Скинути -->
+                <div class="filter-row filter-row-second">
+                    <div class="filter-group recommendation-group">
+                        <label>Рекомендація:</label>
+                        <select id="review-recommended" class="filter-select" onchange="renderReviews()">
+                            <option value="">Усі</option>
+                            <option value="1">Рекомендовано</option>
+                            <option value="0">Не рекомендовано</option>
+                        </select>
+                    </div>
+                    <div class="filter-group age-group">
+                        <div class="age-group-content">
+                            <label>Вік покупця:</label>
+                            <div class="age-slider-container">
+                                <div id="age-slider"></div>
+                            </div>
+                            <div class="age-values">
+                                <input type="number" id="min_age_value" value="0" min="0" max="99" step="1">
+                                <input type="number" id="max_age_value" value="99" min="0" max="99" step="1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-group reset-group">
+                        <button class="reset-button" onclick="resetFilters()">Скинути фільтри/сортування</button>
+                    </div>
+                </div>
+                <input type="hidden" id="review-page" value="1">
+            </div>
+        </div>
+
+        <!-- Список відгуків -->
+        <div id="reviews-list"></div>
+        <div class="pagination" id="review-pagination"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+    <script>
+    let allProducts = [];
+    let productReviews = [];
+    let currentProductId = null;
+    let reviewPage = 1;
+    const reviewsPerPage = 10;
+    let ageSliderObj = null;
+    let minAge = 0, maxAge = 99;
+
+    async function init() {
+        const params = new URLSearchParams(window.location.search);
+        currentProductId = parseInt(params.get('id'));
+        if (!currentProductId) {
+            document.getElementById('product-header').textContent = 'Товар не знайдено';
+            return;
+        }
+
+        // Завантажуємо продукти і відгуки паралельно
+        const [productsResp, reviewsResp] = await Promise.all([
+            fetch('data/products.json'),
+            fetch('data/reviews.json')
+        ]);
+        allProducts = await productsResp.json();
+        const allReviews = await reviewsResp.json();
+        productReviews = allReviews[String(currentProductId)] || [];
+
+        const product = allProducts.find(p => p.clothing_id === currentProductId);
+
+        // Кнопки категорій
+        const cats = [...new Set(allProducts.map(p => p.class_name).filter(Boolean))].sort();
+        document.getElementById('category-buttons').innerHTML = cats.map(cat =>
+            `<a href="category.html?cat=${encodeURIComponent(cat.toLowerCase())}" class="category-button">
+                <button>${cat}</button>
+            </a>`
+        ).join('');
+
+        if (!product) {
+            document.getElementById('product-header').textContent = `Товар ID: ${currentProductId} не знайдено`;
+            return;
+        }
+
+        // Заповнюємо інформацію
+        document.getElementById('page-title').textContent = `Товар ${product.clothing_id} - Магазин Жіночого Одягу`;
+        document.getElementById('product-header').textContent = `Товар ID: ${product.clothing_id}`;
+        document.getElementById('product-img').src = `static/${product.clothing_id}.jpg`;
+        document.getElementById('product-img').alt = product.class_name || 'Товар';
+        document.getElementById('product-cat').textContent = product.class_name || product.title || 'Товар';
+        document.getElementById('detail-class').textContent = product.class_name || 'Невідомо';
+        document.getElementById('detail-division').textContent = product.division_name || 'Невідомо';
+        document.getElementById('detail-department').textContent = product.department_name || 'Невідомо';
+        document.getElementById('detail-rating').textContent = product.avg_rating !== null ? product.avg_rating.toFixed(2) : 'Немає';
+        document.getElementById('detail-reviews').textContent = product.review_count;
+
+        // Схожі товари (та сама категорія, не цей товар)
+        const similar = allProducts
+            .filter(p => p.class_name === product.class_name && p.clothing_id !== product.clothing_id)
+            .sort((a, b) => (b.avg_rating || 0) - (a.avg_rating || 0))
+            .slice(0, 10);
+
+        if (similar.length > 0) {
+            document.getElementById('similar').innerHTML = similar.map(p => {
+                const r = p.avg_rating !== null ? p.avg_rating.toFixed(1) : '0';
+                const n = p.class_name || 'Невідомо';
+                return `<a href="product.html?id=${p.clothing_id}">
+                    <div class="product">
+                        <img src="static/${p.clothing_id}.jpg" alt="${n}" onerror="this.src='https://via.placeholder.com/150.jpg'">
+                        <h3><a href="product.html?id=${p.clothing_id}#sorting-bar">ID: ${p.clothing_id}</a></h3>
+                        <div class="product-info">
+                            <p>Категорія: ${n}</p>
+                            <p>Рейтинг: ${r}</p>
+                            <p><a href="product.html?id=${p.clothing_id}#reviews-section">Відгуків: ${p.review_count}</a></p>
+                        </div>
+                    </div>
+                </a>`;
+            }).join('');
+        } else {
+            document.getElementById('similar').innerHTML = '<p>Схожих товарів не знайдено.</p>';
+        }
+
+        // Ініціалізуємо age slider
+        const ageSliderEl = document.getElementById('age-slider');
+        const minAgeInput = document.getElementById('min_age_value');
+        const maxAgeInput = document.getElementById('max_age_value');
+
+        if (ageSliderEl) {
+            ageSliderObj = noUiSlider.create(ageSliderEl, {
+                start: [0, 99],
+                connect: true,
+                range: { min: 0, max: 99 },
+                step: 1,
+                behaviour: 'drag',
+                tooltips: false,
+                format: {
+                    to: value => Math.round(value),
+                    from: value => Number(value)
+                }
+            });
+
+            ageSliderObj.on('update', function(values, handle) {
+                minAgeInput.value = Math.round(values[0]);
+                maxAgeInput.value = Math.round(values[1]);
+            });
+            ageSliderObj.on('end', function() {
+                minAge = parseInt(minAgeInput.value) || 0;
+                maxAge = parseInt(maxAgeInput.value) || 99;
+                reviewPage = 1;
+                renderReviews();
+            });
+
+            minAgeInput.addEventListener('change', function() {
+                let v = parseInt(this.value) || 0;
+                if (v < 0) v = 0;
+                if (v > 99) v = 99;
+                if (v > parseInt(maxAgeInput.value)) v = parseInt(maxAgeInput.value);
+                ageSliderObj.set([v, null]);
+                minAge = v; reviewPage = 1; renderReviews();
+            });
+            maxAgeInput.addEventListener('change', function() {
+                let v = parseInt(this.value) || 99;
+                if (v < 0) v = 0;
+                if (v > 99) v = 99;
+                if (v < parseInt(minAgeInput.value)) v = parseInt(minAgeInput.value);
+                ageSliderObj.set([null, v]);
+                maxAge = v; reviewPage = 1; renderReviews();
+            });
+
+            [minAgeInput, maxAgeInput].forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        let minV = parseInt(minAgeInput.value) || 0;
+                        let maxV = parseInt(maxAgeInput.value) || 99;
+                        if (minV > maxV) { minAgeInput.value = maxV; minV = maxV; }
+                        ageSliderObj.set([minV, maxV]);
+                        minAge = minV; maxAge = maxV; reviewPage = 1; renderReviews();
+                    }
+                });
+            });
+        }
+
+        renderReviews();
+
+        if (window.location.hash === '#reviews-section') {
+            document.getElementById('reviews-section')?.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    function getFilteredReviews() {
+        let reviews = [...productReviews];
+
+        // Фільтр за зірками
+        const starChecks = [...document.querySelectorAll('.star-checkbox input:checked')].map(el => parseInt(el.value));
+        if (starChecks.length) reviews = reviews.filter(r => r.rating !== null && starChecks.includes(Math.round(r.rating)));
+
+        // Фільтр за рекомендацією
+        const rec = document.getElementById('review-recommended').value;
+        if (rec !== '') reviews = reviews.filter(r => String(r.recommended_ind) === rec);
+
+        // Фільтр за віком
+        reviews = reviews.filter(r => r.age === null || (r.age >= minAge && r.age <= maxAge));
+
+        // Сортування
+        const sort = document.getElementById('review-sort').value;
+        switch (sort) {
+            case 'number_asc': reviews.sort((a, b) => (a.number || 0) - (b.number || 0)); break;
+            case 'number_desc': reviews.sort((a, b) => (b.number || 0) - (a.number || 0)); break;
+            case 'rating_asc': reviews.sort((a, b) => (a.rating || 0) - (b.rating || 0)); break;
+            case 'rating_desc': reviews.sort((a, b) => (b.rating || 0) - (a.rating || 0)); break;
+        }
+
+        return reviews;
+    }
+
+    function renderReviews() {
+        const reviews = getFilteredReviews();
+        const total = reviews.length;
+        const totalPages = Math.max(1, Math.ceil(total / reviewsPerPage));
+        if (reviewPage > totalPages) reviewPage = totalPages;
+
+        const page = reviews.slice((reviewPage-1)*reviewsPerPage, reviewPage*reviewsPerPage);
+
+        if (page.length === 0) {
+            document.getElementById('reviews-list').innerHTML = '<p>Відгуків не знайдено.</p>';
+            document.getElementById('review-pagination').innerHTML = '';
+            return;
+        }
+
+        document.getElementById('reviews-list').innerHTML = page.map(r => {
+            const stars = renderStars(r.rating);
+            const rec = r.recommended_ind === 1 ? 'Рекомендовано покупцем'
+                : r.recommended_ind === 0 ? 'Не рекомендовано покупцем'
+                : 'Рекомендація не вказана';
+            return `<div class="review-item">
+                <h4>Покупець №${r.number !== null ? r.number : 'Невідомо'}</h4>
+                <p>Вік: ${r.age !== null ? r.age : 'Невідомо'}</p>
+                <p class="recommendation">${rec}</p>
+                <p class="stars">${stars}</p>
+                <p><strong>${r.title || 'Без назви'}</strong></p>
+                <p>${r.review_text || 'Відгук відсутній'}</p>
+            </div>`;
+        }).join('');
+
+        renderReviewPagination(totalPages);
+    }
+
+    function renderStars(rating) {
+        let s = '';
+        for (let i = 1; i <= 5; i++) s += (rating !== null && Math.round(rating) >= i) ? '★' : '☆';
+        return s;
+    }
+
+    function renderReviewPagination(totalPages) {
+        if (totalPages <= 1) { document.getElementById('review-pagination').innerHTML = ''; return; }
+        const pages = generatePagination(reviewPage, totalPages);
+        let html = '';
+        if (reviewPage > 1) html += `<a class="page-link nav" onclick="goReviewPage(${reviewPage-1})">Попередня</a>`;
+        pages.forEach(p => {
+            if (p === '...') html += '<span class="page-link ellipsis">...</span>';
+            else if (p === reviewPage) html += `<a class="page-link active" onclick="goReviewPage(${p})">${p}</a>`;
+            else html += `<a class="page-link" onclick="goReviewPage(${p})">${p}</a>`;
+        });
+        if (reviewPage < totalPages) html += `<a class="page-link nav" onclick="goReviewPage(${reviewPage+1})">Наступна</a>`;
+        document.getElementById('review-pagination').innerHTML = html;
+    }
+
+    function generatePagination(current, total) {
+        if (total <= 7) return Array.from({length: total}, (_, i) => i+1);
+        const pages = [1];
+        if (current > 3) pages.push('...');
+        for (let i = Math.max(2, current-1); i <= Math.min(total-1, current+1); i++) pages.push(i);
+        if (current < total-2) pages.push('...');
+        pages.push(total);
+        return pages;
+    }
+
+    function goReviewPage(p) {
+        reviewPage = p;
+        renderReviews();
+        document.getElementById('reviews-section')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetFilters() {
+        document.getElementById('review-sort').value = '';
+        document.querySelectorAll('.star-checkbox input').forEach(cb => cb.checked = false);
+        document.getElementById('review-recommended').value = '';
+        minAge = 0; maxAge = 99;
+        document.getElementById('min_age_value').value = 0;
+        document.getElementById('max_age_value').value = 99;
+        if (ageSliderObj) ageSliderObj.set([0, 99]);
+        reviewPage = 1;
+        renderReviews();
+    }
+
+    function scrollSlider(id, direction) {
+        const slider = document.getElementById(id);
+        if (!slider) return;
+        const product = slider.querySelector('.product');
+        const productWidth = product ? product.offsetWidth + 15 : slider.offsetWidth / 5;
+        slider.scrollBy({ left: direction === 'left' ? -productWidth : productWidth, behavior: 'smooth' });
+    }
+
+    function goSearch(e) {
+        e.preventDefault();
+        const q = document.getElementById('search-input').value.trim();
+        if (q) window.location.href = `search.html?search=${encodeURIComponent(q)}`;
+    }
+
+    function goAgeRec(e) {
+        e.preventDefault();
+        const age = document.getElementById('age-input').value;
+        if (age) window.location.href = `age-recommendations.html?age=${encodeURIComponent(age)}`;
+    }
+
+    window.onload = init;
+    </script>
+</body>
+</html>
