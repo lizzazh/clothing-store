@@ -599,5 +599,4 @@ button[type="submit"]:hover, .category-button button:hover, .sidebar button:hove
     .search-and-age { flex-direction: column; width: 100%; }
     .search-bar input { width: 100%; }
     .product-slider .product { flex: 0 0 100%; }
-    .arrow-controls { display: none !important; } /* Приховуємо стрілки на мобільних, працює свайп */
 }
