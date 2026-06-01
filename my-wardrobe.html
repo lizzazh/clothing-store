@@ -304,13 +304,34 @@ dropZone.addEventListener('dragover', () => dropZone.classList.add('drag-over'))
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
 dropZone.addEventListener('drop', e => {
     dropZone.classList.remove('drag-over');
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-        const file = e.dataTransfer.files[0];
-        // Telegram often sends files with empty type or weird types
-        const isImage = file.type.startsWith('image/') || 
-                        file.name.match(/\.(jpg|jpeg|png|webp|gif|heic)$/i) || 
-                        file.type === ''; 
-        if (isImage) {
+    
+    let file = null;
+    // Try items first (better for some desktop apps)
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+        for (let i = 0; i < e.dataTransfer.items.length; i++) {
+            if (e.dataTransfer.items[i].kind === 'file') {
+                file = e.dataTransfer.items[i].getAsFile();
+                break;
+            }
+        }
+    }
+    // Fallback to files array
+    if (!file && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        file = e.dataTransfer.files[0];
+    }
+    
+    if (file) {
+        processFile(file);
+    } else {
+        alert("Браузер не отримав файл безпосередньо з цього додатку. Спробуйте скопіювати картинку (Ctrl+C) і просто вставити її на сторінці (Ctrl+V).");
+    }
+});
+
+// Add Paste (Ctrl+V) support!
+document.addEventListener('paste', e => {
+    if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length > 0) {
+        const file = e.clipboardData.files[0];
+        if (file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|webp|gif|heic)$/i) || file.type === '') {
             processFile(file);
         }
     }
