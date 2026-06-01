@@ -854,7 +854,7 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
     .then(keyData => {
         if(!keyData.key) throw new Error("API ключ не знайдено на сервері");
         
-        return fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${keyData.key}`, {
+        return fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${keyData.key}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })

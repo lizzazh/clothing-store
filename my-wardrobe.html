@@ -429,11 +429,22 @@ async function generateCapsule() {
     };
 
     try {
-        const r = await fetch('/api/gemini', {
+        const keyRes = await fetch("/api/key");
+        const keyData = await keyRes.json();
+        if(!keyData.key) throw new Error("API ключ не знайдено на сервері");
+
+        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${keyData.key}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: modePrompts[currentMode] }] }] })
         });
+        
+        if(!r.ok) {
+            const errData = await r.json().catch(()=>({}));
+            if(r.status === 429) throw new Error("Ліміт запитів (Помилка 429). Зачекайте 1 хвилину.");
+            throw new Error(errData.error?.message || `Помилка API: ${r.status}`);
+        }
+
         const data = await r.json();
         if (data.candidates && data.candidates[0].content.parts[0].text) {
             let txt = data.candidates[0].content.parts[0].text;
