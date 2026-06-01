@@ -813,7 +813,7 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
     ).join('');
 
     // Products
-    const picks=pickProducts(occ,cat,minR);
+    const picks = pickProducts(occ, cat, minR, custom);
     document.getElementById('prods').innerHTML=picks.length?picks.map(p=>{
         const r=p.avg_rating!=null?p.avg_rating.toFixed(1):'—';
         const nm=p.title||p.class_name||'Товар';
@@ -901,25 +901,64 @@ function renderStaticTips(ST) {
     ).join('');
 }
 
-function pickProducts(occ,cat,minR){
-    let pool=products.filter(p=>p.avg_rating!=null&&p.avg_rating>=minR);
+function pickProducts(occ, cat, minR, custom = '') {
+    let pool = products.filter(p => p.avg_rating != null && p.avg_rating >= minR);
     
     // Ніколи не рекомендувати купальники/білизну, якщо це не пляж
     if (occ !== 'beach') {
         pool = pool.filter(p => p.department_name !== 'Intimate' && p.class_name !== 'Swim');
     }
     
-    const depts=DB.deptMap[occ]||[];
-    if(cat){pool=pool.filter(p=>p.department_name===cat||p.class_name===cat);}
-    else if(depts.length){pool=pool.filter(p=>depts.includes(p.department_name));}
-    if(pool.length<4){
+    const depts = DB.deptMap[occ] || [];
+    if (cat) { pool = pool.filter(p => p.department_name === cat || p.class_name === cat); }
+    else if (depts.length) { pool = pool.filter(p => depts.includes(p.department_name)); }
+    
+    // --- CUSTOM TEXT SEARCH ---
+    if (custom) {
+        const cLow = custom.toLowerCase();
+        // Словник-перекладач для базових кольорів та речей (оскільки відгуки в базі англійською)
+        const dict = {
+            'рожев': 'pink|rose|blush', 'червон': 'red', 'син': 'blue|navy', 'блакит': 'blue|light blue',
+            'зелен': 'green|emerald|olive|mint', 'чорн': 'black', 'біл': 'white', 'жовт': 'yellow|mustard',
+            'сір': 'grey|gray|silver', 'коричнев': 'brown', 'бежев': 'beige|camel|tan', 
+            'фіолетов': 'purple|violet', 'бузков': 'lilac', 'сукн': 'dress', 'світр': 'sweater', 
+            'топ': 'top', 'брюк': 'pant|bottom', 'штани': 'pant|trouser', 'джинс': 'jeans|denim', 'спідниц': 'skirt'
+        };
+        
+        let searchTerms = [cLow]; // Шукаємо і оригінал
+        for (let k in dict) {
+            if (cLow.includes(k)) searchTerms = searchTerms.concat(dict[k].split('|'));
+        }
+        
+        // Нараховуємо бали речам, які відповідають запиту
+        pool.forEach(p => {
+            p._score = 0;
+            const text = ((p.title||'') + ' ' + (p.review_text||'')).toLowerCase();
+            searchTerms.forEach(term => {
+                if (text.includes(term)) p._score += 10;
+            });
+            p._score += Math.random(); // Випадковий фактор для різноманітності
+        });
+        
+        // Сортуємо: спочатку ті, де є збіг по тексту
+        pool.sort((a, b) => b._score - a._score);
+        
+        // Якщо знайшли хоча б кілька релевантних товарів, беремо їх
+        const topPool = pool.filter(p => p._score >= 10);
+        if (topPool.length > 0) {
+            return topPool.slice(0, 6);
+        }
+        // Якщо збігів немає, продовжуємо як зазвичай (випадковий вибір)
+    }
+
+    if (pool.length < 4) {
         // fallback
-        pool=products.filter(p=>p.avg_rating!=null&&p.avg_rating>=Math.max(1,minR-0.5));
+        pool = products.filter(p => p.avg_rating != null && p.avg_rating >= Math.max(1, minR - 0.5));
         if (occ !== 'beach') {
             pool = pool.filter(p => p.department_name !== 'Intimate' && p.class_name !== 'Swim');
         }
     }
-    return [...pool].sort(()=>Math.random()-.5).slice(0,6);
+    return [...pool].sort(() => Math.random() - .5).slice(0, 6);
 }
 
 function share(){
