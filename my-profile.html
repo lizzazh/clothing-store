@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Style Profile 👤 — Elizabeth's Elegance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================================
+           My Profile — Premium Dark Page
+        ========================================================= */
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        :root{
+            --ai-purple:#a855f7;--ai-pink:#ec4899;--ai-gold:#f59e0b;
+            --glass-bg:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.12);
+            --glass-shadow:0 8px 32px rgba(0,0,0,0.35);
+        }
+
+        body{
+            font-family:'Outfit',sans-serif;
+            background:#0f0c29;
+            min-height:100vh;
+            color:#f1f5f9;
+            line-height:1.6;
+            overflow-x:hidden;
+            display:flex; flex-direction:column;
+        }
+
+        /* Animated gradient BG */
+        body::before{
+            content:'';position:fixed;inset:0;z-index:-2;
+            background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);
+        }
+        body::after{
+            content:'';position:fixed;inset:0;z-index:-1;
+            background:
+                radial-gradient(ellipse at 15% 15%, rgba(168,85,247,0.18) 0%, transparent 45%),
+                radial-gradient(ellipse at 85% 80%, rgba(236,72,153,0.14) 0%, transparent 45%);
+            animation:bgPulse 12s ease-in-out infinite alternate;
+            pointer-events:none;
+        }
+        @keyframes bgPulse{ from{opacity:0.8;} to{opacity:1;} }
+
+        a{color:inherit;text-decoration:none;}
+
+        /* ---- TOP NAV ---- */
+        .ai-nav{
+            position:relative;z-index:20;
+            display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;
+            padding:20px 40px;
+            border-bottom:1px solid var(--glass-border);
+            background:rgba(15,12,41,0.6);
+            backdrop-filter:blur(20px);
+        }
+        .ai-brand{
+            font-family:'Great Vibes',cursive;font-size:34px;color:white;
+            filter:drop-shadow(0 0 18px rgba(168,85,247,0.5));
+        }
+        .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
+        .nav-link{
+            color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;
+            padding:8px 16px;border-radius:20px;
+            border:1px solid var(--glass-border);background:var(--glass-bg);
+            transition:all .25s;
+        }
+        .nav-link:hover,.nav-link.active{
+            color:#fff;background:rgba(168,85,247,0.18);
+            border-color:rgba(168,85,247,0.45);
+        }
+
+        /* ---- MAIN CONTAINER ---- */
+        .main-content {
+            flex:1; display:flex; flex-direction:column; align-items:center;
+            padding: 40px 20px; position:relative; z-index:10;
+        }
+
+        .hero-title {
+            font-family:'Great Vibes',cursive;
+            font-size:clamp(40px, 6vw, 64px);
+            background:linear-gradient(135deg,#fff 0%,var(--ai-purple) 45%,var(--ai-pink) 100%);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+            margin-bottom:10px; text-align:center;
+        }
+        .hero-subtitle {
+            font-size:16px;color:rgba(255,255,255,0.6); text-align:center; margin-bottom:40px; max-width:500px;
+        }
+
+        /* ---- PROFILE FORM ---- */
+        .profile-card {
+            width:100%; max-width:600px;
+            background:var(--glass-bg);
+            backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+            border:1px solid var(--glass-border); border-radius:24px;
+            padding:40px; box-shadow:var(--glass-shadow);
+        }
+
+        .form-group { margin-bottom: 25px; }
+        .form-label {
+            display:block; font-size:13px; font-weight:600; color:rgba(255,255,255,0.8);
+            text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;
+        }
+        
+        .form-input, .form-select {
+            width:100%; padding:14px 18px;
+            background:rgba(0,0,0,0.2);
+            border:1px solid var(--glass-border); border-radius:12px;
+            color:white; font-family:'Outfit',sans-serif; font-size:15px;
+            transition:all 0.3s;
+        }
+        .form-input:focus, .form-select:focus {
+            outline:none; border-color:var(--ai-purple); box-shadow:0 0 15px rgba(168,85,247,0.3);
+            background:rgba(0,0,0,0.4);
+        }
+        .form-select option { background:#24243e; color:white; }
+
+        .btn-save {
+            width:100%; padding:16px; border-radius:14px; border:none;
+            background:linear-gradient(135deg,#7c3aed,#ec4899); color:white;
+            font-family:'Outfit',sans-serif; font-size:16px; font-weight:700; cursor:pointer;
+            transition:all 0.3s; margin-top:10px;
+        }
+        .btn-save:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(236,72,153,0.4); }
+
+        .toast {
+            position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+            background:rgba(16, 185, 129, 0.9); color:white; padding:12px 24px;
+            border-radius:30px; font-weight:600; font-size:14px; z-index:1000;
+            opacity:0; transition:opacity 0.4s; pointer-events:none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="ai-nav">
+        <a href="index.html" class="ai-brand">Elizabeth's Elegance</a>
+        <div class="nav-links" id="nav-container">
+            <!-- Injected by script for consistency -->
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1 class="hero-title">My Digital Profile</h1>
+        <p class="hero-subtitle">Розкажіть трохи про себе, щоб штучний інтелект міг адаптувати рекомендації, капсули та образи особисто для вас.</p>
+
+        <div class="profile-card">
+            <form id="profile-form" onsubmit="saveProfile(event)">
+                <div class="form-group">
+                    <label class="form-label">Ваше ім'я</label>
+                    <input type="text" id="p-name" class="form-input" placeholder="Наприклад, Анна" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ваш вік</label>
+                    <input type="number" id="p-age" class="form-input" placeholder="Вік (років)" min="14" max="100" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Тип фігури (Силует)</label>
+                    <select id="p-body" class="form-select">
+                        <option value="hourglass">⌛ Пісочний годинник</option>
+                        <option value="pear">🍐 Груша (Трикутник)</option>
+                        <option value="apple">🍎 Яблуко</option>
+                        <option value="rectangle">📏 Прямокутник</option>
+                        <option value="inverted">🔻 Перевернутий трикутник</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Основний стиль (з Style Quiz)</label>
+                    <select id="p-style" class="form-select">
+                        <option value="classic">🖤 Classic Chic</option>
+                        <option value="boho">🌿 Boho Free Spirit</option>
+                        <option value="minimalist">⬜ Modern Minimalist</option>
+                        <option value="romantic">🎀 Romantic Dreamer</option>
+                        <option value="streetwear">🧢 Streetwear Bold</option>
+                        <option value="elegant">✨ Glamour & Elegance</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Улюблений колір (для Капсули)</label>
+                    <input type="color" id="p-color" class="form-input" value="#7c3aed" style="height:55px; padding:5px 10px; cursor:pointer;">
+                </div>
+
+                <button type="submit" class="btn-save">✨ Зберегти профіль</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Inject Nav
+        document.getElementById('nav-container').innerHTML = `
+            <a href="index.html" class="nav-link">🏠 Головна</a>
+            <a href="my-profile.html" class="nav-link active">👤 Мій профіль</a>
+            <a href="ai-stylist.html" class="nav-link">✨ AI Stylist</a>
+            <a href="style-quiz.html" class="nav-link">🎯 Style Quiz</a>
+            <a href="weather-outfit.html" class="nav-link">🌡️ Weather</a>
+            <a href="capsule-wardrobe.html" class="nav-link">📅 Capsule</a>
+            <a href="mood-board.html" class="nav-link">🎨 Mood Board</a>
+            <a href="trend-radar.html" class="nav-link">📊 Trends</a>
+            <a href="virtual-silhouette.html" class="nav-link">👗 Silhouette</a>
+        `;
+
+        // Load data on init
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('ai_profile');
+            if(saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if(data.name) document.getElementById('p-name').value = data.name;
+                    if(data.age) document.getElementById('p-age').value = data.age;
+                    if(data.body) document.getElementById('p-body').value = data.body;
+                    if(data.style) document.getElementById('p-style').value = data.style;
+                    if(data.color) document.getElementById('p-color').value = data.color;
+                } catch(e) {}
+            }
+        });
+
+        function saveProfile(e) {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('p-name').value.trim(),
+                age: document.getElementById('p-age').value,
+                body: document.getElementById('p-body').value,
+                style: document.getElementById('p-style').value,
+                color: document.getElementById('p-color').value,
+                updatedAt: new Date().toISOString()
+            };
+            localStorage.setItem('ai_profile', JSON.stringify(data));
+            showToast('✨ Профіль успішно збережено!');
+        }
+
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.className = 'toast'; t.textContent = msg;
+            document.body.appendChild(t);
+            requestAnimationFrame(() => { t.style.opacity = '1'; });
+            setTimeout(() => { t.style.opacity = '0'; }, 2500);
+            setTimeout(() => { t.remove(); }, 3000);
+        }
+    </script>
+</body>
+</html>

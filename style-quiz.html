@@ -3,1131 +3,519 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Style DNA Quiz — Пройдіть наш стильовий тест та дізнайтеся свій унікальний стиль у Elizabeth's Elegance. Персональні рекомендації на основі вашого смаку.">
     <title>Style DNA Quiz ✨ — Elizabeth's Elegance</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-    /* =========================================================
-       Style DNA Quiz — Premium Dark Page
-    ========================================================= */
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{
-        --purple:#a855f7;--pink:#ec4899;--gold:#f59e0b;
-        --cyan:#06b6d4;--green:#10b981;
-        --glass-bg:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.12);
-        --glass-shadow:0 8px 32px rgba(0,0,0,0.35);
-    }
+        /* =========================================================
+           Style DNA Quiz — Premium Dark Page
+        ========================================================= */
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        :root{
+            --ai-purple:#a855f7;--ai-pink:#ec4899;--ai-gold:#f59e0b;
+            --glass-bg:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.12);
+            --glass-shadow:0 8px 32px rgba(0,0,0,0.35);
+        }
 
-    html{scroll-behavior:smooth;}
-    body{
-        font-family:'Outfit',sans-serif;
-        background:#0f0c29;
-        min-height:100vh;
-        color:#f1f5f9;
-        padding:0;
-        line-height:1.6;
-        overflow-x:hidden;
-    }
+        body{
+            font-family:'Outfit',sans-serif;
+            background:#0f0c29;
+            min-height:100vh;
+            color:#f1f5f9;
+            padding:0;
+            line-height:1.6;
+            overflow-x:hidden;
+            display:flex;
+            flex-direction:column;
+        }
 
-    body::before{
-        content:'';position:fixed;inset:0;z-index:-2;
-        background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);
-    }
-    body::after{
-        content:'';position:fixed;inset:0;z-index:-1;
-        background:
-            radial-gradient(ellipse at 15% 15%, rgba(168,85,247,0.18) 0%, transparent 45%),
-            radial-gradient(ellipse at 85% 80%, rgba(236,72,153,0.14) 0%, transparent 45%),
-            radial-gradient(ellipse at 50% 50%, rgba(6,182,212,0.07) 0%, transparent 55%);
-        animation:bgPulse 12s ease-in-out infinite alternate;
-        pointer-events:none;
-    }
-    @keyframes bgPulse{from{opacity:0.8;}to{opacity:1;}}
+        /* Animated gradient BG */
+        body::before{
+            content:'';position:fixed;inset:0;z-index:-2;
+            background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);
+        }
+        body::after{
+            content:'';position:fixed;inset:0;z-index:-1;
+            background:
+                radial-gradient(ellipse at 15% 15%, rgba(168,85,247,0.18) 0%, transparent 45%),
+                radial-gradient(ellipse at 85% 80%, rgba(236,72,153,0.14) 0%, transparent 45%);
+            animation:bgPulse 12s ease-in-out infinite alternate;
+            pointer-events:none;
+        }
+        @keyframes bgPulse{ from{opacity:0.8;} to{opacity:1;} }
 
-    /* Particles */
-    #particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-    .dot{
-        position:absolute;border-radius:50%;
-        background:rgba(255,255,255,0.55);
-        animation:floatUp linear infinite;
-    }
-    @keyframes floatUp{
-        0%{transform:translateY(110vh);opacity:0;}
-        8%{opacity:0.6;}
-        92%{opacity:0.6;}
-        100%{transform:translateY(-10vh);opacity:0;}
-    }
+        a{color:inherit;text-decoration:none;}
 
-    a{color:inherit;text-decoration:none;}
+        /* ---- TOP NAV ---- */
+        .ai-nav{
+            position:relative;z-index:20;
+            display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;
+            padding:20px 40px;
+            border-bottom:1px solid var(--glass-border);
+            background:rgba(15,12,41,0.6);
+            backdrop-filter:blur(20px);
+        }
+        .ai-brand{
+            font-family:'Great Vibes',cursive;font-size:34px;color:white;
+            filter:drop-shadow(0 0 18px rgba(168,85,247,0.5));
+        }
+        .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
+        .nav-link{
+            color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;
+            padding:8px 16px;border-radius:20px;
+            border:1px solid var(--glass-border);background:var(--glass-bg);
+            transition:all .25s;
+        }
+        .nav-link:hover,.nav-link.active{
+            color:#fff;background:rgba(168,85,247,0.18);
+            border-color:rgba(168,85,247,0.45);
+        }
 
-    /* ---- TOP NAV ---- */
-    .ai-nav{
-        position:relative;z-index:20;
-        display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;
-        padding:20px 40px;
-        border-bottom:1px solid var(--glass-border);
-        background:rgba(15,12,41,0.6);
-        backdrop-filter:blur(20px);
-    }
-    .ai-brand{
-        font-family:'Great Vibes',cursive;font-size:34px;
-        color:white;
-        filter:drop-shadow(0 0 18px rgba(168,85,247,0.5));
-        transition:filter .3s;
-    }
-    .ai-brand:hover{filter:drop-shadow(0 0 28px rgba(236,72,153,0.7));}
-    .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
-    .nav-link{
-        color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;
-        padding:8px 16px;border-radius:20px;
-        border:1px solid var(--glass-border);background:var(--glass-bg);
-        transition:all .25s;
-    }
-    .nav-link:hover,.nav-link.active{
-        color:#fff;background:rgba(168,85,247,0.18);
-        border-color:rgba(168,85,247,0.45);
-    }
+        /* ---- MAIN CONTAINER ---- */
+        .main-content {
+            flex:1;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            padding: 40px 20px;
+            position:relative;
+            z-index:10;
+        }
 
-    /* ---- HERO ---- */
-    .hero{
-        position:relative;z-index:10;
-        text-align:center;padding:60px 20px 45px;
-    }
-    .hero-badge{
-        display:inline-flex;align-items:center;gap:8px;
-        background:linear-gradient(135deg,rgba(168,85,247,.18),rgba(236,72,153,.18));
-        border:1px solid rgba(168,85,247,.35);border-radius:30px;
-        padding:8px 22px;font-size:12px;font-weight:700;
-        color:var(--purple);letter-spacing:1px;text-transform:uppercase;
-        margin-bottom:22px;
-    }
-    h1.hero-title{
-        font-family:'Great Vibes',cursive;
-        font-size:clamp(52px,9vw,92px);font-weight:400;
-        background:linear-gradient(135deg,#fff 0%,var(--purple) 45%,var(--pink) 100%);
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-        margin-bottom:16px;line-height:1.1;
-    }
-    .hero-subtitle{
-        font-size:16px;color:rgba(255,255,255,.6);
-        max-width:560px;margin:0 auto 10px;font-weight:300;
-    }
+        .hero-title {
+            font-family:'Great Vibes',cursive;
+            font-size:clamp(40px, 8vw, 72px);
+            background:linear-gradient(135deg,#fff 0%,var(--ai-purple) 45%,var(--ai-pink) 100%);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+            margin-bottom:10px;
+            text-align:center;
+        }
+        .hero-subtitle {
+            font-size:16px;color:rgba(255,255,255,0.6);
+            text-align:center;margin-bottom:40px;
+            max-width:500px;
+        }
 
-    /* ---- QUIZ WRAPPER ---- */
-    .quiz-wrapper{
-        position:relative;z-index:10;
-        max-width:860px;margin:0 auto;padding:0 24px 100px;
-    }
+        /* ---- QUIZ CONTAINER ---- */
+        .quiz-container {
+            width:100%;
+            max-width:800px;
+            background:var(--glass-bg);
+            backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+            border:1px solid var(--glass-border);
+            border-radius:24px;
+            padding:40px;
+            box-shadow:var(--glass-shadow);
+            position:relative;
+            overflow:hidden;
+        }
 
-    /* ---- PROGRESS BAR ---- */
-    .progress-container{
-        margin-bottom:36px;
-    }
-    .progress-meta{
-        display:flex;justify-content:space-between;align-items:center;
-        margin-bottom:12px;
-    }
-    .progress-label{
-        font-size:13px;font-weight:600;color:rgba(255,255,255,.55);
-        letter-spacing:.5px;
-    }
-    .progress-step-indicator{
-        font-size:13px;font-weight:700;
-        background:linear-gradient(135deg,var(--purple),var(--pink));
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-        background-clip:text;
-    }
-    .progress-track{
-        width:100%;height:6px;border-radius:10px;
-        background:rgba(255,255,255,.08);overflow:hidden;
-    }
-    .progress-fill{
-        height:100%;border-radius:10px;
-        background:linear-gradient(90deg,var(--purple),var(--pink));
-        transition:width .55s cubic-bezier(.4,0,.2,1);
-        box-shadow:0 0 14px rgba(168,85,247,.5);
-        position:relative;overflow:hidden;
-    }
-    .progress-fill::after{
-        content:'';position:absolute;inset:0;
-        background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
-        animation:shimmer 2s infinite;
-    }
-    @keyframes shimmer{
-        0%{transform:translateX(-100%);}
-        100%{transform:translateX(100%);}
-    }
-    .step-dots{
-        display:flex;gap:8px;justify-content:center;margin-top:14px;
-    }
-    .step-dot{
-        width:8px;height:8px;border-radius:50%;
-        background:rgba(255,255,255,.15);
-        transition:all .35s;
-    }
-    .step-dot.done{background:var(--purple);}
-    .step-dot.active{
-        background:linear-gradient(135deg,var(--purple),var(--pink));
-        width:24px;border-radius:4px;
-        box-shadow:0 0 8px rgba(168,85,247,.5);
-    }
+        /* Progress Bar */
+        .progress-wrapper {
+            width:100%; height:6px;
+            background:rgba(255,255,255,0.1);
+            border-radius:10px;
+            margin-bottom:30px;
+            overflow:hidden;
+            position:relative;
+        }
+        .progress-bar {
+            height:100%; width:0%;
+            background:linear-gradient(90deg, var(--ai-purple), var(--ai-pink));
+            border-radius:10px;
+            transition:width 0.4s ease;
+        }
 
-    /* ---- QUESTION STEP ---- */
-    .quiz-step{
-        display:none;animation:stepIn .45s cubic-bezier(.4,0,.2,1);
-    }
-    .quiz-step.active{display:block;}
-    @keyframes stepIn{
-        from{opacity:0;transform:translateX(40px);}
-        to{opacity:1;transform:translateX(0);}
-    }
-    @keyframes stepOut{
-        from{opacity:1;transform:translateX(0);}
-        to{opacity:0;transform:translateX(-40px);}
-    }
+        /* Steps */
+        .step {
+            display:none;
+            animation: fadeInRight 0.5s ease forwards;
+        }
+        .step.active { display:block; }
 
-    .question-card{
-        background:rgba(255,255,255,.045);
-        backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-        border:1px solid var(--glass-border);border-radius:28px;
-        padding:40px 36px;box-shadow:var(--glass-shadow);
-        margin-bottom:28px;
-    }
-    .question-number{
-        font-size:11px;font-weight:700;text-transform:uppercase;
-        letter-spacing:2px;color:var(--purple);margin-bottom:10px;
-    }
-    .question-text{
-        font-size:clamp(22px,4vw,30px);font-weight:700;color:#fff;
-        margin-bottom:36px;line-height:1.25;
-    }
+        @keyframes fadeInRight {
+            from { opacity:0; transform:translateX(30px); }
+            to { opacity:1; transform:translateX(0); }
+        }
 
-    /* ---- ANSWER CARDS GRID ---- */
-    .answers-grid{
-        display:grid;grid-template-columns:repeat(2,1fr);gap:16px;
-    }
-    @media(max-width:560px){.answers-grid{grid-template-columns:1fr;}}
+        .question-title {
+            font-size:24px; font-weight:700; color:white;
+            margin-bottom:30px; text-align:center;
+        }
 
-    .answer-card{
-        position:relative;
-        background:rgba(255,255,255,.05);
-        border:1.5px solid rgba(255,255,255,.12);
-        border-radius:20px;padding:28px 20px;
-        text-align:center;cursor:pointer;
-        transition:all .28s cubic-bezier(.4,0,.2,1);
-        overflow:hidden;
-        user-select:none;
-    }
-    .answer-card::before{
-        content:'';position:absolute;inset:0;border-radius:20px;
-        background:linear-gradient(135deg,rgba(168,85,247,.15),rgba(236,72,153,.1));
-        opacity:0;transition:opacity .28s;
-    }
-    .answer-card:hover::before{opacity:1;}
-    .answer-card:hover{
-        border-color:rgba(168,85,247,.5);
-        transform:translateY(-4px);
-        box-shadow:0 12px 36px rgba(168,85,247,.2);
-    }
-    .answer-card.selected{
-        background:linear-gradient(135deg,rgba(168,85,247,.22),rgba(236,72,153,.16));
-        border-color:var(--purple);
-        box-shadow:0 0 0 2px rgba(168,85,247,.35), 0 14px 40px rgba(168,85,247,.25);
-        transform:translateY(-4px);
-    }
-    .answer-card.selected::before{opacity:1;}
-    .answer-check{
-        position:absolute;top:12px;right:12px;
-        width:22px;height:22px;border-radius:50%;
-        background:linear-gradient(135deg,var(--purple),var(--pink));
-        display:flex;align-items:center;justify-content:center;
-        font-size:11px;color:#fff;
-        opacity:0;transform:scale(0);
-        transition:all .25s cubic-bezier(.4,0,.2,1);
-    }
-    .answer-card.selected .answer-check{opacity:1;transform:scale(1);}
-    .answer-emoji{
-        font-size:48px;margin-bottom:14px;display:block;
-        transition:transform .25s;
-        line-height:1;
-    }
-    .answer-card:hover .answer-emoji,
-    .answer-card.selected .answer-emoji{transform:scale(1.12);}
-    .answer-text{
-        font-size:15px;font-weight:600;color:rgba(255,255,255,.9);
-        line-height:1.3;
-    }
+        .answers-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+            gap:20px;
+        }
 
-    /* ---- NAV BUTTONS ---- */
-    .quiz-nav{
-        display:flex;gap:14px;justify-content:space-between;align-items:center;
-        margin-top:8px;
-    }
-    .nav-btn{
-        display:inline-flex;align-items:center;gap:9px;
-        padding:14px 30px;border-radius:14px;
-        font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;
-        cursor:pointer;transition:all .28s;border:none;letter-spacing:.3px;
-    }
-    .nav-btn-back{
-        background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);
-        border:1px solid var(--glass-border);
-    }
-    .nav-btn-back:hover{background:rgba(255,255,255,.1);color:#fff;}
-    .nav-btn-next{
-        background:linear-gradient(135deg,#7c3aed,var(--purple),var(--pink));
-        color:#fff;flex:1;justify-content:center;
-        position:relative;overflow:hidden;
-    }
-    .nav-btn-next::after{
-        content:'';position:absolute;inset:0;
-        background:linear-gradient(135deg,rgba(255,255,255,.14),transparent);
-        opacity:0;transition:opacity .28s;
-    }
-    .nav-btn-next:hover::after{opacity:1;}
-    .nav-btn-next:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(168,85,247,.4);}
-    .nav-btn-next:active{transform:translateY(0);}
-    .nav-btn-next:disabled{opacity:.4;pointer-events:none;}
+        .answer-card {
+            background:rgba(255,255,255,0.03);
+            border:1px solid var(--glass-border);
+            border-radius:16px;
+            padding:30px 15px;
+            text-align:center;
+            cursor:pointer;
+            transition:all 0.3s;
+        }
+        .answer-card:hover {
+            background:rgba(255,255,255,0.08);
+            border-color:rgba(168,85,247,0.4);
+            transform:translateY(-5px);
+            box-shadow:0 10px 20px rgba(168,85,247,0.15);
+        }
+        .answer-emoji {
+            font-size:48px; margin-bottom:15px;
+            display:inline-block;
+            transition:transform 0.3s;
+        }
+        .answer-card:hover .answer-emoji { transform:scale(1.1); }
+        .answer-text {
+            font-size:14px; font-weight:600; color:rgba(255,255,255,0.9);
+        }
 
-    /* Hint */
-    .answer-hint{
-        text-align:center;margin-bottom:20px;
-        font-size:12px;color:rgba(255,255,255,.3);font-weight:500;
-        letter-spacing:.5px;
-    }
+        /* ---- RESULT SCREEN ---- */
+        .result-screen {
+            display:none;
+            animation: fadeInUp 0.6s ease forwards;
+            text-align:center;
+        }
+        .result-screen.active { display:block; }
 
-    /* ---- RESULT SCREEN ---- */
-    #result-screen{display:none;animation:stepIn .55s ease;}
-    #result-screen.show{display:block;}
+        @keyframes fadeInUp {
+            from { opacity:0; transform:translateY(30px); }
+            to { opacity:1; transform:translateY(0); }
+        }
 
-    .result-hero{
-        border-radius:28px;padding:44px 40px;margin-bottom:28px;
-        position:relative;overflow:hidden;text-align:center;
-    }
-    .result-hero::before{
-        content:'';position:absolute;inset:0;
-        background:inherit;filter:blur(0);z-index:-1;
-    }
-    .result-deco{
-        position:absolute;right:30px;top:20px;font-size:64px;
-        opacity:.12;pointer-events:none;line-height:1;
-    }
-    .result-deco2{
-        position:absolute;left:20px;bottom:20px;font-size:48px;
-        opacity:.1;pointer-events:none;transform:rotate(-20deg);
-    }
-    .result-emoji-big{
-        font-size:72px;display:block;margin-bottom:12px;
-        animation:float 3.5s ease-in-out infinite;
-    }
-    @keyframes float{
-        0%,100%{transform:translateY(0) rotate(-3deg);}
-        50%{transform:translateY(-12px) rotate(3deg);}
-    }
-    .result-type-label{
-        font-size:11px;font-weight:700;text-transform:uppercase;
-        letter-spacing:2.5px;opacity:.75;margin-bottom:8px;
-    }
-    .result-style-name{
-        font-family:'Great Vibes',cursive;
-        font-size:clamp(44px,8vw,76px);font-weight:400;
-        color:#fff;
-        filter:drop-shadow(0 0 20px rgba(255,255,255,.25));
-        margin-bottom:18px;line-height:1.1;
-    }
-    .result-description{
-        font-size:15px;color:rgba(255,255,255,.72);
-        max-width:580px;margin:0 auto;line-height:1.75;
-    }
+        .result-emoji { font-size:72px; margin-bottom:10px; animation:bounce 2s infinite; }
+        @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
 
-    /* Keywords */
-    .result-section{
-        background:rgba(255,255,255,.045);
-        backdrop-filter:blur(24px);
-        border:1px solid var(--glass-border);border-radius:22px;
-        padding:28px 30px;margin-bottom:22px;
-    }
-    .section-title{
-        font-size:11px;font-weight:700;text-transform:uppercase;
-        letter-spacing:1.5px;color:rgba(255,255,255,.5);
-        margin-bottom:16px;display:flex;align-items:center;gap:8px;
-    }
-    .keywords-row{display:flex;gap:10px;flex-wrap:wrap;}
-    .kw-tag{
-        padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;
-        color:#fff;background:rgba(255,255,255,.08);
-        border:1px solid rgba(255,255,255,.14);
-        transition:all .2s;
-    }
-    .kw-tag:hover{background:rgba(168,85,247,.18);border-color:rgba(168,85,247,.35);}
+        .result-title {
+            font-family:'Great Vibes',cursive;
+            font-size:56px; color:white;
+            text-shadow:0 0 20px rgba(168,85,247,0.5);
+            margin-bottom:15px;
+        }
+        .result-desc {
+            font-size:16px; color:rgba(255,255,255,0.7);
+            max-width:600px; margin:0 auto 30px; line-height:1.6;
+        }
 
-    /* Palette swatches */
-    .swatches-row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
-    .swatch-item{text-align:center;}
-    .swatch-circle{
-        width:50px;height:50px;border-radius:50%;
-        border:2px solid rgba(255,255,255,.12);
-        margin:0 auto 8px;
-        transition:transform .22s;cursor:pointer;
-        box-shadow:0 4px 14px rgba(0,0,0,.3);
-    }
-    .swatch-circle:hover{transform:scale(1.18);}
-    .swatch-name{font-size:10px;color:rgba(255,255,255,.45);}
+        .tags { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:40px; }
+        .tag {
+            padding:8px 16px; border-radius:20px; font-size:13px; font-weight:600;
+            background:rgba(168,85,247,0.15); border:1px solid rgba(168,85,247,0.3); color:white;
+        }
 
-    /* Products */
-    .products-grid-6{
-        display:grid;
-        grid-template-columns:repeat(3,1fr);
-        gap:16px;
-    }
-    @media(max-width:680px){.products-grid-6{grid-template-columns:repeat(2,1fr);}}
-    @media(max-width:400px){.products-grid-6{grid-template-columns:1fr;}}
+        .recs-title { font-size:20px; font-weight:700; margin-bottom:20px; text-align:left; color:white; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; }
+        
+        .products-grid {
+            display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:15px;
+            margin-bottom:40px; text-align:left;
+        }
+        .prod-card {
+            background:var(--glass-bg); border:1px solid var(--glass-border);
+            border-radius:12px; overflow:hidden; transition:all 0.3s;
+            display:block;
+        }
+        .prod-card:hover {
+            border-color:var(--ai-purple); transform:translateY(-5px);
+            box-shadow:0 10px 20px rgba(168,85,247,0.2);
+        }
+        .prod-img { width:100%; height:160px; object-fit:contain; background:rgba(255,255,255,0.02); }
+        .prod-info { padding:12px; }
+        .prod-cat { font-size:10px; font-weight:700; color:var(--ai-purple); text-transform:uppercase; margin-bottom:4px; }
+        .prod-name { font-size:13px; font-weight:600; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; }
+        .prod-rating { font-size:11px; color:rgba(255,255,255,0.5); }
 
-    .prod-card{
-        background:rgba(255,255,255,.05);border:1px solid var(--glass-border);
-        border-radius:16px;overflow:hidden;transition:all .3s;
-        cursor:pointer;text-decoration:none;display:block;
-    }
-    .prod-card:hover{
-        border-color:rgba(168,85,247,.45);transform:translateY(-5px);
-        box-shadow:0 10px 28px rgba(168,85,247,.2);
-    }
-    .prod-img-wrap{
-        width:100%;height:160px;overflow:hidden;
-        background:rgba(255,255,255,.04);position:relative;
-    }
-    .prod-img{width:100%;height:100%;object-fit:contain;display:block;transition:transform .3s;}
-    .prod-card:hover .prod-img{transform:scale(1.05);}
-    .prod-info{padding:12px 14px;}
-    .prod-cat{
-        font-size:10px;font-weight:700;text-transform:uppercase;
-        letter-spacing:1px;color:var(--purple);margin-bottom:4px;
-    }
-    .prod-name{
-        font-size:12.5px;font-weight:600;color:rgba(255,255,255,.88);
-        margin-bottom:6px;
-        display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-        overflow:hidden;line-height:1.35;min-height:34px;
-    }
-    .prod-rating{font-size:12px;color:rgba(255,255,255,.48);display:flex;align-items:center;gap:5px;}
-    .star{color:var(--gold);}
-    .rating-num{font-weight:600;color:rgba(255,255,255,.7);}
+        .action-btns { display:flex; gap:15px; justify-content:center; flex-wrap:wrap; }
+        .btn-primary {
+            padding:14px 28px; border-radius:14px; border:none;
+            background:linear-gradient(135deg,#7c3aed,#ec4899); color:white;
+            font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; cursor:pointer;
+            transition:all 0.3s; text-decoration:none;
+        }
+        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(236,72,153,0.4); }
+        .btn-secondary {
+            padding:14px 28px; border-radius:14px; border:1px solid rgba(255,255,255,0.2);
+            background:rgba(255,255,255,0.05); color:white;
+            font-family:'Outfit',sans-serif; font-size:15px; font-weight:600; cursor:pointer;
+            transition:all 0.3s;
+        }
+        .btn-secondary:hover { background:rgba(255,255,255,0.1); }
 
-    /* Result actions */
-    .result-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;}
-    .res-btn{
-        display:inline-flex;align-items:center;gap:9px;
-        padding:15px 28px;border-radius:14px;
-        font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;
-        cursor:pointer;transition:all .28s;border:none;letter-spacing:.3px;
-        text-decoration:none;
-    }
-    .res-btn-primary{
-        background:linear-gradient(135deg,#7c3aed,var(--purple),var(--pink));
-        color:#fff;flex:1;justify-content:center;
-        position:relative;overflow:hidden;
-    }
-    .res-btn-primary::after{
-        content:'';position:absolute;inset:0;
-        background:linear-gradient(135deg,rgba(255,255,255,.14),transparent);
-        opacity:0;transition:opacity .28s;
-    }
-    .res-btn-primary:hover::after{opacity:1;}
-    .res-btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(168,85,247,.4);}
-    .res-btn-secondary{
-        background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);
-        border:1px solid var(--glass-border);
-    }
-    .res-btn-secondary:hover{background:rgba(255,255,255,.1);color:#fff;transform:translateY(-2px);}
-
-    /* Empty products state */
-    .no-products{
-        text-align:center;padding:40px;
-        color:rgba(255,255,255,.35);font-size:14px;
-        grid-column:1/-1;
-    }
-
-    /* ---- Responsive ---- */
-    @media(max-width:680px){
-        .ai-nav{padding:15px 20px;}
-        .quiz-wrapper{padding:0 15px 80px;}
-        .question-card{padding:28px 22px;}
-        .result-hero{padding:32px 24px;}
-        .result-section{padding:22px 20px;}
-        .result-actions{flex-direction:column;}
-        .res-btn-primary{flex:unset;}
-    }
-    @media(max-width:400px){
-        .hero{padding:40px 15px 30px;}
-        h1.hero-title{font-size:48px;}
-    }
+        @media (max-width: 600px) {
+            .quiz-container { padding:25px 15px; }
+            .answers-grid { grid-template-columns:repeat(2, 1fr); }
+            .hero-title { font-size:42px; }
+        }
     </style>
 </head>
 <body>
-<div id="particles"></div>
 
-<!-- NAV -->
-<nav class="ai-nav">
-    <a href="index.html" class="ai-brand">Elizabeth's Elegance</a>
-    <div class="nav-links">
-        <a href="index.html" class="nav-link">🏠 Головна</a>
-        <a href="ai-stylist.html" class="nav-link">✨ AI Stylist</a>
-        <a href="style-quiz.html" class="nav-link active">🧬 Style Quiz</a>
-    </div>
-</nav>
-
-<!-- HERO -->
-<div class="hero">
-    <div class="hero-badge">Визначте свою стильову ДНК</div>
-    <h1 class="hero-title">Style DNA Quiz</h1>
-    <p class="hero-subtitle">
-        5 питань — і ми розкриємо ваш унікальний стильовий код. 
-        Персональні рекомендації від Elizabeth's Elegance.
-    </p>
-</div>
-
-<!-- QUIZ WRAPPER -->
-<div class="quiz-wrapper">
-
-    <!-- PROGRESS BAR -->
-    <div class="progress-container" id="progress-container">
-        <div class="progress-meta">
-            <span class="progress-label">Ваш прогрес</span>
-            <span class="progress-step-indicator" id="step-counter">Крок 1 з 5</span>
+    <!-- NAV -->
+    <nav class="ai-nav">
+        <a href="index.html" class="ai-brand">Elizabeth's Elegance</a>
+                        <div class="nav-links">
+            <a href="index.html" class="nav-link">🏠 Головна</a>
+            <a href="my-profile.html" class="nav-link">👤 Мій профіль</a>
+            <a href="ai-stylist.html" class="nav-link">✨ AI Stylist</a>
+            <a href="style-quiz.html" class="nav-link active">🎯 Style Quiz</a>
+            <a href="weather-outfit.html" class="nav-link">🌡️ Weather</a>
+            <a href="capsule-wardrobe.html" class="nav-link">📅 Capsule</a>
+            <a href="mood-board.html" class="nav-link">🎨 Mood Board</a>
+            <a href="trend-radar.html" class="nav-link">📊 Trends</a>
+            <a href="virtual-silhouette.html" class="nav-link">👗 Silhouette</a>
         </div>
-        <div class="progress-track">
-            <div class="progress-fill" id="progress-fill" style="width:20%;"></div>
-        </div>
-        <div class="step-dots">
-            <div class="step-dot active" id="dot-0"></div>
-            <div class="step-dot" id="dot-1"></div>
-            <div class="step-dot" id="dot-2"></div>
-            <div class="step-dot" id="dot-3"></div>
-            <div class="step-dot" id="dot-4"></div>
-        </div>
-    </div>
+    </nav>
 
-    <!-- STEP 1 -->
-    <div class="quiz-step active" id="step-0">
-        <div class="question-card">
-            <div class="question-number">Питання 1 / 5</div>
-            <div class="question-text">Який колір вас приваблює?</div>
-            <p class="answer-hint">Оберіть одну відповідь</p>
-            <div class="answers-grid">
-                <div class="answer-card" data-style="classic" onclick="selectAnswer(this,0)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🖤</span>
-                    <div class="answer-text">Чорний / білий</div>
+    <div class="main-content">
+        <h1 class="hero-title">Style DNA Quiz</h1>
+        <p class="hero-subtitle">5 швидких кроків, щоб розкрити ваш унікальний стилетип та отримати персоналізовані рекомендації.</p>
+
+        <div class="quiz-container" id="quiz-container">
+            <div class="progress-wrapper">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="step active" id="step-1">
+                <div class="question-title">Крок 1/5: Який колір вас приваблює?</div>
+                <div class="answers-grid">
+                    <div class="answer-card" onclick="selectAnswer(1, 'classic')">
+                        <span class="answer-emoji">🖤</span>
+                        <div class="answer-text">Чорний / Білий / Нейтральні</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(1, 'boho')">
+                        <span class="answer-emoji">🌿</span>
+                        <div class="answer-text">Земляні тони / Осінні</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(1, 'romantic')">
+                        <span class="answer-emoji">💖</span>
+                        <div class="answer-text">Пастельні / Ніжні</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(1, 'streetwear')">
+                        <span class="answer-emoji">🌈</span>
+                        <div class="answer-text">Яскраві / Неоновий поп</div>
+                    </div>
                 </div>
-                <div class="answer-card" data-style="boho" onclick="selectAnswer(this,0)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🌿</span>
-                    <div class="answer-text">Земляні тони</div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step" id="step-2">
+                <div class="question-title">Крок 2/5: Ваш ідеальний силует?</div>
+                <div class="answers-grid">
+                    <div class="answer-card" onclick="selectAnswer(2, 'elegant')">
+                        <span class="answer-emoji">👗</span>
+                        <div class="answer-text">Облягаючий / Підкреслений</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(2, 'boho')">
+                        <span class="answer-emoji">🌊</span>
+                        <div class="answer-text">Вільний та текучий</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(2, 'classic')">
+                        <span class="answer-emoji">📐</span>
+                        <div class="answer-text">Структурований / Чіткий</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(2, 'romantic')">
+                        <span class="answer-emoji">🎀</span>
+                        <div class="answer-text">Романтичний / Шаруватий</div>
+                    </div>
                 </div>
-                <div class="answer-card" data-style="romantic" onclick="selectAnswer(this,0)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">💖</span>
-                    <div class="answer-text">Пастель</div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step" id="step-3">
+                <div class="question-title">Крок 3/5: Ідеальний образ на вихідний?</div>
+                <div class="answers-grid">
+                    <div class="answer-card" onclick="selectAnswer(3, 'minimalist')">
+                        <span class="answer-emoji">☕</span>
+                        <div class="answer-text">Джинси та ідеальний светр</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(3, 'romantic')">
+                        <span class="answer-emoji">🌺</span>
+                        <div class="answer-text">Легка сукня з принтом</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(3, 'streetwear')">
+                        <span class="answer-emoji">⚡</span>
+                        <div class="answer-text">Спортивний шик / Кросівки</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(3, 'elegant')">
+                        <span class="answer-emoji">🎭</span>
+                        <div class="answer-text">Щось ефектне та незвичне</div>
+                    </div>
                 </div>
-                <div class="answer-card" data-style="streetwear" onclick="selectAnswer(this,0)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🌈</span>
-                    <div class="answer-text">Яскраві кольори</div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step" id="step-4">
+                <div class="question-title">Крок 4/5: Улюблена фактура/тканина?</div>
+                <div class="answers-grid">
+                    <div class="answer-card" onclick="selectAnswer(4, 'streetwear')">
+                        <span class="answer-emoji">🪨</span>
+                        <div class="answer-text">Грубий денім / Шкіра</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(4, 'romantic')">
+                        <span class="answer-emoji">🌸</span>
+                        <div class="answer-text">Легкий шифон / Мереживо</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(4, 'boho')">
+                        <span class="answer-emoji">🧶</span>
+                        <div class="answer-text">Затишний трикотаж / Льон</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(4, 'elegant')">
+                        <span class="answer-emoji">✨</span>
+                        <div class="answer-text">Блискуча / Атласна / Шовк</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step" id="step-5">
+                <div class="question-title">Крок 5/5: Хто вам ближче по духу?</div>
+                <div class="answers-grid">
+                    <div class="answer-card" onclick="selectAnswer(5, 'classic')">
+                        <span class="answer-emoji">👑</span>
+                        <div class="answer-text">Одрі Хепберн / Кейт Міддлтон</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(5, 'boho')">
+                        <span class="answer-emoji">🌿</span>
+                        <div class="answer-text">Зої Кравіц / Флоренс Велч</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(5, 'elegant')">
+                        <span class="answer-emoji">🔥</span>
+                        <div class="answer-text">Бейонсе / Кім Кардашьян</div>
+                    </div>
+                    <div class="answer-card" onclick="selectAnswer(5, 'streetwear')">
+                        <span class="answer-emoji">🎨</span>
+                        <div class="answer-text">Кара Делевінь / Ріанна</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div class="result-screen" id="result-screen">
+                <div class="result-emoji" id="res-emoji">✨</div>
+                <div class="result-title" id="res-title">Ваш стиль</div>
+                <div class="result-desc" id="res-desc">Опис стилю...</div>
+                
+                <div class="tags" id="res-tags"></div>
+
+                <div class="recs-title">🛍️ Рекомендовані для вас товари</div>
+                <div class="products-grid" id="res-products"></div>
+
+                <div class="action-btns">
+                    <a href="#" id="ai-link" class="btn-primary">✨ Відкрити AI Stylist з цим стилем</a>
+                    <button class="btn-secondary" onclick="resetQuiz()">🔄 Пройти ще раз</button>
                 </div>
             </div>
         </div>
-        <div class="quiz-nav">
-            <button class="nav-btn nav-btn-next" id="next-0" onclick="nextStep(0)" disabled>
-                Далі →
-            </button>
-        </div>
     </div>
 
-    <!-- STEP 2 -->
-    <div class="quiz-step" id="step-1">
-        <div class="question-card">
-            <div class="question-number">Питання 2 / 5</div>
-            <div class="question-text">Ваш ідеальний силует?</div>
-            <p class="answer-hint">Оберіть одну відповідь</p>
-            <div class="answers-grid">
-                <div class="answer-card" data-style="classic" onclick="selectAnswer(this,1)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">👗</span>
-                    <div class="answer-text">Облягаючий</div>
-                </div>
-                <div class="answer-card" data-style="boho" onclick="selectAnswer(this,1)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🌊</span>
-                    <div class="answer-text">Вільний та текучий</div>
-                </div>
-                <div class="answer-card" data-style="minimalist" onclick="selectAnswer(this,1)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">📐</span>
-                    <div class="answer-text">Структурований</div>
-                </div>
-                <div class="answer-card" data-style="romantic" onclick="selectAnswer(this,1)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🎀</span>
-                    <div class="answer-text">Романтичний</div>
-                </div>
-            </div>
-        </div>
-        <div class="quiz-nav">
-            <button class="nav-btn nav-btn-back" onclick="prevStep(1)">← Назад</button>
-            <button class="nav-btn nav-btn-next" id="next-1" onclick="nextStep(1)" disabled>
-                Далі →
-            </button>
-        </div>
-    </div>
+    <script>
+        const SCORES = {
+            classic: 0, boho: 0, minimalist: 0, 
+            romantic: 0, streetwear: 0, elegant: 0
+        };
 
-    <!-- STEP 3 -->
-    <div class="quiz-step" id="step-2">
-        <div class="question-card">
-            <div class="question-number">Питання 3 / 5</div>
-            <div class="question-text">Вихідний день — ваш образ?</div>
-            <p class="answer-hint">Оберіть одну відповідь</p>
-            <div class="answers-grid">
-                <div class="answer-card" data-style="classic" onclick="selectAnswer(this,2)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">☕</span>
-                    <div class="answer-text">Джинси + светр</div>
-                </div>
-                <div class="answer-card" data-style="romantic" onclick="selectAnswer(this,2)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🌺</span>
-                    <div class="answer-text">Сукня в квіти</div>
-                </div>
-                <div class="answer-card" data-style="streetwear" onclick="selectAnswer(this,2)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">⚡</span>
-                    <div class="answer-text">Спортивний шик</div>
-                </div>
-                <div class="answer-card" data-style="boho" onclick="selectAnswer(this,2)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🎭</span>
-                    <div class="answer-text">Щось незвичне</div>
-                </div>
-            </div>
-        </div>
-        <div class="quiz-nav">
-            <button class="nav-btn nav-btn-back" onclick="prevStep(2)">← Назад</button>
-            <button class="nav-btn nav-btn-next" id="next-2" onclick="nextStep(2)" disabled>
-                Далі →
-            </button>
-        </div>
-    </div>
+        const STYLE_INFO = {
+            classic: { emoji: '🖤', name: 'Classic Chic', desc: 'Ви цінуєте позачасову елегантність, якісні тканини та ідеальний крій. Ваш гардероб — це інвестиція у речі, які ніколи не виходять з моди.', tags: ['Елегантність', 'Мінімалізм', 'Якість'], depts: ['Tops','Bottoms','Jackets'] },
+            boho: { emoji: '🌿', name: 'Boho Free Spirit', desc: 'Ваш стиль дихає свободою, природою та творчістю. Ви любите шарування, натуральні фактури та неординарні візерунки.', tags: ['Свобода', 'Натуральність', 'Етніка'], depts: ['Dresses','Tops','Bottoms'] },
+            minimalist: { emoji: '⬜', name: 'Modern Minimalist', desc: 'Менше означає більше. Ви віддаєте перевагу чистим лініям, монохромній палітрі та відсутності зайвих деталей. Комфорт та лаконічність.', tags: ['Лаконічність', 'Монохром', 'Комфорт'], depts: ['Tops','Bottoms'] },
+            romantic: { emoji: '🎀', name: 'Romantic Dreamer', desc: 'М\'якість, ніжність та жіночність — ваші головні козирі. Пастельні тони, квіткові принти та легкі тканини підкреслюють вашу натуру.', tags: ['Ніжність', 'Флористика', 'Легкість'], depts: ['Dresses','Tops','Intimate'] },
+            streetwear: { emoji: '🧢', name: 'Streetwear Bold', desc: 'Ви не боїтеся виділятися. Яскраві кольори, незвичні пропорції та спортивні елементи створюють ваш динамічний та сучасний образ.', tags: ['Динаміка', 'Тренди', 'Зухвалість'], depts: ['Jackets','Bottoms','Tops'] },
+            elegant: { emoji: '✨', name: 'Glamour & Elegance', desc: 'Ви любите розкіш, блиск та увагу. Ваш стиль випромінює впевненість, а силуети завжди ідеально підкреслюють фігуру.', tags: ['Розкіш', 'Гламур', 'Впевненість'], depts: ['Dresses','Jackets','Tops'] }
+        };
 
-    <!-- STEP 4 -->
-    <div class="quiz-step" id="step-3">
-        <div class="question-card">
-            <div class="question-number">Питання 4 / 5</div>
-            <div class="question-text">Улюблена тканина?</div>
-            <p class="answer-hint">Оберіть одну відповідь</p>
-            <div class="answers-grid">
-                <div class="answer-card" data-style="streetwear" onclick="selectAnswer(this,3)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🪨</span>
-                    <div class="answer-text">Грубий денім</div>
-                </div>
-                <div class="answer-card" data-style="romantic" onclick="selectAnswer(this,3)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🌸</span>
-                    <div class="answer-text">Легкий шифон</div>
-                </div>
-                <div class="answer-card" data-style="minimalist" onclick="selectAnswer(this,3)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🧶</span>
-                    <div class="answer-text">Затишний трикотаж</div>
-                </div>
-                <div class="answer-card" data-style="elegant" onclick="selectAnswer(this,3)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">✨</span>
-                    <div class="answer-text">Блискуча / атласна</div>
-                </div>
-            </div>
-        </div>
-        <div class="quiz-nav">
-            <button class="nav-btn nav-btn-back" onclick="prevStep(3)">← Назад</button>
-            <button class="nav-btn nav-btn-next" id="next-3" onclick="nextStep(3)" disabled>
-                Далі →
-            </button>
-        </div>
-    </div>
+        let currentStep = 1;
+        let products = [];
 
-    <!-- STEP 5 -->
-    <div class="quiz-step" id="step-4">
-        <div class="question-card">
-            <div class="question-number">Питання 5 / 5</div>
-            <div class="question-text">Ваша стильова ікона?</div>
-            <p class="answer-hint">Оберіть одну відповідь</p>
-            <div class="answers-grid">
-                <div class="answer-card" data-style="classic" onclick="selectAnswer(this,4)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">👑</span>
-                    <div class="answer-text">Одрі Хепберн</div>
-                </div>
-                <div class="answer-card" data-style="boho" onclick="selectAnswer(this,4)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🌿</span>
-                    <div class="answer-text">Вандера Сайр</div>
-                </div>
-                <div class="answer-card" data-style="streetwear" onclick="selectAnswer(this,4)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🔥</span>
-                    <div class="answer-text">Бейонсе</div>
-                </div>
-                <div class="answer-card" data-style="romantic" onclick="selectAnswer(this,4)">
-                    <div class="answer-check">✓</div>
-                    <span class="answer-emoji">🎨</span>
-                    <div class="answer-text">Бі Делевінь</div>
-                </div>
-            </div>
-        </div>
-        <div class="quiz-nav">
-            <button class="nav-btn nav-btn-back" onclick="prevStep(4)">← Назад</button>
-            <button class="nav-btn nav-btn-next" id="next-4" onclick="finishQuiz()" disabled>
-                ✨ Дізнатись результат
-            </button>
-        </div>
-    </div>
+        // Load products silently
+        fetch('data/products.json').then(r=>r.json()).then(data=>{ products = data; }).catch(e=>console.log('No data'));
 
-    <!-- RESULT SCREEN -->
-    <div id="result-screen">
+        function updateProgress() {
+            const pBar = document.getElementById('progress-bar');
+            pBar.style.width = ((currentStep - 1) / 5) * 100 + '%';
+        }
 
-        <!-- Result Hero Card -->
-        <div class="result-hero" id="result-hero">
-            <div class="result-deco" id="result-deco"></div>
-            <div class="result-deco2" id="result-deco2"></div>
-            <span class="result-emoji-big" id="result-emoji"></span>
-            <div class="result-type-label" id="result-type-label">Ваш стиль</div>
-            <div class="result-style-name" id="result-style-name"></div>
-            <div class="result-description" id="result-description"></div>
-        </div>
+        function selectAnswer(stepNum, styleKey) {
+            SCORES[styleKey]++;
+            
+            document.getElementById(`step-${stepNum}`).classList.remove('active');
+            currentStep++;
 
-        <!-- Keywords -->
-        <div class="result-section">
-            <div class="section-title">🔑 Ваші ключові слова</div>
-            <div class="keywords-row" id="result-keywords"></div>
-        </div>
+            if (currentStep <= 5) {
+                document.getElementById(`step-${currentStep}`).classList.add('active');
+                updateProgress();
+            } else {
+                updateProgress();
+                showResult();
+            }
+        }
 
-        <!-- Color Palette -->
-        <div class="result-section">
-            <div class="section-title">🎨 Ваша кольорова палітра</div>
-            <div class="swatches-row" id="result-swatches"></div>
-        </div>
+        function showResult() {
+            // Find max score
+            let maxScore = -1;
+            let winningStyle = 'classic';
+            for (const [style, score] of Object.entries(SCORES)) {
+                // adding small random factor to resolve ties naturally
+                const finalScore = score + Math.random()*0.1;
+                if (finalScore > maxScore) { maxScore = finalScore; winningStyle = style; }
+            }
 
-        <!-- Product Recommendations -->
-        <div class="result-section">
-            <div class="section-title">🛍️ Рекомендовані для вас товари</div>
-            <div class="products-grid-6" id="result-products">
-                <div class="no-products">Завантаження товарів...</div>
-            </div>
-        </div>
+            const info = STYLE_INFO[winningStyle];
 
-        <!-- Actions -->
-        <div class="result-actions">
-            <a class="res-btn res-btn-primary" id="ai-stylist-link" href="ai-stylist.html">
-                ✨ Відкрити AI Stylist з цим стилем
-            </a>
-            <button class="res-btn res-btn-secondary" onclick="restartQuiz()">
-                🔄 Пройти ще раз
-            </button>
-        </div>
+            document.getElementById('res-emoji').textContent = info.emoji;
+            document.getElementById('res-title').textContent = info.name;
+            document.getElementById('res-desc').textContent = info.desc;
+            document.getElementById('res-tags').innerHTML = info.tags.map(t => `<span class="tag">#${t}</span>`).join('');
+            
+            document.getElementById('ai-link').href = `ai-stylist.html?style=${winningStyle}`;
 
-    </div>
-    <!-- /result-screen -->
+            // Save to profile
+            let profile = {};
+            try { profile = JSON.parse(localStorage.getItem('ai_profile')) || {}; } catch(e){}
+            profile.style = winningStyle;
+            profile.updatedAt = new Date().toISOString();
+            localStorage.setItem('ai_profile', JSON.stringify(profile));
 
-</div>
-<!-- /quiz-wrapper -->
+            renderProducts(info.depts);
 
-<script>
-// ============================================================
-// PARTICLES
-// ============================================================
-(function(){
-    const c=document.getElementById('particles');
-    for(let i=0;i<45;i++){
-        const d=document.createElement('div');
-        d.className='dot';
-        const sz=Math.random()*3+1;
-        d.style.cssText=`
-            width:${sz}px;height:${sz}px;
-            left:${Math.random()*100}%;
-            animation-duration:${Math.random()*18+9}s;
-            animation-delay:${Math.random()*14}s;
-            opacity:${Math.random()*.6+.1};
-        `;
-        c.appendChild(d);
-    }
-})();
+            document.getElementById('result-screen').classList.add('active');
+        }
 
-// ============================================================
-// QUIZ STATE
-// ============================================================
-const TOTAL_STEPS = 5;
-let currentStep = 0;
-// answers[stepIndex] = styleName voted
-let answers = [null, null, null, null, null];
+        function renderProducts(depts) {
+            const grid = document.getElementById('res-products');
+            if (!products.length) { grid.innerHTML = '<p style="color:gray;">Каталог недоступний</p>'; return; }
 
-// ============================================================
-// STYLE DATABASE
-// ============================================================
-const STYLES = {
-    classic: {
-        emoji: '🖤',
-        name: 'Класик',
-        label: 'Вічна класика',
-        description: 'Ваш стиль — це витончена елегантність поза часом. Ви обираєте якість замість кількості та знаєте, що справжній шик — у деталях. Ваш гардероб — це капсульна колекція, яка ніколи не виходить з моди.',
-        keywords: ['Елегантність', 'Витонченість', 'Монохром', 'Якість', 'Мінімалізм', 'Вічний стиль'],
-        palette: [
-            { color: '#1a1a2e', name: 'Нічний синій' },
-            { color: '#F5F5F5', name: 'Крем' },
-            { color: '#8B7355', name: 'Тауп' },
-            { color: '#2C2C2C', name: 'Антрацит' },
-            { color: '#C9A96E', name: 'Золото' },
-        ],
-        gradient: 'linear-gradient(135deg, rgba(26,26,46,.7) 0%, rgba(44,44,44,.65) 60%, rgba(139,115,85,.4) 100%)',
-        accentColor: '#C9A96E',
-        departments: ['Dresses', 'Jackets', 'Tops'],
-    },
-    boho: {
-        emoji: '🌿',
-        name: 'Бохо',
-        label: 'Вільна богема',
-        description: 'Ваша стиль — це свобода, природність та творчий підхід до моди. Ви черпаєте натхнення у природі, культурах світу та мистецтві. Кожен образ — це особиста художня виставка.',
-        keywords: ['Свобода', 'Природність', 'Богемність', 'Шарування', 'Етніка', 'Творчість'],
-        palette: [
-            { color: '#8B6914', name: 'Охра' },
-            { color: '#5C4033', name: 'Кориця' },
-            { color: '#6B8E23', name: 'Оливка' },
-            { color: '#D4A96A', name: 'Пісок' },
-            { color: '#8B4513', name: 'Теракота' },
-        ],
-        gradient: 'linear-gradient(135deg, rgba(139,105,20,.6) 0%, rgba(92,64,51,.55) 50%, rgba(107,142,35,.35) 100%)',
-        accentColor: '#D4A96A',
-        departments: ['Dresses', 'Tops', 'Bottoms'],
-    },
-    minimalist: {
-        emoji: '⬜',
-        name: 'Мінімаліст',
-        label: 'Чистий мінімалізм',
-        description: 'Ваш девіз — "less is more". Ви цінуєте чисті лінії, функціональність та продуманість кожного образу. Кожна річ у вашому гардеробі виконує свою роль і нічого зайвого.',
-        keywords: ['Чистота', 'Структура', 'Функціональність', 'Простота', 'Фокус', 'Баланс'],
-        palette: [
-            { color: '#FFFFFF', name: 'Білий' },
-            { color: '#E8E8E8', name: 'Сірий' },
-            { color: '#1C1C1C', name: 'Чорний' },
-            { color: '#9B9B9B', name: 'Срібний' },
-            { color: '#F5F0EB', name: 'Айворі' },
-        ],
-        gradient: 'linear-gradient(135deg, rgba(28,28,28,.75) 0%, rgba(100,100,100,.5) 60%, rgba(245,240,235,.2) 100%)',
-        accentColor: '#9B9B9B',
-        departments: ['Tops', 'Bottoms', 'Jackets'],
-    },
-    romantic: {
-        emoji: '🌸',
-        name: 'Романтик',
-        label: 'Вічна романтика',
-        description: 'Ваш стиль — це поезія в одязі. Легкі тканини, флоральні мотиви та ніжні відтінки — ваш підпис. Кожен образ розповідає власну красиву історію кохання.',
-        keywords: ['Ніжність', 'Флоральний', 'Пастель', 'Шифон', 'Мереживо', 'Казковість'],
-        palette: [
-            { color: '#FFB7C5', name: 'Рожевий' },
-            { color: '#E8D5E8', name: 'Лаванда' },
-            { color: '#FFE4E1', name: 'Персиковий' },
-            { color: '#DDA0DD', name: 'Сливовий' },
-            { color: '#FFF0F5', name: 'Молочний' },
-        ],
-        gradient: 'linear-gradient(135deg, rgba(236,72,153,.45) 0%, rgba(168,85,247,.35) 50%, rgba(255,183,197,.3) 100%)',
-        accentColor: '#ec4899',
-        departments: ['Dresses', 'Tops', 'Intimate'],
-    },
-    streetwear: {
-        emoji: '🔥',
-        name: 'Стрітвер',
-        label: 'Вуличний шик',
-        description: 'Ваш стиль — це сміливість, енергія та індивідуальність. Ви не боїтесь виділятись і встановлюєте власні правила. Вулиця — ваш підіум, а кожен день — нова можливість здивувати.',
-        keywords: ['Сміливість', 'Індивідуальність', 'Денім', 'Графіка', 'Оверсайз', 'Яскравість'],
-        palette: [
-            { color: '#1A1A1A', name: 'Чорний' },
-            { color: '#FF4136', name: 'Червоний' },
-            { color: '#0074D9', name: 'Синій' },
-            { color: '#FFDC00', name: 'Жовтий' },
-            { color: '#7FDBFF', name: 'Блакитний' },
-        ],
-        gradient: 'linear-gradient(135deg, rgba(26,26,26,.75) 0%, rgba(255,65,54,.3) 50%, rgba(0,116,217,.3) 100%)',
-        accentColor: '#FF4136',
-        departments: ['Tops', 'Bottoms', 'Jackets'],
-    },
-    elegant: {
-        emoji: '💫',
-        name: 'Елегантність',
-        label: 'Розкішна елегантність',
-        description: 'Ваш стиль — це особлива атмосфера, що зупиняє погляди. Атлас, шовк, ідеальний крій — ви знаєте, що таке справжня розкіш. Кожен ваш вихід — це театральна постановка найвищого класу.',
-        keywords: ['Розкіш', 'Атлас', 'Витонченість', 'Силует', 'Блиск', 'Аура'],
-        palette: [
-            { color: '#1B0A3B', name: 'Пурпур' },
-            { color: '#C5A028', name: 'Золото' },
-            { color: '#1C1C2E', name: 'Нічний' },
-            { color: '#8B6914', name: 'Бронза' },
-            { color: '#F8F0FF', name: 'Перлина' },
-        ],
-        gradient: 'linear-gradient(135deg, rgba(27,10,59,.75) 0%, rgba(168,85,247,.4) 50%, rgba(197,160,40,.35) 100%)',
-        accentColor: '#a855f7',
-        departments: ['Dresses', 'Jackets', 'Intimate'],
-    },
-};
+            let filtered = products.filter(p => depts.includes(p.department_name) && p.avg_rating >= 4.0);
+            if (filtered.length < 6) filtered = products; // fallback
 
-// ============================================================
-// PRODUCTS DATA
-// ============================================================
-let allProducts = [];
-(async function(){
-    try{
-        const r = await fetch('data/products.json');
-        if(r.ok) allProducts = await r.json();
-    } catch(e){
-        console.warn('Could not load products.json');
-    }
-})();
+            // Shuffle
+            filtered.sort(() => 0.5 - Math.random());
+            const selected = filtered.slice(0, 6);
 
-// ============================================================
-// SELECT ANSWER
-// ============================================================
-function selectAnswer(card, stepIdx) {
-    // Deselect siblings
-    const grid = card.closest('.answers-grid');
-    grid.querySelectorAll('.answer-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
+            grid.innerHTML = selected.map(p => `
+                <a href="product.html?id=${p.clothing_id}" class="prod-card">
+                    <img src="static/${p.clothing_id}.jpg" class="prod-img" alt="${p.class_name}" 
+                         onerror="this.src='https://via.placeholder.com/150/1e1b4b/a855f7?text=${encodeURIComponent(p.class_name||'Item')}'">
+                    <div class="prod-info">
+                        <div class="prod-cat">${p.class_name || p.department_name}</div>
+                        <div class="prod-name">${p.title || p.class_name}</div>
+                        <div class="prod-rating">⭐ ${p.avg_rating.toFixed(1)}</div>
+                    </div>
+                </a>
+            `).join('');
+        }
 
-    // Record vote
-    answers[stepIdx] = card.dataset.style;
+        function resetQuiz() {
+            for(let k in SCORES) SCORES[k] = 0;
+            currentStep = 1;
+            document.getElementById('result-screen').classList.remove('active');
+            document.getElementById('step-1').classList.add('active');
+            updateProgress();
+        }
 
-    // Enable next button
-    const btn = document.getElementById('next-' + stepIdx);
-    if(btn) btn.disabled = false;
-}
-
-// ============================================================
-// NAVIGATION
-// ============================================================
-function nextStep(fromIdx) {
-    if(!answers[fromIdx]) return; // guard
-
-    const cur = document.getElementById('step-' + fromIdx);
-    cur.style.animation = 'stepOut .3s ease forwards';
-    setTimeout(() => {
-        cur.style.animation = '';
-        cur.classList.remove('active');
-        currentStep = fromIdx + 1;
-        const next = document.getElementById('step-' + currentStep);
-        next.classList.add('active');
-        updateProgress(currentStep);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 280);
-}
-
-function prevStep(fromIdx) {
-    const cur = document.getElementById('step-' + fromIdx);
-    cur.style.animation = 'none';
-    cur.classList.remove('active');
-    currentStep = fromIdx - 1;
-    const prev = document.getElementById('step-' + currentStep);
-    prev.style.animation = 'none';
-    prev.classList.add('active');
-    updateProgress(currentStep);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function updateProgress(stepIdx) {
-    const pct = ((stepIdx + 1) / TOTAL_STEPS) * 100;
-    document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('step-counter').textContent = `Крок ${stepIdx + 1} з ${TOTAL_STEPS}`;
-
-    for(let i = 0; i < TOTAL_STEPS; i++) {
-        const dot = document.getElementById('dot-' + i);
-        dot.className = 'step-dot';
-        if(i < stepIdx) dot.classList.add('done');
-        else if(i === stepIdx) dot.classList.add('active');
-    }
-}
-
-// ============================================================
-// FINISH QUIZ
-// ============================================================
-function finishQuiz() {
-    if(!answers[4]) return;
-
-    // Tally votes
-    const tally = {};
-    answers.forEach(s => {
-        if(s) tally[s] = (tally[s] || 0) + 1;
-    });
-
-    // Find winning style
-    let winner = 'classic';
-    let maxVotes = 0;
-    for(const [key, count] of Object.entries(tally)) {
-        if(count > maxVotes) { maxVotes = count; winner = key; }
-    }
-
-    // Hide quiz, show result
-    document.getElementById('progress-container').style.display = 'none';
-    for(let i = 0; i < TOTAL_STEPS; i++) {
-        document.getElementById('step-' + i).classList.remove('active');
-    }
-
-    renderResult(winner);
-    const rs = document.getElementById('result-screen');
-    rs.classList.add('show');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ============================================================
-// RENDER RESULT
-// ============================================================
-function renderResult(styleKey) {
-    const S = STYLES[styleKey] || STYLES.classic;
-
-    // Hero card
-    const hero = document.getElementById('result-hero');
-    hero.style.background = S.gradient;
-    hero.style.border = `1px solid ${S.accentColor}40`;
-    hero.style.boxShadow = `0 0 60px ${S.accentColor}20`;
-
-    document.getElementById('result-deco').textContent = S.emoji;
-    document.getElementById('result-deco2').textContent = S.emoji;
-    document.getElementById('result-emoji').textContent = S.emoji;
-    document.getElementById('result-type-label').textContent = S.label;
-    document.getElementById('result-type-label').style.color = S.accentColor;
-    document.getElementById('result-style-name').textContent = S.name;
-    document.getElementById('result-description').textContent = S.description;
-
-    // Keywords
-    const kwRow = document.getElementById('result-keywords');
-    kwRow.innerHTML = S.keywords.map(k =>
-        `<span class="kw-tag" style="border-color:${S.accentColor}35;">${k}</span>`
-    ).join('');
-
-    // Palette swatches
-    const swRow = document.getElementById('result-swatches');
-    swRow.innerHTML = S.palette.map(p =>
-        `<div class="swatch-item">
-            <div class="swatch-circle" style="background:${p.color};" title="${p.name}"></div>
-            <div class="swatch-name">${p.name}</div>
-        </div>`
-    ).join('');
-
-    // AI Stylist link
-    document.getElementById('ai-stylist-link').href = `ai-stylist.html?style=${styleKey}`;
-
-    // Products
-    renderProducts(S.departments, styleKey);
-}
-
-function renderProducts(departments, styleKey) {
-    const grid = document.getElementById('result-products');
-
-    if(allProducts.length === 0) {
-        grid.innerHTML = '<div class="no-products">Не вдалось завантажити товари. Будь ласка, перевірте підключення.</div>';
-        return;
-    }
-
-    // Filter: match department, rating >= 4, has title
-    let filtered = allProducts.filter(p => {
-        if(!p.department_name) return false;
-        if(!departments.includes(p.department_name)) return false;
-        if((p.avg_rating || 0) < 4) return false;
-        return true;
-    });
-
-    // Shuffle
-    filtered = filtered.sort(() => Math.random() - 0.5);
-
-    // Take 6
-    const picks = filtered.slice(0, 6);
-
-    if(picks.length === 0) {
-        // Fallback: any rated product
-        const fallback = allProducts
-            .filter(p => p.avg_rating >= 4.5 && p.department_name)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 6);
-        renderProductCards(fallback.length ? fallback : allProducts.slice(0, 6));
-    } else {
-        renderProductCards(picks);
-    }
-}
-
-function renderProductCards(prods) {
-    const grid = document.getElementById('result-products');
-    if(!prods || prods.length === 0) {
-        grid.innerHTML = '<div class="no-products">Товари не знайдено.</div>';
-        return;
-    }
-
-    grid.innerHTML = prods.map(p => {
-        const id = p.clothing_id;
-        const cat = p.class_name || p.department_name || 'Одяг';
-        const name = p.title || cat;
-        const rating = p.avg_rating ? p.avg_rating.toFixed(1) : '—';
-        const reviews = p.review_count || 0;
-        const stars = renderStars(p.avg_rating || 0);
-
-        return `<a class="prod-card" href="product.html?id=${id}" id="prod-${id}">
-            <div class="prod-img-wrap">
-                <img class="prod-img"
-                    src="static/${id}.jpg"
-                    alt="${name}"
-                    onerror="this.src='';this.parentNode.style.background='linear-gradient(135deg,rgba(168,85,247,.12),rgba(236,72,153,.08))';this.style.display='none';">
-            </div>
-            <div class="prod-info">
-                <div class="prod-cat">${cat}</div>
-                <div class="prod-name">${name}</div>
-                <div class="prod-rating">
-                    <span class="star">${stars}</span>
-                    <span class="rating-num">${rating}</span>
-                    <span>(${reviews})</span>
-                </div>
-            </div>
-        </a>`;
-    }).join('');
-}
-
-function renderStars(rating) {
-    const full = Math.floor(rating);
-    const half = rating - full >= 0.5;
-    let s = '';
-    for(let i = 0; i < 5; i++) {
-        if(i < full) s += '★';
-        else if(i === full && half) s += '½';
-        else s += '☆';
-    }
-    return s;
-}
-
-// ============================================================
-// RESTART
-// ============================================================
-function restartQuiz() {
-    answers = [null, null, null, null, null];
-    currentStep = 0;
-
-    // Reset selections
-    document.querySelectorAll('.answer-card').forEach(c => c.classList.remove('selected'));
-    document.querySelectorAll('.nav-btn-next').forEach(b => b.disabled = true);
-
-    // Hide result, show progress + step 0
-    document.getElementById('result-screen').classList.remove('show');
-    document.getElementById('progress-container').style.display = '';
-
-    for(let i = 0; i < TOTAL_STEPS; i++) {
-        document.getElementById('step-' + i).classList.remove('active');
-    }
-    document.getElementById('step-0').classList.add('active');
-    updateProgress(0);
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-</script>
+        updateProgress();
+    </script>
 </body>
 </html>

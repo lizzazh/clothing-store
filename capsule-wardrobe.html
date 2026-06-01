@@ -3,1480 +3,409 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Capsule Wardrobe Builder — Elizabeth's Elegance. Створіть свій ідеальний гардероб з максимум 12 речей і розрахуйте кількість можливих образів.">
-    <title>📅 Capsule Wardrobe — Elizabeth's Elegance</title>
+    <title>Capsule Wardrobe 📅 — Elizabeth's Elegance</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-    /* ============================================================
-       RESET & ROOT
-    ============================================================ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-        /* Dark panel (left) */
-        --dp-bg: #1a0a2e;
-        --dp-bg2: #120920;
-        --dp-purple: #9b59f7;
-        --dp-pink: #d946a8;
-        --dp-gold: #f0b429;
-        --dp-glass: rgba(255,255,255,0.06);
-        --dp-border: rgba(255,255,255,0.10);
-        --dp-text: #f0eaff;
-        --dp-muted: rgba(240,234,255,0.5);
-
-        /* Light panel (right) */
-        --lp-bg: #F8F4E6;
-        --lp-bg2: #F0EBD4;
-        --lp-text: #2d2016;
-        --lp-muted: #7a6a52;
-        --lp-accent: #8B4513;
-        --lp-border: #ddd3b4;
-        --lp-card: #fff;
-        --lp-purple: #7c3aed;
-
-        /* Shared */
-        --radius: 16px;
-        --radius-sm: 10px;
-        --shadow-dp: 0 8px 32px rgba(0,0,0,0.45);
-        --shadow-lp: 0 4px 20px rgba(0,0,0,0.08);
-        --transition: all 0.25s ease;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-        font-family: 'Outfit', sans-serif;
-        background: #0f0a1e;
-        min-height: 100vh;
-        color: var(--dp-text);
-        overflow-x: hidden;
-        line-height: 1.6;
-    }
-
-    a { text-decoration: none; color: inherit; }
-
-    /* ============================================================
-       TOP NAV
-    ============================================================ */
-    .cw-nav {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 12px;
-        padding: 14px 36px;
-        background: rgba(26, 10, 46, 0.92);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--dp-border);
-    }
-
-    .cw-brand {
-        font-family: 'Great Vibes', cursive;
-        font-size: 30px;
-        color: #fff;
-        filter: drop-shadow(0 0 14px rgba(155,89,247,0.55));
-        transition: filter 0.3s;
-        white-space: nowrap;
-    }
-    .cw-brand:hover { filter: drop-shadow(0 0 22px rgba(217,70,168,0.7)); }
-
-    .cw-nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    .cw-nav-link {
-        padding: 7px 16px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 500;
-        color: rgba(255,255,255,0.6);
-        border: 1px solid rgba(255,255,255,0.10);
-        background: rgba(255,255,255,0.04);
-        transition: var(--transition);
-    }
-    .cw-nav-link:hover, .cw-nav-link.active {
-        color: #fff;
-        border-color: rgba(155,89,247,0.5);
-        background: rgba(155,89,247,0.14);
-    }
-    .cw-nav-link.active {
-        background: linear-gradient(135deg, rgba(155,89,247,0.25), rgba(217,70,168,0.18));
-        border-color: rgba(155,89,247,0.55);
-    }
-
-    /* ============================================================
-       SPLIT LAYOUT
-    ============================================================ */
-    .cw-split {
-        display: flex;
-        min-height: calc(100vh - 58px);
-    }
-
-    /* -------- LEFT PANEL (dark, sticky) -------- */
-    .cw-left {
-        width: 40%;
-        min-width: 320px;
-        position: sticky;
-        top: 58px;
-        height: calc(100vh - 58px);
-        overflow-y: auto;
-        overflow-x: hidden;
-        background: linear-gradient(160deg, var(--dp-bg) 0%, var(--dp-bg2) 100%);
-        border-right: 1px solid var(--dp-border);
-        padding: 28px 24px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        scrollbar-width: thin;
-        scrollbar-color: rgba(155,89,247,0.3) transparent;
-    }
-    .cw-left::-webkit-scrollbar { width: 4px; }
-    .cw-left::-webkit-scrollbar-track { background: transparent; }
-    .cw-left::-webkit-scrollbar-thumb { background: rgba(155,89,247,0.3); border-radius: 4px; }
-
-    /* Dark panel background orbs */
-    .cw-left::before {
-        content: '';
-        position: fixed;
-        top: 0; left: 0;
-        width: 40%;
-        height: 100%;
-        background:
-            radial-gradient(ellipse at 20% 20%, rgba(155,89,247,0.15) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 80%, rgba(217,70,168,0.12) 0%, transparent 50%);
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    .cw-left > * { position: relative; z-index: 1; }
-
-    /* Left panel title */
-    .cw-wardrobe-title {
-        font-family: 'Great Vibes', cursive;
-        font-size: 52px;
-        line-height: 1.1;
-        background: linear-gradient(135deg, #fff 0%, var(--dp-purple) 50%, var(--dp-pink) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        filter: drop-shadow(0 2px 12px rgba(155,89,247,0.3));
-        text-align: center;
-    }
-
-    /* ---- PROGRESS RING ---- */
-    .progress-section {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .progress-ring-wrap {
-        position: relative;
-        width: 110px;
-        height: 110px;
-    }
-
-    .progress-ring-svg {
-        transform: rotate(-90deg);
-        width: 110px;
-        height: 110px;
-    }
-
-    .progress-ring-bg {
-        fill: none;
-        stroke: rgba(255,255,255,0.08);
-        stroke-width: 8;
-    }
-
-    .progress-ring-arc {
-        fill: none;
-        stroke: url(#ringGrad);
-        stroke-width: 8;
-        stroke-linecap: round;
-        stroke-dasharray: 283;
-        stroke-dashoffset: 283;
-        transition: stroke-dashoffset 0.65s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .progress-ring-label {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0;
-    }
-
-    .progress-count {
-        font-size: 26px;
-        font-weight: 800;
-        color: #fff;
-        line-height: 1;
-        transition: all 0.4s;
-    }
-
-    .progress-sub {
-        font-size: 10px;
-        color: var(--dp-muted);
-        font-weight: 500;
-    }
-
-    .progress-text {
-        font-size: 13px;
-        color: var(--dp-muted);
-        font-weight: 500;
-        letter-spacing: 0.3px;
-    }
-
-    /* ---- COMBINATIONS STAT ---- */
-    .combo-stat {
-        background: linear-gradient(135deg, rgba(155,89,247,0.15), rgba(217,70,168,0.10));
-        border: 1px solid rgba(155,89,247,0.28);
-        border-radius: var(--radius);
-        padding: 18px 20px;
-        text-align: center;
-    }
-
-    .combo-emoji { font-size: 22px; margin-bottom: 4px; }
-
-    .combo-number {
-        font-size: 42px;
-        font-weight: 800;
-        background: linear-gradient(135deg, var(--dp-purple), var(--dp-pink));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        line-height: 1;
-        transition: all 0.4s;
-    }
-
-    .combo-label {
-        font-size: 12px;
-        color: var(--dp-muted);
-        margin-top: 4px;
-        font-weight: 500;
-        letter-spacing: 0.3px;
-    }
-
-    /* ---- SELECTED ITEMS GRID ---- */
-    .selected-section {}
-
-    .section-label {
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        color: var(--dp-muted);
-        margin-bottom: 12px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .section-label::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: var(--dp-border);
-    }
-
-    .selected-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        min-height: 60px;
-    }
-
-    .sel-card {
-        position: relative;
-        border-radius: var(--radius-sm);
-        overflow: hidden;
-        background: var(--dp-glass);
-        border: 1px solid var(--dp-border);
-        aspect-ratio: 3/4;
-        cursor: pointer;
-        transition: var(--transition);
-        animation: cardIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    @keyframes cardIn {
-        from { opacity: 0; transform: scale(0.6) rotate(-5deg); }
-        to   { opacity: 1; transform: scale(1) rotate(0deg); }
-    }
-
-    @keyframes cardOut {
-        from { opacity: 1; transform: scale(1); }
-        to   { opacity: 0; transform: scale(0.6) translateY(-10px); }
-    }
-
-    .sel-card.removing {
-        animation: cardOut 0.28s ease forwards;
-    }
-
-    .sel-card:hover { border-color: rgba(155,89,247,0.5); transform: translateY(-2px); }
-
-    .sel-card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-    .sel-card-dept {
-        position: absolute;
-        bottom: 0; left: 0; right: 0;
-        padding: 4px 6px;
-        font-size: 9px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-        color: rgba(255,255,255,0.85);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .sel-card-remove {
-        position: absolute;
-        top: 4px; right: 4px;
-        width: 20px; height: 20px;
-        border-radius: 50%;
-        background: rgba(217,70,168,0.85);
-        border: none;
-        color: #fff;
-        font-size: 11px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.2s;
-        line-height: 1;
-        font-weight: 700;
-    }
-    .sel-card:hover .sel-card-remove { opacity: 1; }
-
-    /* Empty slot */
-    .sel-slot-empty {
-        border-radius: var(--radius-sm);
-        border: 1px dashed rgba(255,255,255,0.10);
-        background: rgba(255,255,255,0.02);
-        aspect-ratio: 3/4;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        opacity: 0.25;
-    }
-
-    /* Empty wardrobe message */
-    .wardrobe-empty {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px 0;
-        gap: 8px;
-        color: var(--dp-muted);
-        font-size: 13px;
-        text-align: center;
-    }
-    .wardrobe-empty .we-icon { font-size: 36px; }
-
-    /* ---- CATEGORY CHIPS ---- */
-    .cat-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 7px;
-    }
-
-    .cat-chip {
-        padding: 5px 13px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        border: 1px solid;
-        transition: var(--transition);
-    }
-
-    .cat-chip[data-dept="Tops"]     { border-color: rgba(99,179,237,0.5); color: #63b3ed; background: rgba(99,179,237,0.08); }
-    .cat-chip[data-dept="Bottoms"]  { border-color: rgba(104,211,145,0.5); color: #68d391; background: rgba(104,211,145,0.08); }
-    .cat-chip[data-dept="Jackets"]  { border-color: rgba(251,191,36,0.5); color: #fbbf24; background: rgba(251,191,36,0.08); }
-    .cat-chip[data-dept="Dresses"]  { border-color: rgba(248,113,113,0.5); color: #f87171; background: rgba(248,113,113,0.08); }
-    .cat-chip[data-dept="Intimate"] { border-color: rgba(196,181,253,0.5); color: #c4b5fd; background: rgba(196,181,253,0.08); }
-    .cat-chip[data-dept="other"]    { border-color: rgba(156,163,175,0.5); color: #9ca3af; background: rgba(156,163,175,0.08); }
-
-    /* ---- ACTION BUTTONS ---- */
-    .action-btns {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin-top: auto;
-    }
-
-    .cw-btn {
-        width: 100%;
-        padding: 13px 20px;
-        border: none;
-        border-radius: var(--radius-sm);
-        font-family: 'Outfit', sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        letter-spacing: 0.3px;
-    }
-
-    .cw-btn-primary {
-        background: linear-gradient(135deg, #7c3aed, #a855f7, #ec4899);
-        color: #fff;
-        box-shadow: 0 4px 20px rgba(124,58,237,0.35);
-    }
-    .cw-btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 28px rgba(168,85,247,0.45);
-    }
-    .cw-btn-primary:active { transform: translateY(0); }
-
-    .cw-btn-secondary {
-        background: rgba(255,255,255,0.06);
-        color: var(--dp-text);
-        border: 1px solid var(--dp-border);
-    }
-    .cw-btn-secondary:hover {
-        background: rgba(155,89,247,0.12);
-        border-color: rgba(155,89,247,0.4);
-        transform: translateY(-1px);
-    }
-
-    .cw-btn-danger {
-        background: rgba(217,70,168,0.08);
-        color: var(--dp-pink);
-        border: 1px solid rgba(217,70,168,0.25);
-    }
-    .cw-btn-danger:hover {
-        background: rgba(217,70,168,0.15);
-        border-color: rgba(217,70,168,0.45);
-    }
-
-    /* -------- RIGHT PANEL (light beige) -------- */
-    .cw-right {
-        flex: 1;
-        background: var(--lp-bg);
-        overflow-y: auto;
-        overflow-x: hidden;
-        min-height: calc(100vh - 58px);
-    }
-
-    .right-inner {
-        padding: 28px 28px 60px;
-    }
-
-    /* Filter bar */
-    .filter-bar {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        background: var(--lp-bg);
-        padding: 16px 0 14px;
-        border-bottom: 1px solid var(--lp-border);
-        margin-bottom: 20px;
-    }
-
-    .filter-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-bottom: 10px;
-    }
-
-    .dept-btn {
-        padding: 7px 16px;
-        border-radius: 20px;
-        border: 1px solid var(--lp-border);
-        background: var(--lp-card);
-        color: var(--lp-muted);
-        font-family: 'Outfit', sans-serif;
-        font-size: 13px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: var(--transition);
-        white-space: nowrap;
-    }
-    .dept-btn:hover {
-        border-color: var(--lp-accent);
-        color: var(--lp-accent);
-        background: rgba(139,69,19,0.06);
-    }
-    .dept-btn.active {
-        background: var(--lp-accent);
-        color: #fff;
-        border-color: var(--lp-accent);
-        box-shadow: 0 3px 12px rgba(139,69,19,0.25);
-    }
-
-    .filter-controls {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .cw-search {
-        flex: 1;
-        min-width: 180px;
-        max-width: 320px;
-        padding: 8px 14px;
-        border-radius: 20px;
-        border: 1px solid var(--lp-border);
-        background: var(--lp-card);
-        color: var(--lp-text);
-        font-family: 'Outfit', sans-serif;
-        font-size: 13px;
-        outline: none;
-        transition: var(--transition);
-    }
-    .cw-search:focus {
-        border-color: var(--lp-accent);
-        box-shadow: 0 0 0 3px rgba(139,69,19,0.10);
-    }
-    .cw-search::placeholder { color: var(--lp-muted); }
-
-    .sort-select {
-        padding: 8px 14px;
-        border-radius: 20px;
-        border: 1px solid var(--lp-border);
-        background: var(--lp-card);
-        color: var(--lp-text);
-        font-family: 'Outfit', sans-serif;
-        font-size: 13px;
-        cursor: pointer;
-        outline: none;
-        transition: var(--transition);
-    }
-    .sort-select:focus { border-color: var(--lp-accent); }
-
-    .results-count {
-        font-size: 12px;
-        color: var(--lp-muted);
-        margin-left: auto;
-        white-space: nowrap;
-    }
-
-    /* Right panel title */
-    .right-title {
-        font-size: 22px;
-        font-weight: 700;
-        color: var(--lp-text);
-        margin-bottom: 2px;
-    }
-    .right-subtitle {
-        font-size: 13px;
-        color: var(--lp-muted);
-        margin-bottom: 0;
-    }
-
-    /* Product grid */
-    .product-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
-    }
-
-    @media (max-width: 1200px) {
-        .product-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 900px) {
-        .cw-split { flex-direction: column; }
-        .cw-left {
-            width: 100%;
-            position: relative;
-            top: 0;
-            height: auto;
-            min-height: unset;
+        /* =========================================================
+           Capsule Wardrobe — Split Light/Dark Page
+        ========================================================= */
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        :root{
+            --ai-purple:#a855f7; --ai-pink:#ec4899;
+            --dark-bg:#0f0c29; --dark-surface:rgba(255,255,255,0.05); --dark-border:rgba(255,255,255,0.12);
+            --light-bg:#F8F4E6; --light-surface:#ffffff; --light-border:#e5e5e5;
+            --text-dark:#1a1a1a; --text-light:#ffffff;
         }
-        .cw-left::before { width: 100%; }
-        .product-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 540px) {
-        .product-grid { grid-template-columns: 1fr; }
-        .right-inner { padding: 16px 16px 50px; }
-        .cw-left { padding: 20px 16px; }
-        .cw-nav { padding: 12px 16px; }
-    }
 
-    /* Product card */
-    .prod-card {
-        background: var(--lp-card);
-        border: 1px solid var(--lp-border);
-        border-radius: var(--radius);
-        overflow: hidden;
-        transition: var(--transition);
-        position: relative;
-        box-shadow: var(--shadow-lp);
-    }
-    .prod-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 32px rgba(0,0,0,0.13);
-        border-color: #c5b48a;
-    }
+        body{
+            font-family:'Outfit',sans-serif;
+            margin:0; padding:0; height:100vh; overflow:hidden;
+            display:flex; flex-direction:column;
+        }
 
-    .prod-card.selected {
-        border-color: #22c55e;
-        box-shadow: 0 0 0 2px rgba(34,197,94,0.3), var(--shadow-lp);
-    }
-    .prod-card.selected::before {
-        content: '✓';
-        position: absolute;
-        top: 8px; left: 8px;
-        width: 24px; height: 24px;
-        background: #22c55e;
-        color: #fff;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13px;
-        font-weight: 700;
-        z-index: 5;
-        animation: checkIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    @keyframes checkIn {
-        from { transform: scale(0); }
-        to   { transform: scale(1); }
-    }
+        /* Nav */
+        .ai-nav{
+            position:relative;z-index:20; flex-shrink:0;
+            display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;
+            padding:15px 40px; border-bottom:1px solid var(--dark-border);
+            background:var(--dark-bg); color:var(--text-light);
+        }
+        .ai-brand{
+            font-family:'Great Vibes',cursive;font-size:28px;color:white;
+            text-decoration:none; filter:drop-shadow(0 0 10px rgba(168,85,247,0.5));
+        }
+        .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
+        .nav-link{
+            color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;
+            padding:6px 14px;border-radius:20px; text-decoration:none;
+            border:1px solid var(--dark-border);background:var(--dark-surface);
+            transition:all .2s;
+        }
+        .nav-link:hover,.nav-link.active{
+            color:#fff;background:rgba(168,85,247,0.18); border-color:rgba(168,85,247,0.45);
+        }
 
-    .prod-card.bounce {
-        animation: cardBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    @keyframes cardBounce {
-        0%   { transform: scale(1); }
-        40%  { transform: scale(1.08) translateY(-6px); }
-        70%  { transform: scale(0.97); }
-        100% { transform: scale(1); }
-    }
+        /* Layout */
+        .split-layout {
+            display:flex; flex:1; overflow:hidden;
+        }
 
-    .prod-img-wrap {
-        width: 100%;
-        height: 120px;
-        overflow: hidden;
-        background: var(--lp-bg2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+        /* Left Panel - The Wardrobe (Dark) */
+        .left-panel {
+            width:400px; background:linear-gradient(135deg,#0f0c29 0%,#302b63 100%);
+            color:var(--text-light); display:flex; flex-direction:column;
+            border-right:1px solid var(--dark-border); position:relative;
+        }
+        .left-header {
+            padding:30px 20px 20px; text-align:center;
+            border-bottom:1px solid var(--dark-border);
+        }
+        .left-header h2 { font-family:'Great Vibes',cursive; font-size:42px; margin-bottom:10px; }
+        
+        /* Circular Progress Counter */
+        .counter-container {
+            display:flex; align-items:center; justify-content:center; gap:15px; margin-bottom:20px;
+        }
+        .circle-progress {
+            width:60px; height:60px; border-radius:50%;
+            background:conic-gradient(var(--ai-purple) 0%, rgba(255,255,255,0.1) 0%);
+            display:flex; align-items:center; justify-content:center;
+            position:relative; transition:background 0.3s;
+        }
+        .circle-progress::before {
+            content:''; position:absolute; inset:5px; border-radius:50%; background:#1e1b4b;
+        }
+        .circle-text { position:relative; z-index:1; font-size:18px; font-weight:700; }
+        
+        .combination-stat {
+            background:rgba(168,85,247,0.15); border:1px solid rgba(168,85,247,0.3);
+            border-radius:12px; padding:12px; text-align:center;
+        }
+        .comb-num { font-size:24px; font-weight:800; color:var(--ai-purple); display:inline-block; }
 
-    .prod-img-wrap img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        transition: transform 0.4s;
-    }
-    .prod-card:hover .prod-img-wrap img { transform: scale(1.05); }
+        .wardrobe-grid {
+            flex:1; overflow-y:auto; padding:20px;
+            display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; align-content:start;
+        }
+        
+        .w-item {
+            position:relative; border-radius:8px; overflow:hidden;
+            border:1px solid var(--dark-border); background:var(--dark-surface);
+            aspect-ratio:3/4; animation:popIn 0.3s ease;
+        }
+        @keyframes popIn { 0%{transform:scale(0.8);opacity:0;} 100%{transform:scale(1);opacity:1;} }
+        
+        .w-item img { width:100%; height:100%; object-fit:contain; background:rgba(255,255,255,0.02); }
+        .remove-btn {
+            position:absolute; top:4px; right:4px; width:22px; height:22px;
+            background:rgba(236,72,153,0.8); color:white; border:none; border-radius:50%;
+            font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+        }
+        .remove-btn:hover { background:var(--ai-pink); }
+        .w-item-cat {
+            position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.7);
+            font-size:10px; text-align:center; padding:3px;
+        }
 
-    .prod-body {
-        padding: 10px 12px;
-    }
+        .left-footer { padding:20px; border-top:1px solid var(--dark-border); display:flex; gap:10px; }
+        .btn-act {
+            flex:1; padding:10px; border-radius:10px; font-family:'Outfit',sans-serif;
+            font-size:13px; font-weight:600; cursor:pointer; border:1px solid var(--ai-purple);
+            background:transparent; color:var(--ai-purple); transition:all 0.2s;
+        }
+        .btn-act:hover { background:rgba(168,85,247,0.1); }
+        .btn-clear { border-color:var(--ai-pink); color:var(--ai-pink); }
+        .btn-clear:hover { background:rgba(236,72,153,0.1); }
 
-    .prod-dept {
-        font-size: 9px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: var(--lp-accent);
-        margin-bottom: 3px;
-    }
+        /* Right Panel - Browser (Light) */
+        .right-panel {
+            flex:1; background:var(--light-bg); display:flex; flex-direction:column;
+            color:var(--text-dark);
+        }
+        
+        .browser-header {
+            padding:20px 30px; border-bottom:1px solid var(--light-border);
+            display:flex; justify-content:space-between; align-items:center;
+            background:var(--light-surface);
+        }
+        .browser-header h3 { font-size:20px; font-weight:700; margin:0; }
+        
+        .filters { display:flex; gap:10px; flex-wrap:wrap; }
+        .filter-btn {
+            padding:6px 16px; border-radius:20px; border:1px solid #ccc;
+            background:#f5f5f5; color:#555; font-size:13px; font-weight:500; cursor:pointer;
+        }
+        .filter-btn.active { background:#2A5C43; border-color:#2A5C43; color:white; }
 
-    .prod-id {
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--lp-text);
-        margin-bottom: 4px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+        .search-box {
+            padding:8px 16px; border-radius:20px; border:1px solid #ccc;
+            outline:none; font-family:'Outfit'; font-size:13px; width:200px;
+        }
 
-    .prod-rating {
-        font-size: 11px;
-        color: var(--lp-muted);
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        margin-bottom: 8px;
-    }
+        .catalog-grid {
+            flex:1; overflow-y:auto; padding:30px;
+            display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:20px; align-content:start;
+        }
 
-    .star { color: #f59e0b; }
+        .cat-card {
+            background:white; border:1px solid var(--light-border); border-radius:12px;
+            overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.05);
+            transition:transform 0.2s; display:flex; flex-direction:column; min-height: 280px;
+        }
+        .cat-card:hover { transform:translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,0.1); }
+        .cat-img { width:100%; height:180px; min-height:180px; flex-shrink:0; object-fit:contain; background:#fafafa; border-bottom:1px solid var(--light-border); }
+        .cat-info { padding:12px; flex:1; display:flex; flex-direction:column; }
+        .c-dept { font-size:10px; color:#2A5C43; font-weight:700; text-transform:uppercase; margin-bottom:4px; }
+        .c-name { font-size:13px; font-weight:600; margin-bottom:8px; line-height:1.3; flex:1; }
+        .c-bottom { display:flex; justify-content:space-between; align-items:center; }
+        
+        .add-btn {
+            width:30px; height:30px; border-radius:50%; border:none;
+            background:#2A5C43; color:white; font-size:18px; font-weight:400;
+            cursor:pointer; display:flex; align-items:center; justify-content:center;
+        }
+        .add-btn:hover { background:#1e4331; }
+        .add-btn.added { background:#e5e5e5; color:#333; }
 
-    .prod-add-btn {
-        width: 100%;
-        padding: 7px 12px;
-        border-radius: var(--radius-sm);
-        border: none;
-        font-family: 'Outfit', sans-serif;
-        font-size: 12.5px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-    }
+        /* Toast */
+        .toast {
+            position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+            background:#1a1a1a; color:white; padding:12px 24px; border-radius:8px;
+            font-size:14px; font-weight:600; z-index:1000;
+            opacity:0; transition:opacity 0.3s; pointer-events:none;
+        }
 
-    .prod-add-btn.add {
-        background: linear-gradient(135deg, #7c3aed, #a855f7);
-        color: #fff;
-        box-shadow: 0 3px 12px rgba(124,58,237,0.25);
-    }
-    .prod-add-btn.add:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 5px 18px rgba(124,58,237,0.35);
-    }
-
-    .prod-add-btn.remove {
-        background: rgba(34,197,94,0.1);
-        color: #16a34a;
-        border: 1px solid rgba(34,197,94,0.35);
-    }
-    .prod-add-btn.remove:hover {
-        background: rgba(239,68,68,0.1);
-        color: #dc2626;
-        border-color: rgba(239,68,68,0.35);
-    }
-
-    /* Load more */
-    .load-more-wrap {
-        text-align: center;
-        margin-top: 28px;
-    }
-
-    .load-more-btn {
-        padding: 12px 36px;
-        border-radius: 30px;
-        border: 1px solid var(--lp-border);
-        background: var(--lp-card);
-        color: var(--lp-accent);
-        font-family: 'Outfit', sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: var(--transition);
-        box-shadow: var(--shadow-lp);
-    }
-    .load-more-btn:hover {
-        background: var(--lp-accent);
-        color: #fff;
-        border-color: var(--lp-accent);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(139,69,19,0.3);
-    }
-
-    /* Empty state */
-    .products-empty {
-        grid-column: 1 / -1;
-        text-align: center;
-        padding: 60px 20px;
-        color: var(--lp-muted);
-    }
-    .products-empty .pe-icon { font-size: 48px; margin-bottom: 12px; }
-    .products-empty p { font-size: 14px; }
-
-    /* ============================================================
-       TOAST
-    ============================================================ */
-    .cw-toast {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        z-index: 9999;
-        padding: 14px 24px;
-        border-radius: 14px;
-        font-size: 14px;
-        font-weight: 600;
-        color: #fff;
-        box-shadow: 0 10px 36px rgba(0,0,0,0.3);
-        animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        max-width: 340px;
-        pointer-events: none;
-    }
-    .cw-toast.warning {
-        background: linear-gradient(135deg, #d97706, #f59e0b);
-    }
-    .cw-toast.success {
-        background: linear-gradient(135deg, #7c3aed, #ec4899);
-    }
-    .cw-toast.info {
-        background: linear-gradient(135deg, #0891b2, #06b6d4);
-    }
-    @keyframes toastIn {
-        from { opacity: 0; transform: translateY(20px) scale(0.9); }
-        to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    @keyframes toastOut {
-        from { opacity: 1; transform: translateY(0) scale(1); }
-        to   { opacity: 0; transform: translateY(20px) scale(0.9); }
-    }
-    .cw-toast.hide { animation: toastOut 0.3s ease forwards; }
-
-    /* ============================================================
-       COUNT-UP ANIMATION HELPER
-    ============================================================ */
-    @keyframes numPop {
-        0%   { transform: scale(1); }
-        50%  { transform: scale(1.18); }
-        100% { transform: scale(1); }
-    }
-    .num-pop { animation: numPop 0.4s ease; }
+        @media (max-width: 900px) {
+            .split-layout { flex-direction:column; overflow:auto; }
+            .left-panel { width:100%; height:400px; flex-shrink:0; }
+            .right-panel { overflow:visible; }
+            .catalog-grid { overflow:visible; }
+        }
     </style>
 </head>
 <body>
 
-<!-- SVG DEFS for gradient ring -->
-<svg width="0" height="0" style="position:absolute">
-    <defs>
-        <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#9b59f7"/>
-            <stop offset="100%" stop-color="#d946a8"/>
-        </linearGradient>
-    </defs>
-</svg>
-
-<!-- ============================================================
-     TOP NAV
-============================================================ -->
-<nav class="cw-nav">
-    <a href="index.html" class="cw-brand">Elizabeth's Elegance</a>
-    <div class="cw-nav-links">
-        <a href="index.html" class="cw-nav-link">🏠 Головна</a>
-        <a href="ai-stylist.html" class="cw-nav-link">✨ AI Stylist</a>
-        <a href="capsule-wardrobe.html" class="cw-nav-link active">📅 Capsule Wardrobe</a>
-    </div>
-</nav>
-
-<!-- ============================================================
-     SPLIT LAYOUT
-============================================================ -->
-<div class="cw-split">
-
-    <!-- LEFT PANEL: WARDROBE -->
-    <aside class="cw-left" id="wardrobe-panel">
-
-        <div class="cw-wardrobe-title">Ваш Гардероб</div>
-
-        <!-- Progress ring -->
-        <div class="progress-section">
-            <div class="progress-ring-wrap">
-                <svg class="progress-ring-svg" viewBox="0 0 110 110">
-                    <circle class="progress-ring-bg" cx="55" cy="55" r="45"/>
-                    <circle class="progress-ring-arc" id="ring-arc" cx="55" cy="55" r="45"/>
-                </svg>
-                <div class="progress-ring-label">
-                    <span class="progress-count" id="counter-n">0</span>
-                    <span class="progress-sub">/ 12</span>
-                </div>
-            </div>
-            <div class="progress-text" id="progress-text">речей у гардеробі</div>
+    <nav class="ai-nav">
+        <a href="index.html" class="ai-brand">Elizabeth's Elegance</a>
+                        <div class="nav-links">
+            <a href="index.html" class="nav-link">🏠 Головна</a>
+            <a href="my-profile.html" class="nav-link">👤 Мій профіль</a>
+            <a href="ai-stylist.html" class="nav-link">✨ AI Stylist</a>
+            <a href="style-quiz.html" class="nav-link">🎯 Style Quiz</a>
+            <a href="weather-outfit.html" class="nav-link">🌡️ Weather</a>
+            <a href="capsule-wardrobe.html" class="nav-link active">📅 Capsule</a>
+            <a href="mood-board.html" class="nav-link">🎨 Mood Board</a>
+            <a href="trend-radar.html" class="nav-link">📊 Trends</a>
+            <a href="virtual-silhouette.html" class="nav-link">👗 Silhouette</a>
         </div>
+    </nav>
 
-        <!-- Combination stat -->
-        <div class="combo-stat">
-            <div class="combo-emoji">🎯</div>
-            <div class="combo-number" id="combo-number">0</div>
-            <div class="combo-label">образів можливо</div>
-        </div>
-
-        <!-- Selected items -->
-        <div class="selected-section">
-            <div class="section-label">Обрані речі</div>
-            <div class="selected-grid" id="selected-grid">
-                <!-- filled by JS -->
-            </div>
-        </div>
-
-        <!-- Category breakdown -->
-        <div class="selected-section" id="cat-breakdown-wrap" style="display:none">
-            <div class="section-label">По категоріях</div>
-            <div class="cat-chips" id="cat-chips">
-                <!-- filled by JS -->
-            </div>
-        </div>
-
-        <!-- Action buttons -->
-        <div class="action-btns">
-            <button class="cw-btn cw-btn-primary" onclick="saveToLocalStorage()" id="save-btn">
-                💾 Зберегти гардероб
-            </button>
-            <button class="cw-btn cw-btn-secondary" onclick="shareWardrobe()" id="share-btn">
-                🔗 Поділитись
-            </button>
-            <button class="cw-btn cw-btn-danger" onclick="clearWardrobe()" id="clear-btn">
-                🗑️ Очистити
-            </button>
-        </div>
-
-    </aside>
-
-    <!-- RIGHT PANEL: PRODUCT BROWSER -->
-    <main class="cw-right">
-        <div class="right-inner">
-
-            <!-- Filter bar (sticky inside right panel) -->
-            <div class="filter-bar">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
-                    <div>
-                        <div class="right-title">🛍️ Каталог товарів</div>
-                        <div class="right-subtitle">Оберіть до 12 речей для свого капсульного гардеробу</div>
+    <div class="split-layout">
+        <!-- LEFT: WARDROBE -->
+        <div class="left-panel">
+            <div class="left-header">
+                <h2 id="capsule-title">Ваша Капсула</h2>
+                <div class="counter-container">
+                    <div class="circle-progress" id="circ-prog">
+                        <span class="circle-text" id="count-text">0/12</span>
                     </div>
-                    <span class="results-count" id="results-count">Завантаження...</span>
-                </div>
-
-                <div class="filter-row" id="dept-buttons">
-                    <button class="dept-btn active" data-dept="" onclick="setDeptFilter('')">Всі</button>
-                    <button class="dept-btn" data-dept="Tops" onclick="setDeptFilter('Tops')">👕 Tops</button>
-                    <button class="dept-btn" data-dept="Bottoms" onclick="setDeptFilter('Bottoms')">👖 Bottoms</button>
-                    <button class="dept-btn" data-dept="Jackets" onclick="setDeptFilter('Jackets')">🧥 Jackets</button>
-                    <button class="dept-btn" data-dept="Dresses" onclick="setDeptFilter('Dresses')">👗 Dresses</button>
-                    <button class="dept-btn" data-dept="Intimate" onclick="setDeptFilter('Intimate')">🌸 Intimate</button>
-                </div>
-
-                <div class="filter-controls">
-                    <input type="text" class="cw-search" id="search-input"
-                        placeholder="🔍 Пошук за ID або назвою..."
-                        oninput="onSearch()">
-                    <select class="sort-select" id="sort-select" onchange="onSort()">
-                        <option value="">Без сортування</option>
-                        <option value="rating_desc">⭐ Рейтинг ▼</option>
-                        <option value="rating_asc">⭐ Рейтинг ▲</option>
-                        <option value="reviews_desc">💬 Відгуки ▼</option>
-                        <option value="reviews_asc">💬 Відгуки ▲</option>
-                    </select>
+                    <div class="combination-stat">
+                        <span class="comb-num" id="comb-count">0</span><br>
+                        <span style="font-size:12px; color:rgba(255,255,255,0.6);">можливих образів</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Product grid -->
-            <div class="product-grid" id="product-grid">
-                <div class="products-empty">
-                    <div class="pe-icon">⏳</div>
-                    <p>Завантаження товарів...</p>
-                </div>
+            <div class="wardrobe-grid" id="wardrobe-grid">
+                <!-- Selected items will appear here -->
             </div>
 
-            <!-- Load more -->
-            <div class="load-more-wrap" id="load-more-wrap" style="display:none">
-                <button class="load-more-btn" onclick="loadMore()">
-                    Завантажити ще
-                </button>
+            <div class="left-footer">
+                <button class="btn-act" onclick="saveWardrobe()">💾 Зберегти</button>
+                <button class="btn-act btn-clear" onclick="clearWardrobe()">🗑️ Очистити</button>
             </div>
-
         </div>
-    </main>
 
-</div>
+        <!-- RIGHT: CATALOG -->
+        <div class="right-panel">
+            <div class="browser-header">
+                <h3>🛍️ Каталог товарів</h3>
+                <div class="filters">
+                    <button class="filter-btn active" onclick="setFilter('')">Всі</button>
+                    <button class="filter-btn" onclick="setFilter('Tops')">Верх</button>
+                    <button class="filter-btn" onclick="setFilter('Bottoms')">Низ</button>
+                    <button class="filter-btn" onclick="setFilter('Jackets')">Куртки</button>
+                    <button class="filter-btn" onclick="setFilter('Dresses')">Сукні</button>
+                    <input type="text" class="search-box" id="search-box" placeholder="Пошук..." oninput="renderCatalog()">
+                </div>
+            </div>
 
-<!-- Toast container -->
-<div id="toast-container"></div>
+            <div class="catalog-grid" id="catalog-grid">
+                <p>Завантаження каталогу...</p>
+            </div>
+        </div>
+    </div>
 
-<script>
-// ============================================================
-// STATE
-// ============================================================
-let allProducts = [];
-let filteredProducts = [];
-let displayedCount = 0;
-const PAGE_SIZE = 30;
-const MAX_ITEMS = 12;
+    <div class="toast" id="toast"></div>
 
-let selectedItems = new Set(); // Set of clothing_ids (numbers)
-let selectedMap = {};          // id -> product object
+    <script>
+        const MAX_ITEMS = 12;
+        let allProducts = [];
+        let wardrobeIds = new Set(); // Stores clothing_ids
+        let currentFilter = '';
 
-let currentDept = '';
-let currentSearch = '';
-let currentSort = '';
+        // Load data & profile
+        let favColor = 'var(--ai-purple)';
+        try {
+            const p = JSON.parse(localStorage.getItem('ai_profile'));
+            if(p && p.name) document.getElementById('capsule-title').textContent = `Капсула ${p.name}`;
+            if(p && p.color) {
+                favColor = p.color;
+                document.getElementById('circ-prog').style.background = `conic-gradient(${favColor} 0%, rgba(255,255,255,0.1) 0%)`;
+                document.querySelector('.comb-num').style.color = favColor;
+            }
+        } catch(e){}
 
-// ============================================================
-// INIT
-// ============================================================
-async function init() {
-    // Load products
-    try {
-        const resp = await fetch('data/products.json');
-        if (!resp.ok) throw new Error('HTTP error');
-        const raw = await resp.json();
-        // Filter: only rating >= 3.5 by default
-        allProducts = raw.filter(p => p.avg_rating !== null && p.avg_rating >= 3.5 && p.department_name);
-    } catch(e) {
-        console.error('Error loading products:', e);
-        showToast('⚠️ Помилка завантаження товарів. Запустіть через локальний сервер.', 'warning');
-        document.getElementById('product-grid').innerHTML = `
-            <div class="products-empty">
-                <div class="pe-icon">⚠️</div>
-                <p>Не вдалось завантажити товари.<br>Запустіть через локальний сервер.</p>
-            </div>`;
-        return;
-    }
+        fetch('data/products.json').then(r=>r.json()).then(data => {
+            // Only keep decent rated products for capsule
+            allProducts = data.filter(p => p.avg_rating && p.avg_rating >= 3.5);
+            loadWardrobe();
+            renderCatalog();
+        });
 
-    // Restore from URL ?items=1,2,3
-    const params = new URLSearchParams(window.location.search);
-    const urlItems = params.get('items');
-    if (urlItems) {
-        const ids = urlItems.split(',').map(Number).filter(Boolean);
-        for (const id of ids) {
-            const prod = allProducts.find(p => p.clothing_id === id);
-            if (prod && selectedItems.size < MAX_ITEMS) {
-                selectedItems.add(id);
-                selectedMap[id] = prod;
+        function setFilter(dept) {
+            currentFilter = dept;
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.toggle('active', b.textContent === (dept==='Tops'?'Верх':dept==='Bottoms'?'Низ':dept==='Jackets'?'Куртки':dept==='Dresses'?'Сукні':'Всі'));
+            });
+            renderCatalog();
+        }
+
+        function renderCatalog() {
+            const query = document.getElementById('search-box').value.toLowerCase();
+            const grid = document.getElementById('catalog-grid');
+            
+            let filtered = allProducts;
+            if(currentFilter) filtered = filtered.filter(p => p.department_name === currentFilter);
+            if(query) filtered = filtered.filter(p => (p.title||'').toLowerCase().includes(query) || (p.class_name||'').toLowerCase().includes(query));
+
+            // Show max 50 to avoid lag
+            filtered = filtered.slice(0, 50);
+
+            grid.innerHTML = filtered.map(p => {
+                const isAdded = wardrobeIds.has(p.clothing_id);
+                return `
+                <div class="cat-card">
+                    <img src="static/${p.clothing_id}.jpg" class="cat-img" onerror="this.src='https://via.placeholder.com/150/ffffff/cccccc?text=No+Img'">
+                    <div class="cat-info">
+                        <div class="c-dept">${p.class_name || p.department_name || 'Item'}</div>
+                        <div class="c-name">${p.title ? p.title.slice(0,40)+'...' : 'No name'}</div>
+                        <div class="c-bottom">
+                            <span style="font-size:12px; color:#666;">⭐ ${p.avg_rating.toFixed(1)}</span>
+                            <button class="add-btn ${isAdded?'added':''}" onclick="toggleItem(${p.clothing_id})">
+                                ${isAdded ? '✓' : '+'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function toggleItem(id) {
+            if(wardrobeIds.has(id)) {
+                wardrobeIds.delete(id);
+            } else {
+                if(wardrobeIds.size >= MAX_ITEMS) {
+                    showToast('Капсула заповнена! Максимум 12 речей.');
+                    return;
+                }
+                wardrobeIds.add(id);
+            }
+            updateWardrobeUI();
+            renderCatalog(); // update buttons
+        }
+
+        function updateWardrobeUI() {
+            const count = wardrobeIds.size;
+            document.getElementById('count-text').textContent = `${count}/${MAX_ITEMS}`;
+            const pct = (count / MAX_ITEMS) * 100;
+            document.getElementById('circ-prog').style.background = `conic-gradient(${favColor} ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
+
+            // Render selected items
+            const grid = document.getElementById('wardrobe-grid');
+            const items = Array.from(wardrobeIds).map(id => allProducts.find(p => p.clothing_id === id)).filter(Boolean);
+            
+            grid.innerHTML = items.map(p => `
+                <div class="w-item">
+                    <img src="static/${p.clothing_id}.jpg" onerror="this.style.display='none'">
+                    <div class="w-item-cat">${p.department_name}</div>
+                    <button class="remove-btn" onclick="toggleItem(${p.clothing_id})">✕</button>
+                </div>
+            `).join('');
+
+            // Calculate combinations
+            let tops = 0, bottoms = 0, jackets = 0, dresses = 0;
+            items.forEach(p => {
+                if(p.department_name === 'Tops') tops++;
+                if(p.department_name === 'Bottoms') bottoms++;
+                if(p.department_name === 'Jackets') jackets++;
+                if(p.department_name === 'Dresses') dresses++;
+            });
+
+            // Combinations logic: (Tops * Bottoms * (Jackets+1)) + (Dresses * (Jackets+1))
+            let outJ = Math.max(1, jackets + 1); // +1 means wearing no jacket
+            let combs = 0;
+            if (tops > 0 && bottoms > 0) {
+                combs += (tops * bottoms * outJ);
+            }
+            if (dresses > 0) {
+                combs += (dresses * outJ);
+            }
+            
+            animateNumber('comb-count', parseInt(document.getElementById('comb-count').textContent), combs, 500);
+        }
+
+        function animateNumber(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function clearWardrobe() {
+            wardrobeIds.clear();
+            updateWardrobeUI();
+            renderCatalog();
+        }
+
+        function saveWardrobe() {
+            localStorage.setItem('capsule_wardrobe', JSON.stringify(Array.from(wardrobeIds)));
+            showToast('Гардероб збережено!');
+        }
+
+        function loadWardrobe() {
+            const saved = localStorage.getItem('capsule_wardrobe');
+            if(saved) {
+                try {
+                    const ids = JSON.parse(saved);
+                    ids.forEach(id => wardrobeIds.add(id));
+                    updateWardrobeUI();
+                } catch(e) {}
             }
         }
-        if (ids.length) showToast(`✅ Відновлено ${selectedItems.size} речей зі спільного посилання`, 'success');
-    } else {
-        // Restore from localStorage
-        loadFromLocalStorage();
-    }
 
-    applyFilters();
-    updateWardrobe();
-}
-
-// ============================================================
-// FILTERING & SORTING
-// ============================================================
-function applyFilters() {
-    let result = [...allProducts];
-
-    if (currentDept) result = result.filter(p => p.department_name === currentDept);
-
-    if (currentSearch) {
-        const q = currentSearch.toLowerCase();
-        result = result.filter(p =>
-            String(p.clothing_id).includes(q) ||
-            (p.class_name && p.class_name.toLowerCase().includes(q)) ||
-            (p.title && p.title.toLowerCase().includes(q))
-        );
-    }
-
-    switch (currentSort) {
-        case 'rating_desc':  result.sort((a,b) => (b.avg_rating||0) - (a.avg_rating||0)); break;
-        case 'rating_asc':   result.sort((a,b) => (a.avg_rating||0) - (b.avg_rating||0)); break;
-        case 'reviews_desc': result.sort((a,b) => b.review_count - a.review_count); break;
-        case 'reviews_asc':  result.sort((a,b) => a.review_count - b.review_count); break;
-        default:             result.sort((a,b) => a.clothing_id - b.clothing_id); break;
-    }
-
-    filteredProducts = result;
-    displayedCount = 0;
-    renderProducts(true);
-}
-
-function setDeptFilter(dept) {
-    currentDept = dept;
-    document.querySelectorAll('.dept-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.dept === dept);
-    });
-    applyFilters();
-}
-
-function onSearch() {
-    currentSearch = document.getElementById('search-input').value.trim();
-    applyFilters();
-}
-
-function onSort() {
-    currentSort = document.getElementById('sort-select').value;
-    applyFilters();
-}
-
-// ============================================================
-// RENDER PRODUCTS
-// ============================================================
-function renderProducts(reset = false) {
-    const grid = document.getElementById('product-grid');
-    const page = filteredProducts.slice(displayedCount, displayedCount + PAGE_SIZE);
-    displayedCount += page.length;
-
-    if (reset) {
-        if (filteredProducts.length === 0) {
-            grid.innerHTML = `<div class="products-empty">
-                <div class="pe-icon">🔍</div>
-                <p>Товарів не знайдено.<br>Спробуйте змінити фільтр або пошук.</p>
-            </div>`;
-            document.getElementById('load-more-wrap').style.display = 'none';
-            document.getElementById('results-count').textContent = '0 товарів';
-            return;
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.opacity = '1';
+            setTimeout(() => t.style.opacity = '0', 2000);
         }
-        grid.innerHTML = '';
-    }
-
-    page.forEach(p => {
-        const el = createProductCard(p);
-        grid.appendChild(el);
-    });
-
-    document.getElementById('results-count').textContent =
-        `${filteredProducts.length} товарів`;
-
-    const loadMoreWrap = document.getElementById('load-more-wrap');
-    loadMoreWrap.style.display = displayedCount < filteredProducts.length ? 'block' : 'none';
-}
-
-function createProductCard(p) {
-    const isSelected = selectedItems.has(p.clothing_id);
-    const div = document.createElement('div');
-    div.className = 'prod-card' + (isSelected ? ' selected' : '');
-    div.id = 'pc-' + p.clothing_id;
-
-    const rating = p.avg_rating !== null ? p.avg_rating.toFixed(2) : '–';
-    const stars = p.avg_rating ? '★'.repeat(Math.round(p.avg_rating)) + '☆'.repeat(5 - Math.round(p.avg_rating)) : '–';
-    const dept = p.department_name || 'Інше';
-    const title = p.title ? p.title : (p.class_name || 'Артикул ' + p.clothing_id);
-
-    div.innerHTML = `
-        <div class="prod-img-wrap">
-            <img src="static/${p.clothing_id}.jpg" alt="${title}"
-                onerror="this.src='https://via.placeholder.com/120x120/f0ebd4/8B4513?text=ID+${p.clothing_id}'">
-        </div>
-        <div class="prod-body">
-            <div class="prod-dept">${dept}</div>
-            <div class="prod-id" title="${title}">ID ${p.clothing_id} · ${p.class_name || ''}</div>
-            <div class="prod-rating">
-                <span class="star">${p.avg_rating ? '★' : ''}</span>
-                ${rating} <span style="opacity:0.5">(${p.review_count})</span>
-            </div>
-            <button class="prod-add-btn ${isSelected ? 'remove' : 'add'}"
-                id="btn-${p.clothing_id}"
-                onclick="toggleItem(${p.clothing_id})">
-                ${isSelected ? '✓ Прибрати' : '+ Додати'}
-            </button>
-        </div>
-    `;
-    return div;
-}
-
-function loadMore() {
-    renderProducts(false);
-}
-
-// ============================================================
-// WARDROBE LOGIC
-// ============================================================
-function addItem(id) {
-    if (selectedItems.has(id)) return;
-    if (selectedItems.size >= MAX_ITEMS) {
-        showToast('⚠️ Максимум 12 речей!', 'warning');
-        return;
-    }
-    const prod = allProducts.find(p => p.clothing_id === id);
-    if (!prod) return;
-    selectedItems.add(id);
-    selectedMap[id] = prod;
-    updateWardrobe();
-    updateCardUI(id, true);
-
-    // bounce animation
-    const card = document.getElementById('pc-' + id);
-    if (card) {
-        card.classList.add('bounce');
-        card.addEventListener('animationend', () => card.classList.remove('bounce'), { once: true });
-    }
-    showToast(`✅ Додано до гардеробу`, 'success');
-}
-
-function removeItem(id) {
-    if (!selectedItems.has(id)) return;
-    selectedItems.delete(id);
-    delete selectedMap[id];
-    updateWardrobe();
-    updateCardUI(id, false);
-}
-
-function toggleItem(id) {
-    if (selectedItems.has(id)) {
-        removeItem(id);
-    } else {
-        addItem(id);
-    }
-}
-
-function updateCardUI(id, isSelected) {
-    const card = document.getElementById('pc-' + id);
-    if (!card) return;
-    const btn = document.getElementById('btn-' + id);
-    card.classList.toggle('selected', isSelected);
-    if (btn) {
-        btn.className = 'prod-add-btn ' + (isSelected ? 'remove' : 'add');
-        btn.textContent = isSelected ? '✓ Прибрати' : '+ Додати';
-    }
-}
-
-// ============================================================
-// UPDATE WARDROBE PANEL
-// ============================================================
-function updateWardrobe() {
-    const n = selectedItems.size;
-
-    // Counter
-    animateCounter('counter-n', n);
-
-    // Ring progress
-    const circumference = 2 * Math.PI * 45; // ~283
-    const arc = document.getElementById('ring-arc');
-    const offset = circumference - (n / MAX_ITEMS) * circumference;
-    arc.style.strokeDashoffset = offset;
-
-    // Progress text
-    document.getElementById('progress-text').textContent =
-        n === 0 ? 'гардероб порожній' :
-        n === MAX_ITEMS ? 'гардероб повний!' :
-        `${MAX_ITEMS - n} місць залишилось`;
-
-    // Combinations
-    const combos = calculateCombinations();
-    animateCounter('combo-number', combos);
-
-    // Selected grid
-    renderSelectedGrid();
-
-    // Category chips
-    renderCategoryChips();
-}
-
-function renderSelectedGrid() {
-    const grid = document.getElementById('selected-grid');
-    const items = [...selectedItems];
-    grid.innerHTML = '';
-
-    if (items.length === 0) {
-        grid.innerHTML = `<div class="wardrobe-empty" style="grid-column:1/-1">
-            <div class="we-icon">👗</div>
-            <span>Додайте товари з каталогу</span>
-        </div>`;
-        return;
-    }
-
-    // Show selected items
-    items.forEach(id => {
-        const prod = selectedMap[id];
-        if (!prod) return;
-        const card = document.createElement('div');
-        card.className = 'sel-card';
-        card.id = 'sel-' + id;
-        card.innerHTML = `
-            <img src="static/${id}.jpg" alt="ID ${id}"
-                onerror="this.src='https://via.placeholder.com/80x100/2a1540/9b59f7?text=${id}'">
-            <div class="sel-card-dept">${prod.department_name || 'Item'}</div>
-            <button class="sel-card-remove" onclick="removeItemAnimated(${id})" title="Видалити">×</button>
-        `;
-        grid.appendChild(card);
-    });
-
-    // Empty slots
-    const remaining = MAX_ITEMS - items.length;
-    for (let i = 0; i < Math.min(remaining, 3); i++) {
-        const slot = document.createElement('div');
-        slot.className = 'sel-slot-empty';
-        slot.textContent = '+';
-        grid.appendChild(slot);
-    }
-}
-
-function removeItemAnimated(id) {
-    const card = document.getElementById('sel-' + id);
-    if (card) {
-        card.classList.add('removing');
-        card.addEventListener('animationend', () => removeItem(id), { once: true });
-    } else {
-        removeItem(id);
-    }
-}
-
-function renderCategoryChips() {
-    const wrap = document.getElementById('cat-breakdown-wrap');
-    const chipsEl = document.getElementById('cat-chips');
-
-    if (selectedItems.size === 0) {
-        wrap.style.display = 'none';
-        return;
-    }
-
-    const counts = {};
-    for (const id of selectedItems) {
-        const prod = selectedMap[id];
-        if (!prod) continue;
-        const dept = prod.department_name || 'other';
-        counts[dept] = (counts[dept] || 0) + 1;
-    }
-
-    chipsEl.innerHTML = Object.entries(counts).map(([dept, count]) =>
-        `<div class="cat-chip" data-dept="${dept}">${dept}: ${count}</div>`
-    ).join('');
-
-    wrap.style.display = '';
-}
-
-// ============================================================
-// COMBINATIONS CALCULATOR
-// ============================================================
-function calculateCombinations() {
-    let tops = 0, bottoms = 0, outerwear = 0, dresses = 0;
-
-    for (const id of selectedItems) {
-        const prod = selectedMap[id];
-        if (!prod) continue;
-        const dept = prod.department_name;
-        if (dept === 'Tops')    tops++;
-        else if (dept === 'Bottoms') bottoms++;
-        else if (dept === 'Jackets') outerwear++;
-        else if (dept === 'Dresses') dresses++;
-    }
-
-    const outerFactor = Math.max(1, outerwear);
-    const combos = (tops * bottoms * outerFactor) + (dresses * outerFactor);
-    return combos;
-}
-
-// ============================================================
-// COUNT-UP ANIMATION
-// ============================================================
-function animateCounter(elId, targetVal) {
-    const el = document.getElementById(elId);
-    if (!el) return;
-    const current = parseInt(el.textContent.replace(/,/g, '')) || 0;
-    if (current === targetVal) return;
-
-    el.classList.remove('num-pop');
-    void el.offsetWidth; // reflow
-    el.classList.add('num-pop');
-
-    const duration = 500;
-    const start = performance.now();
-    const from = current;
-
-    function step(ts) {
-        const elapsed = ts - start;
-        const progress = Math.min(elapsed / duration, 1);
-        // easeOutQuart
-        const eased = 1 - Math.pow(1 - progress, 4);
-        const val = Math.round(from + (targetVal - from) * eased);
-        el.textContent = val.toLocaleString('uk-UA');
-        if (progress < 1) requestAnimationFrame(step);
-        else el.textContent = targetVal.toLocaleString('uk-UA');
-    }
-    requestAnimationFrame(step);
-}
-
-// ============================================================
-// LOCALSTORAGE
-// ============================================================
-function saveToLocalStorage() {
-    const ids = [...selectedItems];
-    localStorage.setItem('cw_wardrobe', JSON.stringify(ids));
-    showToast('💾 Гардероб збережено!', 'success');
-
-    // Button feedback
-    const btn = document.getElementById('save-btn');
-    btn.textContent = '✅ Збережено!';
-    setTimeout(() => { btn.textContent = '💾 Зберегти гардероб'; }, 2000);
-}
-
-function loadFromLocalStorage() {
-    try {
-        const saved = localStorage.getItem('cw_wardrobe');
-        if (!saved) return;
-        const ids = JSON.parse(saved);
-        let restored = 0;
-        for (const id of ids) {
-            const prod = allProducts.find(p => p.clothing_id === id);
-            if (prod && selectedItems.size < MAX_ITEMS) {
-                selectedItems.add(id);
-                selectedMap[id] = prod;
-                restored++;
-            }
-        }
-        if (restored > 0) showToast(`✅ Відновлено ${restored} речей`, 'success');
-    } catch(e) {
-        console.warn('Failed to load from localStorage:', e);
-    }
-}
-
-// ============================================================
-// URL SHARING
-// ============================================================
-function shareWardrobe() {
-    if (selectedItems.size === 0) {
-        showToast('🛍️ Спочатку додайте речі до гардеробу', 'info');
-        return;
-    }
-    const ids = [...selectedItems].join(',');
-    const url = window.location.origin + window.location.pathname + '?items=' + ids;
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(() => {
-            showToast('🔗 Посилання скопійовано!', 'success');
-        }).catch(() => fallbackShare(url));
-    } else {
-        fallbackShare(url);
-    }
-}
-
-function fallbackShare(url) {
-    const ta = document.createElement('textarea');
-    ta.value = url;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    showToast('🔗 Посилання скопійовано!', 'success');
-}
-
-// ============================================================
-// CLEAR WARDROBE
-// ============================================================
-function clearWardrobe() {
-    if (selectedItems.size === 0) {
-        showToast('Гардероб вже порожній', 'info');
-        return;
-    }
-    const prev = [...selectedItems];
-    selectedItems.clear();
-    selectedMap = {};
-    updateWardrobe();
-    // Update all visible card UIs
-    prev.forEach(id => updateCardUI(id, false));
-    showToast('🗑️ Гардероб очищено', 'warning');
-}
-
-// ============================================================
-// TOAST
-// ============================================================
-let toastTimer = null;
-
-function showToast(msg, type = 'success') {
-    const container = document.getElementById('toast-container');
-    const toast = document.createElement('div');
-    toast.className = 'cw-toast ' + type;
-    toast.textContent = msg;
-    container.appendChild(toast);
-
-    setTimeout(() => {
-        toast.classList.add('hide');
-        toast.addEventListener('animationend', () => toast.remove(), { once: true });
-    }, 2800);
-}
-
-// ============================================================
-// BOOT
-// ============================================================
-window.addEventListener('DOMContentLoaded', init);
-</script>
-
+    </script>
 </body>
 </html>

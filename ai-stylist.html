@@ -392,23 +392,24 @@
 <!-- NAV -->
 <nav class="ai-nav">
     <a href="index.html" class="ai-brand">Elizabeth's Elegance</a>
-    <div class="nav-links">
-        <a href="index.html" class="nav-link">🏠 Головна</a>
-        <a href="search.html" class="nav-link">🔍 Пошук</a>
-        <a href="age-recommendations.html" class="nav-link">👤 За віком</a>
-        <a href="category-stats.html" class="nav-link">📊 Статистика</a>
-        <a href="ai-stylist.html" class="nav-link active">✨ AI Stylist</a>
-    </div>
+                    <div class="nav-links">
+            <a href="index.html" class="nav-link">🏠 Головна</a>
+            <a href="my-profile.html" class="nav-link">👤 Мій профіль</a>
+            <a href="ai-stylist.html" class="nav-link active">✨ AI Stylist</a>
+            <a href="style-quiz.html" class="nav-link">🎯 Style Quiz</a>
+            <a href="weather-outfit.html" class="nav-link">🌡️ Weather</a>
+            <a href="capsule-wardrobe.html" class="nav-link">📅 Capsule</a>
+            <a href="mood-board.html" class="nav-link">🎨 Mood Board</a>
+            <a href="trend-radar.html" class="nav-link">📊 Trends</a>
+            <a href="virtual-silhouette.html" class="nav-link">👗 Silhouette</a>
+        </div>
 </nav>
 
 <!-- HERO -->
 <div class="ai-hero">
-    <div class="ai-badge">Powered by Style Intelligence</div>
-    <h1 class="ai-title">AI Stylist</h1>
-    <p class="ai-subtitle">
-        Ваш персональний цифровий стиліст. Оберіть контекст — отримайте готовий образ 
-        з підібраними товарами з нашого каталогу.
-    </p>
+    <div class="ai-badge">Експериментальна технологія</div>
+    <h1 class="ai-title" id="ai-greeting">Ваш Персональний<br>ШІ-Стиліст</h1>
+    <p class="ai-subtitle">Розкажіть про подію, настрій та стиль, а наш штучний інтелект підбере ідеальний образ з урахуванням ваших параметрів.</p>
 </div>
 
 <!-- MAIN GRID -->
@@ -816,7 +817,41 @@ function renderResult(occ,seas,stl,mood,cat,minR){
     }).join('')
     :'<p style="color:rgba(255,255,255,.45);font-size:13px;">Товарів не знайдено за вашими критеріями. Спробуйте знизити мінімальний рейтинг.</p>';
 
-    // Tips
+    // Tips & Gemini Integration
+    let profile = {};
+    try { profile = JSON.parse(localStorage.getItem('ai_profile')) || {}; } catch(e){}
+    
+    document.getElementById('tips').innerHTML = `<div class="tip-item"><div class="tip-dot"></div><span>✨ Запитую думку нейромережі Gemini...</span></div>`;
+    
+    // Build product list string
+    const prodNames = picks.map(p => p.title || p.class_name).join(", ");
+    const prompt = `Ти професійний модний стиліст бренду Elizabeth's Elegance. Твій клієнт: ${profile.name||'Дівчина'}, вік: ${profile.age||'не вказано'}, тип фігури: ${profile.body||'не вказано'}. Її улюблений стиль: ${ST.label||stl}, настрій: ${moodTxt||mood}. Подія: ${O.label||occ}, сезон: ${S.label||seas}. Додаткове побажання: ${custom || 'немає'}. 
+Ти пропонуєш одяг: ${prodNames}.
+Напиши один короткий, натхненний і персоналізований абзац (до 4-5 речень) тексту, звертаючись до клієнта. Поясни, чому ці речі ідеально підходять саме їй, її фігурі та нагоді. Пиши красиво, українською мовою.`;
+
+    fetch("/api/gemini", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if(data.candidates && data.candidates[0].content.parts[0].text) {
+            let aiText = data.candidates[0].content.parts[0].text;
+            // simple formatting
+            aiText = aiText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            document.getElementById('tips').innerHTML = `<div class="tip-item" style="display:block; padding:15px; border-radius:12px; background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.3); line-height:1.6;"><b style="color:var(--ai-purple); margin-bottom:10px; display:block;">✨ Вердикт ШІ (Gemini):</b> ${aiText}</div>`;
+        } else {
+            throw new Error("Invalid response or missing API key on server");
+        }
+    })
+    .catch(err => {
+        console.error("Gemini Error:", err);
+        renderStaticTips(ST);
+    });
+}
+
+function renderStaticTips(ST) {
     document.getElementById('tips').innerHTML=(ST.tips||[]).map(t=>
         `<div class="tip-item"><div class="tip-dot"></div><span>${t}</span></div>`
     ).join('');
@@ -851,11 +886,25 @@ function toast(msg){
     setTimeout(()=>t.remove(),2600);
 }
 
-// URL params
+// URL params & Profile
 window.addEventListener('load',()=>{
     const p=new URLSearchParams(location.search);
     if(p.get('occasion'))setChip('g-occasion',p.get('occasion'));
     if(p.get('style'))setChip('g-style',p.get('style'));
+    
+    // Load profile
+    try {
+        const saved = localStorage.getItem('ai_profile');
+        if(saved) {
+            const profile = JSON.parse(saved);
+            if(profile.name) {
+                document.getElementById('ai-greeting').innerHTML = `Привіт, ${profile.name}! ✨<br>Твій ШІ-Стиліст`;
+            }
+            if(!p.get('style') && profile.style) {
+                setChip('g-style', profile.style);
+            }
+        }
+    } catch(e) {}
 });
 </script>
 </body>

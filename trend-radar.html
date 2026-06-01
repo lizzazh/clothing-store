@@ -3,1034 +3,407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Trend Radar — аналітика трендів магазину Elizabeth's Elegance. Рейтинги, відгуки та популярні товари.">
-    <title>📊 Trend Radar — Elizabeth's Elegance</title>
+    <title>Trend Radar 📊 — Elizabeth's Elegance</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-    /* =========================================================
-       Trend Radar — Premium Dark Dashboard
-    ========================================================= */
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{
-        --purple:#a855f7;--pink:#ec4899;--gold:#f59e0b;
-        --cyan:#06b6d4;--green:#10b981;--blue:#3b82f6;
-        --glass-bg:rgba(255,255,255,0.05);
-        --glass-border:rgba(255,255,255,0.12);
-        --glass-shadow:0 8px 32px rgba(0,0,0,0.35);
-        --chart-colors:#a855f7,#ec4899,#f59e0b,#06b6d4,#10b981,#3b82f6;
-    }
+        /* =========================================================
+           Trend Radar — Premium Dark Page
+        ========================================================= */
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        :root{
+            --ai-purple:#a855f7;--ai-pink:#ec4899;--ai-cyan:#06b6d4;--ai-green:#10b981;
+            --glass-bg:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.12);
+            --glass-shadow:0 8px 32px rgba(0,0,0,0.35);
+        }
 
-    html{scroll-behavior:smooth;}
-    body{
-        font-family:'Outfit',sans-serif;
-        background:#0f0c29;
-        min-height:100vh;
-        color:#f1f5f9;
-        padding:0;
-        line-height:1.6;
-        overflow-x:hidden;
-    }
+        body{
+            font-family:'Outfit',sans-serif;
+            background:#0f0c29;
+            min-height:100vh;
+            color:#f1f5f9;
+            padding:0;
+            line-height:1.6;
+            overflow-x:hidden;
+        }
 
-    /* Animated gradient BG */
-    body::before{
-        content:'';position:fixed;inset:0;z-index:-2;
-        background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);
-    }
-    body::after{
-        content:'';position:fixed;inset:0;z-index:-1;
-        background:
-            radial-gradient(ellipse at 10% 20%,rgba(168,85,247,0.2) 0%,transparent 45%),
-            radial-gradient(ellipse at 90% 75%,rgba(236,72,153,0.16) 0%,transparent 45%),
-            radial-gradient(ellipse at 50% 50%,rgba(6,182,212,0.07) 0%,transparent 55%);
-        animation:bgPulse 12s ease-in-out infinite alternate;
-        pointer-events:none;
-    }
-    @keyframes bgPulse{from{opacity:0.8;}to{opacity:1;}}
+        /* Animated gradient BG */
+        body::before{
+            content:'';position:fixed;inset:0;z-index:-2;
+            background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);
+        }
+        body::after{
+            content:'';position:fixed;inset:0;z-index:-1;
+            background:
+                radial-gradient(ellipse at 80% 20%, rgba(168,85,247,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 80%, rgba(6,182,212,0.1) 0%, transparent 50%);
+            pointer-events:none;
+        }
 
-    /* Particles */
-    #particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-    .dot{
-        position:absolute;border-radius:50%;
-        background:rgba(255,255,255,0.55);
-        animation:floatUp linear infinite;
-    }
-    @keyframes floatUp{
-        0%{transform:translateY(110vh);opacity:0;}
-        8%{opacity:0.5;}
-        92%{opacity:0.5;}
-        100%{transform:translateY(-10vh);opacity:0;}
-    }
+        a{color:inherit;text-decoration:none;}
 
-    a{color:inherit;text-decoration:none;}
+        /* ---- TOP NAV ---- */
+        .ai-nav{
+            position:relative;z-index:20;
+            display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;
+            padding:20px 40px;
+            border-bottom:1px solid var(--glass-border);
+            background:rgba(15,12,41,0.6);
+            backdrop-filter:blur(20px);
+        }
+        .ai-brand{
+            font-family:'Great Vibes',cursive;font-size:34px;color:white;
+            filter:drop-shadow(0 0 18px rgba(168,85,247,0.5));
+        }
+        .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
+        .nav-link{
+            color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;
+            padding:8px 16px;border-radius:20px;
+            border:1px solid var(--glass-border);background:var(--glass-bg);
+            transition:all .25s;
+        }
+        .nav-link:hover,.nav-link.active{
+            color:#fff;background:rgba(168,85,247,0.18);
+            border-color:rgba(168,85,247,0.45);
+        }
 
-    /* ---- TOP NAV ---- */
-    .tr-nav{
-        position:relative;z-index:20;
-        display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;
-        padding:20px 40px;
-        border-bottom:1px solid var(--glass-border);
-        background:rgba(15,12,41,0.6);
-        backdrop-filter:blur(20px);
-    }
-    .tr-brand{
-        font-family:'Great Vibes',cursive;font-size:34px;
-        color:white;
-        filter:drop-shadow(0 0 18px rgba(168,85,247,0.5));
-        transition:filter .3s;
-    }
-    .tr-brand:hover{filter:drop-shadow(0 0 28px rgba(236,72,153,0.7));}
-    .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
-    .nav-link{
-        color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;
-        padding:8px 16px;border-radius:20px;
-        border:1px solid var(--glass-border);background:var(--glass-bg);
-        transition:all .25s;
-    }
-    .nav-link:hover{color:#fff;background:rgba(168,85,247,0.18);border-color:rgba(168,85,247,0.45);}
-    .nav-link.active{
-        color:#fff;
-        background:linear-gradient(135deg,rgba(168,85,247,0.28),rgba(236,72,153,0.18));
-        border-color:rgba(168,85,247,0.55);
-        box-shadow:0 0 16px rgba(168,85,247,0.22);
-    }
+        /* ---- HEADER ---- */
+        .page-header {
+            text-align:center; padding:40px 20px; position:relative; z-index:10;
+        }
+        .page-title {
+            font-family:'Great Vibes',cursive;
+            font-size:clamp(40px, 6vw, 64px);
+            background:linear-gradient(135deg,#fff 0%,var(--ai-cyan) 45%,var(--ai-purple) 100%);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+            margin-bottom:10px;
+        }
+        .page-subtitle { font-size:15px; color:rgba(255,255,255,0.6); }
 
-    /* ---- HERO ---- */
-    .tr-hero{
-        position:relative;z-index:10;
-        text-align:center;padding:60px 20px 45px;
-    }
-    .tr-badge{
-        display:inline-flex;align-items:center;gap:8px;
-        background:linear-gradient(135deg,rgba(168,85,247,.18),rgba(236,72,153,.18));
-        border:1px solid rgba(168,85,247,.35);border-radius:30px;
-        padding:8px 22px;font-size:12px;font-weight:700;
-        color:var(--purple);letter-spacing:1px;text-transform:uppercase;
-        margin-bottom:22px;
-    }
-    h1.tr-title{
-        font-family:'Great Vibes',cursive;
-        font-size:clamp(52px,9vw,92px);font-weight:400;
-        background:linear-gradient(135deg,#fff 0%,var(--purple) 45%,var(--pink) 100%);
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-        margin-bottom:16px;line-height:1.1;
-    }
-    .tr-subtitle{
-        font-size:16px;color:rgba(255,255,255,.6);
-        max-width:600px;margin:0 auto;font-weight:300;
-    }
+        /* ---- MAIN GRID ---- */
+        .dashboard-container {
+            max-width:1400px; margin:0 auto; padding:0 20px 60px;
+            position:relative; z-index:10;
+        }
 
-    /* ---- WRAPPER ---- */
-    .tr-wrap{
-        position:relative;z-index:10;
-        max-width:1440px;margin:0 auto;
-        padding:0 30px 80px;
-    }
+        /* Stats Row */
+        .stats-row {
+            display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+            gap:20px; margin-bottom:30px;
+        }
+        .stat-card {
+            background:var(--glass-bg); border:1px solid var(--glass-border);
+            border-radius:20px; padding:25px;
+            backdrop-filter:blur(10px);
+            display:flex; flex-direction:column; gap:10px;
+            transition:transform 0.3s;
+        }
+        .stat-card:hover { transform:translateY(-5px); border-color:rgba(6,182,212,0.4); }
+        .stat-icon { font-size:32px; margin-bottom:5px; }
+        .stat-value { font-size:36px; font-weight:700; color:white; line-height:1; }
+        .stat-label { font-size:13px; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:1px; }
 
-    /* ---- STATS ROW ---- */
-    .stats-row{
-        display:grid;
-        grid-template-columns:repeat(4,1fr);
-        gap:20px;margin-bottom:36px;
-    }
-    .stat-card{
-        background:rgba(255,255,255,0.05);
-        backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-        border:1px solid var(--glass-border);border-radius:20px;
-        padding:28px 24px;text-align:center;
-        transition:all .35s;position:relative;overflow:hidden;
-    }
-    .stat-card::before{
-        content:'';position:absolute;inset:0;
-        background:linear-gradient(135deg,transparent,rgba(168,85,247,0.05));
-        opacity:0;transition:opacity .35s;
-    }
-    .stat-card:hover{
-        transform:translateY(-6px);
-        border-color:rgba(168,85,247,0.4);
-        box-shadow:0 16px 40px rgba(168,85,247,0.18);
-    }
-    .stat-card:hover::before{opacity:1;}
-    .stat-icon{
-        font-size:32px;margin-bottom:10px;display:block;
-        filter:drop-shadow(0 0 12px rgba(168,85,247,0.4));
-    }
-    .stat-num{
-        font-size:clamp(28px,4vw,42px);font-weight:800;
-        background:linear-gradient(135deg,#fff,var(--purple));
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-        background-clip:text;line-height:1;margin-bottom:6px;
-        font-variant-numeric:tabular-nums;
-    }
-    .stat-label{
-        font-size:12px;font-weight:600;
-        color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1.2px;
-    }
-    .stat-card.s1 .stat-num{background:linear-gradient(135deg,#fff,var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .stat-card.s2 .stat-num{background:linear-gradient(135deg,#fff,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .stat-card.s3 .stat-num{background:linear-gradient(135deg,#fff,var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .stat-card.s4 .stat-num{background:linear-gradient(135deg,#fff,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        /* Charts Grid */
+        .charts-grid {
+            display:grid; grid-template-columns:repeat(auto-fit, minmax(500px, 1fr));
+            gap:25px; margin-bottom:40px;
+        }
+        .chart-card {
+            background:var(--glass-bg); border:1px solid var(--glass-border);
+            border-radius:24px; padding:25px;
+            backdrop-filter:blur(10px);
+            min-height:380px; display:flex; flex-direction:column;
+        }
+        .chart-title {
+            font-size:18px; font-weight:600; color:white; margin-bottom:20px;
+            display:flex; align-items:center; gap:8px;
+        }
+        .chart-title::before { content:''; display:block; width:4px; height:18px; background:var(--ai-cyan); border-radius:4px; }
+        .chart-wrapper { flex:1; position:relative; }
 
-    /* ---- CHARTS GRID ---- */
-    .charts-grid{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        grid-template-rows:auto auto;
-        gap:24px;margin-bottom:36px;
-    }
-    .chart-card{
-        background:rgba(255,255,255,0.05);
-        backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-        border:1px solid var(--glass-border);border-radius:22px;
-        padding:28px;transition:all .35s;
-        position:relative;overflow:hidden;
-    }
-    .chart-card::after{
-        content:'';position:absolute;top:0;left:0;right:0;height:2px;
-        background:linear-gradient(90deg,var(--purple),var(--pink));
-        opacity:0;transition:opacity .35s;
-    }
-    .chart-card:hover{
-        border-color:rgba(168,85,247,0.3);
-        box-shadow:0 12px 36px rgba(168,85,247,0.12);
-    }
-    .chart-card:hover::after{opacity:1;}
-    .chart-title{
-        font-size:15px;font-weight:700;color:#fff;
-        margin-bottom:20px;display:flex;align-items:center;gap:10px;
-    }
-    .chart-title span{
-        background:linear-gradient(135deg,var(--purple),var(--pink));
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-    }
-    .chart-badge{
-        margin-left:auto;font-size:10px;font-weight:700;
-        padding:4px 10px;border-radius:12px;
-        background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3);
-        color:var(--purple);text-transform:uppercase;letter-spacing:.8px;
-        -webkit-text-fill-color:var(--purple);
-    }
-    .chart-wrap{position:relative;height:280px;}
+        /* Loading Overlay */
+        .loading {
+            text-align:center; padding:100px 0; color:rgba(255,255,255,0.6);
+            font-size:18px; font-weight:500; grid-column:1/-1;
+        }
 
-    /* ---- BOTTOM SECTION ---- */
-    .bottom-section{
-        display:grid;grid-template-columns:280px 1fr;gap:24px;
-        align-items:start;
-    }
-
-    /* ---- DEPT PILLS ---- */
-    .dept-panel{
-        background:rgba(255,255,255,0.05);
-        backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-        border:1px solid var(--glass-border);border-radius:22px;
-        padding:24px;position:sticky;top:20px;
-    }
-    .dept-panel-title{
-        font-size:14px;font-weight:700;color:rgba(255,255,255,0.8);
-        margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;
-        display:flex;align-items:center;gap:8px;
-    }
-    .dept-pills{display:flex;flex-direction:column;gap:8px;}
-    .dept-pill{
-        padding:10px 16px;border-radius:14px;font-size:13px;font-weight:600;
-        border:1px solid var(--glass-border);background:var(--glass-bg);
-        color:rgba(255,255,255,0.65);cursor:pointer;
-        transition:all .25s;text-align:left;
-        font-family:'Outfit',sans-serif;
-    }
-    .dept-pill:hover{
-        color:#fff;background:rgba(168,85,247,0.15);
-        border-color:rgba(168,85,247,0.4);
-    }
-    .dept-pill.active{
-        background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(236,72,153,0.2));
-        border-color:rgba(168,85,247,0.6);color:#fff;
-        box-shadow:0 0 16px rgba(168,85,247,0.2);
-    }
-
-    /* ---- TOP TABLE ---- */
-    .table-panel{
-        background:rgba(255,255,255,0.05);
-        backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-        border:1px solid var(--glass-border);border-radius:22px;
-        padding:28px;overflow:hidden;
-    }
-    .table-header{
-        display:flex;align-items:center;justify-content:space-between;
-        margin-bottom:20px;flex-wrap:wrap;gap:12px;
-    }
-    .table-title{
-        font-size:16px;font-weight:700;color:#fff;
-        display:flex;align-items:center;gap:10px;
-    }
-    .filter-info{
-        font-size:12px;color:rgba(255,255,255,0.45);
-        background:rgba(255,255,255,0.06);
-        padding:5px 14px;border-radius:12px;
-        border:1px solid var(--glass-border);
-    }
-    .tr-table{width:100%;border-collapse:collapse;}
-    .tr-table thead th{
-        padding:12px 14px;text-align:left;
-        font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;
-        color:rgba(255,255,255,0.45);border-bottom:1px solid var(--glass-border);
-    }
-    .tr-table tbody tr{
-        border-bottom:1px solid rgba(255,255,255,0.05);
-        cursor:pointer;transition:all .22s;
-    }
-    .tr-table tbody tr:hover{
-        background:rgba(168,85,247,0.1);
-    }
-    .tr-table tbody tr:nth-child(even){
-        background:rgba(255,255,255,0.025);
-    }
-    .tr-table tbody tr:nth-child(even):hover{
-        background:rgba(168,85,247,0.1);
-    }
-    .tr-table td{
-        padding:13px 14px;font-size:13.5px;color:rgba(255,255,255,0.8);
-        vertical-align:middle;
-    }
-    .rank-badge{
-        display:inline-flex;align-items:center;justify-content:center;
-        width:26px;height:26px;border-radius:8px;
-        font-size:11px;font-weight:800;
-        background:rgba(168,85,247,0.2);border:1px solid rgba(168,85,247,0.3);
-        color:var(--purple);
-    }
-    .rank-badge.gold{background:rgba(245,158,11,0.2);border-color:rgba(245,158,11,0.4);color:var(--gold);}
-    .rank-badge.silver{background:rgba(148,163,184,0.2);border-color:rgba(148,163,184,0.4);color:#94a3b8;}
-    .rank-badge.bronze{background:rgba(180,83,9,0.2);border-color:rgba(180,83,9,0.4);color:#b45309;}
-    .prod-thumb{
-        width:42px;height:42px;object-fit:contain;border-radius:10px;
-        background:rgba(255,255,255,0.06);border:1px solid var(--glass-border);
-    }
-    .cell-cat{
-        font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
-        color:var(--purple);
-    }
-    .cell-dept{font-size:12.5px;color:rgba(255,255,255,0.55);}
-    .stars-cell{color:var(--gold);font-size:13px;letter-spacing:1px;white-space:nowrap;}
-    .stars-val{color:rgba(255,255,255,0.5);font-size:11px;margin-left:4px;}
-    .rev-count{color:rgba(255,255,255,0.55);}
-    .score-badge{
-        display:inline-block;
-        padding:4px 10px;border-radius:10px;
-        background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(236,72,153,0.2));
-        border:1px solid rgba(168,85,247,0.3);
-        color:var(--purple);font-weight:700;font-size:12px;
-    }
-    .no-rows{
-        text-align:center;padding:40px;
-        color:rgba(255,255,255,0.35);font-size:14px;
-    }
-
-    /* ---- SECTION LABEL ---- */
-    .sec-divider{
-        display:flex;align-items:center;gap:16px;
-        margin-bottom:20px;
-    }
-    .sec-divider h2{
-        font-family:'Great Vibes',cursive;
-        font-size:clamp(28px,4vw,40px);
-        background:linear-gradient(135deg,#fff,var(--purple));
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-        background-clip:text;white-space:nowrap;
-    }
-    .sec-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(168,85,247,0.4),transparent);}
-
-    /* ---- LOADING ---- */
-    #loading-overlay{
-        position:fixed;inset:0;z-index:999;
-        background:rgba(15,12,41,0.95);
-        display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
-    }
-    .load-spin{
-        width:60px;height:60px;border-radius:50%;
-        border:3px solid rgba(168,85,247,0.2);
-        border-top-color:var(--purple);border-right-color:var(--pink);
-        animation:spin 1s linear infinite;
-    }
-    @keyframes spin{to{transform:rotate(360deg);}}
-    .load-txt{font-size:16px;font-weight:600;color:rgba(255,255,255,0.8);}
-    .load-sub{font-size:12px;color:rgba(255,255,255,0.35);}
-    .load-brand{
-        font-family:'Great Vibes',cursive;font-size:36px;color:white;
-        filter:drop-shadow(0 0 18px rgba(168,85,247,0.6));
-        margin-bottom:8px;
-    }
-
-    /* ---- RESPONSIVE ---- */
-    @media(max-width:1100px){
-        .stats-row{grid-template-columns:repeat(2,1fr);}
-        .charts-grid{grid-template-columns:1fr;}
-        .bottom-section{grid-template-columns:1fr;}
-        .dept-panel{position:static;}
-        .dept-pills{flex-direction:row;flex-wrap:wrap;}
-    }
-    @media(max-width:680px){
-        .tr-nav{padding:15px 20px;}
-        .tr-wrap{padding:0 15px 60px;}
-        .stats-row{grid-template-columns:repeat(2,1fr);}
-        .chart-wrap{height:220px;}
-        h1.tr-title{font-size:52px;}
-        .tr-table td,.tr-table th{padding:10px 8px;}
-    }
-    @media(max-width:400px){
-        .stats-row{grid-template-columns:1fr;}
-    }
+        @media (max-width: 600px) {
+            .charts-grid { grid-template-columns:1fr; }
+        }
     </style>
 </head>
 <body>
-<div id="particles"></div>
-<div id="loading-overlay">
-    <div class="load-brand">Elizabeth's Elegance</div>
-    <div class="load-spin"></div>
-    <div class="load-txt">Завантаження Trend Radar</div>
-    <div class="load-sub" id="load-sub">Обробка даних продуктів...</div>
-</div>
 
-<!-- NAV -->
-<nav class="tr-nav">
-    <a href="index.html" class="tr-brand">Elizabeth's Elegance</a>
-    <div class="nav-links">
-        <a href="index.html" class="nav-link">🏠 Головна</a>
-        <a href="search.html" class="nav-link">🔍 Пошук</a>
-        <a href="age-recommendations.html" class="nav-link">👤 За віком</a>
-        <a href="category-stats.html" class="nav-link">📊 Статистика</a>
-        <a href="ai-stylist.html" class="nav-link">✨ AI Stylist</a>
-        <a href="trend-radar.html" class="nav-link active">📡 Trend Radar</a>
-    </div>
-</nav>
+    <!-- NAV -->
+    <nav class="ai-nav">
+        <a href="index.html" class="ai-brand">Elizabeth's Elegance</a>
+                        <div class="nav-links">
+            <a href="index.html" class="nav-link">🏠 Головна</a>
+            <a href="my-profile.html" class="nav-link">👤 Мій профіль</a>
+            <a href="ai-stylist.html" class="nav-link">✨ AI Stylist</a>
+            <a href="style-quiz.html" class="nav-link">🎯 Style Quiz</a>
+            <a href="weather-outfit.html" class="nav-link">🌡️ Weather</a>
+            <a href="capsule-wardrobe.html" class="nav-link">📅 Capsule</a>
+            <a href="mood-board.html" class="nav-link">🎨 Mood Board</a>
+            <a href="trend-radar.html" class="nav-link active">📊 Trends</a>
+            <a href="virtual-silhouette.html" class="nav-link">👗 Silhouette</a>
+        </div>
+    </nav>
 
-<!-- HERO -->
-<div class="tr-hero">
-    <div class="tr-badge">📡 Real-time Trend Intelligence</div>
-    <h1 class="tr-title">Trend Radar</h1>
-    <p class="tr-subtitle">Глибока аналітика трендів, рейтингів та популярності товарів — все в одному місці.</p>
-</div>
-
-<!-- MAIN WRAP -->
-<div class="tr-wrap">
-
-    <!-- STATS ROW -->
-    <div class="sec-divider" style="margin-bottom:16px;">
-        <h2>Ключові метрики</h2>
-        <div class="sec-line"></div>
-    </div>
-    <div class="stats-row">
-        <div class="stat-card s1">
-            <span class="stat-icon">👗</span>
-            <div class="stat-num" id="stat-total">0</div>
-            <div class="stat-label">Total Products</div>
-        </div>
-        <div class="stat-card s2">
-            <span class="stat-icon">⭐</span>
-            <div class="stat-num" id="stat-rating">0.0</div>
-            <div class="stat-label">Avg Rating</div>
-        </div>
-        <div class="stat-card s3">
-            <span class="stat-icon">💬</span>
-            <div class="stat-num" id="stat-reviews">0</div>
-            <div class="stat-label">Total Reviews</div>
-        </div>
-        <div class="stat-card s4">
-            <span class="stat-icon">🏆</span>
-            <div class="stat-num" id="stat-top" style="font-size:clamp(14px,2.5vw,22px);-webkit-text-fill-color:inherit;color:var(--cyan);">—</div>
-            <div class="stat-label">Top Category</div>
-        </div>
+    <div class="page-header">
+        <h1 class="page-title">Trend Radar Dashboard</h1>
+        <p class="page-subtitle">Інтерактивна аналітика популярності стилів та товарів</p>
     </div>
 
-    <!-- CHARTS GRID -->
-    <div class="sec-divider" style="margin-bottom:16px;margin-top:8px;">
-        <h2>Аналітика</h2>
-        <div class="sec-line"></div>
-    </div>
-    <div class="charts-grid">
+    <div class="dashboard-container" id="dashboard">
+        <div class="loading" id="loader">Завантаження аналітики...</div>
+        
+        <!-- Content injected here after data loads -->
+        <div id="dashboard-content" style="display:none;">
+            
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon">🛍️</div>
+                    <div class="stat-value" id="stat-total">0</div>
+                    <div class="stat-label">Всього товарів</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value" id="stat-rating">0.0</div>
+                    <div class="stat-label">Середній рейтинг</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-value" id="stat-reviews">0</div>
+                    <div class="stat-label">Відгуків залишено</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👑</div>
+                    <div class="stat-value" id="stat-top-dept" style="font-size:24px; padding-top:10px;">-</div>
+                    <div class="stat-label">Топ Департамент</div>
+                </div>
+            </div>
 
-        <!-- Radar chart -->
-        <div class="chart-card">
-            <div class="chart-title">
-                🕸️ <span>Avg Rating by Department</span>
-                <span class="chart-badge">Radar</span>
-            </div>
-            <div class="chart-wrap">
-                <canvas id="chart-radar"></canvas>
-            </div>
-        </div>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-title">Рейтинг за департаментами (Radar)</div>
+                    <div class="chart-wrapper">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-title">Розподіл відгуків (Doughnut)</div>
+                    <div class="chart-wrapper">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
 
-        <!-- Horizontal bar -->
-        <div class="chart-card">
-            <div class="chart-title">
-                📊 <span>Review Count by Department</span>
-                <span class="chart-badge">Bar</span>
-            </div>
-            <div class="chart-wrap">
-                <canvas id="chart-bar"></canvas>
-            </div>
-        </div>
+                <div class="chart-card">
+                    <div class="chart-title">Залученість за відділом (Bar)</div>
+                    <div class="chart-wrapper">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
 
-        <!-- Doughnut -->
-        <div class="chart-card">
-            <div class="chart-title">
-                🍩 <span>Products by Division</span>
-                <span class="chart-badge">Doughnut</span>
+                <div class="chart-card">
+                    <div class="chart-title">Клас одягу: Рейтинг vs Відгуки (Bubble)</div>
+                    <div class="chart-wrapper">
+                        <canvas id="bubbleChart"></canvas>
+                    </div>
+                </div>
             </div>
-            <div class="chart-wrap">
-                <canvas id="chart-doughnut"></canvas>
-            </div>
-        </div>
-
-        <!-- Bubble/scatter -->
-        <div class="chart-card">
-            <div class="chart-title">
-                🔮 <span>Rating vs Reviews by Class</span>
-                <span class="chart-badge">Bubble</span>
-            </div>
-            <div class="chart-wrap">
-                <canvas id="chart-bubble"></canvas>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- BOTTOM: PILLS + TABLE -->
-    <div class="sec-divider" style="margin-bottom:16px;">
-        <h2>Топ виконавці</h2>
-        <div class="sec-line"></div>
-    </div>
-    <div class="bottom-section">
-
-        <!-- Department pills -->
-        <div class="dept-panel">
-            <div class="dept-panel-title">🗂️ Category Explorer</div>
-            <div class="dept-pills" id="dept-pills">
-                <button class="dept-pill active" data-dept="all" id="pill-all">✨ Всі відділи</button>
-            </div>
-        </div>
-
-        <!-- Top performers table -->
-        <div class="table-panel">
-            <div class="table-header">
-                <div class="table-title">🏅 Top 10 Performers</div>
-                <div class="filter-info" id="filter-info">Всі відділи</div>
-            </div>
-            <div style="overflow-x:auto;">
-                <table class="tr-table" id="top-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Thumb</th>
-                            <th>Category</th>
-                            <th>Department</th>
-                            <th>Rating</th>
-                            <th>Reviews</th>
-                            <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody id="top-tbody">
-                        <tr><td colspan="7" class="no-rows">Завантаження...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+            
         </div>
     </div>
 
-</div><!-- /.tr-wrap -->
+    <script>
+        // Set Chart.js defaults for dark theme
+        Chart.defaults.color = 'rgba(255,255,255,0.7)';
+        Chart.defaults.font.family = "'Outfit', sans-serif";
+        Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
 
-<script>
-// ============================================================
-// PARTICLES
-// ============================================================
-(function(){
-    const c=document.getElementById('particles');
-    for(let i=0;i<40;i++){
-        const d=document.createElement('div');
-        d.className='dot';
-        const sz=Math.random()*3+1;
-        d.style.cssText=`
-            width:${sz}px;height:${sz}px;
-            left:${Math.random()*100}%;
-            animation-duration:${Math.random()*18+9}s;
-            animation-delay:${Math.random()*16}s;
-            opacity:${Math.random()*.5+.1};
-        `;
-        c.appendChild(d);
-    }
-})();
+        const COLORS = ['#a855f7', '#ec4899', '#06b6d4', '#f59e0b', '#10b981', '#3b82f6'];
+        const BG_COLORS = COLORS.map(c => c + '40'); // 25% opacity
 
-// ============================================================
-// CHART DEFAULTS
-// ============================================================
-const PALETTE = ['#a855f7','#ec4899','#f59e0b','#06b6d4','#10b981','#3b82f6','#f97316','#8b5cf6','#14b8a6','#f43f5e'];
-
-Chart.defaults.color = 'rgba(255,255,255,0.65)';
-Chart.defaults.font.family = "'Outfit', sans-serif";
-Chart.defaults.font.size = 12;
-
-const gridConfig = {
-    color: 'rgba(255,255,255,0.08)',
-    borderColor: 'rgba(255,255,255,0.08)',
-};
-
-const tooltipConfig = {
-    backgroundColor: 'rgba(15,12,41,0.92)',
-    titleColor: '#fff',
-    bodyColor: 'rgba(255,255,255,0.75)',
-    borderColor: 'rgba(168,85,247,0.4)',
-    borderWidth: 1,
-    padding: 12,
-    cornerRadius: 12,
-};
-
-// ============================================================
-// COUNT-UP ANIMATION
-// ============================================================
-function animateCount(el, from, to, duration, decimals=0, suffix=''){
-    const start = performance.now();
-    const range = to - from;
-    function step(now){
-        const elapsed = Math.min(now - start, duration);
-        const t = elapsed / duration;
-        const ease = 1 - Math.pow(1 - t, 3);
-        const val = from + range * ease;
-        el.textContent = val.toFixed(decimals) + suffix;
-        if(elapsed < duration) requestAnimationFrame(step);
-        else el.textContent = to.toFixed(decimals) + suffix;
-    }
-    requestAnimationFrame(step);
-}
-
-// ============================================================
-// STARS RENDERER
-// ============================================================
-function starsHtml(rating){
-    const full = Math.floor(rating);
-    const half = (rating - full) >= 0.5 ? 1 : 0;
-    const empty = 5 - full - half;
-    return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
-}
-
-// ============================================================
-// MAIN
-// ============================================================
-let allProducts = [];
-let activeFilter = 'all';
-let charts = {};
-
-async function init(){
-    setLoadMsg('Завантаження products.json...');
-    try{
-        const resp = await fetch('data/products.json');
-        if(!resp.ok) throw new Error('HTTP ' + resp.status);
-        allProducts = await resp.json();
-    } catch(e){
-        setLoadMsg('Помилка завантаження даних (CORS). Запустіть через локальний сервер.');
-        setTimeout(() => document.getElementById('loading-overlay').style.display='none', 3000);
-        return;
-    }
-
-    setLoadMsg('Обчислення статистики...');
-    await sleep(80);
-
-    // ---- COMPUTE STATS ----
-    const validProducts = allProducts.filter(p => p.avg_rating && p.review_count >= 0);
-    const totalProducts = allProducts.length;
-    const avgRating = validProducts.length
-        ? validProducts.reduce((s,p) => s + p.avg_rating, 0) / validProducts.length
-        : 0;
-    const totalReviews = allProducts.reduce((s,p) => s + (p.review_count || 0), 0);
-
-    // ---- DEPARTMENT STATS ----
-    const deptStats = {};
-    allProducts.forEach(p => {
-        if(!p.department_name || !p.avg_rating) return;
-        if(!deptStats[p.department_name]) deptStats[p.department_name] = {count:0, totalR:0, totalRev:0};
-        deptStats[p.department_name].count++;
-        deptStats[p.department_name].totalR += p.avg_rating;
-        deptStats[p.department_name].totalRev += p.review_count || 0;
-    });
-
-    // ---- DIVISION STATS ----
-    const divStats = {};
-    allProducts.forEach(p => {
-        if(!p.division_name) return;
-        divStats[p.division_name] = (divStats[p.division_name] || 0) + 1;
-    });
-
-    // ---- CLASS STATS ----
-    const classStats = {};
-    allProducts.forEach(p => {
-        if(!p.class_name || !p.avg_rating) return;
-        if(!classStats[p.class_name]) classStats[p.class_name] = {count:0, totalR:0, totalRev:0};
-        classStats[p.class_name].count++;
-        classStats[p.class_name].totalR += p.avg_rating;
-        classStats[p.class_name].totalRev += p.review_count || 0;
-    });
-
-    // Top 6 departments by avg_rating
-    const top6depts = Object.entries(deptStats)
-        .map(([k,v]) => ({name:k, avgR: v.totalR/v.count, totalRev: v.totalRev, count: v.count}))
-        .sort((a,b) => b.avgR - a.avgR)
-        .slice(0,6);
-
-    // Top category
-    const topCat = top6depts.length ? top6depts[0].name : '—';
-
-    // ---- ANIMATE STATS ----
-    setLoadMsg('Анімація метрик...');
-    await sleep(40);
-
-    document.getElementById('stat-top').textContent = topCat;
-
-    setTimeout(() => {
-        animateCount(document.getElementById('stat-total'), 0, totalProducts, 1400, 0);
-        animateCount(document.getElementById('stat-rating'), 0, avgRating, 1600, 2);
-        animateCount(document.getElementById('stat-reviews'), 0, totalReviews, 1800, 0);
-    }, 400);
-
-    // ---- BUILD PILLS ----
-    setLoadMsg('Побудова фільтрів...');
-    buildPills(Object.keys(deptStats).sort());
-
-    // ---- BUILD CHARTS ----
-    setLoadMsg('Рендеринг графіків...');
-    await sleep(60);
-
-    buildRadarChart(top6depts);
-    buildBarChart(top6depts);
-    buildDoughnutChart(divStats);
-    buildBubbleChart(classStats);
-
-    // ---- BUILD TABLE ----
-    buildTable(allProducts, 'all');
-
-    // ---- HIDE LOADING ----
-    await sleep(200);
-    const overlay = document.getElementById('loading-overlay');
-    overlay.style.transition = 'opacity .5s';
-    overlay.style.opacity = '0';
-    setTimeout(() => overlay.style.display = 'none', 500);
-}
-
-function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
-function setLoadMsg(msg){ document.getElementById('load-sub').textContent = msg; }
-
-// ============================================================
-// PILLS
-// ============================================================
-function buildPills(depts){
-    const container = document.getElementById('dept-pills');
-    depts.forEach(dept => {
-        const btn = document.createElement('button');
-        btn.className = 'dept-pill';
-        btn.dataset.dept = dept;
-        btn.textContent = dept;
-        btn.addEventListener('click', () => filterByDept(dept));
-        container.appendChild(btn);
-    });
-    document.getElementById('pill-all').addEventListener('click', () => filterByDept('all'));
-}
-
-function filterByDept(dept){
-    activeFilter = dept;
-    document.querySelectorAll('.dept-pill').forEach(p => {
-        p.classList.toggle('active', p.dataset.dept === dept);
-    });
-    document.getElementById('filter-info').textContent = dept === 'all' ? 'Всі відділи' : dept;
-    buildTable(allProducts, dept);
-}
-
-// ============================================================
-// TABLE
-// ============================================================
-function buildTable(products, dept){
-    let filtered = products.filter(p => p.avg_rating && p.review_count);
-    if(dept !== 'all') filtered = filtered.filter(p => p.department_name === dept);
-
-    // Score = avg_rating * sqrt(review_count)
-    const scored = filtered.map(p => ({
-        ...p,
-        score: p.avg_rating * Math.sqrt(p.review_count)
-    })).sort((a,b) => b.score - a.score).slice(0, 10);
-
-    const tbody = document.getElementById('top-tbody');
-
-    if(!scored.length){
-        tbody.innerHTML = '<tr><td colspan="7" class="no-rows">Немає товарів для відображення</td></tr>';
-        return;
-    }
-
-    tbody.innerHTML = scored.map((p, i) => {
-        const rank = i + 1;
-        let rankClass = '';
-        if(rank === 1) rankClass = 'gold';
-        else if(rank === 2) rankClass = 'silver';
-        else if(rank === 3) rankClass = 'bronze';
-
-        const rating = p.avg_rating.toFixed(2);
-        const stars = starsHtml(p.avg_rating);
-        const score = p.score.toFixed(1);
-        const cat = p.class_name || '—';
-        const dept = p.department_name || '—';
-        const id = p.clothing_id;
-
-        return `<tr onclick="window.location.href='product.html?id=${id}'" title="Відкрити товар #${id}">
-            <td><span class="rank-badge ${rankClass}">${rank}</span></td>
-            <td><img class="prod-thumb" src="static/${id}.jpg" alt="${cat}"
-                onerror="this.onerror=null;this.src='https://via.placeholder.com/42x42/1e1b4b/a855f7?text=${rank}'"></td>
-            <td><div class="cell-cat">${cat}</div></td>
-            <td><div class="cell-dept">${dept}</div></td>
-            <td>
-                <span class="stars-cell">${stars}</span>
-                <span class="stars-val">${rating}</span>
-            </td>
-            <td class="rev-count">${p.review_count.toLocaleString()}</td>
-            <td><span class="score-badge">${score}</span></td>
-        </tr>`;
-    }).join('');
-}
-
-// ============================================================
-// RADAR CHART
-// ============================================================
-function buildRadarChart(top6depts){
-    const ctx = document.getElementById('chart-radar').getContext('2d');
-    const labels = top6depts.map(d => d.name);
-    const data = top6depts.map(d => +d.avgR.toFixed(2));
-
-    charts.radar = new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels,
-            datasets: [{
-                label: 'Avg Rating',
-                data,
-                backgroundColor: 'rgba(168,85,247,0.2)',
-                borderColor: '#a855f7',
-                pointBackgroundColor: PALETTE,
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointRadius: 5,
-                borderWidth: 2,
-                fill: true,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: {duration: 1400, easing: 'easeOutQuart'},
-            plugins: {
-                legend: {display: false},
-                tooltip: {
-                    ...tooltipConfig,
-                    callbacks: {
-                        label: ctx => ` Rating: ${ctx.raw}`
-                    }
-                }
-            },
-            scales: {
-                r: {
-                    min: 3.5,
-                    max: 5,
-                    ticks: {
-                        stepSize: 0.5,
-                        color: 'rgba(255,255,255,0.45)',
-                        backdropColor: 'transparent',
-                        font: {size: 10}
-                    },
-                    grid: {color: 'rgba(255,255,255,0.1)'},
-                    pointLabels: {
-                        color: 'rgba(255,255,255,0.75)',
-                        font: {size: 11, weight: '600'}
-                    },
-                    angleLines: {color: 'rgba(255,255,255,0.08)'}
-                }
+        async function initDashboard() {
+            try {
+                const res = await fetch('data/products.json');
+                const products = await res.json();
+                
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('dashboard-content').style.display = 'block';
+                
+                processData(products);
+            } catch (e) {
+                document.getElementById('loader').textContent = 'Помилка завантаження даних.';
+                console.error(e);
             }
         }
-    });
-}
 
-// ============================================================
-// BAR CHART (horizontal)
-// ============================================================
-function buildBarChart(top6depts){
-    const ctx = document.getElementById('chart-bar').getContext('2d');
-    const labels = top6depts.map(d => d.name);
-    const data = top6depts.map(d => d.totalRev);
-
-    charts.bar = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [{
-                label: 'Total Reviews',
-                data,
-                backgroundColor: PALETTE.slice(0,6).map(c => c + 'cc'),
-                borderColor: PALETTE.slice(0,6),
-                borderWidth: 1.5,
-                borderRadius: 8,
-                borderSkipped: false,
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: {duration: 1200, easing: 'easeOutBounce'},
-            plugins: {
-                legend: {display: false},
-                tooltip: {
-                    ...tooltipConfig,
-                    callbacks: {
-                        label: ctx => ` Reviews: ${ctx.raw.toLocaleString()}`
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    grid: gridConfig,
-                    ticks: {color: 'rgba(255,255,255,0.5)', font:{size:10}}
-                },
-                y: {
-                    grid: {display: false},
-                    ticks: {color: 'rgba(255,255,255,0.75)', font:{size:11, weight:'600'}}
-                }
-            }
+        function animateValue(obj, start, end, duration, isFloat=false) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const current = progress * (end - start) + start;
+                obj.innerHTML = isFloat ? current.toFixed(1) : Math.floor(current);
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
         }
-    });
-}
 
-// ============================================================
-// DOUGHNUT CHART
-// ============================================================
-function buildDoughnutChart(divStats){
-    const ctx = document.getElementById('chart-doughnut').getContext('2d');
-    const entries = Object.entries(divStats).sort((a,b) => b[1]-a[1]);
-    const labels = entries.map(e => e[0]);
-    const data = entries.map(e => e[1]);
+        function processData(products) {
+            let totalRating = 0;
+            let totalReviews = 0;
+            let ratedCount = 0;
+            
+            const depts = {};
+            const classes = {};
 
-    charts.doughnut = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels,
-            datasets: [{
-                data,
-                backgroundColor: PALETTE.slice(0, labels.length).map(c => c + 'cc'),
-                borderColor: PALETTE.slice(0, labels.length),
-                borderWidth: 2,
-                hoverOffset: 16,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: {duration: 1600, easing: 'easeOutQuart'},
-            cutout: '65%',
-            plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        color: 'rgba(255,255,255,0.75)',
-                        font: {size: 12, weight: '600'},
-                        padding: 14,
-                        usePointStyle: true,
-                        pointStyleWidth: 10,
-                    }
+            products.forEach(p => {
+                if (p.avg_rating !== null) {
+                    totalRating += p.avg_rating;
+                    ratedCount++;
+                }
+                if (p.review_count) {
+                    totalReviews += p.review_count;
+                }
+                
+                // Department stats
+                const dName = p.department_name || 'Інше';
+                if (!depts[dName]) depts[dName] = { count: 0, reviews: 0, sumRating: 0, rCount: 0 };
+                depts[dName].count++;
+                if (p.review_count) depts[dName].reviews += p.review_count;
+                if (p.avg_rating !== null) { depts[dName].sumRating += p.avg_rating; depts[dName].rCount++; }
+
+                // Class stats (for bubble chart)
+                const cName = p.class_name || 'Інше';
+                if (!classes[cName]) classes[cName] = { count: 0, reviews: 0, sumRating: 0, rCount: 0 };
+                classes[cName].count++;
+                if (p.review_count) classes[cName].reviews += p.review_count;
+                if (p.avg_rating !== null) { classes[cName].sumRating += p.avg_rating; classes[cName].rCount++; }
+            });
+
+            const avgRating = totalRating / ratedCount;
+            
+            // Top dept by reviews
+            const topDept = Object.keys(depts).reduce((a, b) => depts[a].reviews > depts[b].reviews ? a : b);
+
+            // Animate Top Stats
+            animateValue(document.getElementById('stat-total'), 0, products.length, 1500);
+            animateValue(document.getElementById('stat-rating'), 0, avgRating, 1500, true);
+            animateValue(document.getElementById('stat-reviews'), 0, totalReviews, 1500);
+            document.getElementById('stat-top-dept').textContent = topDept;
+
+            renderCharts(depts, classes);
+        }
+
+        function renderCharts(depts, classes) {
+            const deptNames = Object.keys(depts).filter(d => d !== 'Інше');
+            
+            // 1. Radar Chart (Avg Rating per Dept)
+            const radarCtx = document.getElementById('radarChart').getContext('2d');
+            new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: deptNames,
+                    datasets: [{
+                        label: 'Середній рейтинг',
+                        data: deptNames.map(d => depts[d].rCount ? (depts[d].sumRating / depts[d].rCount) : 0),
+                        backgroundColor: 'rgba(6,182,212,0.2)',
+                        borderColor: '#06b6d4',
+                        pointBackgroundColor: '#ec4899',
+                        borderWidth: 2
+                    }]
                 },
-                tooltip: {
-                    ...tooltipConfig,
-                    callbacks: {
-                        label: ctx => {
-                            const total = ctx.dataset.data.reduce((a,b) => a+b, 0);
-                            const pct = ((ctx.raw / total) * 100).toFixed(1);
-                            return ` ${ctx.raw} products (${pct}%)`;
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { r: { min: 3, max: 5, angleLines: { color: 'rgba(255,255,255,0.1)' }, grid: { color: 'rgba(255,255,255,0.1)' } } }
+                }
+            });
+
+            // 2. Doughnut Chart (Product count per Dept)
+            const dCtx = document.getElementById('doughnutChart').getContext('2d');
+            new Chart(dCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: deptNames,
+                    datasets: [{
+                        data: deptNames.map(d => depts[d].count),
+                        backgroundColor: COLORS,
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '70%' }
+            });
+
+            // 3. Bar Chart (Total reviews per dept)
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: deptNames,
+                    datasets: [{
+                        label: 'Кількість відгуків',
+                        data: deptNames.map(d => depts[d].reviews),
+                        backgroundColor: BG_COLORS[0],
+                        borderColor: COLORS[0],
+                        borderWidth: 2,
+                        borderRadius: 6
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // 4. Bubble Chart (Class stats)
+            // Filter to top 15 classes by count to avoid clutter
+            const topClasses = Object.keys(classes)
+                .sort((a,b) => classes[b].count - classes[a].count)
+                .slice(0, 15);
+            
+            const bubbleData = topClasses.map(c => {
+                const avgR = classes[c].rCount ? classes[c].sumRating / classes[c].rCount : 0;
+                return {
+                    x: avgR,
+                    y: classes[c].reviews,
+                    r: Math.sqrt(classes[c].count) * 2, // scale radius visually
+                    label: c
+                };
+            });
+
+            const bubCtx = document.getElementById('bubbleChart').getContext('2d');
+            new Chart(bubCtx, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: 'Категорії одягу',
+                        data: bubbleData,
+                        backgroundColor: BG_COLORS[1],
+                        borderColor: COLORS[1]
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const d = context.raw;
+                                    return `${d.label}: Рейтинг ${d.x.toFixed(1)}, Відгуків ${d.y}`;
+                                }
+                            }
                         }
+                    },
+                    scales: {
+                        x: { title: { display:true, text:'Середній рейтинг' } },
+                        y: { title: { display:true, text:'Кількість відгуків' } }
                     }
                 }
-            }
+            });
         }
-    });
-}
 
-// ============================================================
-// BUBBLE CHART
-// ============================================================
-function buildBubbleChart(classStats){
-    const ctx = document.getElementById('chart-bubble').getContext('2d');
-
-    // Sample up to 20 classes
-    const entries = Object.entries(classStats)
-        .map(([name, v]) => ({
-            name,
-            x: +(v.totalR / v.count).toFixed(2),
-            y: Math.round(v.totalRev / v.count),
-            r: Math.max(5, Math.min(v.count * 3, 30))
-        }))
-        .sort((a,b) => b.r - a.r)
-        .slice(0, 20);
-
-    const datasets = entries.map((e, i) => ({
-        label: e.name,
-        data: [{x: e.x, y: e.y, r: e.r}],
-        backgroundColor: PALETTE[i % PALETTE.length] + '99',
-        borderColor: PALETTE[i % PALETTE.length],
-        borderWidth: 1.5,
-    }));
-
-    charts.bubble = new Chart(ctx, {
-        type: 'bubble',
-        data: {datasets},
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: {duration: 1800, easing: 'easeOutElastic'},
-            plugins: {
-                legend: {display: false},
-                tooltip: {
-                    ...tooltipConfig,
-                    callbacks: {
-                        title: ctx => ctx[0].dataset.label,
-                        label: ctx => [
-                            ` Avg Rating: ${ctx.raw.x}`,
-                            ` Avg Reviews: ${ctx.raw.y}`,
-                            ` Products: ${Math.round(ctx.raw.r / 3)}`
-                        ]
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Avg Rating',
-                        color: 'rgba(255,255,255,0.5)',
-                        font: {size: 11}
-                    },
-                    grid: gridConfig,
-                    ticks: {color: 'rgba(255,255,255,0.5)', font:{size:10}},
-                    min: 3.0, max: 5.1
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Avg Reviews',
-                        color: 'rgba(255,255,255,0.5)',
-                        font: {size: 11}
-                    },
-                    grid: gridConfig,
-                    ticks: {color: 'rgba(255,255,255,0.5)', font:{size:10}},
-                }
-            }
-        }
-    });
-}
-
-// ============================================================
-// BOOT
-// ============================================================
-window.addEventListener('load', init);
-</script>
+        initDashboard();
+    </script>
 </body>
 </html>

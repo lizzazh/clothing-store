@@ -3,1114 +3,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Weather Outfit Picker — підберіть ідеальний образ відповідно до погоди у вашому місті. Elizabeth's Elegance.">
-    <title>🌡️ Weather Outfit — Elizabeth's Elegance</title>
+    <title>Weather Outfit 🌡️ — Elizabeth's Elegance</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-    /* ============================================================
-       Weather Outfit — Premium Dark Page
-    ============================================================ */
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{
-        --purple:#a855f7;--pink:#ec4899;--cyan:#06b6d4;--gold:#f59e0b;--green:#10b981;
-        --glass-bg:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.12);
-        --glass-shadow:0 8px 32px rgba(0,0,0,0.35);
-    }
+        /* =========================================================
+           Weather Outfit — Premium Dark Page
+        ========================================================= */
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        :root{
+            --ai-purple:#a855f7;--ai-pink:#ec4899;--ai-cyan:#06b6d4;--ai-gold:#f59e0b;
+            --glass-bg:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.12);
+            --glass-shadow:0 8px 32px rgba(0,0,0,0.35);
+        }
 
-    html{scroll-behavior:smooth;}
-    body{
-        font-family:'Outfit',sans-serif;
-        background:#0f0c29;
-        min-height:100vh;
-        color:#f1f5f9;
-        padding:0;
-        line-height:1.6;
-        overflow-x:hidden;
-    }
+        body{
+            font-family:'Outfit',sans-serif;
+            background:#0f0c29;
+            min-height:100vh;
+            color:#f1f5f9;
+            padding:0;
+            line-height:1.6;
+        }
+        body::before{
+            content:'';position:fixed;inset:0;z-index:-2;
+            background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);
+        }
 
-    /* Animated gradient BG */
-    body::before{
-        content:'';position:fixed;inset:0;z-index:-2;
-        background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);
-    }
-    body::after{
-        content:'';position:fixed;inset:0;z-index:-1;
-        background:
-            radial-gradient(ellipse at 10% 20%,rgba(168,85,247,0.18) 0%,transparent 50%),
-            radial-gradient(ellipse at 90% 75%,rgba(236,72,153,0.14) 0%,transparent 45%),
-            radial-gradient(ellipse at 55% 45%,rgba(6,182,212,0.08) 0%,transparent 55%);
-        animation:bgPulse 12s ease-in-out infinite alternate;
-        pointer-events:none;
-    }
-    @keyframes bgPulse{from{opacity:0.8;}to{opacity:1;}}
+        /* Nav */
+        .ai-nav{
+            position:relative;z-index:20;
+            display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;
+            padding:20px 40px; border-bottom:1px solid var(--glass-border);
+            background:rgba(15,12,41,0.6); backdrop-filter:blur(20px);
+        }
+        .ai-brand{
+            font-family:'Great Vibes',cursive;font-size:34px;color:white;
+            text-decoration:none; filter:drop-shadow(0 0 18px rgba(168,85,247,0.5));
+        }
+        .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
+        .nav-link{
+            color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;
+            padding:8px 16px;border-radius:20px; text-decoration:none;
+            border:1px solid var(--glass-border);background:var(--glass-bg);
+            transition:all .25s;
+        }
+        .nav-link:hover,.nav-link.active{
+            color:#fff;background:rgba(168,85,247,0.18); border-color:rgba(168,85,247,0.45);
+        }
 
-    /* Particles */
-    #particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-    .dot{
-        position:absolute;border-radius:50%;
-        background:rgba(255,255,255,0.55);
-        animation:floatUp linear infinite;
-    }
-    @keyframes floatUp{
-        0%{transform:translateY(110vh);opacity:0;}
-        8%{opacity:0.6;}
-        92%{opacity:0.6;}
-        100%{transform:translateY(-10vh);opacity:0;}
-    }
+        /* Layout */
+        .container {
+            max-width:1400px; margin:0 auto; padding:40px 20px;
+            display:grid; grid-template-columns:380px 1fr; gap:30px;
+        }
+        
+        .panel {
+            background:var(--glass-bg); backdrop-filter:blur(24px);
+            border:1px solid var(--glass-border); border-radius:24px;
+            padding:35px; box-shadow:var(--glass-shadow);
+        }
+        .left-panel { position:sticky; top:30px; height:max-content; }
 
-    a{color:inherit;text-decoration:none;}
+        h2 { font-family:'Great Vibes',cursive; font-size:42px; margin-bottom:20px; color:white; }
+        
+        /* Weather Input */
+        .input-group { margin-bottom:25px; }
+        .input-group label { display:block; font-size:12px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; margin-bottom:10px; }
+        .city-input {
+            width:100%; padding:14px 20px; border-radius:14px;
+            border:1px solid var(--glass-border); background:rgba(255,255,255,0.07);
+            color:white; font-family:'Outfit',sans-serif; font-size:16px; outline:none;
+            margin-bottom:15px;
+        }
+        .city-input:focus { border-color:var(--ai-cyan); box-shadow:0 0 0 3px rgba(6,182,212,0.15); }
+        
+        .btn-primary {
+            width:100%; padding:16px; border-radius:14px; border:none;
+            background:linear-gradient(135deg, #06b6d4, #3b82f6); color:white;
+            font-family:'Outfit',sans-serif; font-size:16px; font-weight:700; cursor:pointer;
+            transition:all 0.3s;
+        }
+        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(6,182,212,0.4); }
 
-    /* ---- TOP NAV ---- */
-    .ai-nav{
-        position:relative;z-index:20;
-        display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;
-        padding:20px 40px;
-        border-bottom:1px solid var(--glass-border);
-        background:rgba(15,12,41,0.6);
-        backdrop-filter:blur(20px);
-    }
-    .ai-brand{
-        font-family:'Great Vibes',cursive;font-size:34px;
-        color:white;
-        filter:drop-shadow(0 0 18px rgba(168,85,247,0.5));
-        transition:filter .3s;
-    }
-    .ai-brand:hover{filter:drop-shadow(0 0 28px rgba(236,72,153,0.7));}
-    .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
-    .nav-link{
-        color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;
-        padding:8px 16px;border-radius:20px;
-        border:1px solid var(--glass-border);background:var(--glass-bg);
-        transition:all .25s;
-    }
-    .nav-link:hover,.nav-link.active{
-        color:#fff;background:rgba(168,85,247,0.18);
-        border-color:rgba(168,85,247,0.45);
-    }
-    .nav-link.active{
-        background:linear-gradient(135deg,rgba(168,85,247,0.28),rgba(236,72,153,0.18));
-        border-color:rgba(168,85,247,0.6);
-        color:#fff;
-    }
+        /* Manual Sliders */
+        .divider { text-align:center; margin:25px 0; color:rgba(255,255,255,0.4); font-size:12px; font-weight:700; }
+        .divider::before, .divider::after { content:''; display:inline-block; width:30%; height:1px; background:rgba(255,255,255,0.1); vertical-align:middle; margin:0 10px; }
 
-    /* ---- HERO ---- */
-    .wo-hero{
-        position:relative;z-index:10;
-        text-align:center;padding:60px 20px 45px;
-    }
-    .wo-badge{
-        display:inline-flex;align-items:center;gap:8px;
-        background:linear-gradient(135deg,rgba(6,182,212,.18),rgba(168,85,247,.18));
-        border:1px solid rgba(6,182,212,.35);border-radius:30px;
-        padding:8px 22px;font-size:12px;font-weight:700;
-        color:var(--cyan);letter-spacing:1px;text-transform:uppercase;
-        margin-bottom:22px;
-    }
-    h1.wo-title{
-        font-family:'Great Vibes',cursive;
-        font-size:clamp(52px,9vw,88px);font-weight:400;
-        background:linear-gradient(135deg,#fff 0%,var(--cyan) 40%,var(--purple) 100%);
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-        margin-bottom:16px;line-height:1.1;
-    }
-    .wo-subtitle{
-        font-size:16px;color:rgba(255,255,255,.6);
-        max-width:560px;margin:0 auto 10px;font-weight:300;
-    }
+        .temp-row { display:flex; align-items:center; gap:15px; }
+        .temp-row input[type=range] { flex:1; accent-color:var(--ai-cyan); }
+        .temp-val { font-size:24px; font-weight:700; color:var(--ai-cyan); min-width:60px; text-align:right; }
 
-    /* ---- MAIN GRID ---- */
-    .wo-grid{
-        position:relative;z-index:10;
-        display:grid;grid-template-columns:420px 1fr;gap:28px;
-        max-width:1380px;margin:0 auto;padding:10px 30px 80px;
-        align-items:start;
-    }
+        .weather-chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:15px; }
+        .chip {
+            padding:8px 15px; border-radius:20px; border:1px solid var(--glass-border);
+            background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.7); cursor:pointer; font-size:13px; font-weight:600;
+        }
+        .chip.active { background:rgba(6,182,212,0.2); border-color:var(--ai-cyan); color:white; }
 
-    /* ---- LEFT PANEL ---- */
-    .left-panel{
-        background:rgba(255,255,255,.045);
-        backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-        border:1px solid var(--glass-border);border-radius:24px;
-        padding:32px;box-shadow:var(--glass-shadow);
-        position:sticky;top:20px;
-    }
-    .panel-heading{
-        font-size:18px;font-weight:700;color:#fff;
-        margin-bottom:24px;display:flex;align-items:center;gap:10px;
-    }
-    .panel-heading span{
-        background:linear-gradient(135deg,var(--cyan),var(--purple));
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-    }
-    .form-block{margin-bottom:22px;}
-    .form-lbl{
-        display:block;font-size:11px;font-weight:700;
-        color:rgba(255,255,255,.55);text-transform:uppercase;
-        letter-spacing:1.2px;margin-bottom:9px;
-    }
+        /* Right Panel: Result */
+        .weather-display {
+            display:flex; align-items:center; gap:30px; margin-bottom:40px;
+            background:linear-gradient(135deg, rgba(6,182,212,0.1), rgba(168,85,247,0.1));
+            padding:30px; border-radius:20px; border:1px solid rgba(6,182,212,0.2);
+        }
+        .weather-icon-container { width:100px; height:100px; display:flex; justify-content:center; align-items:center; font-size:72px; }
+        .weather-info h3 { font-size:48px; font-weight:800; margin:0; line-height:1; }
+        .weather-info p { font-size:18px; color:rgba(255,255,255,0.7); margin-top:5px; }
+        
+        .products-grid {
+            display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:20px; margin-bottom:30px;
+        }
+        .prod-card {
+            background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:16px;
+            overflow:hidden; text-decoration:none; display:block; transition:all 0.3s;
+        }
+        .prod-card:hover { border-color:var(--ai-cyan); transform:translateY(-5px); box-shadow:0 10px 25px rgba(6,182,212,0.2); }
+        .prod-img { width:100%; height:200px; object-fit:contain; background:rgba(255,255,255,0.02); }
+        .prod-info { padding:15px; }
+        .prod-cat { font-size:11px; font-weight:700; color:var(--ai-cyan); text-transform:uppercase; margin-bottom:4px; }
+        .prod-name { font-size:14px; font-weight:600; color:white; margin-bottom:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+        .prod-rating { font-size:12px; color:rgba(255,255,255,0.5); }
 
-    /* City Input */
-    .city-input-wrap{display:flex;gap:10px;}
-    .city-input{
-        flex:1;padding:13px 18px;border-radius:13px;
-        border:1px solid var(--glass-border);background:rgba(255,255,255,.07);
-        color:#fff;font-family:'Outfit',sans-serif;font-size:14px;
-        outline:none;transition:all .3s;
-    }
-    .city-input::placeholder{color:rgba(255,255,255,.35);}
-    .city-input:focus{
-        border-color:rgba(6,182,212,.55);background:rgba(6,182,212,.08);
-        box-shadow:0 0 0 3px rgba(6,182,212,.1);
-    }
-    .city-btn{
-        padding:13px 18px;border-radius:13px;border:none;
-        background:linear-gradient(135deg,#0891b2,var(--cyan));
-        color:#fff;font-family:'Outfit',sans-serif;font-size:13px;
-        font-weight:700;cursor:pointer;transition:all .3s;white-space:nowrap;
-    }
-    .city-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(6,182,212,.4);}
-    .city-btn:active{transform:translateY(0);}
+        .tips-box {
+            background:rgba(255,255,255,0.03); border:1px dashed var(--glass-border);
+            padding:25px; border-radius:16px;
+        }
+        .tips-box h4 { color:var(--ai-purple); margin-bottom:15px; font-size:16px; }
+        .tips-box ul { list-style:none; }
+        .tips-box li { display:flex; gap:10px; margin-bottom:10px; color:rgba(255,255,255,0.7); font-size:14px; }
+        .tips-box li::before { content:'💡'; }
 
-    .divider{
-        display:flex;align-items:center;gap:12px;
-        margin:20px 0;color:rgba(255,255,255,.3);font-size:12px;
-    }
-    .divider::before,.divider::after{
-        content:'';flex:1;height:1px;
-        background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
-    }
+        /* Animations */
+        @keyframes spin { 100% { transform:rotate(360deg); } }
+        @keyframes float { 50% { transform:translateY(-10px); } }
+        .anim-sun { animation:spin 10s linear infinite; }
+        .anim-cloud { animation:float 3s ease-in-out infinite; }
 
-    /* Temp Slider */
-    .temp-row{display:flex;align-items:center;gap:12px;}
-    .temp-row input[type=range]{
-        flex:1;accent-color:var(--purple);cursor:pointer;height:4px;
-    }
-    .temp-val{
-        color:var(--cyan);font-weight:700;font-size:16px;
-        min-width:52px;text-align:right;
-    }
-
-    /* Condition chips */
-    .chips{display:flex;flex-wrap:wrap;gap:7px;}
-    .chip{
-        padding:7px 15px;border-radius:20px;
-        border:1px solid var(--glass-border);background:rgba(255,255,255,.05);
-        color:rgba(255,255,255,.65);font-size:12.5px;font-weight:500;
-        cursor:pointer;transition:all .22s;user-select:none;
-        font-family:'Outfit',sans-serif;
-    }
-    .chip:hover{border-color:rgba(6,182,212,.5);color:#fff;background:rgba(6,182,212,.1);}
-    .chip.on{
-        background:linear-gradient(135deg,rgba(6,182,212,.3),rgba(168,85,247,.3));
-        border-color:rgba(6,182,212,.65);color:#fff;
-        box-shadow:0 0 12px rgba(6,182,212,.22);
-    }
-
-    .pick-btn{
-        width:100%;padding:17px;border:none;border-radius:15px;
-        background:linear-gradient(135deg,#7c3aed,var(--purple),var(--pink));
-        color:#fff;font-family:'Outfit',sans-serif;
-        font-size:15px;font-weight:700;cursor:pointer;
-        transition:all .3s;position:relative;overflow:hidden;
-        letter-spacing:.5px;
-    }
-    .pick-btn::after{
-        content:'';position:absolute;inset:0;
-        background:linear-gradient(135deg,rgba(255,255,255,.12),transparent);
-        opacity:0;transition:opacity .3s;
-    }
-    .pick-btn:hover::after{opacity:1;}
-    .pick-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(168,85,247,.4);}
-    .pick-btn:active{transform:translateY(0);}
-
-    /* Spin */
-    .spin{display:none;width:17px;height:17px;border:2px solid rgba(255,255,255,.25);
-        border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;}
-    .spinning .spin{display:inline-block;}
-    .btn-inner{display:flex;align-items:center;justify-content:center;gap:10px;}
-    @keyframes sp{to{transform:rotate(360deg);}}
-
-    /* ---- RIGHT PANEL ---- */
-    .right-panel{min-height:500px;position:relative;}
-
-    /* Empty state */
-    .empty-state{
-        display:flex;flex-direction:column;align-items:center;
-        justify-content:center;min-height:520px;text-align:center;padding:40px;
-    }
-    .empty-anim{font-size:82px;margin-bottom:18px;
-        animation:wobble 3.5s ease-in-out infinite;}
-    @keyframes wobble{
-        0%,100%{transform:rotate(-6deg) scale(1);}
-        50%{transform:rotate(6deg) scale(1.1);}
-    }
-    .empty-h{font-size:24px;font-weight:700;color:#fff;margin-bottom:10px;}
-    .empty-p{font-size:15px;color:rgba(255,255,255,.48);max-width:320px;line-height:1.65;}
-
-    /* Result */
-    .wo-result{display:none;animation:upIn .55s ease;}
-    .wo-result.show{display:block;}
-    @keyframes upIn{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:none;}}
-
-    /* Loading overlay */
-    .load-ov{
-        display:none;position:absolute;inset:0;
-        background:rgba(15,12,41,.88);backdrop-filter:blur(12px);
-        border-radius:20px;z-index:50;
-        flex-direction:column;align-items:center;justify-content:center;gap:18px;
-        min-height:400px;
-    }
-    .load-ov.on{display:flex;}
-    .big-spin{
-        width:56px;height:56px;border-radius:50%;
-        border:3px solid rgba(6,182,212,.2);
-        border-top-color:var(--cyan);
-        border-right-color:var(--purple);
-        animation:sp 1s linear infinite;
-    }
-    .ov-t{font-size:15px;font-weight:600;color:rgba(255,255,255,.8);}
-    .ov-s{font-size:12px;color:rgba(255,255,255,.38);}
-
-    /* ---- WEATHER DISPLAY CARD ---- */
-    .weather-card{
-        background:linear-gradient(135deg,rgba(6,182,212,.2),rgba(168,85,247,.14));
-        border:1px solid rgba(6,182,212,.3);
-        border-radius:22px;padding:30px;margin-bottom:22px;
-        display:flex;align-items:center;gap:28px;flex-wrap:wrap;
-        position:relative;overflow:hidden;
-    }
-    .weather-card::after{
-        content:'';position:absolute;inset:0;z-index:0;
-        background:radial-gradient(ellipse at 80% 50%,rgba(6,182,212,.08),transparent 60%);
-        pointer-events:none;
-    }
-
-    /* ---- CSS WEATHER ANIMATIONS ---- */
-    .wx-icon{position:relative;width:100px;height:100px;flex-shrink:0;z-index:1;}
-
-    /* SUN */
-    .sun-core{
-        position:absolute;top:50%;left:50%;
-        width:46px;height:46px;margin:-23px;
-        border-radius:50%;
-        background:radial-gradient(circle,#fde68a,#f59e0b);
-        box-shadow:0 0 20px 8px rgba(245,158,11,.5);
-        animation:sunPulse 2.5s ease-in-out infinite;
-    }
-    @keyframes sunPulse{
-        0%,100%{box-shadow:0 0 20px 8px rgba(245,158,11,.5);}
-        50%{box-shadow:0 0 35px 15px rgba(245,158,11,.7);}
-    }
-    .sun-rays{
-        position:absolute;top:50%;left:50%;
-        width:100px;height:100px;margin:-50px;
-        animation:sunSpin 8s linear infinite;
-    }
-    .sun-ray{
-        position:absolute;top:50%;left:50%;
-        width:3px;height:14px;margin-left:-1.5px;margin-top:-7px;
-        background:linear-gradient(180deg,#fde68a,transparent);
-        border-radius:2px;
-        transform-origin:50% 50%;
-    }
-    @keyframes sunSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-
-    /* CLOUD */
-    .cloud-wrap{position:relative;width:100%;height:100%;}
-    .cloud-body{
-        position:absolute;
-        bottom:22px;left:8px;
-        width:72px;height:30px;
-        background:rgba(255,255,255,.88);
-        border-radius:15px;
-        animation:cloudFloat 3s ease-in-out infinite;
-    }
-    .cloud-body::before{
-        content:'';position:absolute;
-        top:-16px;left:12px;
-        width:30px;height:30px;
-        background:rgba(255,255,255,.88);
-        border-radius:50%;
-    }
-    .cloud-body::after{
-        content:'';position:absolute;
-        top:-9px;left:32px;
-        width:22px;height:22px;
-        background:rgba(255,255,255,.88);
-        border-radius:50%;
-    }
-    @keyframes cloudFloat{
-        0%,100%{transform:translateY(0);}
-        50%{transform:translateY(-6px);}
-    }
-
-    /* RAIN */
-    .rain-wrap{position:relative;width:100%;height:100%;}
-    .rain-cloud{
-        position:absolute;
-        top:8px;left:8px;
-        width:72px;height:26px;
-        background:rgba(148,163,184,.85);
-        border-radius:13px;
-    }
-    .rain-cloud::before{
-        content:'';position:absolute;
-        top:-14px;left:10px;
-        width:26px;height:26px;
-        background:rgba(148,163,184,.85);
-        border-radius:50%;
-    }
-    .rain-cloud::after{
-        content:'';position:absolute;
-        top:-8px;left:30px;
-        width:20px;height:20px;
-        background:rgba(148,163,184,.85);
-        border-radius:50%;
-    }
-    .rain-drop{
-        position:absolute;
-        width:2px;border-radius:1px;
-        background:linear-gradient(180deg,var(--cyan),rgba(6,182,212,.3));
-        animation:fall linear infinite;
-    }
-    @keyframes fall{
-        0%{transform:translateY(-10px);opacity:0;}
-        20%{opacity:1;}
-        100%{transform:translateY(65px);opacity:0;}
-    }
-
-    /* SNOW */
-    .snow-wrap{position:relative;width:100%;height:100%;overflow:hidden;}
-    .snow-cloud{
-        position:absolute;
-        top:8px;left:8px;
-        width:72px;height:26px;
-        background:rgba(203,213,225,.8);
-        border-radius:13px;
-    }
-    .snow-cloud::before{
-        content:'';position:absolute;
-        top:-14px;left:10px;
-        width:26px;height:26px;
-        background:rgba(203,213,225,.8);
-        border-radius:50%;
-    }
-    .snow-cloud::after{
-        content:'';position:absolute;
-        top:-8px;left:30px;
-        width:20px;height:20px;
-        background:rgba(203,213,225,.8);
-        border-radius:50%;
-    }
-    .snowflake{
-        position:absolute;
-        color:rgba(255,255,255,.9);
-        font-size:11px;
-        animation:snowfall linear infinite;
-    }
-    @keyframes snowfall{
-        0%{transform:translateY(-10px) rotate(0);opacity:0;}
-        15%{opacity:1;}
-        100%{transform:translateY(75px) rotate(360deg);opacity:0;}
-    }
-
-    /* WIND */
-    .wind-wrap{position:relative;width:100%;height:100%;}
-    .wind-line{
-        position:absolute;
-        height:3px;border-radius:2px;
-        background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
-        animation:windBlow ease-in-out infinite;
-    }
-    @keyframes windBlow{
-        0%{transform:translateX(-30px);opacity:0;}
-        30%{opacity:1;}
-        100%{transform:translateX(30px);opacity:0;}
-    }
-
-    /* Weather info */
-    .weather-info{flex:1;min-width:180px;z-index:1;}
-    .wx-city{font-size:12px;font-weight:700;text-transform:uppercase;
-        letter-spacing:1.5px;color:var(--cyan);margin-bottom:5px;}
-    .wx-temp{
-        font-size:56px;font-weight:800;line-height:1;
-        background:linear-gradient(135deg,#fff,var(--cyan));
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-        margin-bottom:5px;
-    }
-    .wx-feels{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:8px;}
-    .wx-cond{
-        display:inline-block;padding:5px 14px;border-radius:20px;
-        background:rgba(6,182,212,.18);border:1px solid rgba(6,182,212,.3);
-        font-size:13px;font-weight:600;color:var(--cyan);
-    }
-
-    /* ---- SECTION LABEL ---- */
-    .sec-label{
-        font-size:11px;font-weight:700;text-transform:uppercase;
-        letter-spacing:1.2px;color:rgba(255,255,255,.6);
-        margin-bottom:14px;display:flex;align-items:center;gap:8px;
-    }
-
-    /* ---- PRODUCTS GRID ---- */
-    .products-grid{
-        display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-        gap:14px;margin-bottom:22px;
-    }
-    .prod-card{
-        background:var(--glass-bg);border:1px solid var(--glass-border);
-        border-radius:15px;overflow:hidden;transition:all .3s;
-        cursor:pointer;text-decoration:none;display:block;
-    }
-    .prod-card:hover{
-        border-color:rgba(168,85,247,.45);transform:translateY(-5px);
-        box-shadow:0 10px 28px rgba(168,85,247,.2);
-    }
-    .prod-img{width:100%;height:150px;object-fit:contain;
-        background:rgba(255,255,255,.04);display:block;}
-    .prod-info{padding:11px 13px;}
-    .prod-cat{font-size:10px;font-weight:700;text-transform:uppercase;
-        letter-spacing:1px;color:var(--purple);margin-bottom:3px;}
-    .prod-name{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.9);
-        margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .prod-rating{font-size:11.5px;color:rgba(255,255,255,.48);
-        display:flex;align-items:center;gap:4px;}
-    .star-gold{color:var(--gold);}
-
-    /* ---- TIPS BOX ---- */
-    .tips-box{
-        background:linear-gradient(135deg,rgba(6,182,212,.1),rgba(168,85,247,.1));
-        border:1px solid rgba(6,182,212,.22);border-radius:18px;padding:22px;
-        margin-bottom:22px;
-    }
-    .tip-item{display:flex;align-items:flex-start;gap:11px;
-        margin-bottom:10px;color:rgba(255,255,255,.72);font-size:13.5px;line-height:1.5;}
-    .tip-item:last-child{margin-bottom:0;}
-    .tip-dot{width:5px;height:5px;background:var(--cyan);border-radius:50%;
-        margin-top:7px;flex-shrink:0;}
-
-    /* No products state */
-    .no-products{
-        text-align:center;padding:40px 20px;
-        color:rgba(255,255,255,.4);font-size:14px;
-        background:var(--glass-bg);border:1px solid var(--glass-border);
-        border-radius:15px;margin-bottom:22px;
-    }
-    .no-products .icon{font-size:36px;display:block;margin-bottom:10px;}
-
-    /* Action row */
-    .action-row{display:flex;gap:12px;flex-wrap:wrap;}
-    .act-btn{
-        display:inline-flex;align-items:center;gap:8px;
-        padding:13px 24px;border-radius:13px;
-        border:1px solid rgba(168,85,247,.4);background:rgba(168,85,247,.1);
-        color:var(--purple);font-family:'Outfit',sans-serif;
-        font-size:13.5px;font-weight:600;cursor:pointer;transition:all .3s;
-    }
-    .act-btn:hover{background:rgba(168,85,247,.2);transform:translateY(-2px);
-        box-shadow:0 5px 18px rgba(168,85,247,.2);}
-    .act-btn.cyan{border-color:rgba(6,182,212,.4);background:rgba(6,182,212,.1);color:var(--cyan);}
-    .act-btn.cyan:hover{background:rgba(6,182,212,.2);box-shadow:0 5px 18px rgba(6,182,212,.2);}
-
-    /* ---- RESPONSIVE ---- */
-    @media(max-width:1050px){
-        .wo-grid{grid-template-columns:1fr;}
-        .left-panel{position:static;}
-    }
-    @media(max-width:680px){
-        .ai-nav{padding:15px 20px;}
-        .wo-grid{padding:10px 15px 60px;}
-        .products-grid{grid-template-columns:repeat(2,1fr);}
-        h1.wo-title{font-size:52px;}
-        .weather-card{flex-direction:column;align-items:flex-start;gap:16px;}
-    }
-    @media(max-width:400px){
-        .products-grid{grid-template-columns:1fr;}
-    }
+        @media (max-width: 900px) {
+            .container { grid-template-columns:1fr; }
+            .left-panel { position:static; }
+        }
     </style>
 </head>
 <body>
-<div id="particles"></div>
 
-<!-- NAV -->
-<nav class="ai-nav">
-    <a href="index.html" class="ai-brand">Elizabeth's Elegance</a>
-    <div class="nav-links">
-        <a href="index.html" class="nav-link">🏠 Головна</a>
-        <a href="search.html" class="nav-link">🔍 Пошук</a>
-        <a href="age-recommendations.html" class="nav-link">👤 За віком</a>
-        <a href="category-stats.html" class="nav-link">📊 Статистика</a>
-        <a href="ai-stylist.html" class="nav-link">✨ AI Stylist</a>
-        <a href="style-quiz.html" class="nav-link">🎯 Style Quiz</a>
-        <a href="weather-outfit.html" class="nav-link active">🌡️ Weather Outfit</a>
-    </div>
-</nav>
+    <!-- NAV -->
+    <nav class="ai-nav">
+        <a href="index.html" class="ai-brand">Elizabeth's Elegance</a>
+                        <div class="nav-links">
+            <a href="index.html" class="nav-link">🏠 Головна</a>
+            <a href="my-profile.html" class="nav-link">👤 Мій профіль</a>
+            <a href="ai-stylist.html" class="nav-link">✨ AI Stylist</a>
+            <a href="style-quiz.html" class="nav-link">🎯 Style Quiz</a>
+            <a href="weather-outfit.html" class="nav-link active">🌡️ Weather</a>
+            <a href="capsule-wardrobe.html" class="nav-link">📅 Capsule</a>
+            <a href="mood-board.html" class="nav-link">🎨 Mood Board</a>
+            <a href="trend-radar.html" class="nav-link">📊 Trends</a>
+            <a href="virtual-silhouette.html" class="nav-link">👗 Silhouette</a>
+        </div>
+    </nav>
 
-<!-- HERO -->
-<div class="wo-hero">
-    <div class="wo-badge">🌍 Dress for the Weather</div>
-    <h1 class="wo-title">Weather Outfit</h1>
-    <p class="wo-subtitle">
-        Введіть своє місто або налаштуйте температуру вручну — і ми підберемо ідеальний образ для сьогоднішньої погоди.
-    </p>
-</div>
+    <div class="container">
+        
+        <!-- Left Panel -->
+        <div class="panel left-panel">
+            <h2>Ваша локація</h2>
+            <p style="color:rgba(255,255,255,0.6); margin-bottom:25px; font-size:14px;">Дізнайтесь погоду та отримайте ідеальний образ.</p>
 
-<!-- MAIN GRID -->
-<div class="wo-grid">
-
-    <!-- LEFT PANEL -->
-    <div class="left-panel">
-        <div class="panel-heading">🌍 <span>Ваше місто</span></div>
-
-        <div class="form-block">
-            <span class="form-lbl">Назва міста</span>
-            <div class="city-input-wrap">
-                <input type="text" id="city-input" class="city-input"
-                    placeholder="Введіть місто..."
-                    onkeydown="if(event.key==='Enter') fetchWeather()">
-                <button class="city-btn" onclick="fetchWeather()" id="city-btn">
-                    <div class="btn-inner">
-                        <span class="spin" id="city-spin"></span>
-                        <span id="city-btn-txt">🔍</span>
-                    </div>
-                </button>
+            <div class="input-group">
+                <label>Місто</label>
+                <input type="text" id="city-input" class="city-input" placeholder="Наприклад: Київ, Львів...">
+                <button class="btn-primary" onclick="getSimulatedWeather()">🌤️ Дізнатись погоду</button>
             </div>
-            <div id="city-error" style="margin-top:8px;font-size:12px;color:rgba(236,72,153,.8);display:none;"></div>
-        </div>
 
-        <div class="divider">або налаштуйте вручну</div>
+            <div class="divider">АБО ВКАЖІТЬ ВРУЧНУ</div>
 
-        <div class="form-block">
-            <span class="form-lbl">Температура повітря</span>
-            <div class="temp-row">
-                <input type="range" id="temp-slider" min="-10" max="35" step="1" value="20"
-                    oninput="onTempChange()">
-                <span class="temp-val" id="temp-display">20°C</span>
+            <div class="input-group">
+                <label>Температура</label>
+                <div class="temp-row">
+                    <input type="range" id="temp-slider" min="-15" max="40" value="20" oninput="updateTempLabel()">
+                    <div class="temp-val" id="temp-label">+20°C</div>
+                </div>
             </div>
-        </div>
 
-        <div class="form-block">
-            <span class="form-lbl">Погодні умови</span>
-            <div class="chips" id="cond-chips">
-                <div class="chip on" data-v="sunny">☀️ Сонячно</div>
-                <div class="chip" data-v="cloudy">🌤️ Хмарно</div>
-                <div class="chip" data-v="rainy">🌧️ Дощ</div>
-                <div class="chip" data-v="snow">❄️ Сніг</div>
-                <div class="chip" data-v="windy">💨 Вітер</div>
+            <div class="input-group">
+                <label>Погодні умови</label>
+                <div class="weather-chips" id="w-chips">
+                    <div class="chip active" onclick="selectCondition('sunny', this)">☀️ Сонячно</div>
+                    <div class="chip" onclick="selectCondition('cloudy', this)">🌤️ Хмарно</div>
+                    <div class="chip" onclick="selectCondition('rainy', this)">🌧️ Дощ</div>
+                    <div class="chip" onclick="selectCondition('snowy', this)">❄️ Сніг</div>
+                </div>
             </div>
+
+            <button class="btn-primary" style="background:var(--ai-purple); box-shadow:none;" onclick="applyManualWeather()">👗 Підібрати образ</button>
         </div>
 
-        <button class="pick-btn" id="pick-btn" onclick="pickOutfit()">
-            <div class="btn-inner">
-                <span class="spin" id="pick-spin"></span>
-                <span id="pick-btn-txt">👗 Підібрати образ</span>
-            </div>
-        </button>
-    </div>
-
-    <!-- RIGHT PANEL -->
-    <div class="right-panel" id="right-panel">
-
-        <!-- Empty state -->
-        <div class="empty-state" id="wo-empty">
-            <div class="empty-anim">🌈</div>
-            <div class="empty-h">Дізнайтесь свій ідеальний образ!</div>
-            <div class="empty-p">Введіть місто або налаштуйте температуру вручну, а потім натисніть «Підібрати образ» — ми знайдемо найкращі речі для сьогоднішньої погоди.</div>
-        </div>
-
-        <!-- Loading overlay -->
-        <div class="load-ov" id="load-ov">
-            <div class="big-spin"></div>
-            <div class="ov-t">Підбираємо образ...</div>
-            <div class="ov-s" id="ov-s-txt">Аналіз погодних умов</div>
-        </div>
-
-        <!-- Result -->
-        <div class="wo-result" id="wo-result">
-
-            <!-- Weather card with animated icon -->
-            <div class="weather-card" id="weather-card">
-                <div class="wx-icon" id="wx-icon"></div>
+        <!-- Right Panel -->
+        <div class="panel right-panel">
+            <div class="weather-display">
+                <div class="weather-icon-container" id="w-icon">
+                    <span class="anim-sun">☀️</span>
+                </div>
                 <div class="weather-info">
-                    <div class="wx-city" id="wx-city">— —</div>
-                    <div class="wx-temp" id="wx-temp">20°C</div>
-                    <div class="wx-feels" id="wx-feels">Відчувається як 18°C</div>
-                    <span class="wx-cond" id="wx-cond">☀️ Сонячно</span>
+                    <h3 id="res-temp">+20°C</h3>
+                    <p id="res-cond">Сонячно</p>
+                    <p id="res-city" style="font-size:13px; color:rgba(255,255,255,0.4); margin-top:2px;">Ручний вибір</p>
                 </div>
             </div>
 
-            <!-- Products -->
-            <div class="sec-label">🛍️ Ідеальний образ для цієї погоди:</div>
-            <div class="products-grid" id="weather-products"></div>
-
-            <!-- Stylist tips -->
-            <div class="tips-box">
-                <div class="sec-label" style="color:var(--cyan);">💡 Поради стиліста для цієї погоди</div>
-                <div id="weather-tips"></div>
+            <h3 style="font-size:20px; color:white; margin-bottom:20px;">🛍️ Рекомендовані товари для цієї погоди</h3>
+            
+            <div class="products-grid" id="outfit-grid">
+                <!-- Products -->
+                <p style="color:gray;">Завантаження товарів...</p>
             </div>
 
-            <div class="action-row">
-                <button class="act-btn" onclick="pickOutfit()">🔄 Підібрати знову</button>
-                <a href="ai-stylist.html" class="act-btn cyan">✨ AI Stylist</a>
+            <div class="tips-box">
+                <h4>Поради стиліста</h4>
+                <ul id="tips-list">
+                    <li>Сонцезахисні окуляри та легкі тканини — ваш найкращий вибір.</li>
+                    <li>Обирайте світлі кольори, які не притягують тепло.</li>
+                </ul>
             </div>
         </div>
+
     </div>
 
-</div>
+    <script>
+        let currentCondition = 'sunny';
+        let allProducts = [];
+        let userStyle = '';
+        
+        try {
+            const profile = JSON.parse(localStorage.getItem('ai_profile'));
+            if(profile && profile.style) userStyle = profile.style;
+        } catch(e){}
 
-<script>
-// ============================================================
-// PARTICLES
-// ============================================================
-(function(){
-    const c=document.getElementById('particles');
-    for(let i=0;i<45;i++){
-        const d=document.createElement('div');
-        d.className='dot';
-        const sz=Math.random()*3+1;
-        d.style.cssText=`
-            width:${sz}px;height:${sz}px;
-            left:${Math.random()*100}%;
-            animation-duration:${Math.random()*18+9}s;
-            animation-delay:${Math.random()*14}s;
-            opacity:${Math.random()*.6+.1};
-        `;
-        c.appendChild(d);
-    }
-})();
+        fetch('data/products.json').then(r=>r.json()).then(data=>{ 
+            allProducts = data; 
+            applyManualWeather(); // load default
+        });
 
-// ============================================================
-// CONDITION CHIPS (single-select)
-// ============================================================
-const condGroup = document.getElementById('cond-chips');
-condGroup.querySelectorAll('.chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-        condGroup.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
-        chip.classList.add('on');
-    });
-});
-
-function getCondition() {
-    return condGroup.querySelector('.chip.on')?.dataset.v || 'sunny';
-}
-function setCondition(v) {
-    condGroup.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c.dataset.v === v));
-}
-
-// ============================================================
-// TEMP SLIDER
-// ============================================================
-function onTempChange() {
-    const val = parseInt(document.getElementById('temp-slider').value);
-    document.getElementById('temp-display').textContent = val + '°C';
-}
-
-// ============================================================
-// CITY NAME HASHING → WEATHER SIMULATION
-// ============================================================
-function hashString(str) {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) {
-        h = ((h << 5) - h) + str.charCodeAt(i);
-        h |= 0;
-    }
-    return Math.abs(h);
-}
-
-function simulateWeather(cityName) {
-    const h = hashString(cityName.toLowerCase().trim());
-    const seasons = ['spring','summer','autumn','winter'];
-    const season = seasons[h % 4];
-
-    // Base temp per season
-    const ranges = {
-        spring: [12, 18],
-        summer: [25, 33],
-        autumn: [8, 15],
-        winter: [-5, 5],
-    };
-    const [lo, hi] = ranges[season];
-    // Add pseudo-random offset derived from hash
-    const extra = (h >> 4) % (hi - lo + 1);
-    const temp = lo + extra;
-    const feelsLike = temp - Math.round(((h >> 8) % 5));
-
-    // Condition
-    const condMap = {
-        spring: ['sunny','cloudy','rainy'],
-        summer: ['sunny','sunny','sunny','cloudy','windy'],
-        autumn: ['cloudy','rainy','windy'],
-        winter: ['snow','cloudy','windy'],
-    };
-    const conds = condMap[season];
-    const condition = conds[(h >> 2) % conds.length];
-
-    return { temp, feelsLike, condition, season, city: cityName };
-}
-
-// ============================================================
-// FETCH WEATHER (simulated)
-// ============================================================
-function fetchWeather() {
-    const city = document.getElementById('city-input').value.trim();
-    const errEl = document.getElementById('city-error');
-    errEl.style.display = 'none';
-
-    if (!city) {
-        errEl.textContent = '⚠️ Будь ласка, введіть назву міста.';
-        errEl.style.display = 'block';
-        return;
-    }
-
-    const btn = document.getElementById('city-btn');
-    const spin = document.getElementById('city-spin');
-    const btnTxt = document.getElementById('city-btn-txt');
-
-    btn.disabled = true;
-    spin.style.display = 'inline-block';
-    btnTxt.textContent = '';
-
-    setTimeout(() => {
-        const wx = simulateWeather(city);
-
-        // Update slider and chip
-        document.getElementById('temp-slider').value = wx.temp;
-        document.getElementById('temp-display').textContent = wx.temp + '°C';
-        setCondition(wx.condition);
-
-        btn.disabled = false;
-        spin.style.display = 'none';
-        btnTxt.textContent = '✓';
-
-        setTimeout(() => { btnTxt.textContent = '🔍'; }, 1500);
-
-        // Auto-pick
-        pickOutfitWithData(wx.temp, wx.condition, wx.city, wx.feelsLike);
-    }, 1400);
-}
-
-// ============================================================
-// PRODUCTS DATA
-// ============================================================
-let products = [];
-(async function() {
-    try {
-        const r = await fetch('data/products.json');
-        if (r.ok) products = await r.json();
-    } catch(e) {
-        console.warn('Could not load products.json – demo mode');
-    }
-})();
-
-// ============================================================
-// WEATHER → OUTFIT MAPPING
-// ============================================================
-const WEATHER_MAP = {
-    hot_sunny:   { cats:['Swim','Shorts','Tops','Dresses'],       label:'☀️ Сонячно та жарко',  bg:'rgba(245,158,11,.18)',border:'rgba(245,158,11,.3)' },
-    warm:        { cats:['Knits','Casual bottoms','Jackets','Dresses'], label:'🌤️ Тепла погода', bg:'rgba(16,185,129,.15)',border:'rgba(16,185,129,.3)' },
-    cool:        { cats:['Sweaters','Outerwear','Pants','Layering'],    label:'🍂 Прохолодно',   bg:'rgba(6,182,212,.15)', border:'rgba(6,182,212,.3)'  },
-    cold:        { cats:['Lounge','Sleep','Layering','Outerwear'],      label:'❄️ Холодно',       bg:'rgba(168,85,247,.15)',border:'rgba(168,85,247,.3)' },
-    rainy:       { cats:['Outerwear','Jackets','Layering'],             label:'🌧️ Дощова погода', bg:'rgba(148,163,184,.15)',border:'rgba(148,163,184,.3)'},
-    snowy:       { cats:['Outerwear','Sweaters','Layering','Knits'],    label:'❄️ Сніг',          bg:'rgba(203,213,225,.12)',border:'rgba(203,213,225,.3)'},
-    windy:       { cats:['Jackets','Outerwear','Knits','Sweaters'],     label:'💨 Вітряно',        bg:'rgba(99,102,241,.15)', border:'rgba(99,102,241,.3)' },
-};
-
-// Possible class_names from products.json (case-insensitive matching)
-const CAT_KEYWORDS = {
-    'Swim':         ['swim','swimwear','swimsuit'],
-    'Shorts':       ['shorts'],
-    'Tops':         ['tops','blouses','tees'],
-    'Dresses':      ['dresses','dress'],
-    'Knits':        ['knits','knitwear'],
-    'Casual bottoms':['casual bottoms','bottoms'],
-    'Jackets':      ['jackets','jacket'],
-    'Sweaters':     ['sweaters','sweater'],
-    'Outerwear':    ['outerwear','coats','coat'],
-    'Pants':        ['pants'],
-    'Layering':     ['layering','layer'],
-    'Lounge':       ['lounge','loungewear'],
-    'Sleep':        ['sleep','sleepwear'],
-};
-
-function getWeatherKey(temp, condition) {
-    if (condition === 'rainy') return 'rainy';
-    if (condition === 'snow')  return 'snowy';
-    if (condition === 'windy') return 'windy';
-    if (temp > 25 && condition === 'sunny') return 'hot_sunny';
-    if (temp >= 15) return 'warm';
-    if (temp >= 5)  return 'cool';
-    return 'cold';
-}
-
-function filterProducts(cats) {
-    if (!products.length) return [];
-    const keywordsAll = [];
-    cats.forEach(cat => {
-        (CAT_KEYWORDS[cat] || [cat.toLowerCase()]).forEach(k => keywordsAll.push(k));
-    });
-    const matched = products.filter(p => {
-        const cn = (p.class_name || '').toLowerCase();
-        return keywordsAll.some(k => cn.includes(k));
-    });
-    // Sort by rating, shuffle top 20, take 6
-    const sorted = matched.sort((a,b) => (b.avg_rating||0)-(a.avg_rating||0)).slice(0,30);
-    // pseudo-random shuffle
-    for (let i = sorted.length-1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i+1));
-        [sorted[i], sorted[j]] = [sorted[j], sorted[i]];
-    }
-    return sorted.slice(0, 6);
-}
-
-// ============================================================
-// WEATHER TIPS
-// ============================================================
-const TIPS = {
-    hot_sunny: [
-        'Обирайте легкі натуральні тканини — льон, бавовна — вони дають шкірі дихати.',
-        'Яскраві та пастельні відтінки відбивають сонячне світло і виглядають свіжо.',
-        'Не забудьте аксесуари: соломʼяний капелюх та сонцезахисні окуляри завершать образ.',
-    ],
-    warm: [
-        'Шарування — ваш найкращий друг: легкий кардиган врятує в прохолодний вечір.',
-        'Трикотажні топи та спідниці нижче коліна — ідеальне поєднання комфорту і стилю.',
-        'Дрес-код "вільний" означає поєднувати тканини за фактурою: шовк + джинс = хіт.',
-    ],
-    cool: [
-        'Шерстяні та трикотажні свитери поверх сорочки додадуть обʼєм і тепло.',
-        'Верхній одяг — зірка сезону. Обирайте пальто або тренч з яскравою підкладкою.',
-        'Темні тони — бургунді, смарагд, темно-синій — виглядають особливо розкішно восени.',
-    ],
-    cold: [
-        'Терморегулювання: надягайте шари — базовий шар з мериносу, светр і пальто.',
-        'Домашній одяг може бути стильним: оксамитові лаунж-сети виглядають преміально.',
-        'Аксесуари: шапка та рукавички — не просто тепло, а модний акцент.',
-    ],
-    rainy: [
-        'Верхній одяг з водовідштовхувальною просоченням — must-have в дощовий день.',
-        'Темні джинси або брюки — практичніший вибір, ніж світлі відтінки.',
-        'Додайте яскравий шарф або яскраве пальто, щоб підняти настрій в сіру погоду.',
-    ],
-    snowy: [
-        'Термобілизна — невидима, але неоціненна основа для зимового образу.',
-        'Oversize светр або худі + щільні леггінси = ідеальний home-chic і прогулянка.',
-        'Металеві та перламутрові відтінки одягу перегукуються з засніженим пейзажем.',
-    ],
-    windy: [
-        'Куртка або пальто з поясом або кнопками — захистить від пориву вітру.',
-        'Трикотажні водолазки закривають шию та виглядають елегантно в будь-яку погоду.',
-        'Уникайте широких спідниць і суконь — обирайте більш приталені силуети.',
-    ],
-};
-
-// ============================================================
-// WEATHER CSS ANIMATIONS
-// ============================================================
-function buildWeatherIcon(condition) {
-    const el = document.getElementById('wx-icon');
-    el.innerHTML = '';
-
-    if (condition === 'sunny') {
-        // Sun core + rays
-        const core = document.createElement('div');
-        core.className = 'sun-core';
-        const raysWrap = document.createElement('div');
-        raysWrap.className = 'sun-rays';
-        for (let i = 0; i < 8; i++) {
-            const ray = document.createElement('div');
-            ray.className = 'sun-ray';
-            ray.style.transform = `rotate(${i*45}deg) translateY(-28px)`;
-            raysWrap.appendChild(ray);
+        function updateTempLabel() {
+            let val = document.getElementById('temp-slider').value;
+            let sign = val > 0 ? '+' : '';
+            document.getElementById('temp-label').textContent = `${sign}${val}°C`;
         }
-        el.appendChild(raysWrap);
-        el.appendChild(core);
 
-    } else if (condition === 'cloudy') {
-        const wrap = document.createElement('div');
-        wrap.className = 'cloud-wrap';
-        const body = document.createElement('div');
-        body.className = 'cloud-body';
-        wrap.appendChild(body);
-        el.appendChild(wrap);
+        function selectCondition(cond, el) {
+            currentCondition = cond;
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+        }
 
-    } else if (condition === 'rainy') {
-        const wrap = document.createElement('div');
-        wrap.className = 'rain-wrap';
-        const cloud = document.createElement('div');
-        cloud.className = 'rain-cloud';
-        wrap.appendChild(cloud);
-        // drops
-        const dropDefs = [
-            {left:14, top:45, h:14, dur:1.0, delay:0},
-            {left:26, top:45, h:18, dur:0.85,delay:0.25},
-            {left:38, top:45, h:12, dur:1.1, delay:0.1},
-            {left:50, top:45, h:16, dur:0.95,delay:0.4},
-            {left:62, top:45, h:14, dur:0.9, delay:0.15},
-            {left:73, top:45, h:18, dur:1.0, delay:0.35},
-        ];
-        dropDefs.forEach(d => {
-            const drop = document.createElement('div');
-            drop.className = 'rain-drop';
-            drop.style.cssText = `left:${d.left}px;top:${d.top}px;height:${d.h}px;animation-duration:${d.dur}s;animation-delay:${d.delay}s;`;
-            wrap.appendChild(drop);
-        });
-        el.appendChild(wrap);
+        // Simulates weather API since we don't have a backend/key
+        function getSimulatedWeather() {
+            const city = document.getElementById('city-input').value.trim();
+            if(!city) return;
+            
+            // simple hash to generate deterministic weather for a city
+            let hash = 0;
+            for(let i=0; i<city.length; i++) hash += city.charCodeAt(i);
+            
+            const temps = [-5, 5, 12, 18, 22, 28, 32, 15];
+            const conds = ['sunny', 'cloudy', 'rainy', 'snowy', 'sunny', 'cloudy'];
+            
+            const temp = temps[hash % temps.length];
+            const cond = conds[hash % conds.length];
 
-    } else if (condition === 'snow') {
-        const wrap = document.createElement('div');
-        wrap.className = 'snow-wrap';
-        const cloud = document.createElement('div');
-        cloud.className = 'snow-cloud';
-        wrap.appendChild(cloud);
-        const flakeDefs = [
-            {left:12,top:40,dur:1.5,delay:0},
-            {left:28,top:40,dur:1.8,delay:0.4},
-            {left:44,top:40,dur:1.4,delay:0.2},
-            {left:58,top:40,dur:1.9,delay:0.6},
-            {left:72,top:40,dur:1.6,delay:0.1},
-        ];
-        flakeDefs.forEach(d => {
-            const fl = document.createElement('div');
-            fl.className = 'snowflake';
-            fl.textContent = '❄';
-            fl.style.cssText = `left:${d.left}px;top:${d.top}px;animation-duration:${d.dur}s;animation-delay:${d.delay}s;`;
-            wrap.appendChild(fl);
-        });
-        el.appendChild(wrap);
+            // Update UI sliders
+            document.getElementById('temp-slider').value = temp;
+            updateTempLabel();
+            document.querySelectorAll('.chip').forEach(c => {
+                if(c.textContent.includes(cond === 'sunny' ? 'Сонячно' : cond === 'cloudy' ? 'Хмарно' : cond === 'rainy' ? 'Дощ' : 'Сніг')) {
+                    selectCondition(cond, c);
+                }
+            });
 
-    } else if (condition === 'windy') {
-        const wrap = document.createElement('div');
-        wrap.className = 'wind-wrap';
-        const defs = [
-            {top:18,left:5,width:80,dur:1.5,delay:0},
-            {top:36,left:15,width:65,dur:1.8,delay:0.3},
-            {top:54,left:0,width:75,dur:1.4,delay:0.6},
-            {top:70,left:10,width:55,dur:1.9,delay:0.1},
-        ];
-        defs.forEach(d => {
-            const line = document.createElement('div');
-            line.className = 'wind-line';
-            line.style.cssText = `top:${d.top}px;left:${d.left}px;width:${d.width}px;animation-duration:${d.dur}s;animation-delay:${d.delay}s;`;
-            wrap.appendChild(line);
-        });
-        el.appendChild(wrap);
-    }
-}
+            document.getElementById('res-city').textContent = `Погода у: ${city}`;
+            applyManualWeather(temp, cond);
+        }
 
-// Condition label map
-const COND_LABELS = {
-    sunny: '☀️ Сонячно',
-    cloudy:'🌤️ Хмарно',
-    rainy: '🌧️ Дощ',
-    snow:  '❄️ Сніг',
-    windy: '💨 Вітер',
-};
+        function applyManualWeather(t, c) {
+            const temp = t !== undefined ? t : parseInt(document.getElementById('temp-slider').value);
+            const cond = c !== undefined ? c : currentCondition;
 
-// ============================================================
-// MAIN PICK OUTFIT
-// ============================================================
-function pickOutfit() {
-    const temp = parseInt(document.getElementById('temp-slider').value);
-    const condition = getCondition();
-    pickOutfitWithData(temp, condition, null, temp - 2);
-}
+            // Set Header
+            let sign = temp > 0 ? '+' : '';
+            document.getElementById('res-temp').textContent = `${sign}${temp}°C`;
+            
+            let icon = '☀️', anim = 'anim-sun', text = 'Сонячно';
+            if(cond === 'cloudy') { icon = '🌤️'; anim = 'anim-cloud'; text = 'Хмарно'; }
+            if(cond === 'rainy') { icon = '🌧️'; anim = 'anim-cloud'; text = 'Дощова погода'; }
+            if(cond === 'snowy') { icon = '❄️'; anim = 'anim-cloud'; text = 'Сніг'; }
+            if(temp < 0 && cond==='sunny') text = 'Ясно та морозно';
 
-function pickOutfitWithData(temp, condition, city, feelsLike) {
-    // Show loading overlay
-    document.getElementById('wo-empty').style.display = 'none';
-    const result = document.getElementById('wo-result');
-    result.classList.add('show');
-    const ov = document.getElementById('load-ov');
-    ov.classList.add('on');
+            document.getElementById('w-icon').innerHTML = `<span class="${anim}">${icon}</span>`;
+            document.getElementById('res-cond').textContent = text;
+            if(t===undefined) document.getElementById('res-city').textContent = 'Ручний вибір';
 
-    const msgs = [
-        'Аналіз погодних умов...',
-        'Підбір категорій одягу...',
-        'Пошук найкращих товарів...',
-        'Формуємо образ...',
-        'Майже готово...',
-    ];
-    let mi = 0;
-    const timer = setInterval(() => {
-        document.getElementById('ov-s-txt').textContent = msgs[mi % msgs.length];
-        mi++;
-    }, 550);
+            generateOutfit(temp, cond);
+        }
 
-    const pickBtn = document.getElementById('pick-btn');
-    const pickSpin = document.getElementById('pick-spin');
-    const pickTxt = document.getElementById('pick-btn-txt');
-    pickBtn.disabled = true;
-    pickSpin.style.display = 'inline-block';
-    pickTxt.textContent = 'Підбираємо...';
+        function generateOutfit(temp, cond) {
+            let depts = [];
+            let tips = [];
 
-    setTimeout(() => {
-        clearInterval(timer);
-        ov.classList.remove('on');
-        pickBtn.disabled = false;
-        pickSpin.style.display = 'none';
-        pickTxt.textContent = '👗 Підібрати образ';
-        renderResult(temp, condition, city, feelsLike);
-    }, 1800);
-}
+            if (temp >= 25) {
+                depts = ['Tops', 'Dresses', 'Intimate', 'Bottoms'];
+                tips = ['Легкі натуральні тканини (льон, бавовна)', 'Відкрите взуття та сонцезахисні окуляри', 'Світлі кольори відбивають сонячні промені'];
+            } else if (temp >= 15 && temp < 25) {
+                depts = ['Tops', 'Bottoms', 'Jackets', 'Dresses'];
+                tips = ['Ідеальна погода для багатошаровості', 'Джинсова куртка або легкий кардиган', 'Зручні кросівки або лофери'];
+                if(cond==='rainy') { depts.push('Jackets'); tips.push('Не забудьте тренч або водонепроникну куртку'); }
+            } else if (temp >= 5 && temp < 15) {
+                depts = ['Jackets', 'Bottoms', 'Tops'];
+                tips = ['Щільний денім або вовняні брюки', 'Теплий светр — основа образу', 'Пальто або куртка обов\'язкові'];
+            } else {
+                depts = ['Jackets', 'Bottoms'];
+                tips = ['Максимальне утеплення: термобілизна', 'Пуховик або тепле вовняне пальто', 'Об\'ємний шарф та шапка'];
+            }
 
-function renderResult(temp, condition, city, feelsLike) {
-    // Update weather card
-    document.getElementById('wx-city').textContent = city ? city.toUpperCase() : '— ВАША ЛОКАЦІЯ —';
-    document.getElementById('wx-temp').textContent = temp + '°C';
-    document.getElementById('wx-feels').textContent = `Відчувається як ${feelsLike !== null ? feelsLike : temp - 2}°C`;
-    document.getElementById('wx-cond').textContent = COND_LABELS[condition] || condition;
+            // Filter products
+            if(!allProducts.length) return;
+            let filtered = allProducts.filter(p => depts.includes(p.department_name));
 
-    // Build animated icon
-    buildWeatherIcon(condition);
+            // Personalization: If user has a style, heavily bias recommendations if we have tags (mock logic)
+            if (userStyle === 'boho') filtered = filtered.filter(p => !['Formal', 'Suit'].includes(p.class_name));
+            if (userStyle === 'minimalist') tips.push('💡 Ваш мінімалістичний стиль вимагає монохрому: обирайте базові кольори.');
+            
+            document.getElementById('tips-list').innerHTML = tips.map(t => `<li>${t.replace('💡 ', '')}</li>`).join('');
+            
+            // Exclude summer items for cold weather
+            if (temp < 15) {
+                filtered = filtered.filter(p => !['Shorts', 'Skirts', 'Swim', 'Intimates'].includes(p.class_name));
+            }
 
-    // Get outfit key and data
-    const key = getWeatherKey(temp, condition);
-    const outfit = WEATHER_MAP[key] || WEATHER_MAP['warm'];
+            if(filtered.length < 6) filtered = allProducts; // fallback
+            
+            // Randomize and select 6
+            filtered.sort(() => 0.5 - Math.random());
+            const selected = filtered.slice(0, 6);
 
-    // Update card colors
-    const card = document.getElementById('weather-card');
-    card.style.background = `linear-gradient(135deg,${outfit.bg},rgba(168,85,247,.1))`;
-    card.style.borderColor = outfit.border;
-
-    // Products
-    const cats = outfit.cats;
-    let picked = filterProducts(cats);
-
-    const prodGrid = document.getElementById('weather-products');
-    if (picked.length === 0) {
-        prodGrid.innerHTML = `<div class="no-products" style="grid-column:1/-1;">
-            <span class="icon">🛍️</span>
-            Товари для цієї погоди не знайдено.<br>
-            <a href="index.html" style="color:var(--purple);font-weight:600;">Переглянути всі товари →</a>
-        </div>`;
-    } else {
-        prodGrid.innerHTML = picked.map(p => {
-            const rating = p.avg_rating !== null ? p.avg_rating.toFixed(2) : '—';
-            const name = p.class_name || 'Одяг';
-            return `<a href="product.html?id=${p.clothing_id}" class="prod-card">
-                <img class="prod-img" src="static/${p.clothing_id}.jpg" alt="${name}"
-                    onerror="this.onerror=null;this.src='https://via.placeholder.com/160x150/1e1b4b/a855f7?text=${encodeURIComponent(name)}'">
-                <div class="prod-info">
-                    <div class="prod-cat">${name}</div>
-                    <div class="prod-name">ID: ${p.clothing_id}</div>
-                    <div class="prod-rating"><span class="star-gold">⭐</span> ${rating}</div>
-                </div>
-            </a>`;
-        }).join('');
-    }
-
-    // Tips
-    const tips = TIPS[key] || TIPS['warm'];
-    document.getElementById('weather-tips').innerHTML = tips.map(t =>
-        `<div class="tip-item"><div class="tip-dot"></div><div>${t}</div></div>`
-    ).join('');
-
-    // Scroll into view
-    document.getElementById('wo-result').scrollIntoView({ behavior:'smooth', block:'start' });
-}
-
-// Init temp display
-document.getElementById('temp-display').textContent = document.getElementById('temp-slider').value + '°C';
-</script>
+            document.getElementById('outfit-grid').innerHTML = selected.map(p => `
+                <a href="product.html?id=${p.clothing_id}" class="prod-card">
+                    <img src="static/${p.clothing_id}.jpg" class="prod-img" alt="${p.class_name}" 
+                         onerror="this.src='https://via.placeholder.com/200/1e1b4b/06b6d4?text=${encodeURIComponent(p.class_name||'Item')}'">
+                    <div class="prod-info">
+                        <div class="prod-cat">${p.class_name || p.department_name}</div>
+                        <div class="prod-name">${p.title || p.class_name}</div>
+                        <div class="prod-rating">⭐ ${p.avg_rating ? p.avg_rating.toFixed(1) : '—'}</div>
+                    </div>
+                </a>
+            `).join('');
+        }
+    </script>
 </body>
 </html>
