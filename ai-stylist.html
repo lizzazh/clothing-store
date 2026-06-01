@@ -859,11 +859,21 @@ function renderStaticTips(ST) {
 
 function pickProducts(occ,cat,minR){
     let pool=products.filter(p=>p.avg_rating!=null&&p.avg_rating>=minR);
+    
+    // Ніколи не рекомендувати купальники/білизну, якщо це не пляж
+    if (occ !== 'beach') {
+        pool = pool.filter(p => p.department_name !== 'Intimate' && p.class_name !== 'Swim');
+    }
+    
     const depts=DB.deptMap[occ]||[];
     if(cat){pool=pool.filter(p=>p.department_name===cat||p.class_name===cat);}
     else if(depts.length){pool=pool.filter(p=>depts.includes(p.department_name));}
     if(pool.length<4){
+        // fallback
         pool=products.filter(p=>p.avg_rating!=null&&p.avg_rating>=Math.max(1,minR-0.5));
+        if (occ !== 'beach') {
+            pool = pool.filter(p => p.department_name !== 'Intimate' && p.class_name !== 'Swim');
+        }
     }
     return [...pool].sort(()=>Math.random()-.5).slice(0,6);
 }
