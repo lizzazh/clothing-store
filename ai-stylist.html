@@ -155,6 +155,7 @@
         color:rgba(255,255,255,.65);font-size:12.5px;font-weight:500;
         cursor:pointer;transition:all .22s;user-select:none;
         font-family:'Outfit',sans-serif;
+        white-space:nowrap;
     }
     .chip:hover{border-color:rgba(168,85,247,.5);color:#fff;background:rgba(168,85,247,.1);}
     .chip.on{
@@ -420,7 +421,7 @@
         <div class="form-block">
             <span class="form-lbl">Привід / Подія</span>
             <div class="chips" id="g-occasion">
-                <div class="chip on" data-v="casual">👟 Повсякден</div>
+        <div class="chip on" data-v="casual">👟 Повсякденне</div>
                 <div class="chip" data-v="work">💼 Офіс</div>
                 <div class="chip" data-v="date">🌹 Побачення</div>
                 <div class="chip" data-v="party">🎉 Вечірка</div>
@@ -838,9 +839,15 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
     // Build product list string
     const prodNames = picks.map(p => p.title || p.class_name).join(", ");
     const bodyLabel = BODY_LABELS[body] || profile.body || 'не вказано';
-    const prompt = `Ти професійний модний стиліст бренду Elizabeth's Elegance. Твій клієнт: ${profile.name||'Дівчина'}, вік: ${profile.age||'не вказано'}, тип фігури: ${bodyLabel}. Її улюблений стиль: ${ST.label||stl}, настрій: ${moodTxt||mood}. Подія: ${O.label||occ}, сезон: ${S.label||seas}. Додаткове побажання: ${custom || 'немає'}. 
-Ти пропонуєш одяг: ${prodNames}.
-Напиши один короткий, натхненний і персоналізований абзац (до 4-5 речень) тексту, звертаючись до клієнта. Поясни, чому ці речі ідеально підходять саме їй, її типу фігури (${bodyLabel}) та нагоді. Пиши красиво, українською мовою.`;
+    const prompt = `Ти — топовий модний стиліст бренду Elizabeth's Elegance. Твій клієнт: ${profile.name||'Дівчина'}, вік: ${profile.age||'не вказано'}, тип фігури: ${bodyLabel}. Улюблений стиль: ${ST.label||stl}, настрій: ${moodTxt||mood}. Подія: ${O.label||occ}, сезон: ${S.label||seas}. Додаткове побажання: ${custom || 'немає'}.
+Ти підібрала для неї такий одяг: ${prodNames}.
+
+Напиши розгорнуту пораду стиліста (5-7 речень) українською мовою. Обов'язково включи:
+1. Чому саме цей одяг підходить для її фігури (${bodyLabel}) та події.
+2. Конкретні поради щодо аксесуарів: яка сумочка (клатч, шопер, кросбоді?), яке взуття (каблук, балетки, кеди?), яка прикраса підійде.
+3. Пораду щодо укладки або макіяжу під цей образ.
+4. Де можна носити цей образ (конкретне місце або подія).
+Пиши тепло, надихаюче, ніби розмовляєш з подругою. Без зайвих пунктів і нумерації — суцільний красивий текст.`;
 
     fetch("/api/gemini", {
         method: "POST",
