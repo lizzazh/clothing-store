@@ -854,7 +854,14 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
     })
-    .then(r => r.json())
+    .then(async r => {
+        if(!r.ok) {
+            const errData = await r.json().catch(()=>({}));
+            if(r.status === 429) throw new Error("Ліміт запитів до Gemini вичерпано (Помилка 429). Спробуйте пізніше або оновіть API ключ.");
+            throw new Error(errData.error || `Server responded with status ${r.status}`);
+        }
+        return r.json();
+    })
     .then(data => {
         if(data.candidates && data.candidates[0].content.parts[0].text) {
             let aiText = data.candidates[0].content.parts[0].text;
@@ -862,7 +869,7 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
             aiText = aiText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
             document.getElementById('tips').innerHTML = `<div class="tip-item" style="display:block; padding:15px; border-radius:12px; background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.3); line-height:1.6;"><b style="color:var(--ai-purple); margin-bottom:10px; display:block;">✨ Вердикт ШІ (Gemini):</b> ${aiText}</div>`;
         } else {
-            throw new Error("Invalid response or missing API key on server");
+            throw new Error("Invalid response from Gemini API");
         }
     })
     .catch(err => {
