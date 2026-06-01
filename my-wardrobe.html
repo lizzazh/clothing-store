@@ -304,8 +304,16 @@ dropZone.addEventListener('dragover', () => dropZone.classList.add('drag-over'))
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
 dropZone.addEventListener('drop', e => {
     dropZone.classList.remove('drag-over');
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) processFile(file);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        const file = e.dataTransfer.files[0];
+        // Telegram often sends files with empty type or weird types
+        const isImage = file.type.startsWith('image/') || 
+                        file.name.match(/\.(jpg|jpeg|png|webp|gif|heic)$/i) || 
+                        file.type === ''; 
+        if (isImage) {
+            processFile(file);
+        }
+    }
 });
 
 function onFileSelect(e) {
