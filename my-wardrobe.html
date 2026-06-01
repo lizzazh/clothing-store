@@ -504,7 +504,7 @@ async function generateCapsule() {
         const keyData = await keyRes.json();
         if(!keyData.key) throw new Error("API ключ не знайдено на сервері");
 
-        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${keyData.key}`, {
+        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${keyData.key}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: modePrompts[currentMode] }] }] })
@@ -530,7 +530,7 @@ async function generateCapsule() {
             throw new Error('empty response');
         }
     } catch(err) {
-        document.getElementById('ai-text').innerHTML = `<span style="color:#f87171;">⚠️ Не вдалося зв'язатись з Gemini. Перевірте, чи правильно вказано API-ключ у налаштуваннях Cloudflare.</span>`;
+        document.getElementById('ai-text').innerHTML = `<span style="color:#f87171;">⚠️ Помилка Gemini: ${err.message}</span>`;
     }
 
     btn.disabled = false;

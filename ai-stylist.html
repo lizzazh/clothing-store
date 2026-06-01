@@ -854,7 +854,7 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
     .then(keyData => {
         if(!keyData.key) throw new Error("API ключ не знайдено на сервері");
         
-        return fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${keyData.key}`, {
+        return fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${keyData.key}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -879,7 +879,7 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
     })
     .catch(err => {
         console.error("Gemini Error:", err);
-        document.getElementById('tips').innerHTML = `<div class="tip-item" style="color: #ef4444;">⚠️ ${err.message}. Тим часом показуємо базові поради:</div>`;
+        document.getElementById('tips').innerHTML = `<div class="tip-item" style="color: #ef4444;">⚠️ Помилка: ${err.message}. Тим часом показуємо базові поради:</div>`;
         document.getElementById('tips').innerHTML += (ST.tips||[]).map(t=>
             `<div class="tip-item"><div class="tip-dot"></div><span>${t}</span></div>`
         ).join('');
