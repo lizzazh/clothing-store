@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI Stylist — Ваш інтелектуальний цифровий стиліст Elizabeth's Elegance. Отримайте персональні рекомендації образу на основі контексту та ШІ.">
+    <title>AI Stylist ✨ — Elizabeth's Elegance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+    /* =========================================================
+       AI Stylist — Premium Dark Page
+    ========================================================= */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+        --ai-purple:#a855f7;--ai-pink:#ec4899;--ai-gold:#f59e0b;
+        --ai-cyan:#06b6d4;--ai-green:#10b981;
+        --glass-bg:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.12);
+        --glass-shadow:0 8px 32px rgba(0,0,0,0.35);
+    }
+
+    html{scroll-behavior:smooth;}
+    body{
+        font-family:'Outfit',sans-serif;
+        background:#0f0c29;
+        min-height:100vh;
+        color:#f1f5f9;
+        padding:0;
+        line-height:1.6;
+        overflow-x:hidden;
+    }
+
+    /* Animated gradient BG */
+    body::before{
+        content:'';position:fixed;inset:0;z-index:-2;
+        background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);
+    }
+    body::after{
+        content:'';position:fixed;inset:0;z-index:-1;
+        background:
+            radial-gradient(ellipse at 15% 15%, rgba(168,85,247,0.18) 0%, transparent 45%),
+            radial-gradient(ellipse at 85% 80%, rgba(236,72,153,0.14) 0%, transparent 45%),
+            radial-gradient(ellipse at 50% 50%, rgba(6,182,212,0.07) 0%, transparent 55%);
+        animation:bgPulse 12s ease-in-out infinite alternate;
+        pointer-events:none;
+    }
+    @keyframes bgPulse{
+        from{opacity:0.8;}
+        to{opacity:1;}
+    }
+
+    /* Particles */
+    #particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+    .dot{
+        position:absolute;border-radius:50%;
+        background:rgba(255,255,255,0.55);
+        animation:floatUp linear infinite;
+    }
+    @keyframes floatUp{
+        0%{transform:translateY(110vh);opacity:0;}
+        8%{opacity:0.6;}
+        92%{opacity:0.6;}
+        100%{transform:translateY(-10vh);opacity:0;}
+    }
+
+    a{color:inherit;text-decoration:none;}
+
+    /* ---- TOP NAV ---- */
+    .ai-nav{
+        position:relative;z-index:20;
+        display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;
+        padding:20px 40px;
+        border-bottom:1px solid var(--glass-border);
+        background:rgba(15,12,41,0.6);
+        backdrop-filter:blur(20px);
+    }
+    .ai-brand{
+        font-family:'Great Vibes',cursive;font-size:34px;
+        color:white;
+        filter:drop-shadow(0 0 18px rgba(168,85,247,0.5));
+        transition:filter .3s;
+    }
+    .ai-brand:hover{filter:drop-shadow(0 0 28px rgba(236,72,153,0.7));}
+    .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
+    .nav-link{
+        color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;
+        padding:8px 16px;border-radius:20px;
+        border:1px solid var(--glass-border);background:var(--glass-bg);
+        transition:all .25s;
+    }
+    .nav-link:hover,.nav-link.active{
+        color:#fff;background:rgba(168,85,247,0.18);
+        border-color:rgba(168,85,247,0.45);
+    }
+
+    /* ---- HERO ---- */
+    .ai-hero{
+        position:relative;z-index:10;
+        text-align:center;padding:60px 20px 45px;
+    }
+    .ai-badge{
+        display:inline-flex;align-items:center;gap:8px;
+        background:linear-gradient(135deg,rgba(168,85,247,.18),rgba(236,72,153,.18));
+        border:1px solid rgba(168,85,247,.35);border-radius:30px;
+        padding:8px 22px;font-size:12px;font-weight:700;
+        color:var(--ai-purple);letter-spacing:1px;text-transform:uppercase;
+        margin-bottom:22px;
+    }
+    .ai-badge::before{content:'✨';}
+    h1.ai-title{
+        font-family:'Great Vibes',cursive;
+        font-size:clamp(52px,9vw,88px);font-weight:400;
+        background:linear-gradient(135deg,#fff 0%,var(--ai-purple) 45%,var(--ai-pink) 100%);
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        margin-bottom:16px;line-height:1.1;
+    }
+    .ai-subtitle{
+        font-size:16px;color:rgba(255,255,255,.6);
+        max-width:560px;margin:0 auto 10px;font-weight:300;
+    }
+
+    /* ---- MAIN GRID ---- */
+    .ai-grid{
+        position:relative;z-index:10;
+        display:grid;grid-template-columns:400px 1fr;gap:28px;
+        max-width:1380px;margin:0 auto;padding:10px 30px 80px;
+        align-items:start;
+    }
+
+    /* ---- INPUT PANEL ---- */
+    .input-panel{
+        background:rgba(255,255,255,.045);
+        backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+        border:1px solid var(--glass-border);border-radius:24px;
+        padding:32px;box-shadow:var(--glass-shadow);
+        position:sticky;top:20px;
+    }
+    .panel-heading{
+        font-size:18px;font-weight:700;color:#fff;
+        margin-bottom:24px;display:flex;align-items:center;gap:10px;
+    }
+    .panel-heading span{
+        background:linear-gradient(135deg,var(--ai-purple),var(--ai-pink));
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .form-block{margin-bottom:22px;}
+    .form-lbl{
+        display:block;font-size:11px;font-weight:700;
+        color:rgba(255,255,255,.55);text-transform:uppercase;
+        letter-spacing:1.2px;margin-bottom:9px;
+    }
+    .chips{display:flex;flex-wrap:wrap;gap:7px;}
+    .chip{
+        padding:7px 15px;border-radius:20px;
+        border:1px solid var(--glass-border);background:rgba(255,255,255,.05);
+        color:rgba(255,255,255,.65);font-size:12.5px;font-weight:500;
+        cursor:pointer;transition:all .22s;user-select:none;
+        font-family:'Outfit',sans-serif;
+    }
+    .chip:hover{border-color:rgba(168,85,247,.5);color:#fff;background:rgba(168,85,247,.1);}
+    .chip.on{
+        background:linear-gradient(135deg,rgba(168,85,247,.3),rgba(236,72,153,.3));
+        border-color:rgba(168,85,247,.65);color:#fff;
+        box-shadow:0 0 12px rgba(168,85,247,.22);
+    }
+
+    .ai-sel,.ai-area{
+        width:100%;padding:13px 18px;border-radius:13px;
+        border:1px solid var(--glass-border);background:rgba(255,255,255,.07);
+        color:#fff;font-family:'Outfit',sans-serif;font-size:14px;
+        outline:none;transition:all .3s;
+    }
+    .ai-sel option{background:#1e1b4b;color:#fff;}
+    .ai-sel:focus,.ai-area:focus{
+        border-color:rgba(168,85,247,.55);background:rgba(168,85,247,.08);
+        box-shadow:0 0 0 3px rgba(168,85,247,.1);
+    }
+    .ai-area{resize:vertical;min-height:82px;}
+    .ai-area::placeholder,.ai-sel::placeholder{color:rgba(255,255,255,.3);}
+
+    .rating-row{display:flex;align-items:center;gap:12px;}
+    .rating-row input[type=range]{
+        flex:1;accent-color:var(--ai-purple);cursor:pointer;
+        height:4px;
+    }
+    .rating-val{color:var(--ai-purple);font-weight:700;min-width:28px;text-align:center;}
+
+    .gen-btn{
+        width:100%;padding:17px;border:none;border-radius:15px;
+        background:linear-gradient(135deg,#7c3aed,#a855f7,#ec4899);
+        color:#fff;font-family:'Outfit',sans-serif;
+        font-size:15px;font-weight:700;cursor:pointer;
+        transition:all .3s;position:relative;overflow:hidden;
+        letter-spacing:.5px;
+    }
+    .gen-btn::after{
+        content:'';position:absolute;inset:0;
+        background:linear-gradient(135deg,rgba(255,255,255,.12),transparent);
+        opacity:0;transition:opacity .3s;
+    }
+    .gen-btn:hover::after{opacity:1;}
+    .gen-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(168,85,247,.4);}
+    .gen-btn:active{transform:translateY(0);}
+    .gen-btn.busy{pointer-events:none;opacity:.82;}
+    .gen-btn .inner{display:flex;align-items:center;justify-content:center;gap:10px;}
+    .spin{display:none;width:17px;height:17px;border:2px solid rgba(255,255,255,.25);
+        border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite;}
+    .busy .spin{display:block;}
+    @keyframes s{to{transform:rotate(360deg);}}
+
+    /* ---- OUTPUT PANEL ---- */
+    .out-panel{min-height:500px;position:relative;}
+
+    .empty-state{
+        display:flex;flex-direction:column;align-items:center;
+        justify-content:center;min-height:520px;text-align:center;padding:40px;
+    }
+    .empty-icon{font-size:72px;margin-bottom:18px;
+        animation:wobble 3.5s ease-in-out infinite;}
+    @keyframes wobble{
+        0%,100%{transform:rotate(-6deg) scale(1);}
+        50%{transform:rotate(6deg) scale(1.1);}
+    }
+    .empty-h{font-size:24px;font-weight:700;color:#fff;margin-bottom:10px;}
+    .empty-p{font-size:15px;color:rgba(255,255,255,.48);max-width:320px;line-height:1.65;}
+
+    /* Result */
+    .result{display:none;animation:up .55s ease;}
+    .result.show{display:block;}
+    @keyframes up{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:none;}}
+
+    /* Loading overlay */
+    .ov{
+        display:none;position:absolute;inset:0;
+        background:rgba(15,12,41,.88);backdrop-filter:blur(12px);
+        border-radius:20px;z-index:50;
+        flex-direction:column;align-items:center;justify-content:center;gap:18px;
+    }
+    .ov.on{display:flex;}
+    .big-spin{
+        width:56px;height:56px;border-radius:50%;
+        border:3px solid rgba(168,85,247,.2);
+        border-top-color:var(--ai-purple);
+        border-right-color:var(--ai-pink);
+        animation:s 1s linear infinite;
+    }
+    .ov-t{font-size:15px;font-weight:600;color:rgba(255,255,255,.8);}
+    .ov-s{font-size:12px;color:rgba(255,255,255,.38);}
+
+    /* Result header card */
+    .r-head{
+        background:linear-gradient(135deg,rgba(124,58,237,.28),rgba(236,72,153,.18));
+        border:1px solid rgba(168,85,247,.3);
+        border-radius:22px;padding:30px;margin-bottom:22px;
+        position:relative;overflow:hidden;
+    }
+    .r-head::after{content:'✨';position:absolute;right:22px;top:18px;
+        font-size:38px;opacity:.25;pointer-events:none;}
+    .r-occasion{font-size:11px;font-weight:700;text-transform:uppercase;
+        letter-spacing:2px;color:var(--ai-purple);margin-bottom:7px;}
+    .r-name{font-family:'Great Vibes',cursive;font-size:clamp(32px,5vw,50px);
+        color:#fff;filter:drop-shadow(0 0 12px rgba(168,85,247,.4));margin-bottom:12px;}
+    .r-desc{font-size:14px;color:rgba(255,255,255,.65);line-height:1.7;max-width:600px;}
+
+    .tag-row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px;}
+    .tag{
+        padding:7px 16px;border-radius:20px;font-size:12.5px;font-weight:600;color:#fff;
+        backdrop-filter:blur(6px);
+    }
+
+    /* Palette */
+    .palette-box{
+        background:var(--glass-bg);border:1px solid var(--glass-border);
+        border-radius:18px;padding:22px;margin-bottom:22px;
+    }
+    .sec-label{font-size:11px;font-weight:700;text-transform:uppercase;
+        letter-spacing:1.2px;color:rgba(255,255,255,.6);
+        margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+    .swatches{display:flex;gap:14px;flex-wrap:wrap;}
+    .sw{
+        position:relative;width:44px;height:44px;border-radius:50%;
+        border:2px solid rgba(255,255,255,.1);cursor:pointer;
+        transition:transform .2s;
+    }
+    .sw:hover{transform:scale(1.18);}
+    .sw-lbl{
+        position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);
+        font-size:9px;color:rgba(255,255,255,.45);white-space:nowrap;
+    }
+
+    /* Products */
+    .products-grid{
+        display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));
+        gap:14px;margin-bottom:22px;
+    }
+    .prod-card{
+        background:var(--glass-bg);border:1px solid var(--glass-border);
+        border-radius:15px;overflow:hidden;transition:all .3s;
+        cursor:pointer;text-decoration:none;display:block;
+    }
+    .prod-card:hover{
+        border-color:rgba(168,85,247,.45);transform:translateY(-5px);
+        box-shadow:0 10px 28px rgba(168,85,247,.2);
+    }
+    .prod-img{width:100%;height:150px;object-fit:contain;
+        background:rgba(255,255,255,.04);display:block;}
+    .prod-info{padding:11px 13px;}
+    .prod-cat{font-size:10px;font-weight:700;text-transform:uppercase;
+        letter-spacing:1px;color:var(--ai-purple);margin-bottom:3px;}
+    .prod-name{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.9);
+        margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .prod-rating{font-size:11.5px;color:rgba(255,255,255,.48);
+        display:flex;align-items:center;gap:4px;}
+    .star-gold{color:var(--ai-gold);}
+
+    /* Tips */
+    .tips-box{
+        background:linear-gradient(135deg,rgba(6,182,212,.1),rgba(16,185,129,.1));
+        border:1px solid rgba(6,182,212,.22);border-radius:18px;padding:22px;
+        margin-bottom:22px;
+    }
+    .tip-item{display:flex;align-items:flex-start;gap:11px;
+        margin-bottom:10px;color:rgba(255,255,255,.72);font-size:13.5px;line-height:1.5;}
+    .tip-item:last-child{margin-bottom:0;}
+    .tip-dot{width:5px;height:5px;background:var(--ai-cyan);border-radius:50%;
+        margin-top:7px;flex-shrink:0;}
+
+    /* Action buttons */
+    .action-row{display:flex;gap:12px;flex-wrap:wrap;}
+    .act-btn{
+        display:inline-flex;align-items:center;gap:8px;
+        padding:13px 24px;border-radius:13px;
+        border:1px solid rgba(168,85,247,.4);background:rgba(168,85,247,.1);
+        color:var(--ai-purple);font-family:'Outfit',sans-serif;
+        font-size:13.5px;font-weight:600;cursor:pointer;transition:all .3s;
+    }
+    .act-btn:hover{background:rgba(168,85,247,.2);transform:translateY(-2px);
+        box-shadow:0 5px 18px rgba(168,85,247,.2);}
+    .act-btn.cyan{border-color:rgba(6,182,212,.4);background:rgba(6,182,212,.1);color:var(--ai-cyan);}
+    .act-btn.cyan:hover{background:rgba(6,182,212,.2);box-shadow:0 5px 18px rgba(6,182,212,.2);}
+
+    /* ---- INSPIRATION SECTION ---- */
+    .inspo{position:relative;z-index:10;max-width:1380px;
+        margin:0 auto;padding:20px 30px 80px;}
+    .sec-head{text-align:center;margin-bottom:32px;}
+    .sec-head h2{font-family:'Great Vibes',cursive;font-size:clamp(36px,6vw,58px);
+        background:linear-gradient(135deg,#fff,var(--ai-purple));
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+        background-clip:text;margin-bottom:8px;}
+    .sec-head p{color:rgba(255,255,255,.45);font-size:14px;}
+    .style-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px;}
+    .sty-card{
+        border-radius:18px;padding:24px;text-align:center;cursor:pointer;
+        transition:all .3s;border:1px solid var(--glass-border);
+        background:var(--glass-bg);backdrop-filter:blur(10px);
+    }
+    .sty-card:hover{transform:translateY(-8px);border-color:rgba(168,85,247,.4);
+        box-shadow:0 15px 40px rgba(168,85,247,.15);}
+    .sty-icon{font-size:34px;margin-bottom:10px;display:block;}
+    .sty-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:5px;}
+    .sty-desc{font-size:12px;color:rgba(255,255,255,.45);}
+
+    /* Toast */
+    .toast{
+        position:fixed;bottom:30px;right:30px;z-index:9999;
+        background:linear-gradient(135deg,#7c3aed,#ec4899);
+        color:#fff;padding:13px 22px;border-radius:13px;
+        font-size:13.5px;font-weight:600;
+        box-shadow:0 10px 28px rgba(168,85,247,.4);
+        animation:up .4s ease;transition:opacity .4s;
+    }
+
+    /* Responsive */
+    @media(max-width:1050px){
+        .ai-grid{grid-template-columns:1fr;}
+        .input-panel{position:static;}
+    }
+    @media(max-width:680px){
+        .ai-nav{padding:15px 20px;}
+        .ai-grid{padding:10px 15px 60px;}
+        .inspo{padding:10px 15px 60px;}
+        .products-grid{grid-template-columns:repeat(2,1fr);}
+        h1.ai-title{font-size:52px;}
+    }
+    @media(max-width:400px){
+        .products-grid{grid-template-columns:1fr;}
+    }
+    </style>
+</head>
+<body>
+<div id="particles"></div>
+
+<!-- NAV -->
+<nav class="ai-nav">
+    <a href="index.html" class="ai-brand">Elizabeth's Elegance</a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Головна</a>
+        <a href="search.html" class="nav-link">🔍 Пошук</a>
+        <a href="age-recommendations.html" class="nav-link">👤 За віком</a>
+        <a href="category-stats.html" class="nav-link">📊 Статистика</a>
+        <a href="ai-stylist.html" class="nav-link active">✨ AI Stylist</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="ai-hero">
+    <div class="ai-badge">Powered by Style Intelligence</div>
+    <h1 class="ai-title">AI Stylist</h1>
+    <p class="ai-subtitle">
+        Ваш персональний цифровий стиліст. Оберіть контекст — отримайте готовий образ 
+        з підібраними товарами з нашого каталогу.
+    </p>
+</div>
+
+<!-- MAIN GRID -->
+<div class="ai-grid">
+
+    <!-- INPUT PANEL -->
+    <div class="input-panel">
+        <div class="panel-heading">🎨 <span>Налаштування образу</span></div>
+
+        <div class="form-block">
+            <span class="form-lbl">Привід / Подія</span>
+            <div class="chips" id="g-occasion">
+                <div class="chip on" data-v="casual">👟 Повсякден</div>
+                <div class="chip" data-v="work">💼 Офіс</div>
+                <div class="chip" data-v="date">🌹 Побачення</div>
+                <div class="chip" data-v="party">🎉 Вечірка</div>
+                <div class="chip" data-v="sport">🏃 Спорт</div>
+                <div class="chip" data-v="beach">🏖️ Пляж</div>
+                <div class="chip" data-v="formal">🎭 Формальне</div>
+                <div class="chip" data-v="vacation">✈️ Подорож</div>
+            </div>
+        </div>
+
+        <div class="form-block">
+            <span class="form-lbl">Сезон</span>
+            <div class="chips" id="g-season">
+                <div class="chip on" data-v="spring">🌸 Весна</div>
+                <div class="chip" data-v="summer">☀️ Літо</div>
+                <div class="chip" data-v="autumn">🍂 Осінь</div>
+                <div class="chip" data-v="winter">❄️ Зима</div>
+            </div>
+        </div>
+
+        <div class="form-block">
+            <span class="form-lbl">Стиль</span>
+            <div class="chips" id="g-style">
+                <div class="chip on" data-v="classic">🖤 Класика</div>
+                <div class="chip" data-v="boho">🌿 Бохо</div>
+                <div class="chip" data-v="minimalist">⬜ Мінімалізм</div>
+                <div class="chip" data-v="romantic">🌺 Романтика</div>
+                <div class="chip" data-v="street">🧢 Стрітвер</div>
+                <div class="chip" data-v="elegant">💫 Елегантність</div>
+            </div>
+        </div>
+
+        <div class="form-block">
+            <span class="form-lbl">Настрій</span>
+            <div class="chips" id="g-mood">
+                <div class="chip on" data-v="confident">💪 Впевнений</div>
+                <div class="chip" data-v="playful">🎈 Грайливий</div>
+                <div class="chip" data-v="mysterious">🌙 Загадковий</div>
+                <div class="chip" data-v="relaxed">😌 Розслаблений</div>
+                <div class="chip" data-v="powerful">⚡ Сильний</div>
+            </div>
+        </div>
+
+        <div class="form-block">
+            <span class="form-lbl">Тип одягу (фокус)</span>
+            <select class="ai-sel" id="cat-pref">
+                <option value="">Будь-який</option>
+                <option value="Dresses">Сукні</option>
+                <option value="Tops">Топи</option>
+                <option value="Bottoms">Низ</option>
+                <option value="Jackets">Куртки</option>
+                <option value="Intimate">Нижня білизна</option>
+            </select>
+        </div>
+
+        <div class="form-block">
+            <span class="form-lbl">Ваш запит (необов'язково)</span>
+            <textarea class="ai-area" id="custom-txt"
+                placeholder="Наприклад: корпоратив у п'ятницю, хочу стильно але невимушено..."></textarea>
+        </div>
+
+        <div class="form-block">
+            <span class="form-lbl">Мінімальний рейтинг товарів</span>
+            <div class="rating-row">
+                <input type="range" id="r-slide" min="1" max="5" step="0.5" value="4" oninput="rateLabel()">
+                <span class="rating-val" id="r-val">4.0</span>
+                <span style="color:rgba(255,255,255,.35);font-size:13px;">⭐</span>
+            </div>
+        </div>
+
+        <button class="gen-btn" id="gen-btn" onclick="generate()">
+            <div class="inner"><div class="spin"></div><span id="btn-txt">✨ Створити образ</span></div>
+        </button>
+    </div>
+
+    <!-- OUTPUT PANEL -->
+    <div class="out-panel" id="out-panel">
+
+        <!-- Empty -->
+        <div class="empty-state" id="empty">
+            <div class="empty-icon">🪄</div>
+            <div class="empty-h">Готові до магії стилю?</div>
+            <div class="empty-p">Налаштуйте параметри образу та натисніть «Створити образ» — AI підбере ідеальне поєднання товарів.</div>
+        </div>
+
+        <!-- Result -->
+        <div class="result" id="result">
+            <!-- Loading overlay -->
+            <div class="ov" id="ov">
+                <div class="big-spin"></div>
+                <div class="ov-t">Підбираємо ваш образ...</div>
+                <div class="ov-s" id="ov-s">Аналіз стилістичних параметрів</div>
+            </div>
+
+            <div class="r-head">
+                <div class="r-occasion" id="r-occ"></div>
+                <div class="r-name" id="r-name"></div>
+                <div class="r-desc" id="r-desc"></div>
+            </div>
+
+            <div class="tag-row" id="tags"></div>
+
+            <div class="palette-box">
+                <div class="sec-label">🎨 Кольорова палітра образу</div>
+                <div class="swatches" id="swatches"></div>
+            </div>
+
+            <div class="sec-label" style="margin-bottom:14px;">🛍️ Рекомендовані товари</div>
+            <div class="products-grid" id="prods"></div>
+
+            <div class="tips-box">
+                <div class="sec-label" style="color:var(--ai-cyan);">💡 Поради стиліста</div>
+                <div id="tips"></div>
+            </div>
+
+            <div class="action-row">
+                <button class="act-btn" onclick="generate()">🔄 Новий варіант</button>
+                <button class="act-btn cyan" onclick="share()">🔗 Поділитись</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- INSPIRATION -->
+<div class="inspo">
+    <div class="sec-head">
+        <h2>Стилі для натхнення</h2>
+        <p>Натисніть на стиль, щоб швидко застосувати налаштування</p>
+    </div>
+    <div class="style-grid">
+        <div class="sty-card" onclick="preset('corporate')">
+            <span class="sty-icon">💼</span>
+            <div class="sty-name">Corporate Chic</div>
+            <div class="sty-desc">Офісний шик для сучасної ділової жінки</div>
+        </div>
+        <div class="sty-card" onclick="preset('boho')">
+            <span class="sty-icon">🌿</span>
+            <div class="sty-name">Boho Dream</div>
+            <div class="sty-desc">Вільний дух та природня краса</div>
+        </div>
+        <div class="sty-card" onclick="preset('nightout')">
+            <span class="sty-icon">🌙</span>
+            <div class="sty-name">Night Out</div>
+            <div class="sty-desc">Вечірній образ, що вражає</div>
+        </div>
+        <div class="sty-card" onclick="preset('casual')">
+            <span class="sty-icon">😎</span>
+            <div class="sty-name">Casual Cool</div>
+            <div class="sty-desc">Невимушений стиль на кожен день</div>
+        </div>
+        <div class="sty-card" onclick="preset('romantic')">
+            <span class="sty-icon">🌹</span>
+            <div class="sty-name">Romantic Mood</div>
+            <div class="sty-desc">Чарівний образ для особливого вечора</div>
+        </div>
+        <div class="sty-card" onclick="preset('sport')">
+            <span class="sty-icon">⚡</span>
+            <div class="sty-name">Sport Luxe</div>
+            <div class="sty-desc">Активна жінка — стильна жінка</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// PARTICLES
+// ============================================================
+(function(){
+    const c=document.getElementById('particles');
+    for(let i=0;i<45;i++){
+        const d=document.createElement('div');
+        d.className='dot';
+        const sz=Math.random()*3+1;
+        d.style.cssText=`
+            width:${sz}px;height:${sz}px;
+            left:${Math.random()*100}%;
+            animation-duration:${Math.random()*18+9}s;
+            animation-delay:${Math.random()*14}s;
+            opacity:${Math.random()*.6+.1};
+        `;
+        c.appendChild(d);
+    }
+})();
+
+// ============================================================
+// CHIP GROUPS (single-select)
+// ============================================================
+document.querySelectorAll('.chips').forEach(g=>{
+    g.querySelectorAll('.chip').forEach(c=>{
+        c.addEventListener('click',()=>{
+            g.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+            c.classList.add('on');
+        });
+    });
+});
+
+function getChip(id){
+    return document.querySelector('#'+id+' .chip.on')?.dataset.v||'';
+}
+function setChip(id,v){
+    document.querySelectorAll('#'+id+' .chip').forEach(c=>{
+        c.classList.toggle('on',c.dataset.v===v);
+    });
+}
+
+function rateLabel(){
+    const v=document.getElementById('r-slide').value;
+    document.getElementById('r-val').textContent=parseFloat(v).toFixed(1);
+}
+
+// ============================================================
+// PRODUCTS DATA
+// ============================================================
+let products=[];
+(async function(){
+    try{
+        const r=await fetch('data/products.json');
+        if(r.ok) products=await r.json();
+    }catch(e){console.warn('Demo mode (no server)');}
+})();
+
+// ============================================================
+// STYLE DATABASE
+// ============================================================
+const DB={
+    occasion:{
+        casual:  {label:'Повсякденний образ',emoji:'👟',color:'#10b981'},
+        work:    {label:'Діловий образ',    emoji:'💼',color:'#3b82f6'},
+        date:    {label:'Образ на побачення',emoji:'🌹',color:'#ec4899'},
+        party:   {label:'Вечірній образ',   emoji:'🎉',color:'#f59e0b'},
+        sport:   {label:'Спортивний образ', emoji:'🏃',color:'#06b6d4'},
+        beach:   {label:'Пляжний образ',    emoji:'🏖️',color:'#f97316'},
+        formal:  {label:'Офіційний образ',  emoji:'🎭',color:'#8b5cf6'},
+        vacation:{label:'Образ для подорожі',emoji:'✈️',color:'#14b8a6'},
+    },
+    season:{
+        spring:{label:'Весна',colors:['#F9A8D4','#FDE68A','#A7F3D0','#C7D2FE'],names:['Рожевий','Жовтий','М\'ятний','Лавандовий']},
+        summer:{label:'Літо', colors:['#FCA5A5','#FCD34D','#6EE7B7','#93C5FD'],names:['Коралевий','Сонячний','Смарагд','Блакитний']},
+        autumn:{label:'Осінь',colors:['#D97706','#92400E','#78350F','#6B7280'],names:['Гарбуз','Шоколад','Теракота','Сірий']},
+        winter:{label:'Зима', colors:['#1E3A5F','#475569','#94A3B8','#F1F5F9'],names:['Морський','Сланець','Лід','Сніговий']},
+    },
+    style:{
+        classic:   {adj:'класичний та витончений',  tips:['Ставте на якість тканин','Уникайте надмірних деталей','Нейтральна палітра — ваш друг']},
+        boho:      {adj:'вільний та богемний',       tips:['Шарування текстур','Етнічні акценти','Натуральні матеріали']},
+        minimalist:{adj:'мінімалістичний та чистий', tips:['Один фокусний елемент','Монохром або 2 кольори','Якість важливіша за кількість']},
+        romantic:  {adj:'романтичний та ніжний',     tips:['Легкі тканини','Флоральні мотиви','Пастельні відтінки']},
+        street:    {adj:'вуличний та сміливий',      tips:['Грайте з пропорціями','Оверсайз + облягаючий','Яскраві акценти']},
+        elegant:   {adj:'елегантний та розкішний',   tips:['Монохромний образ','Мінімум прикрас — максимум ефекту','Ідеальний силует']},
+    },
+    mood:{
+        confident: '💪 Ви випромінюєте впевненість — це найкраша прикраса',
+        playful:   '🎈 Грайливий настрій заразний. Посміхайтесь!',
+        mysterious:'🌙 Загадковість привертає погляди краще за будь-що',
+        relaxed:   '😌 Комфорт — це теж стиль, і ще який',
+        powerful:  '⚡ Сила та стиль завжди ідуть поруч',
+    },
+    names:{
+        casual:  ['Fresh Start','Sunday Vibe','Easy Going','Urban Walk','Daily Bloom'],
+        work:    ['Power Suit','Office Grace','Business Bloom','The Executive','Sharp & Chic'],
+        date:    ['First Impression','Midnight Rose','Golden Hour','Love Story','Cherry Kiss'],
+        party:   ['Center Stage','Sparkle Night','The Statement','Glow Up','Disco Queen'],
+        sport:   ['Active Beauty','Move & Shine','Power Play','Athleisure Queen'],
+        beach:   ['Ocean Dream','Sandy Glow','Coastal Breeze','Wave Rider'],
+        formal:  ['Black Tie Affair','Gala Queen','Signature Look','Grande Dame'],
+        vacation:['Wanderlust','Jet Set Style','World Traveler','Bon Voyage'],
+    },
+    deptMap:{
+        work:    ['Tops','Bottoms','Jackets'],
+        date:    ['Dresses','Tops'],
+        party:   ['Dresses','Tops'],
+        sport:   ['Tops','Bottoms'],
+        beach:   ['Intimate'],
+        formal:  ['Dresses','Jackets'],
+        vacation:['Tops','Bottoms','Dresses'],
+        casual:  [],
+    },
+};
+
+// ============================================================
+// PRESETS
+// ============================================================
+const PRESETS={
+    corporate:{occasion:'work',  season:'autumn',style:'classic',  mood:'confident',cat:'Tops'},
+    boho:     {occasion:'casual',season:'summer',style:'boho',     mood:'relaxed',  cat:''},
+    nightout: {occasion:'party', season:'spring',style:'elegant',  mood:'mysterious',cat:'Dresses'},
+    casual:   {occasion:'casual',season:'spring',style:'minimalist',mood:'relaxed', cat:''},
+    romantic: {occasion:'date',  season:'spring',style:'romantic', mood:'playful',  cat:'Dresses'},
+    sport:    {occasion:'sport', season:'summer',style:'street',   mood:'powerful', cat:'Tops'},
+};
+
+function preset(name){
+    const p=PRESETS[name];if(!p)return;
+    setChip('g-occasion',p.occasion);setChip('g-season',p.season);
+    setChip('g-style',p.style);setChip('g-mood',p.mood);
+    document.getElementById('cat-pref').value=p.cat||'';
+    document.querySelector('.input-panel').scrollIntoView({behavior:'smooth'});
+    setTimeout(generate,380);
+}
+
+// ============================================================
+// GENERATE
+// ============================================================
+let loadTimer=null;
+
+function generate(){
+    const occ  = getChip('g-occasion')||'casual';
+    const seas  = getChip('g-season')  ||'spring';
+    const stl   = getChip('g-style')   ||'classic';
+    const mood  = getChip('g-mood')    ||'confident';
+    const cat   = document.getElementById('cat-pref').value;
+    const minR  = parseFloat(document.getElementById('r-slide').value);
+
+    // Show skeleton
+    document.getElementById('empty').style.display='none';
+    const res=document.getElementById('result');
+    res.classList.add('show');
+    const ov=document.getElementById('ov');
+    ov.classList.add('on');
+
+    const msgs=[
+        'Аналіз стилістичних параметрів...',
+        'Підбір кольорової палітри...',
+        'Пошук найкращих товарів...',
+        'Формування порад стиліста...',
+        'Майже готово...',
+    ];
+    let mi=0;
+    if(loadTimer)clearInterval(loadTimer);
+    loadTimer=setInterval(()=>{
+        document.getElementById('ov-s').textContent=msgs[mi%msgs.length];mi++;
+    },580);
+
+    const btn=document.getElementById('gen-btn');
+    btn.classList.add('busy');
+    document.getElementById('btn-txt').textContent='Генерую...';
+
+    setTimeout(()=>{
+        clearInterval(loadTimer);
+        ov.classList.remove('on');
+        btn.classList.remove('busy');
+        document.getElementById('btn-txt').textContent='✨ Створити образ';
+        renderResult(occ,seas,stl,mood,cat,minR);
+    },2800);
+}
+
+function renderResult(occ,seas,stl,mood,cat,minR){
+    const O=DB.occasion[occ]||DB.occasion.casual;
+    const S=DB.season[seas]  ||DB.season.spring;
+    const ST=DB.style[stl]   ||DB.style.classic;
+    const names=DB.names[occ]||['Style Statement'];
+    const outfitName=names[Math.floor(Math.random()*names.length)];
+    const moodTxt=DB.mood[mood]||'';
+    const custom=document.getElementById('custom-txt').value.trim();
+
+    document.getElementById('r-occ').textContent=`${O.emoji} ${O.label} · ${S.label} · ${ST.adj}`;
+    document.getElementById('r-name').textContent=outfitName;
+    document.getElementById('r-desc').textContent=custom?`"${custom}" — ${moodTxt}`:moodTxt;
+
+    // Tags
+    const tagsData=[
+        {txt:O.emoji+' '+O.label,    bg:O.color},
+        {txt:'🎨 '+ST.adj.charAt(0).toUpperCase()+ST.adj.slice(1), bg:'#7c3aed'},
+        {txt:'🌡️ '+S.label,           bg:'#0891b2'},
+    ];
+    document.getElementById('tags').innerHTML=tagsData.map(t=>
+        `<span class="tag" style="background:${t.bg}25;border:1px solid ${t.bg}60;">${t.txt}</span>`
+    ).join('');
+
+    // Palette
+    document.getElementById('swatches').innerHTML=S.colors.map((c,i)=>
+        `<div style="position:relative;margin-bottom:22px;">
+            <div class="sw" style="background:${c}" title="${S.names[i]}"></div>
+            <span class="sw-lbl">${S.names[i]}</span>
+        </div>`
+    ).join('');
+
+    // Products
+    const picks=pickProducts(occ,cat,minR);
+    document.getElementById('prods').innerHTML=picks.length?picks.map(p=>{
+        const r=p.avg_rating!=null?p.avg_rating.toFixed(1):'—';
+        const nm=p.title||p.class_name||'Товар';
+        const short=nm.length>34?nm.slice(0,32)+'...':nm;
+        return `<a href="product.html?id=${p.clothing_id}" class="prod-card">
+            <img class="prod-img" src="static/${p.clothing_id}.jpg" alt="${p.class_name||'item'}"
+                onerror="this.src='https://via.placeholder.com/200x200/1e1b4b/a855f7?text=${encodeURIComponent(p.class_name||'item')}'">
+            <div class="prod-info">
+                <div class="prod-cat">${p.class_name||p.department_name||'Товар'}</div>
+                <div class="prod-name">${short}</div>
+                <div class="prod-rating"><span class="star-gold">⭐</span>${r} · ${p.review_count} відг.</div>
+            </div>
+        </a>`;
+    }).join('')
+    :'<p style="color:rgba(255,255,255,.45);font-size:13px;">Товарів не знайдено за вашими критеріями. Спробуйте знизити мінімальний рейтинг.</p>';
+
+    // Tips
+    document.getElementById('tips').innerHTML=(ST.tips||[]).map(t=>
+        `<div class="tip-item"><div class="tip-dot"></div><span>${t}</span></div>`
+    ).join('');
+}
+
+function pickProducts(occ,cat,minR){
+    let pool=products.filter(p=>p.avg_rating!=null&&p.avg_rating>=minR);
+    const depts=DB.deptMap[occ]||[];
+    if(cat){pool=pool.filter(p=>p.department_name===cat||p.class_name===cat);}
+    else if(depts.length){pool=pool.filter(p=>depts.includes(p.department_name));}
+    if(pool.length<4){
+        pool=products.filter(p=>p.avg_rating!=null&&p.avg_rating>=Math.max(1,minR-0.5));
+    }
+    return [...pool].sort(()=>Math.random()-.5).slice(0,6);
+}
+
+function share(){
+    const occ=getChip('g-occasion');
+    const stl=getChip('g-style');
+    const url=location.href.split('?')[0]+`?occasion=${occ}&style=${stl}`;
+    if(navigator.clipboard){
+        navigator.clipboard.writeText(url).then(()=>toast('📋 Посилання скопійовано!'))
+            .catch(()=>toast('✨ Ваш образ готовий!'));
+    }else toast('✨ Ваш образ готовий!');
+}
+
+function toast(msg){
+    const t=document.createElement('div');
+    t.className='toast';t.textContent=msg;
+    document.body.appendChild(t);
+    setTimeout(()=>{t.style.opacity='0';},2100);
+    setTimeout(()=>t.remove(),2600);
+}
+
+// URL params
+window.addEventListener('load',()=>{
+    const p=new URLSearchParams(location.search);
+    if(p.get('occasion'))setChip('g-occasion',p.get('occasion'));
+    if(p.get('style'))setChip('g-style',p.get('style'));
+});
+</script>
+</body>
+</html>
