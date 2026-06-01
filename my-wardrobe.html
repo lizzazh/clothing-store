@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мій Гардероб 👗 — Elizabeth's Elegance</title>
+    <meta name="description" content="Завантажте фото свого одягу і отримайте AI-капсулу від Gemini на основі ваших реальних речей.">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        :root{
+            --ai-purple:#a855f7;--ai-pink:#ec4899;--ai-cyan:#06b6d4;
+            --glass-bg:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.12);
+        }
+        body{font-family:'Outfit',sans-serif;background:#0f0c29;color:#f1f5f9;min-height:100vh;}
+        body::before{content:'';position:fixed;inset:0;z-index:-2;
+            background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);}
+
+        /* NAV */
+        .ai-nav{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;
+            padding:15px 40px;border-bottom:1px solid var(--glass-border);
+            background:rgba(15,12,41,0.6);backdrop-filter:blur(20px);position:relative;z-index:20;}
+        .ai-brand{font-family:'Great Vibes',cursive;font-size:32px;color:white;text-decoration:none;}
+        .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
+        .nav-link{color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;padding:6px 14px;border-radius:20px;
+            text-decoration:none;border:1px solid var(--glass-border);background:var(--glass-bg);}
+        .nav-link:hover,.nav-link.active{color:#fff;background:rgba(168,85,247,0.18);border-color:rgba(168,85,247,0.45);}
+
+        /* HERO */
+        .hero{text-align:center;padding:50px 20px 30px;}
+        .hero-badge{display:inline-block;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);
+            color:var(--ai-purple);font-size:12px;font-weight:600;padding:6px 18px;border-radius:20px;
+            text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;}
+        .hero h1{font-family:'Great Vibes',cursive;font-size:64px;
+            background:linear-gradient(135deg,#fff 0%,var(--ai-purple) 60%,var(--ai-pink) 100%);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;}
+        .hero p{color:rgba(255,255,255,0.6);font-size:16px;max-width:540px;margin:0 auto;}
+
+        /* MAIN LAYOUT */
+        .container{max-width:1200px;margin:0 auto;padding:0 20px 60px;}
+
+        /* UPLOAD ZONE */
+        .upload-section{margin-bottom:40px;}
+        .upload-box{
+            border:2px dashed rgba(168,85,247,0.4);border-radius:20px;padding:40px;
+            text-align:center;cursor:pointer;transition:all 0.3s;background:var(--glass-bg);
+            position:relative;overflow:hidden;
+        }
+        .upload-box:hover,.upload-box.drag-over{
+            border-color:var(--ai-purple);background:rgba(168,85,247,0.08);transform:scale(1.01);
+        }
+        .upload-icon{font-size:48px;margin-bottom:16px;}
+        .upload-title{font-size:20px;font-weight:700;margin-bottom:8px;}
+        .upload-desc{color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:20px;}
+        #file-input{display:none;}
+        .upload-btn{
+            display:inline-block;background:linear-gradient(135deg,var(--ai-purple),var(--ai-pink));
+            color:#fff;font-weight:600;padding:12px 28px;border-radius:12px;cursor:pointer;
+            font-size:14px;transition:opacity 0.2s;border:none;
+        }
+        .upload-btn:hover{opacity:0.88;}
+
+        /* ADD FORM */
+        .add-form{display:none;background:var(--glass-bg);border:1px solid var(--glass-border);
+            border-radius:20px;padding:24px;margin-top:16px;animation:fadeUp 0.3s ease;}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+        .add-form.show{display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:start;}
+        .preview-thumb{width:120px;height:140px;object-fit:cover;border-radius:12px;border:2px solid var(--glass-border);}
+        .form-fields{display:flex;flex-direction:column;gap:12px;}
+        .field-label{font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:4px;}
+        .field-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--glass-border);
+            color:#fff;padding:10px 14px;border-radius:10px;font-family:inherit;font-size:14px;}
+        .field-input:focus{outline:none;border-color:var(--ai-purple);}
+        .field-select{width:100%;background:rgba(15,12,41,0.9);border:1px solid var(--glass-border);
+            color:#fff;padding:10px 14px;border-radius:10px;font-family:inherit;font-size:14px;}
+        .form-row{display:flex;gap:10px;}
+        .save-item-btn{
+            background:linear-gradient(135deg,var(--ai-purple),var(--ai-pink));color:#fff;
+            font-weight:700;padding:12px 24px;border-radius:12px;border:none;cursor:pointer;
+            font-size:14px;margin-top:4px;align-self:flex-end;
+        }
+
+        /* SECTION HEADER */
+        .sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+        .sec-title{font-size:22px;font-weight:700;}
+        .item-count{background:rgba(168,85,247,0.2);color:var(--ai-purple);padding:4px 12px;
+            border-radius:20px;font-size:13px;font-weight:600;}
+
+        /* WARDROBE GRID */
+        .wardrobe-grid{
+            display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;
+            margin-bottom:40px;
+        }
+        .item-card{
+            background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:16px;
+            overflow:hidden;cursor:pointer;transition:all 0.25s;position:relative;
+        }
+        .item-card:hover{transform:translateY(-4px);border-color:rgba(168,85,247,0.5);}
+        .item-card.selected{border-color:var(--ai-pink);box-shadow:0 0 0 2px rgba(236,72,153,0.4);}
+        .item-img{width:100%;height:180px;object-fit:cover;}
+        .item-info{padding:10px 12px 12px;}
+        .item-cat{font-size:11px;color:var(--ai-cyan);font-weight:600;text-transform:uppercase;
+            letter-spacing:0.5px;margin-bottom:3px;}
+        .item-name{font-size:13px;font-weight:600;line-height:1.3;}
+        .item-delete{position:absolute;top:8px;right:8px;width:26px;height:26px;
+            background:rgba(0,0,0,0.6);border:none;border-radius:50%;color:#fff;font-size:12px;
+            cursor:pointer;display:flex;align-items:center;justify-content:center;
+            opacity:0;transition:opacity 0.2s;}
+        .item-card:hover .item-delete{opacity:1;}
+        .item-check{position:absolute;top:8px;left:8px;width:22px;height:22px;
+            background:var(--ai-pink);border-radius:50%;display:none;align-items:center;
+            justify-content:center;font-size:12px;}
+        .item-card.selected .item-check{display:flex;}
+
+        /* EMPTY STATE */
+        .empty-wardrobe{text-align:center;padding:60px 20px;color:rgba(255,255,255,0.35);}
+        .empty-wardrobe .big-icon{font-size:64px;margin-bottom:16px;}
+        .empty-wardrobe p{font-size:15px;}
+
+        /* AI CAPSULE SECTION */
+        .capsule-section{
+            background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:24px;padding:30px;
+        }
+        .capsule-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;margin-bottom:20px;}
+        .capsule-title{font-size:20px;font-weight:700;}
+        .capsule-hint{color:rgba(255,255,255,0.45);font-size:13px;margin-bottom:20px;}
+        .capsule-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+        .capsule-mode{display:flex;gap:8px;}
+        .mode-btn{
+            background:var(--glass-bg);border:1px solid var(--glass-border);color:rgba(255,255,255,0.7);
+            padding:8px 16px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;
+            transition:all 0.2s;font-family:inherit;
+        }
+        .mode-btn.active{background:rgba(168,85,247,0.2);border-color:var(--ai-purple);color:#fff;}
+        .gen-capsule-btn{
+            background:linear-gradient(135deg,var(--ai-purple),var(--ai-pink));color:#fff;
+            font-weight:700;padding:13px 28px;border-radius:14px;border:none;cursor:pointer;
+            font-size:15px;display:flex;align-items:center;gap:8px;transition:opacity 0.2s;
+        }
+        .gen-capsule-btn:hover{opacity:0.88;}
+        .gen-capsule-btn:disabled{opacity:0.4;cursor:not-allowed;}
+
+        /* RESULT BLOCK */
+        .capsule-result{display:none;margin-top:24px;animation:fadeUp 0.4s ease;}
+        .capsule-result.show{display:block;}
+        .ai-answer{
+            background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.3);
+            border-radius:16px;padding:24px;line-height:1.7;font-size:15px;margin-bottom:20px;
+        }
+        .ai-answer-label{color:var(--ai-purple);font-weight:700;font-size:13px;
+            text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+        .shop-recs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:20px;}
+        .shop-label{font-size:13px;font-weight:700;color:var(--ai-cyan);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;}
+        .thinking-row{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.5);font-size:14px;padding:20px 0;}
+        .spin-sm{width:18px;height:18px;border:2px solid rgba(168,85,247,0.3);border-top-color:var(--ai-purple);
+            border-radius:50%;animation:spin 0.8s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="ai-nav">
+    <a href="index.html" class="ai-brand">Elizabeth's Elegance</a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Головна</a>
+        <a href="my-profile.html" class="nav-link">👤 Мій профіль</a>
+        <a href="ai-stylist.html" class="nav-link">✨ AI Stylist</a>
+        <a href="my-wardrobe.html" class="nav-link active">👚 Мій гардероб</a>
+        <a href="style-quiz.html" class="nav-link">🎯 Style Quiz</a>
+        <a href="weather-outfit.html" class="nav-link">🌡️ Weather</a>
+        <a href="category-stats.html" class="nav-link">📊 Тренди</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-badge">🤖 AI Digital Closet</div>
+    <h1>Мій Гардероб</h1>
+    <p>Завантажте фото своїх речей, а Gemini AI складе для вас капсульний гардероб або підкаже, як їх поєднати.</p>
+</div>
+
+<div class="container">
+
+    <!-- UPLOAD ZONE -->
+    <div class="upload-section">
+        <div class="upload-box" id="drop-zone" onclick="document.getElementById('file-input').click()">
+            <div class="upload-icon">👗</div>
+            <div class="upload-title">Додати річ до гардеробу</div>
+            <div class="upload-desc">Перетягніть фото сюди або натисніть, щоб обрати файл</div>
+            <label class="upload-btn" onclick="event.stopPropagation()">
+                📁 Обрати фото
+                <input type="file" id="file-input" accept="image/*" onchange="onFileSelect(event)">
+            </label>
+        </div>
+        <div class="add-form" id="add-form">
+            <img class="preview-thumb" id="preview-img" src="" alt="preview">
+            <div class="form-fields">
+                <div>
+                    <div class="field-label">Назва / опис</div>
+                    <input class="field-input" id="item-name" type="text" placeholder="Наприклад: Чорна сукня міді з вирізом">
+                </div>
+                <div class="form-row">
+                    <div style="flex:1">
+                        <div class="field-label">Категорія</div>
+                        <select class="field-select" id="item-cat">
+                            <option value="Сукня">👗 Сукня</option>
+                            <option value="Топ / Блуза">👚 Топ / Блуза</option>
+                            <option value="Брюки / Спідниця">👖 Брюки / Спідниця</option>
+                            <option value="Куртка / Пальто">🧥 Куртка / Пальто</option>
+                            <option value="Взуття">👠 Взуття</option>
+                            <option value="Аксесуар">💍 Аксесуар</option>
+                            <option value="Інше">📦 Інше</option>
+                        </select>
+                    </div>
+                    <div style="flex:1">
+                        <div class="field-label">Колір</div>
+                        <input class="field-input" id="item-color" type="text" placeholder="Наприклад: чорний">
+                    </div>
+                </div>
+                <button class="save-item-btn" onclick="saveItem()">✅ Зберегти в гардероб</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MY CLOTHES -->
+    <div class="sec-header">
+        <div class="sec-title">👗 Моя шафа</div>
+        <div class="item-count" id="item-count">0 речей</div>
+    </div>
+    <div class="wardrobe-grid" id="wardrobe-grid">
+        <div class="empty-wardrobe" style="grid-column:1/-1;">
+            <div class="big-icon">🧺</div>
+            <p>Ваша цифрова шафа порожня.<br>Завантажте фото першої речі!</p>
+        </div>
+    </div>
+
+    <!-- AI CAPSULE -->
+    <div class="capsule-section">
+        <div class="capsule-header">
+            <div>
+                <div class="capsule-title">✨ AI-Капсула від Gemini</div>
+                <div class="capsule-hint">Gemini проаналізує ваш гардероб і запропонує готові образи або що докупити.</div>
+            </div>
+        </div>
+        <div class="capsule-controls">
+            <div class="capsule-mode">
+                <button class="mode-btn active" id="mode-combine" onclick="setMode('combine')">🔗 Поєднати мої речі</button>
+                <button class="mode-btn" id="mode-capsule" onclick="setMode('capsule')">💊 Скласти капсулу</button>
+                <button class="mode-btn" id="mode-shop" onclick="setMode('shop')">🛍️ Що докупити?</button>
+            </div>
+            <button class="gen-capsule-btn" id="gen-btn" onclick="generateCapsule()">
+                <span id="gen-icon">🤖</span>
+                <span id="gen-txt">Запитати Gemini</span>
+            </button>
+        </div>
+        <div class="capsule-result" id="capsule-result">
+            <div class="ai-answer">
+                <div class="ai-answer-label">✨ Вердикт ШІ (Gemini):</div>
+                <div id="ai-text"></div>
+            </div>
+            <div id="shop-recs-wrap" style="display:none;">
+                <div class="shop-label">🛍️ Рекомендуємо з нашого магазину:</div>
+                <div class="shop-recs" id="shop-recs-grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// =============================================
+// STORAGE
+// =============================================
+const STORAGE_KEY = 'my_wardrobe_items';
+
+function loadItems() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch(e) { return []; }
+}
+function saveItems(items) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+// =============================================
+// FILE SELECT / DRAG & DROP
+// =============================================
+let pendingImageB64 = null;
+
+const dropZone = document.getElementById('drop-zone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+    e.preventDefault(); dropZone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) processFile(file);
+});
+
+function onFileSelect(e) {
+    const file = e.target.files[0];
+    if (file) processFile(file);
+}
+
+function processFile(file) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+        pendingImageB64 = ev.target.result;
+        document.getElementById('preview-img').src = pendingImageB64;
+        document.getElementById('item-name').value = '';
+        document.getElementById('item-color').value = '';
+        const form = document.getElementById('add-form');
+        form.classList.add('show');
+        form.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    };
+    reader.readAsDataURL(file);
+}
+
+// =============================================
+// SAVE ITEM
+// =============================================
+function saveItem() {
+    if (!pendingImageB64) return;
+    const name = document.getElementById('item-name').value.trim() || 'Без назви';
+    const cat  = document.getElementById('item-cat').value;
+    const color= document.getElementById('item-color').value.trim();
+    const item = { id: Date.now(), name, cat, color, img: pendingImageB64 };
+    const items = loadItems();
+    items.push(item);
+    saveItems(items);
+    pendingImageB64 = null;
+    document.getElementById('add-form').classList.remove('show');
+    document.getElementById('file-input').value = '';
+    renderWardrobe();
+}
+
+// =============================================
+// RENDER WARDROBE
+// =============================================
+function renderWardrobe() {
+    const items = loadItems();
+    const grid = document.getElementById('wardrobe-grid');
+    document.getElementById('item-count').textContent = `${items.length} ${noun(items.length)}`;
+
+    if (!items.length) {
+        grid.innerHTML = `<div class="empty-wardrobe" style="grid-column:1/-1;">
+            <div class="big-icon">🧺</div>
+            <p>Ваша цифрова шафа порожня.<br>Завантажте фото першої речі!</p>
+        </div>`;
+        return;
+    }
+
+    grid.innerHTML = items.map(item => `
+        <div class="item-card" id="card-${item.id}" onclick="toggleSelect(${item.id})">
+            <div class="item-check">✓</div>
+            <button class="item-delete" onclick="deleteItem(event,${item.id})">✕</button>
+            <img class="item-img" src="${item.img}" alt="${item.name}" onerror="this.style.background='#302b63';this.style.height='180px';">
+            <div class="item-info">
+                <div class="item-cat">${item.cat}${item.color ? ' · ' + item.color : ''}</div>
+                <div class="item-name">${item.name}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function noun(n) {
+    if (n % 100 >= 11 && n % 100 <= 14) return 'речей';
+    switch (n % 10) {
+        case 1: return 'річ';
+        case 2: case 3: case 4: return 'речі';
+        default: return 'речей';
+    }
+}
+
+// =============================================
+// SELECT / DELETE
+// =============================================
+const selected = new Set();
+
+function toggleSelect(id) {
+    if (selected.has(id)) selected.delete(id);
+    else selected.add(id);
+    const card = document.getElementById('card-' + id);
+    if (card) card.classList.toggle('selected', selected.has(id));
+}
+
+function deleteItem(e, id) {
+    e.stopPropagation();
+    if (!confirm('Видалити цю річ з гардеробу?')) return;
+    const items = loadItems().filter(i => i.id !== id);
+    saveItems(items);
+    selected.delete(id);
+    renderWardrobe();
+}
+
+// =============================================
+// MODE
+// =============================================
+let currentMode = 'combine';
+function setMode(m) {
+    currentMode = m;
+    ['combine','capsule','shop'].forEach(k => {
+        document.getElementById('mode-' + k).classList.toggle('active', k === m);
+    });
+}
+
+// =============================================
+// GEMINI CAPSULE
+// =============================================
+async function generateCapsule() {
+    const items = loadItems();
+    if (!items.length) { alert('Спочатку додайте хоча б одну річ до гардеробу!'); return; }
+
+    const btn = document.getElementById('gen-btn');
+    btn.disabled = true;
+    document.getElementById('gen-txt').textContent = 'Думаю...';
+    document.getElementById('gen-icon').textContent = '⏳';
+
+    const resultBlock = document.getElementById('capsule-result');
+    resultBlock.classList.add('show');
+    document.getElementById('ai-text').innerHTML = `<div class="thinking-row"><div class="spin-sm"></div>Gemini аналізує ваш гардероб...</div>`;
+    document.getElementById('shop-recs-wrap').style.display = 'none';
+
+    // Build wardrobe description
+    const itemsList = items.map(i => `"${i.name}" (${i.cat}${i.color ? ', ' + i.color : ''})`).join('; ');
+
+    const modePrompts = {
+        combine: `У мене є такий одяг: ${itemsList}.\nЗапропонуй 2-3 конкретних готових образи (outfits), поєднуючи ці речі. Для кожного образу вкажи: 1) назву образу (яскрава); 2) які конкретні речі з мого списку входять; 3) до якої події підходить; 4) коротку пораду стиліста. Пиши красиво, по-українськи, з емодзі.`,
+        capsule: `У мене є такий одяг: ${itemsList}.\nСкладіть для мене мінімалістичну капсулу гардеробу (10-15 речей) на основі того, що вже є. Визнач базові, доповнюючі і акцентні речі. Поясни логіку капсули. Пиши по-українськи.`,
+        shop: `У мене є такий одяг: ${itemsList}.\nЩо з нашого магазину (жіночий одяг: сукні, топи, брюки, куртки, аксесуари) мені варто докупити, щоб доповнити гардероб і мати більше варіантів образів? Назви 3-5 конкретних категорій речей і поясни чому. Пиши по-українськи.`
+    };
+
+    try {
+        const r = await fetch('/api/gemini', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: modePrompts[currentMode] }] }] })
+        });
+        const data = await r.json();
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+            let txt = data.candidates[0].content.parts[0].text;
+            txt = txt.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+            document.getElementById('ai-text').innerHTML = txt;
+
+            // If "shop" mode — show product recommendations from our catalog
+            if (currentMode === 'shop') {
+                showShopRecs();
+            }
+        } else {
+            throw new Error('empty response');
+        }
+    } catch(err) {
+        document.getElementById('ai-text').innerHTML = `<span style="color:#f87171;">⚠️ Не вдалося зв'язатись з Gemini. Перевірте, чи правильно вказано API-ключ у налаштуваннях Cloudflare.</span>`;
+    }
+
+    btn.disabled = false;
+    document.getElementById('gen-txt').textContent = 'Запитати Gemini';
+    document.getElementById('gen-icon').textContent = '🤖';
+}
+
+// =============================================
+// SHOP RECS FROM CATALOG
+// =============================================
+async function showShopRecs() {
+    try {
+        const r = await fetch('data/products.json');
+        if (!r.ok) return;
+        const all = await r.json();
+        const pool = all.filter(p => p.avg_rating >= 4.5);
+        const picks = [...pool].sort(() => Math.random() - .5).slice(0, 4);
+        const wrap = document.getElementById('shop-recs-wrap');
+        const grid = document.getElementById('shop-recs-grid');
+        grid.innerHTML = picks.map(p => `
+            <a href="product.html?id=${p.clothing_id}" style="text-decoration:none;color:inherit;">
+                <div style="background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:12px;overflow:hidden;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+                    <img src="static/${p.clothing_id}.jpg" style="width:100%;height:140px;object-fit:cover;"
+                        onerror="this.src='https://via.placeholder.com/150x140/1e1b4b/a855f7?text=${encodeURIComponent(p.class_name||'item')}'">
+                    <div style="padding:8px 10px;">
+                        <div style="font-size:10px;color:var(--ai-cyan);font-weight:600;margin-bottom:2px;">${p.class_name}</div>
+                        <div style="font-size:12px;font-weight:600;">${(p.title||p.class_name).slice(0,30)}</div>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.5);">⭐ ${p.avg_rating?.toFixed(1)}</div>
+                    </div>
+                </div>
+            </a>
+        `).join('');
+        wrap.style.display = 'block';
+    } catch(e) {}
+}
+
+// =============================================
+// INIT
+// =============================================
+renderWardrobe();
+</script>
+</body>
+</html>

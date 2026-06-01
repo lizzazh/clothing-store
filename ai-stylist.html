@@ -396,12 +396,10 @@
             <a href="index.html" class="nav-link">🏠 Головна</a>
             <a href="my-profile.html" class="nav-link">👤 Мій профіль</a>
             <a href="ai-stylist.html" class="nav-link active">✨ AI Stylist</a>
+            <a href="my-wardrobe.html" class="nav-link">👚 Мій гардероб</a>
             <a href="style-quiz.html" class="nav-link">🎯 Style Quiz</a>
             <a href="weather-outfit.html" class="nav-link">🌡️ Weather</a>
-            <a href="capsule-wardrobe.html" class="nav-link">📅 Capsule</a>
-            <a href="mood-board.html" class="nav-link">🎨 Mood Board</a>
-            <a href="trend-radar.html" class="nav-link">📊 Trends</a>
-            <a href="virtual-silhouette.html" class="nav-link">👗 Silhouette</a>
+            <a href="category-stats.html" class="nav-link">📊 Тренди</a>
         </div>
 </nav>
 
@@ -463,6 +461,18 @@
                 <div class="chip" data-v="mysterious">🌙 Загадковий</div>
                 <div class="chip" data-v="relaxed">😌 Розслаблений</div>
                 <div class="chip" data-v="powerful">⚡ Сильний</div>
+            </div>
+        </div>
+
+        <div class="form-block">
+            <span class="form-lbl">Тип фігури</span>
+            <div class="chips" id="g-body">
+                <div class="chip on" data-v="">🙂 Не вказано</div>
+                <div class="chip" data-v="hourglass">⌛ Пісочний годинник</div>
+                <div class="chip" data-v="apple">🍎 Яблуко</div>
+                <div class="chip" data-v="pear">🍐 Груша</div>
+                <div class="chip" data-v="rectangle">▭ Прямокутник</div>
+                <div class="chip" data-v="inverted">🔺 Перев. трикутник</div>
             </div>
         </div>
 
@@ -732,6 +742,7 @@ function generate(){
     const seas  = getChip('g-season')  ||'spring';
     const stl   = getChip('g-style')   ||'classic';
     const mood  = getChip('g-mood')    ||'confident';
+    const body  = getChip('g-body')    ||'';
     const cat   = document.getElementById('cat-pref').value;
     const minR  = parseFloat(document.getElementById('r-slide').value);
 
@@ -764,11 +775,12 @@ function generate(){
         ov.classList.remove('on');
         btn.classList.remove('busy');
         document.getElementById('btn-txt').textContent='✨ Створити образ';
-        renderResult(occ,seas,stl,mood,cat,minR);
+        renderResult(occ,seas,stl,mood,body,cat,minR);
     },2800);
 }
 
-function renderResult(occ,seas,stl,mood,cat,minR){
+const BODY_LABELS = { hourglass:'Пісочний годинник', apple:'Яблуко', pear:'Груша', rectangle:'Прямокутник', inverted:'Перевернутий трикутник' };
+function renderResult(occ,seas,stl,mood,body,cat,minR){
     const O=DB.occasion[occ]||DB.occasion.casual;
     const S=DB.season[seas]  ||DB.season.spring;
     const ST=DB.style[stl]   ||DB.style.classic;
@@ -825,9 +837,10 @@ function renderResult(occ,seas,stl,mood,cat,minR){
     
     // Build product list string
     const prodNames = picks.map(p => p.title || p.class_name).join(", ");
-    const prompt = `Ти професійний модний стиліст бренду Elizabeth's Elegance. Твій клієнт: ${profile.name||'Дівчина'}, вік: ${profile.age||'не вказано'}, тип фігури: ${profile.body||'не вказано'}. Її улюблений стиль: ${ST.label||stl}, настрій: ${moodTxt||mood}. Подія: ${O.label||occ}, сезон: ${S.label||seas}. Додаткове побажання: ${custom || 'немає'}. 
+    const bodyLabel = BODY_LABELS[body] || profile.body || 'не вказано';
+    const prompt = `Ти професійний модний стиліст бренду Elizabeth's Elegance. Твій клієнт: ${profile.name||'Дівчина'}, вік: ${profile.age||'не вказано'}, тип фігури: ${bodyLabel}. Її улюблений стиль: ${ST.label||stl}, настрій: ${moodTxt||mood}. Подія: ${O.label||occ}, сезон: ${S.label||seas}. Додаткове побажання: ${custom || 'немає'}. 
 Ти пропонуєш одяг: ${prodNames}.
-Напиши один короткий, натхненний і персоналізований абзац (до 4-5 речень) тексту, звертаючись до клієнта. Поясни, чому ці речі ідеально підходять саме їй, її фігурі та нагоді. Пиши красиво, українською мовою.`;
+Напиши один короткий, натхненний і персоналізований абзац (до 4-5 речень) тексту, звертаючись до клієнта. Поясни, чому ці речі ідеально підходять саме їй, її типу фігури (${bodyLabel}) та нагоді. Пиши красиво, українською мовою.`;
 
     fetch("/api/gemini", {
         method: "POST",
