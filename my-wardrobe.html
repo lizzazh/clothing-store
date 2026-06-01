@@ -289,6 +289,10 @@ let pendingImageB64 = null;
 const dropZone = document.getElementById('drop-zone');
 
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => {
+    document.body.addEventListener(evt, e => {
+        e.preventDefault();
+        e.stopPropagation();
+    });
     dropZone.addEventListener(evt, e => {
         e.preventDefault();
         e.stopPropagation();
