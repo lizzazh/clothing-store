@@ -849,23 +849,28 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
 4. Де можна носити цей образ (конкретне місце або подія).
 Пиши тепло, надихаюче, ніби розмовляєш з подругою. Без зайвих пунктів і нумерації — суцільний красивий текст.`;
 
-    fetch("/api/gemini", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    fetch("/api/key")
+    .then(r => r.json())
+    .then(keyData => {
+        if(!keyData.key) throw new Error("API ключ не знайдено на сервері");
+        
+        return fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${keyData.key}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
     })
     .then(async r => {
         if(!r.ok) {
             const errData = await r.json().catch(()=>({}));
-            if(r.status === 429) throw new Error("Ліміт запитів до Gemini вичерпано (Помилка 429). Спробуйте пізніше або оновіть API ключ.");
-            throw new Error(errData.error || `Server responded with status ${r.status}`);
+            if(r.status === 429) throw new Error("Ліміт запитів до Gemini вичерпано (Помилка 429). Зачекайте хвилину і спробуйте знову.");
+            throw new Error(errData.error?.message || `Помилка API: ${r.status}`);
         }
         return r.json();
     })
     .then(data => {
         if(data.candidates && data.candidates[0].content.parts[0].text) {
             let aiText = data.candidates[0].content.parts[0].text;
-            // simple formatting
             aiText = aiText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
             document.getElementById('tips').innerHTML = `<div class="tip-item" style="display:block; padding:15px; border-radius:12px; background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.3); line-height:1.6;"><b style="color:var(--ai-purple); margin-bottom:10px; display:block;">✨ Вердикт ШІ (Gemini):</b> ${aiText}</div>`;
         } else {
@@ -874,7 +879,10 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
     })
     .catch(err => {
         console.error("Gemini Error:", err);
-        renderStaticTips(ST);
+        document.getElementById('tips').innerHTML = `<div class="tip-item" style="color: #ef4444;">⚠️ ${err.message}. Тим часом показуємо базові поради:</div>`;
+        document.getElementById('tips').innerHTML += (ST.tips||[]).map(t=>
+            `<div class="tip-item"><div class="tip-dot"></div><span>${t}</span></div>`
+        ).join('');
     });
 }
 
