@@ -287,10 +287,19 @@ function saveItems(items) {
 let pendingImageB64 = null;
 
 const dropZone = document.getElementById('drop-zone');
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => {
+    dropZone.addEventListener(evt, e => {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+});
+
+dropZone.addEventListener('dragenter', () => dropZone.classList.add('drag-over'));
+dropZone.addEventListener('dragover', () => dropZone.classList.add('drag-over'));
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
 dropZone.addEventListener('drop', e => {
-    e.preventDefault(); dropZone.classList.remove('drag-over');
+    dropZone.classList.remove('drag-over');
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) processFile(file);
 });
