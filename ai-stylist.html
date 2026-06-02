@@ -914,9 +914,11 @@ function pickProducts(occ, cat, minR, custom = '') {
             'фіолетов': 'purple|violet', 'бузков': 'lilac', 'персиков': 'pink|peach', 'малинов': 'pink|raspberry'
         };
         const dictItems = {
-            'сукн': 'dress', 'світр': 'sweater', 'топ': 'top', 'брюк': 'pant|bottom', 
-            'штани': 'pant|trouser', 'джинс': 'jeans|denim', 'спідниц': 'skirt', 'куртк': 'jacket', 'пальт': 'coat',
-            'блуз': 'blouse', 'сорочк': 'shirt', 'футболк': 't-shirt'
+            'сукн': 'dresses', 'світр': 'sweaters|knits|fine gauge', 'топ': 'blouses|knits', 
+            'брюк': 'pants|casual bottoms', 'штани': 'pants|casual bottoms', 'джинс': 'jeans', 
+            'спідниц': 'skirts', 'куртк': 'jackets|outerwear', 'пальт': 'outerwear',
+            'блуз': 'blouses', 'сорочк': 'blouses', 'футболк': 'knits',
+            'шорт': 'shorts', 'купальник': 'swim', 'білизн': 'intimates|chemises|sleep'
         };
         
         let colorTerms = [];
@@ -932,6 +934,7 @@ function pickProducts(occ, cat, minR, custom = '') {
             p._score = 0;
             const text = ((p.title||'') + ' ' + (p.review_text||'')).toLowerCase();
             const realColor = imageColors[p.clothing_id] || '';
+            const className = (p.class_name || '').toLowerCase();
             
             // За колір даємо 100 балів якщо це реальний колір з картинки, і тільки 20 якщо з тексту
             colorTerms.forEach(term => { 
@@ -939,8 +942,11 @@ function pickProducts(occ, cat, minR, custom = '') {
                 else if (text.includes(term)) p._score += 20; 
             });
             
-            // За тип речі даємо величезний пріоритет (150 балів), щоб сукня іншого кольору обганяла штани правильного кольору
-            itemTerms.forEach(term => { if (text.includes(term)) p._score += 150; });
+            // За тип речі (категорію) даємо 150 балів, щоб гарантувати правильний тип
+            itemTerms.forEach(term => { 
+                if (className === term || className.includes(term)) p._score += 150; 
+                else if (text.includes(term) || (p.title||'').toLowerCase().includes(term)) p._score += 20;
+            });
             
             // Бонус за прямий збіг оригінального слова
             if (text.includes(cLow)) p._score += 100;
