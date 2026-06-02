@@ -612,7 +612,7 @@ async function generateCapsule() {
 
             // If "shop" mode — show product recommendations from our catalog
             if (currentMode === 'shop') {
-                showShopRecs();
+                showShopRecs(txt);
             }
         } else {
             throw new Error('empty response');
@@ -629,12 +629,32 @@ async function generateCapsule() {
 // =============================================
 // SHOP RECS FROM CATALOG
 // =============================================
-async function showShopRecs() {
+async function showShopRecs(aiText = '') {
     try {
         const r = await fetch('data/products.json');
         if (!r.ok) return;
         const all = await r.json();
-        const pool = all.filter(p => p.avg_rating >= 4.5);
+        
+        const textLow = aiText.toLowerCase();
+        const searchCategories = new Set();
+        
+        if (textLow.match(/сукн|платт/)) searchCategories.add('Dresses');
+        if (textLow.match(/брюк|штан|джинс/)) { searchCategories.add('Pants'); searchCategories.add('Jeans'); searchCategories.add('Casual bottoms'); }
+        if (textLow.match(/светр|кардиган|кофт/)) { searchCategories.add('Sweaters'); searchCategories.add('Knits'); }
+        if (textLow.match(/сорочк|блуз|топ|футболк/)) { searchCategories.add('Blouses'); searchCategories.add('Knits'); }
+        if (textLow.match(/куртк|пальт|тренч|піджак|жакет/)) { searchCategories.add('Jackets'); searchCategories.add('Outerwear'); }
+        if (textLow.match(/спідниц/)) searchCategories.add('Skirts');
+        if (textLow.match(/шорт/)) searchCategories.add('Shorts');
+
+        let pool = all.filter(p => p.avg_rating >= 4.0);
+        
+        if (searchCategories.size > 0) {
+            pool = pool.filter(p => searchCategories.has(p.class_name));
+        } else {
+            const exclude = ['Intimates', 'Swim', 'Sleep', 'Chemises', 'Legwear'];
+            pool = pool.filter(p => !exclude.includes(p.class_name));
+        }
+
         const picks = [...pool].sort(() => Math.random() - .5).slice(0, 4);
         const wrap = document.getElementById('shop-recs-wrap');
         const grid = document.getElementById('shop-recs-grid');
