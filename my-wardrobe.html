@@ -379,10 +379,73 @@ function processFile(file) {
             const form = document.getElementById('add-form');
             form.classList.add('show');
             form.scrollIntoView({ behavior:'smooth', block:'nearest' });
+            
+            // Auto-detect attributes using AI
+            detectItemAttributes(pendingImageB64);
         };
         img.src = ev.target.result;
     };
     reader.readAsDataURL(file);
+}
+
+// =============================================
+// AI ITEM DETECTION
+// =============================================
+async function detectItemAttributes(base64Data) {
+    const btn = document.querySelector('.save-item-btn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<div class="spin-sm" style="display:inline-block;vertical-align:middle;margin-right:8px;border-color:rgba(255,255,255,0.3);border-top-color:#fff;"></div> ШІ розпізнає фото...';
+    btn.disabled = true;
+
+    try {
+        const keyRes = await fetch("/api/key");
+        const keyData = await keyRes.json();
+        if(!keyData.key) throw new Error("No API key");
+
+        const base64Clean = base64Data.replace(/^data:image\/(png|jpeg|jpg|webp);base64,/, "");
+        const prompt = `Проаналізуй цей елемент одягу. Поверни JSON з трьома полями:
+1) "name": коротка красива назва українською (напр. "Чорна шкіряна куртка").
+2) "category": обери ОДНЕ з: "Сукня", "Топ / Блуза", "Брюки / Спідниця", "Куртка / Пальто", "Взуття", "Аксесуар", "Інше".
+3) "color": основний колір українською (одне слово, напр. "чорний", "синій").
+Поверни ТІЛЬКИ валідний JSON без markdown, без тексту навколо.`;
+
+        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${keyData.key}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [
+                        { text: prompt },
+                        { inlineData: { mimeType: "image/jpeg", data: base64Clean } }
+                    ]
+                }]
+            })
+        });
+
+        if (r.ok) {
+            const data = await r.json();
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            const result = JSON.parse(jsonStr);
+            
+            if (result.name) document.getElementById('item-name').value = result.name;
+            if (result.color) document.getElementById('item-color').value = result.color;
+            if (result.category) {
+                const select = document.getElementById('item-cat');
+                for (let i=0; i<select.options.length; i++) {
+                    if (select.options[i].value.includes(result.category)) {
+                        select.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+    } catch(e) {
+        console.error("AI detection failed:", e);
+    }
+    
+    btn.innerHTML = '✅ Зберегти в гардероб';
+    btn.disabled = false;
 }
 
 // =============================================
@@ -490,14 +553,14 @@ async function generateCapsule() {
     document.getElementById('ai-text').innerHTML = `<div class="thinking-row"><div class="spin-sm"></div>Gemini аналізує ваш гардероб...</div>`;
     document.getElementById('shop-recs-wrap').style.display = 'none';
 
-    // Build wardrobe description
-    const itemsList = items.map(i => `"${i.name}" (${i.cat}${i.color ? ', ' + i.color : ''})`).join('; ');
+    // Build wardrobe description with IDs
+    const itemsList = items.map(i => `"${i.name}" (ID:${i.id}, ${i.cat}${i.color ? ', ' + i.color : ''})`).join('; ');
 
-    const structRules = `Відповідь має бути СТРУКТУРОВАНОЮ: використовуй жирний текст для назв і переходь на новий рядок для нових абзаців.`;
+    const structRules = `Відповідь має бути СТРУКТУРОВАНОЮ: використовуй жирний текст для назв і переходь на новий рядок для нових абзаців.\nСУВОРЕ ПРАВИЛО: Коли ти згадуєш або рекомендуєш використати конкретну річ з мого списку, обов'язково напиши її ID у квадратних дужках одразу після назви, ось так: [ID:123456789]. Це критично важливо!`;
     const modePrompts = {
         combine: `У мене є такий одяг: ${itemsList}.\nЗапропонуй 2-3 конкретних готових образи (outfits), поєднуючи ці речі. Для кожного образу вкажи: 1) назву образу (яскрава); 2) які конкретні речі з мого списку входять; 3) до якої події підходить; 4) коротку пораду стиліста. Пиши красиво, по-українськи.\n${structRules}\nСУВОРЕ ПРАВИЛО: Використовуй ТІЛЬКИ ті речі та кольори, які я перелічила. Не вигадуй одяг чи кольори, яких у мене немає!`,
         capsule: `У мене є такий одяг: ${itemsList}.\nСкладіть для мене мінімалістичну капсулу гардеробу на основі того, що вже є. Визнач базові, доповнюючі і акцентні речі. Поясни логіку капсули. Пиши по-українськи.\n${structRules}\nСУВОРЕ ПРАВИЛО: Спирайся ТІЛЬКИ на мої речі. Не придумуй їм інші кольори чи фасони!`,
-        shop: `У мене є такий одяг: ${itemsList}.\nЩо (які конкретно базові категорії речей, напр. "біла сорочка", "чорні лофери") мені варто докупити, щоб доповнити гардероб і мати більше варіантів образів? Назви 3-5 конкретних речей і поясни чому. Пиши по-українськи.\n${structRules}`
+        shop: `У мене є такий одяг: ${itemsList}.\nЩо (які конкретно базові категорії речей, напр. "біла сорочка", "чорні лофери", "срібне кольє") мені варто докупити, щоб доповнити гардероб і мати більше варіантів образів? Назви 3-5 конкретних речей і поясни чому. Пиши по-українськи.\n${structRules}`
     };
 
     try {
@@ -520,8 +583,32 @@ async function generateCapsule() {
         const data = await r.json();
         if (data.candidates && data.candidates[0].content.parts[0].text) {
             let txt = data.candidates[0].content.parts[0].text;
+            
+            // Extract IDs and build image gallery
+            const mentionedItems = new Map(); // map preserves insertion order
+            txt = txt.replace(/\[ID:(\d+)\]/g, (match, idStr) => {
+                const id = parseInt(idStr);
+                const item = items.find(i => i.id === id);
+                if (item) mentionedItems.set(id, item);
+                return ''; // remove from displayed text
+            });
+
             txt = txt.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            document.getElementById('ai-text').innerHTML = `<br>${txt}`;
+            
+            let imagesHtml = '';
+            if (mentionedItems.size > 0 && currentMode !== 'shop') {
+                imagesHtml = `<div class="shop-label" style="margin-top:24px;">📸 Речі з вашої шафи у цих образах:</div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;margin-bottom:20px;">` + 
+                    Array.from(mentionedItems.values()).map(img => `
+                        <div style="position:relative;width:90px;">
+                            <img src="${img.img}" style="width:100%;height:110px;object-fit:cover;border-radius:12px;border:2px solid var(--ai-purple);box-shadow:0 4px 12px rgba(168,85,247,0.2);">
+                            <div style="font-size:10px;text-align:center;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${img.name}</div>
+                        </div>
+                    `).join('') +
+                '</div><hr style="border:0;border-top:1px solid var(--glass-border);margin:20px 0;">';
+            }
+
+            document.getElementById('ai-text').innerHTML = imagesHtml + `<br>${txt}`;
 
             // If "shop" mode — show product recommendations from our catalog
             if (currentMode === 'shop') {
@@ -569,9 +656,39 @@ async function showShopRecs() {
 }
 
 // =============================================
-// INIT
+// INIT WITH DEFAULTS
 // =============================================
-renderWardrobe();
+async function initWardrobe() {
+    let items = loadItems();
+    if (!items.length) {
+        try {
+            const r = await fetch('data/products.json');
+            if (r.ok) {
+                const all = await r.json();
+                const dress = all.find(p => p.class_name === 'Dresses' && p.title && p.title.toLowerCase().includes('black'));
+                const top = all.find(p => p.class_name === 'Blouses');
+                const pants = all.find(p => p.class_name === 'Pants' || p.class_name === 'Jeans');
+                const jacket = all.find(p => p.class_name === 'Jackets');
+                
+                const defaults = [dress, top, pants, jacket].filter(Boolean);
+                items = defaults.map((p, i) => ({
+                    id: Date.now() + i,
+                    name: p.title || p.class_name,
+                    cat: p.class_name === 'Dresses' ? 'Сукня' : 
+                         p.class_name === 'Blouses' ? 'Топ / Блуза' : 
+                         (p.class_name === 'Pants' || p.class_name === 'Jeans') ? 'Брюки / Спідниця' : 
+                         p.class_name === 'Jackets' ? 'Куртка / Пальто' : 'Інше',
+                    color: '',
+                    img: `static/${p.clothing_id}.jpg`
+                }));
+                saveItems(items);
+            }
+        } catch(e) {}
+    }
+    renderWardrobe();
+}
+
+initWardrobe();
 </script>
 </body>
 </html>
