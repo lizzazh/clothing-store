@@ -849,7 +849,6 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
 
 Напиши розгорнуту пораду стиліста українською мовою. Відповідь має бути СТРУКТУРОВАНОЮ:
 - Розділи текст на логічні абзаци з жирними заголовками: 👗 **Основа образу**, 👜 **Аксесуари та взуття**, 💄 **Макіяж та зачіска**, 📍 **Куди вдягнути**.
-- У розділі "Аксесуари та взуття" додай кілька емодзі звичайного розміру в рядок, щоб вони виглядали як картиночки (наприклад: 👠 👜 🕶️).
 Важливі правила (СУВОРО дотримуйся їх):
 - НЕ вигадуй кольори для речей зі списку! Якщо в назві речі не вказано, що вона рожева чи зелена — не пиши цього.
 - Спирайся ТІЛЬКИ на перелічені категорії одягу (наприклад, якщо вказано "Светр", не називай його сукнею).
@@ -900,9 +899,59 @@ function renderStaticTips(ST) {
 }
 
 function pickProducts(occ, cat, minR, custom = '') {
+    // Якщо є кастомний запит (напр. "зелена сукня") — шукаємо по ВСІЙ базі, ігноруючи фільтри
+    if (custom) {
+        const cLow = custom.toLowerCase();
+        const dictColors = {
+            'рожев': 'pink|rose|blush', 'червон': 'red', 'син': 'blue|navy', 'блакит': 'blue|light blue',
+            'зелен': 'green|emerald|olive|mint', 'чорн': 'black', 'біл': 'white', 'жовт': 'yellow|mustard',
+            'сір': 'grey|gray|silver', 'коричнев': 'brown', 'бежев': 'beige|camel|tan', 
+            'фіолетов': 'purple|violet', 'бузков': 'lilac'
+        };
+        const dictItems = {
+            'сукн': 'dress', 'світр': 'sweater', 'топ': 'top', 'брюк': 'pant|bottom', 
+            'штани': 'pant|trouser', 'джинс': 'jeans|denim', 'спідниц': 'skirt', 'куртк': 'jacket', 'пальт': 'coat'
+        };
+        
+        let colorTerms = [];
+        for (let k in dictColors) { if (cLow.includes(k)) colorTerms = colorTerms.concat(dictColors[k].split('|')); }
+        
+        let itemTerms = [];
+        for (let k in dictItems) { if (cLow.includes(k)) itemTerms = itemTerms.concat(dictItems[k].split('|')); }
+
+        let pool = [...products];
+        
+        // Нараховуємо бали по всій базі
+        pool.forEach(p => {
+            p._score = 0;
+            const text = ((p.title||'') + ' ' + (p.review_text||'')).toLowerCase();
+            
+            // За колір даємо 50 балів (це критично важливо!)
+            colorTerms.forEach(term => { if (text.includes(term)) p._score += 50; });
+            
+            // За тип речі даємо 10 балів
+            itemTerms.forEach(term => { if (text.includes(term)) p._score += 10; });
+            
+            // Бонус за прямий збіг оригінального слова
+            if (text.includes(cLow)) p._score += 100;
+            
+            // Штраф за дуже низький рейтинг
+            if (p.avg_rating && p.avg_rating < 3.0) p._score -= 20;
+            
+            p._score += Math.random(); 
+        });
+        
+        pool.sort((a, b) => b._score - a._score);
+        
+        // Якщо знайшли щось дуже релевантні (бали >= 10), показуємо їх
+        const topPool = pool.filter(p => p._score >= 10);
+        if (topPool.length > 0) {
+            return topPool.slice(0, 6);
+        }
+    }
+
+    // Звичайний режим (без кастомного запиту, або якщо нічого не знайдено)
     let pool = products.filter(p => p.avg_rating != null && p.avg_rating >= minR);
-    
-    // Ніколи не рекомендувати купальники/білизну, якщо це не пляж
     if (occ !== 'beach') {
         pool = pool.filter(p => p.department_name !== 'Intimate' && p.class_name !== 'Swim');
     }
@@ -911,46 +960,7 @@ function pickProducts(occ, cat, minR, custom = '') {
     if (cat) { pool = pool.filter(p => p.department_name === cat || p.class_name === cat); }
     else if (depts.length) { pool = pool.filter(p => depts.includes(p.department_name)); }
     
-    // --- CUSTOM TEXT SEARCH ---
-    if (custom) {
-        const cLow = custom.toLowerCase();
-        // Словник-перекладач для базових кольорів та речей (оскільки відгуки в базі англійською)
-        const dict = {
-            'рожев': 'pink|rose|blush', 'червон': 'red', 'син': 'blue|navy', 'блакит': 'blue|light blue',
-            'зелен': 'green|emerald|olive|mint', 'чорн': 'black', 'біл': 'white', 'жовт': 'yellow|mustard',
-            'сір': 'grey|gray|silver', 'коричнев': 'brown', 'бежев': 'beige|camel|tan', 
-            'фіолетов': 'purple|violet', 'бузков': 'lilac', 'сукн': 'dress', 'світр': 'sweater', 
-            'топ': 'top', 'брюк': 'pant|bottom', 'штани': 'pant|trouser', 'джинс': 'jeans|denim', 'спідниц': 'skirt'
-        };
-        
-        let searchTerms = [cLow]; // Шукаємо і оригінал
-        for (let k in dict) {
-            if (cLow.includes(k)) searchTerms = searchTerms.concat(dict[k].split('|'));
-        }
-        
-        // Нараховуємо бали речам, які відповідають запиту
-        pool.forEach(p => {
-            p._score = 0;
-            const text = ((p.title||'') + ' ' + (p.review_text||'')).toLowerCase();
-            searchTerms.forEach(term => {
-                if (text.includes(term)) p._score += 10;
-            });
-            p._score += Math.random(); // Випадковий фактор для різноманітності
-        });
-        
-        // Сортуємо: спочатку ті, де є збіг по тексту
-        pool.sort((a, b) => b._score - a._score);
-        
-        // Якщо знайшли хоча б кілька релевантних товарів, беремо їх
-        const topPool = pool.filter(p => p._score >= 10);
-        if (topPool.length > 0) {
-            return topPool.slice(0, 6);
-        }
-        // Якщо збігів немає, продовжуємо як зазвичай (випадковий вибір)
-    }
-
     if (pool.length < 4) {
-        // fallback
         pool = products.filter(p => p.avg_rating != null && p.avg_rating >= Math.max(1, minR - 0.5));
         if (occ !== 'beach') {
             pool = pool.filter(p => p.department_name !== 'Intimate' && p.class_name !== 'Swim');
