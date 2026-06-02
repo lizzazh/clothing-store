@@ -962,7 +962,7 @@ function pickProducts(occ, cat, minR, custom = '') {
         // Якщо знайшли щось дуже релевантні (бали >= 10), показуємо їх
         const topPool = pool.filter(p => p._score >= 10);
         if (topPool.length > 0) {
-            return topPool.slice(0, 6);
+            return topPool.slice(0, 8);
         }
     }
 
@@ -982,7 +982,7 @@ function pickProducts(occ, cat, minR, custom = '') {
             pool = pool.filter(p => p.department_name !== 'Intimate' && p.class_name !== 'Swim');
         }
     }
-    return [...pool].sort(() => Math.random() - .5).slice(0, 6);
+    return [...pool].sort(() => Math.random() - .5).slice(0, 8);
 }
 
 function share(){
