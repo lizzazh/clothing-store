@@ -849,12 +849,12 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
 
 Напиши розгорнуту пораду стиліста українською мовою. Відповідь має бути СТРУКТУРОВАНОЮ:
 - Розділи текст на логічні абзаци з жирними заголовками: 👗 **Основа образу**, 👜 **Аксесуари та взуття**, 💄 **Макіяж та зачіска**, 📍 **Куди вдягнути**.
-- У розділі "Аксесуари та взуття" обов'язково додай великі яскраві емодзі на окремому рядку, щоб вони виглядали як картиночки (наприклад: <div style="font-size:3rem; text-align:center; margin:15px 0;">👠 👜 🕶️</div>).
+- У розділі "Аксесуари та взуття" додай кілька емодзі звичайного розміру в рядок, щоб вони виглядали як картиночки (наприклад: 👠 👜 🕶️).
 Важливі правила (СУВОРО дотримуйся їх):
 - НЕ вигадуй кольори для речей зі списку! Якщо в назві речі не вказано, що вона рожева чи зелена — не пиши цього.
 - Спирайся ТІЛЬКИ на перелічені категорії одягу (наприклад, якщо вказано "Светр", не називай його сукнею).
 - Аксесуари ти можеш радити будь-які, оскільки ми їх лише пропонуємо додати.
-Пиши тепло, надихаюче, ніби розмовляєш з подругою. Використовуй HTML-тег <br> для переходу на новий рядок!`;
+Пиши тепло, надихаюче, ніби розмовляєш з подругою.`;
 
     fetch("/api/key")
     .then(r => r.json())
@@ -878,8 +878,8 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
     .then(data => {
         if(data.candidates && data.candidates[0].content.parts[0].text) {
             let aiText = data.candidates[0].content.parts[0].text;
-            aiText = aiText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            document.getElementById('tips').innerHTML = `<div class="tip-item" style="display:block; padding:15px; border-radius:12px; background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.3); line-height:1.6;"><b style="color:var(--ai-purple); margin-bottom:10px; display:block;">✨ Вердикт ШІ (Gemini):</b> ${aiText}</div>`;
+            aiText = aiText.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            document.getElementById('tips').innerHTML = `<div class="tip-item" style="display:block; padding:15px; border-radius:12px; background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.3); line-height:1.6;"><b style="color:var(--ai-purple); margin-bottom:10px; display:block;">✨ Вердикт ШІ (Gemini):</b><br>${aiText}</div>`;
         } else {
             throw new Error("Invalid response from Gemini API");
         }

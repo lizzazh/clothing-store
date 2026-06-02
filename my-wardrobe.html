@@ -493,7 +493,7 @@ async function generateCapsule() {
     // Build wardrobe description
     const itemsList = items.map(i => `"${i.name}" (${i.cat}${i.color ? ', ' + i.color : ''})`).join('; ');
 
-    const structRules = `Відповідь має бути СТРУКТУРОВАНОЮ: використовуй жирний текст для назв і тег <br> для нових рядків. Додавай великі яскраві емодзі на окремому рядку (наприклад: <div style="font-size:3rem; text-align:center; margin:15px 0;">👗 👠 👜</div>) щоб візуально розділяти блоки.`;
+    const structRules = `Відповідь має бути СТРУКТУРОВАНОЮ: використовуй жирний текст для назв і переходь на новий рядок для нових абзаців. Додавай кілька емодзі звичайного розміру в рядок (наприклад: 👗 👠 👜) щоб візуально прикрашати блоки.`;
     const modePrompts = {
         combine: `У мене є такий одяг: ${itemsList}.\nЗапропонуй 2-3 конкретних готових образи (outfits), поєднуючи ці речі. Для кожного образу вкажи: 1) назву образу (яскрава); 2) які конкретні речі з мого списку входять; 3) до якої події підходить; 4) коротку пораду стиліста. Пиши красиво, по-українськи.\n${structRules}\nСУВОРЕ ПРАВИЛО: Використовуй ТІЛЬКИ ті речі та кольори, які я перелічила. Не вигадуй одяг чи кольори, яких у мене немає!`,
         capsule: `У мене є такий одяг: ${itemsList}.\nСкладіть для мене мінімалістичну капсулу гардеробу на основі того, що вже є. Визнач базові, доповнюючі і акцентні речі. Поясни логіку капсули. Пиши по-українськи.\n${structRules}\nСУВОРЕ ПРАВИЛО: Спирайся ТІЛЬКИ на мої речі. Не придумуй їм інші кольори чи фасони!`,
@@ -520,8 +520,8 @@ async function generateCapsule() {
         const data = await r.json();
         if (data.candidates && data.candidates[0].content.parts[0].text) {
             let txt = data.candidates[0].content.parts[0].text;
-            txt = txt.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
-            document.getElementById('ai-text').innerHTML = txt;
+            txt = txt.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            document.getElementById('ai-text').innerHTML = `<br>${txt}`;
 
             // If "shop" mode — show product recommendations from our catalog
             if (currentMode === 'shop') {
