@@ -930,13 +930,14 @@ function pickProducts(occ, cat, minR, custom = '') {
             const text = ((p.title||'') + ' ' + (p.review_text||'')).toLowerCase();
             const realColor = imageColors[p.clothing_id] || '';
             
-            // За колір даємо 50 балів (використовуємо реальний колір з картинки, якщо є, або текст)
+            // За колір даємо 100 балів якщо це реальний колір з картинки, і тільки 20 якщо з тексту
             colorTerms.forEach(term => { 
-                if (realColor === term || text.includes(term)) p._score += 50; 
+                if (realColor === term) p._score += 100;
+                else if (text.includes(term)) p._score += 20; 
             });
             
-            // За тип речі даємо 10 балів
-            itemTerms.forEach(term => { if (text.includes(term)) p._score += 10; });
+            // За тип речі даємо 20 балів
+            itemTerms.forEach(term => { if (text.includes(term)) p._score += 20; });
             
             // Бонус за прямий збіг оригінального слова
             if (text.includes(cLow)) p._score += 100;
