@@ -648,10 +648,13 @@ function rateLabel(){
 // PRODUCTS DATA
 // ============================================================
 let products=[];
+let imageColors={};
 (async function(){
     try{
         const r=await fetch('data/products.json');
         if(r.ok) products=await r.json();
+        const rColors = await fetch('data/image_colors.json');
+        if (rColors.ok) imageColors = await rColors.json();
     }catch(e){console.warn('Demo mode (no server)');}
 })();
 
@@ -925,9 +928,12 @@ function pickProducts(occ, cat, minR, custom = '') {
         pool.forEach(p => {
             p._score = 0;
             const text = ((p.title||'') + ' ' + (p.review_text||'')).toLowerCase();
+            const realColor = imageColors[p.clothing_id] || '';
             
-            // За колір даємо 50 балів (це критично важливо!)
-            colorTerms.forEach(term => { if (text.includes(term)) p._score += 50; });
+            // За колір даємо 50 балів (використовуємо реальний колір з картинки, якщо є, або текст)
+            colorTerms.forEach(term => { 
+                if (realColor === term || text.includes(term)) p._score += 50; 
+            });
             
             // За тип речі даємо 10 балів
             itemTerms.forEach(term => { if (text.includes(term)) p._score += 10; });
