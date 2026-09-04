@@ -62,60 +62,44 @@
         100%{transform:translateY(-10vh);opacity:0;}
     }
 
-    a{color:inherit;text-decoration:none;}
-
-    /* ---- TOP NAV ---- */
+    /* NAV */
     .ai-nav{
-        position:relative;z-index:20;
         display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;
-        padding:20px 40px;
-        border-bottom:1px solid var(--glass-border);
-        background:rgba(15,12,41,0.6);
-        backdrop-filter:blur(20px);
+        padding:15px 40px;border-bottom:1px solid var(--glass-border);
+        background:rgba(15,12,41,0.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+        position:relative;z-index:20;
     }
     .ai-brand{
-        font-family:'Great Vibes',cursive;font-size:34px;
-        color:white;
-        filter:drop-shadow(0 0 18px rgba(168,85,247,0.5));
-        transition:filter .3s;
+        font-family:'Great Vibes',cursive;font-size:32px;color:white;text-decoration:none;
+        text-shadow:0 0 20px rgba(168,85,247,0.4);
     }
-    .ai-brand:hover{filter:drop-shadow(0 0 28px rgba(236,72,153,0.7));}
     .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
     .nav-link{
         color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;
-        padding:8px 16px;border-radius:20px;
+        padding:6px 14px;border-radius:20px;text-decoration:none;
         border:1px solid var(--glass-border);background:var(--glass-bg);
-        transition:all .25s;
+        transition:all 0.3s ease;
     }
     .nav-link:hover,.nav-link.active{
         color:#fff;background:rgba(168,85,247,0.18);
-        border-color:rgba(168,85,247,0.45);
+        border-color:rgba(168,85,247,0.45);box-shadow:0 0 15px rgba(168,85,247,0.2);
     }
 
-    /* ---- HERO ---- */
-    .ai-hero{
-        position:relative;z-index:10;
-        text-align:center;padding:60px 20px 45px;
-    }
+    /* HERO */
+    .ai-hero{text-align:center;padding:45px 20px 25px;position:relative;z-index:2;}
     .ai-badge{
-        display:inline-flex;align-items:center;gap:8px;
-        background:linear-gradient(135deg,rgba(168,85,247,.18),rgba(236,72,153,.18));
-        border:1px solid rgba(168,85,247,.35);border-radius:30px;
-        padding:8px 22px;font-size:12px;font-weight:700;
-        color:var(--ai-purple);letter-spacing:1px;text-transform:uppercase;
-        margin-bottom:22px;
+        display:inline-block;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);
+        color:var(--ai-purple);font-size:12px;font-weight:600;padding:6px 18px;border-radius:20px;
+        text-transform:uppercase;letter-spacing:1px;margin-bottom:15px;
     }
-    .ai-badge::before{content:'✨';}
-    h1.ai-title{
-        font-family:'Great Vibes',cursive;
-        font-size:clamp(52px,9vw,88px);font-weight:400;
-        background:linear-gradient(135deg,#fff 0%,var(--ai-purple) 45%,var(--ai-pink) 100%);
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-        margin-bottom:16px;line-height:1.1;
+    .ai-title{
+        font-family:'Great Vibes',cursive;font-size:56px;line-height:1.1;
+        background:linear-gradient(135deg,#fff 0%,var(--ai-purple) 60%,var(--ai-pink) 100%);
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+        margin-bottom:12px;text-shadow:0 10px 30px rgba(168,85,247,0.3);
     }
     .ai-subtitle{
-        font-size:16px;color:rgba(255,255,255,.6);
-        max-width:560px;margin:0 auto 10px;font-weight:300;
+        color:rgba(255,255,255,0.6);font-size:16px;max-width:560px;margin:0 auto;font-weight:300;
     }
 
     /* ---- MAIN GRID ---- */
@@ -496,6 +480,16 @@
         </div>
 
         <div class="form-block">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:14px; font-weight:600; color:#fff;">
+                <input type="checkbox" id="use-wardrobe" style="width:18px; height:18px; accent-color:var(--ai-pink);">
+                👚 Враховувати речі з мого гардероба
+            </label>
+            <div id="wardrobe-msg" style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:4px; display:none;">
+                Ваша шафа порожня. <a href="my-wardrobe.html" style="color:var(--ai-cyan);">Додайте речі</a> спочатку.
+            </div>
+        </div>
+
+        <div class="form-block">
             <span class="form-lbl">Мінімальний рейтинг товарів</span>
             <div class="rating-row">
                 <input type="range" id="r-slide" min="1" max="5" step="0.5" value="4" oninput="rateLabel()">
@@ -597,6 +591,9 @@
     </div>
 </div>
 
+<script src="js/wardrobe-db.js"></script>
+<script src="js/ai-service.js"></script>
+<script src="js/match-score.js"></script>
 <script>
 // ============================================================
 // PARTICLES
@@ -816,22 +813,42 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
     ).join('');
 
     // Products
-    const picks = pickProducts(occ, cat, minR, custom);
+    const cb = document.getElementById('use-wardrobe');
+    const includeWardrobe = cb && !cb.disabled && cb.checked;
+    
+    const picks = pickProductsMixed(occ, cat, minR, custom, body, stl, seas, includeWardrobe);
+    
     document.getElementById('prods').innerHTML=picks.length?picks.map(p=>{
-        const r=p.avg_rating!=null?p.avg_rating.toFixed(1):'—';
-        const nm=p.title||p.class_name||'Товар';
-        const short=nm.length>34?nm.slice(0,32)+'...':nm;
-        return `<a href="product.html?id=${p.clothing_id}" class="prod-card">
-            <img class="prod-img" src="static/${p.clothing_id}.jpg" alt="${p.class_name||'item'}"
-                onerror="this.src='https://via.placeholder.com/200x200/1e1b4b/a855f7?text=${encodeURIComponent(p.class_name||'item')}'">
-            <div class="prod-info">
-                <div class="prod-cat">${p.class_name||p.department_name||'Товар'}</div>
-                <div class="prod-name">${short}</div>
-                <div class="prod-rating"><span class="star-gold">⭐</span>${r} · ${p.review_count} відг.</div>
-            </div>
-        </a>`;
+        if (p._isWardrobe) {
+            const short = p.name.length > 34 ? p.name.slice(0,32)+'...' : p.name;
+            return `<a href="my-wardrobe.html" class="prod-card" style="border-color:var(--ai-pink);">
+                <div style="position:absolute; top:8px; right:8px; background:var(--ai-pink); color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; z-index:2;">З гардероба</div>
+                <div style="position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.6); color:var(--ai-cyan); font-size:11px; font-weight:700; padding:2px 6px; border-radius:4px; z-index:2; border:1px solid var(--ai-cyan);">${p._score}% Match</div>
+                <img class="prod-img" src="${p.img}" alt="${p.category}">
+                <div class="prod-info">
+                    <div class="prod-cat">${p.category || 'Річ'}</div>
+                    <div class="prod-name">${short}</div>
+                    <div class="prod-rating" style="color:var(--ai-pink);">Ваша річ</div>
+                </div>
+            </a>`;
+        } else {
+            const r=p.avg_rating!=null?p.avg_rating.toFixed(1):'—';
+            const nm=p.title||p.class_name||'Товар';
+            const short=nm.length>34?nm.slice(0,32)+'...':nm;
+            return `<a href="product.html?id=${p.clothing_id}" class="prod-card">
+                <div style="position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.1); color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; z-index:2; backdrop-filter:blur(4px);">З каталогу</div>
+                <div style="position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.6); color:var(--ai-cyan); font-size:11px; font-weight:700; padding:2px 6px; border-radius:4px; z-index:2; border:1px solid var(--ai-cyan);">${p._score}% Match</div>
+                <img class="prod-img" src="static/${p.clothing_id}.jpg" alt="${p.class_name||'item'}"
+                    onerror="this.src='https://via.placeholder.com/200x200/1e1b4b/a855f7?text=${encodeURIComponent(p.class_name||'item')}'">
+                <div class="prod-info">
+                    <div class="prod-cat">${p.class_name||p.department_name||'Товар'}</div>
+                    <div class="prod-name">${short}</div>
+                    <div class="prod-rating"><span class="star-gold">⭐</span>${r} · ${p.review_count} відг.</div>
+                </div>
+            </a>`;
+        }
     }).join('')
-    :'<p style="color:rgba(255,255,255,.45);font-size:13px;">Товарів не знайдено за вашими критеріями. Спробуйте знизити мінімальний рейтинг.</p>';
+    :'<p style="color:rgba(255,255,255,.45);font-size:13px;">Товарів не знайдено за вашими критеріями.</p>';
 
     // Tips & Gemini Integration
     let profile = {};
@@ -839,56 +856,68 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
     
     document.getElementById('tips').innerHTML = `<div class="tip-item"><div class="tip-dot"></div><span>✨ Запитую думку нейромережі Gemini...</span></div>`;
     
-    // Build product list string with specific categories so AI doesn't guess
-    const prodNames = picks.map(p => {
-        let cat = p.class_name || p.department_name || 'Річ';
-        let name = p.title ? `«${p.title}»` : '';
-        return `${cat} ${name}`.trim();
-    }).join(", ");
+    // Build product list string
+    let catalogDesc = [];
+    let wardrobeDesc = [];
+    
+    picks.forEach(p => {
+        if (p._isWardrobe) {
+            wardrobeDesc.push(`[Ваша річ] ${p.category || 'Річ'}: «${p.name || ''}» (колір: ${p.color||'не вказано'})`);
+        } else {
+            let cat = p.class_name || p.department_name || 'Річ';
+            let name = p.title ? `«${p.title}»` : '';
+            catalogDesc.push(`[З каталогу] ${cat} ${name}`);
+        }
+    });
     
     const bodyLabel = BODY_LABELS[body] || profile.body || 'не вказано';
-    const prompt = `Ти — топовий модний стиліст. Твій клієнт: ${profile.name||'Дівчина'}, фігура: ${bodyLabel}. Стиль: ${ST.label||stl}, настрій: ${moodTxt||mood}. Подія: ${O.label||occ}, сезон: ${S.label||seas}. Додаткове побажання клієнта: ${custom || 'немає'}.
-Ти підібрала для неї такий одяг з нашого магазину: ${prodNames}.
+    const prompt = `Ти — модний стиліст. Клієнтка: ${profile.name||'Дівчина'}, фігура: ${bodyLabel}. Стиль: ${ST.label||stl}, настрій: ${moodTxt||mood}. Подія: ${O.label||occ}, сезон: ${S.label||seas}.
+Додатковий запит: ${custom || 'немає'}.
 
-Напиши розгорнуту пораду стиліста українською мовою. Відповідь має бути СТРУКТУРОВАНОЮ:
-- Розділи текст на логічні абзаци з жирними заголовками: 👗 **Основа образу**, 👜 **Аксесуари та взуття**, 💄 **Макіяж та зачіска**, 📍 **Куди вдягнути**.
-Важливі правила (СУВОРО дотримуйся їх):
-- НЕ вигадуй кольори для речей зі списку! Якщо в назві речі не вказано, що вона рожева чи зелена — не пиши цього.
-- Спирайся ТІЛЬКИ на перелічені категорії одягу (наприклад, якщо вказано "Светр", не називай його сукнею).
-- Аксесуари ти можеш радити будь-які, оскільки ми їх лише пропонуємо додати.
-Пиши тепло, надихаюче, ніби розмовляєш з подругою.`;
+Гардероб клієнтки: ${wardrobeDesc.length ? wardrobeDesc.join(', ') : 'немає'}
+Пропозиції з магазину: ${catalogDesc.length ? catalogDesc.join(', ') : 'немає'}
 
-    fetch("/api/key")
-    .then(r => r.json())
-    .then(keyData => {
-        if(!keyData.key) throw new Error("API ключ не знайдено на сервері");
+Напиши пораду стиліста українською. Структура:
+- 👗 **Основа образу** (як поєднати речі)
+- 👜 **Деталі**
+- 📍 **Поради стиліста**
+ПРАВИЛА:
+- Не вигадуй кольори.
+- Якщо використовуєш річ клієнтки, відзначай, що це її річ (напр. "Ваша чорна сукня").`;
+
+    // Extract item IDs for feedback
+    const itemIds = picks.map(p => p._isWardrobe ? `w_${p.id}` : `c_${p.clothing_id}`);
+
+    AIService.generateText(prompt, { model: 'standard' })
+    .then(aiTextRaw => {
+        let aiText = AIService.formatMarkdown(aiTextRaw);
         
-        return fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${keyData.key}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-    })
-    .then(async r => {
-        if(!r.ok) {
-            const errData = await r.json().catch(()=>({}));
-            if(r.status === 429) throw new Error("Ліміт запитів до Gemini вичерпано (Помилка 429). Зачекайте хвилину і спробуйте знову.");
-            throw new Error(errData.error?.message || `Помилка API: ${r.status}`);
-        }
-        return r.json();
-    })
-    .then(data => {
-        if(data.candidates && data.candidates[0].content.parts[0].text) {
-            let aiText = data.candidates[0].content.parts[0].text;
-            aiText = aiText.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            document.getElementById('tips').innerHTML = `<div class="tip-item" style="display:block; padding:15px; border-radius:12px; background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.3); line-height:1.6;"><b style="color:var(--ai-purple); margin-bottom:10px; display:block;">✨ Вердикт ШІ (Gemini):</b><br>${aiText}</div>`;
-        } else {
-            throw new Error("Invalid response from Gemini API");
-        }
+        // Render feedback UI inline
+        const recId = 'rec_' + Date.now();
+        const feedbackHtml = `
+            <div class="feedback-box" style="margin-top:20px; padding-top:15px; border-top:1px solid rgba(255,255,255,0.1); display:flex; gap:10px;">
+                <button onclick="submitFeedback('${recId}', 'like', '', '${occ}', '${stl}', '${itemIds.join(',')}'); this.style.opacity=0.5; alert('Дякуємо за відгук!')" style="background:rgba(255,255,255,0.1); color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">👍 Подобається</button>
+                <button onclick="document.getElementById('dislike-reasons').style.display='block'" style="background:rgba(255,255,255,0.1); color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">👎 Не моє</button>
+            </div>
+            <div id="dislike-reasons" style="display:none; margin-top:10px;">
+                <select id="dislike-sel" style="background:var(--card-bg); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:6px; border-radius:4px;">
+                    <option value="">Оберіть причину...</option>
+                    <option value="style">Не мій стиль</option>
+                    <option value="color">Не подобається колір</option>
+                    <option value="formal">Занадто офіційно</option>
+                    <option value="casual">Занадто casual</option>
+                    <option value="other">Інше</option>
+                </select>
+                <button onclick="submitFeedback('${recId}', 'dislike', document.getElementById('dislike-sel').value, '${occ}', '${stl}', '${itemIds.join(',')}'); alert('Відгук враховано для майбутніх рекомендацій!'); this.parentElement.style.display='none';" style="background:var(--ai-cyan); color:#111; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">Відправити</button>
+            </div>
+        `;
+        
+        document.getElementById('tips').innerHTML = `<div class="tip-item" style="display:block; padding:15px; border-radius:12px; background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.3); line-height:1.6;"><b style="color:var(--ai-purple); margin-bottom:10px; display:block;">✨ Вердикт ШІ:</b><br>${aiText}${feedbackHtml}</div>`;
     })
     .catch(err => {
-        console.error("Gemini Error:", err);
-        document.getElementById('tips').innerHTML = `<div class="tip-item" style="color: #ef4444;">⚠️ Помилка: ${err.message}. Тим часом показуємо базові поради:</div>`;
+        console.error("AI Error:", err);
+        const msg = err.userMessage || err.message || 'Невідома помилка';
+        document.getElementById('tips').innerHTML = `<div class="tip-item" style="color: #ef4444;">⚠️ ${msg}. Тим часом показуємо базові поради:</div>`;
         document.getElementById('tips').innerHTML += (ST.tips||[]).map(t=>
             `<div class="tip-item"><div class="tip-dot"></div><span>${t}</span></div>`
         ).join('');
@@ -900,89 +929,44 @@ function renderStaticTips(ST) {
         `<div class="tip-item"><div class="tip-dot"></div><span>${t}</span></div>`
     ).join('');
 }
+function pickProductsMixed(occ, cat, minR, custom, body, stl, seas, includeWardrobe) {
+    const context = {
+        occasion: occ,
+        style: stl,
+        season: seas,
+        body: body,
+        custom: custom,
+        weather: null,
+        feedbackDislikes: getDislikedItemIds()
+    };
 
-function pickProducts(occ, cat, minR, custom = '') {
-    // Якщо є кастомний запит (напр. "зелена сукня") — шукаємо по ВСІЙ базі, ігноруючи фільтри
-    if (custom) {
-        const cLow = custom.toLowerCase();
-        const dictColors = {
-            'рожев': 'pink|rose|blush', 'червон': 'red', 'бордов': 'red|burgundy|maroon',
-            'син': 'blue|navy', 'блакит': 'blue|light blue', 'волошков': 'blue',
-            'зелен': 'green|emerald|olive|mint', 'оливков': 'green|olive', 'мʼятн': 'green|mint', 'мятн': 'green|mint', 'смарагдов': 'green|emerald', 'хакі': 'green|khaki',
-            'чорн': 'black', 'біл': 'white', 'жовт': 'yellow|mustard', 'гірчичн': 'yellow|mustard',
-            'сір': 'grey|gray|silver', 'коричнев': 'brown', 'бежев': 'beige|camel|tan', 
-            'фіолетов': 'purple|violet', 'бузков': 'lilac', 'персиков': 'pink|peach', 'малинов': 'pink|raspberry'
-        };
-        const dictItems = {
-            'сукн': 'dresses', 'світр': 'sweaters|knits|fine gauge', 'топ': 'blouses|knits', 
-            'брюк': 'pants|casual bottoms', 'штани': 'pants|casual bottoms', 'джинс': 'jeans', 
-            'спідниц': 'skirts', 'куртк': 'jackets|outerwear', 'пальт': 'outerwear',
-            'блуз': 'blouses', 'сорочк': 'blouses', 'футболк': 'knits',
-            'шорт': 'shorts', 'купальник': 'swim', 'білизн': 'intimates|chemises|sleep'
-        };
-        
-        let colorTerms = [];
-        for (let k in dictColors) { if (cLow.includes(k)) colorTerms = colorTerms.concat(dictColors[k].split('|')); }
-        
-        let itemTerms = [];
-        for (let k in dictItems) { if (cLow.includes(k)) itemTerms = itemTerms.concat(dictItems[k].split('|')); }
+    let allItems = [];
 
-        let pool = [...products];
+    // Catalog items
+    products.forEach(p => {
+        if (p.avg_rating && p.avg_rating < minR) return;
+        if (cat && p.department_name !== cat && p.class_name !== cat) return;
         
-        // Нараховуємо бали по всій базі
-        pool.forEach(p => {
-            p._score = 0;
-            const text = ((p.title||'') + ' ' + (p.review_text||'')).toLowerCase();
-            const realColor = imageColors[p.clothing_id] || '';
-            const className = (p.class_name || '').toLowerCase();
-            
-            // За колір даємо 100 балів якщо це реальний колір з картинки, і тільки 20 якщо з тексту
-            colorTerms.forEach(term => { 
-                if (realColor === term) p._score += 100;
-                else if (text.includes(term)) p._score += 20; 
-            });
-            
-            // За тип речі (категорію) даємо 150 балів, щоб гарантувати правильний тип
-            itemTerms.forEach(term => { 
-                if (className === term || className.includes(term)) p._score += 150; 
-                else if (text.includes(term) || (p.title||'').toLowerCase().includes(term)) p._score += 20;
-            });
-            
-            // Бонус за прямий збіг оригінального слова
-            if (text.includes(cLow)) p._score += 100;
-            
-            // Штраф за дуже низький рейтинг
-            if (p.avg_rating && p.avg_rating < 3.0) p._score -= 20;
-            
-            p._score += Math.random(); 
+        p._score = MatchScore.calculateMatchScore(p, context);
+        p._isWardrobe = false;
+        allItems.push(p);
+    });
+
+    // Wardrobe items
+    if (includeWardrobe) {
+        _wardrobeCache.forEach(w => {
+            const wContext = { ...context, isWardrobeItem: true };
+            w._score = MatchScore.calculateMatchScore(w, wContext);
+            w._isWardrobe = true;
+            allItems.push(w);
         });
-        
-        pool.sort((a, b) => b._score - a._score);
-        
-        // Якщо знайшли щось дуже релевантні (бали >= 10), показуємо їх
-        const topPool = pool.filter(p => p._score >= 10);
-        if (topPool.length > 0) {
-            return topPool.slice(0, 8);
-        }
     }
 
-    // Звичайний режим (без кастомного запиту, або якщо нічого не знайдено)
-    let pool = products.filter(p => p.avg_rating != null && p.avg_rating >= minR);
-    if (occ !== 'beach') {
-        pool = pool.filter(p => p.department_name !== 'Intimate' && p.class_name !== 'Swim');
-    }
-    
-    const depts = DB.deptMap[occ] || [];
-    if (cat) { pool = pool.filter(p => p.department_name === cat || p.class_name === cat); }
-    else if (depts.length) { pool = pool.filter(p => depts.includes(p.department_name)); }
-    
-    if (pool.length < 4) {
-        pool = products.filter(p => p.avg_rating != null && p.avg_rating >= Math.max(1, minR - 0.5));
-        if (occ !== 'beach') {
-            pool = pool.filter(p => p.department_name !== 'Intimate' && p.class_name !== 'Swim');
-        }
-    }
-    return [...pool].sort(() => Math.random() - .5).slice(0, 8);
+    // Sort by score
+    allItems.sort((a, b) => b._score - a._score);
+
+    // Pick top 8, ensure at least some diversity if possible, but keep it simple
+    return allItems.slice(0, 8);
 }
 
 function share(){
@@ -1003,8 +987,40 @@ function toast(msg){
     setTimeout(()=>t.remove(),2600);
 }
 
+// Feedback System
+function submitFeedback(recId, action, reason, occ, stl, itemIds) {
+    try {
+        const feedbackList = JSON.parse(localStorage.getItem('ai_feedback') || '[]');
+        feedbackList.push({
+            id: recId,
+            timestamp: Date.now(),
+            action,
+            reason,
+            event: occ,
+            style: stl,
+            itemIds: itemIds.split(',')
+        });
+        localStorage.setItem('ai_feedback', JSON.stringify(feedbackList));
+    } catch(e) {
+        console.error('Failed to save feedback', e);
+    }
+}
+
+function getDislikedItemIds() {
+    try {
+        const feedbackList = JSON.parse(localStorage.getItem('ai_feedback') || '[]');
+        const disliked = [];
+        feedbackList.forEach(f => {
+            if (f.action === 'dislike') disliked.push(...(f.itemIds || []));
+        });
+        return disliked;
+    } catch(e) { return []; }
+}
+
 // URL params & Profile
-window.addEventListener('load',()=>{
+let _wardrobeCache = [];
+
+window.addEventListener('load', async () => {
     const p=new URLSearchParams(location.search);
     if(p.get('occasion'))setChip('g-occasion',p.get('occasion'));
     if(p.get('style'))setChip('g-style',p.get('style'));
@@ -1020,6 +1036,18 @@ window.addEventListener('load',()=>{
             if(!p.get('style') && profile.style) {
                 setChip('g-style', profile.style);
             }
+        }
+    } catch(e) {}
+
+    // Load Wardrobe
+    try {
+        _wardrobeCache = await WardrobeDB.getAll();
+        const cb = document.getElementById('use-wardrobe');
+        const msg = document.getElementById('wardrobe-msg');
+        if (_wardrobeCache.length === 0) {
+            cb.disabled = true;
+            cb.checked = false;
+            msg.style.display = 'block';
         }
     } catch(e) {}
 });
