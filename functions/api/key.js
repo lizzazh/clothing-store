@@ -3,7 +3,8 @@ export async function onRequest(context) {
     // and bypass Cloudflare's EU IP restrictions.
     return new Response(JSON.stringify({ 
         key: context.env.GEMINI_API_KEY,
-        openrouter_key: context.env.OPENROUTER_API_KEY || null
+        openrouter_key: context.env.OPENROUTER_API_KEY || null,
+        groq_key: context.env.GROQ_API_KEY || null
     }), {
         headers: { 
             'Content-Type': 'application/json',
