@@ -15,13 +15,13 @@ const AIService = {
             vision: 'gemini-3.6-flash'
         },
         groq: {
-            standard: 'llama-3.1-70b-versatile',
+            standard: 'llama-3.3-70b-versatile',
             light: 'llama-3.1-8b-instant'
         },
         openrouter: {
-            standard: 'meta-llama/llama-3.1-8b-instruct:free',
-            light: 'meta-llama/llama-3.1-8b-instruct:free',
-            vision: 'qwen/qwen-2-vl-7b-instruct:free'
+            standard: 'openrouter/free',
+            light: 'openrouter/free',
+            vision: 'openrouter/free'
         }
     },
 
