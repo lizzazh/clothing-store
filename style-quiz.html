@@ -113,35 +113,63 @@
         .step.active { display:block; }
         @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
 
+        .question-header {
+            text-align:center; margin-bottom:30px;
+        }
+        .question-step-label {
+            font-size:12px; font-weight:700; color:var(--ai-pink); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; display:inline-block;
+            background:rgba(236,72,153,0.1); padding:4px 12px; border-radius:20px; border:1px solid rgba(236,72,153,0.3);
+        }
         .question-title {
-            font-size:22px; font-weight:600; text-align:center; margin-bottom:25px; color:#fff;
+            font-size:24px; font-weight:600; color:#fff;
         }
 
         /* Options Grid */
-        .options-grid {
-            display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:15px;
+        .answers-grid {
+            display:grid; grid-template-columns:repeat(2, 1fr); gap:15px;
         }
-        .option-card {
-            background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);
-            border-radius:16px; padding:25px 15px; text-align:center; cursor:pointer;
-            transition:all 0.3s ease; display:flex; flex-direction:column; align-items:center; gap:12px;
-            min-height: 140px;
+        .answer-card {
+            background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+            border-radius:16px; padding:20px 15px; text-align:center; cursor:pointer;
+            transition:all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); display:flex; flex-direction:column; align-items:center; gap:12px;
+            position:relative; overflow:hidden;
         }
-        .option-card:hover {
+        .answer-card:hover {
             background:rgba(255,255,255,0.08); transform:translateY(-3px);
-            border-color:rgba(168,85,247,0.3);
+            border-color:rgba(168,85,247,0.4);
+            box-shadow:0 8px 24px rgba(0,0,0,0.2);
         }
-        .option-card.selected {
-            background:rgba(168,85,247,0.15); border-color:var(--ai-purple);
-            box-shadow:0 0 20px rgba(168,85,247,0.2); transform:scale(1.02);
-        }     .answer-emoji {
-            font-size:48px; margin-bottom:15px;
-            display:inline-block;
-            transition:transform 0.3s;
+        .answer-card.selected {
+            background:rgba(168,85,247,0.15); border-color:var(--ai-pink);
+            box-shadow:0 0 20px rgba(236,72,153,0.3); transform:scale(1.02);
         }
-        .answer-card:hover .answer-emoji { transform:scale(1.1); }
+        .answer-card.selected::before {
+            content:'✓'; position:absolute; top:12px; right:12px;
+            background:linear-gradient(135deg, var(--ai-purple), var(--ai-pink));
+            color:white; width:22px; height:22px; border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            font-size:12px; font-weight:bold; box-shadow:0 2px 8px rgba(236,72,153,0.4);
+        }
+        
+        .answer-icon-wrap {
+            width:56px; height:56px; border-radius:50%;
+            background:linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+            border:1px solid rgba(255,255,255,0.1);
+            display:flex; align-items:center; justify-content:center;
+            margin-bottom:5px; transition:transform 0.3s ease, background 0.3s ease;
+        }
+        .answer-card:hover .answer-icon-wrap {
+            transform:scale(1.1); background:rgba(168,85,247,0.1); border-color:rgba(168,85,247,0.3);
+        }
+        .answer-card.selected .answer-icon-wrap {
+            background:linear-gradient(135deg, rgba(168,85,247,0.2), rgba(236,72,153,0.2));
+            border-color:rgba(236,72,153,0.4);
+        }
+        .answer-emoji {
+            font-size:28px; line-height:1;
+        }
         .answer-text {
-            font-size:14px; font-weight:600; color:rgba(255,255,255,0.9);
+            font-size:15px; font-weight:500; color:rgba(255,255,255,0.9); line-height:1.4;
         }
 
         /* ---- RESULT SCREEN ---- */
@@ -216,8 +244,13 @@
 
         @media (max-width: 600px) {
             .quiz-container { padding:25px 15px; }
-            .answers-grid { grid-template-columns:repeat(2, 1fr); }
-            .hero-title { font-size:42px; }
+            .answers-grid { grid-template-columns:1fr; gap:12px; }
+            .answer-card { padding:12px 15px; flex-direction:row; align-items:center; text-align:left; min-height:auto; }
+            .answer-icon-wrap { width:48px; height:48px; margin-bottom:0; margin-right:15px; flex-shrink:0; }
+            .answer-emoji { font-size:24px; }
+            .answer-card.selected::before { top:50%; margin-top:-11px; right:15px; }
+            .hero-title { font-size:38px; }
+            .hero-subtitle { font-size:14px; margin-bottom:20px; }
         }
     </style>
 </head>
@@ -242,28 +275,31 @@
         <p class="hero-subtitle">5 швидких кроків, щоб розкрити ваш унікальний стилетип та отримати персоналізовані рекомендації.</p>
 
         <div class="quiz-container" id="quiz-container">
-            <div class="progress-wrapper">
+            <div class="progress-wrap">
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
 
             <!-- Step 1 -->
             <div class="step active" id="step-1">
-                <div class="question-title">Крок 1/5: Який колір вас приваблює?</div>
+                <div class="question-header">
+                    <div class="question-step-label">Крок 1 із 5</div>
+                    <div class="question-title">Який колір вас приваблює?</div>
+                </div>
                 <div class="answers-grid">
                     <div class="answer-card" onclick="selectAnswer(1, 'classic')">
-                        <span class="answer-emoji">🖤</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🖤</span></div>
                         <div class="answer-text">Чорний / Білий / Нейтральні</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(1, 'boho')">
-                        <span class="answer-emoji">🌿</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🌿</span></div>
                         <div class="answer-text">Земляні тони / Осінні</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(1, 'romantic')">
-                        <span class="answer-emoji">💖</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">💖</span></div>
                         <div class="answer-text">Пастельні / Ніжні</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(1, 'streetwear')">
-                        <span class="answer-emoji">🌈</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🌈</span></div>
                         <div class="answer-text">Яскраві / Неоновий поп</div>
                     </div>
                 </div>
@@ -271,22 +307,25 @@
 
             <!-- Step 2 -->
             <div class="step" id="step-2">
-                <div class="question-title">Крок 2/5: Ваш ідеальний силует?</div>
+                <div class="question-header">
+                    <div class="question-step-label">Крок 2 із 5</div>
+                    <div class="question-title">Ваш ідеальний силует?</div>
+                </div>
                 <div class="answers-grid">
                     <div class="answer-card" onclick="selectAnswer(2, 'elegant')">
-                        <span class="answer-emoji">👗</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">👗</span></div>
                         <div class="answer-text">Облягаючий / Підкреслений</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(2, 'boho')">
-                        <span class="answer-emoji">🌊</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🌊</span></div>
                         <div class="answer-text">Вільний та текучий</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(2, 'classic')">
-                        <span class="answer-emoji">📐</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">📐</span></div>
                         <div class="answer-text">Структурований / Чіткий</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(2, 'romantic')">
-                        <span class="answer-emoji">🎀</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🎀</span></div>
                         <div class="answer-text">Романтичний / Шаруватий</div>
                     </div>
                 </div>
@@ -294,22 +333,25 @@
 
             <!-- Step 3 -->
             <div class="step" id="step-3">
-                <div class="question-title">Крок 3/5: Ідеальний образ на вихідний?</div>
+                <div class="question-header">
+                    <div class="question-step-label">Крок 3 із 5</div>
+                    <div class="question-title">Ідеальний образ на вихідний?</div>
+                </div>
                 <div class="answers-grid">
                     <div class="answer-card" onclick="selectAnswer(3, 'minimalist')">
-                        <span class="answer-emoji">☕</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">☕</span></div>
                         <div class="answer-text">Джинси та ідеальний светр</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(3, 'romantic')">
-                        <span class="answer-emoji">🌺</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🌺</span></div>
                         <div class="answer-text">Легка сукня з принтом</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(3, 'streetwear')">
-                        <span class="answer-emoji">⚡</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">⚡</span></div>
                         <div class="answer-text">Спортивний шик / Кросівки</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(3, 'elegant')">
-                        <span class="answer-emoji">🎭</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🎭</span></div>
                         <div class="answer-text">Щось ефектне та незвичне</div>
                     </div>
                 </div>
@@ -317,22 +359,25 @@
 
             <!-- Step 4 -->
             <div class="step" id="step-4">
-                <div class="question-title">Крок 4/5: Улюблена фактура/тканина?</div>
+                <div class="question-header">
+                    <div class="question-step-label">Крок 4 із 5</div>
+                    <div class="question-title">Улюблена фактура/тканина?</div>
+                </div>
                 <div class="answers-grid">
                     <div class="answer-card" onclick="selectAnswer(4, 'streetwear')">
-                        <span class="answer-emoji">🪨</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🪨</span></div>
                         <div class="answer-text">Грубий денім / Шкіра</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(4, 'romantic')">
-                        <span class="answer-emoji">🌸</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🌸</span></div>
                         <div class="answer-text">Легкий шифон / Мереживо</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(4, 'boho')">
-                        <span class="answer-emoji">🧶</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🧶</span></div>
                         <div class="answer-text">Затишний трикотаж / Льон</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(4, 'elegant')">
-                        <span class="answer-emoji">✨</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">✨</span></div>
                         <div class="answer-text">Блискуча / Атласна / Шовк</div>
                     </div>
                 </div>
@@ -340,22 +385,25 @@
 
             <!-- Step 5 -->
             <div class="step" id="step-5">
-                <div class="question-title">Крок 5/5: Хто вам ближче по духу?</div>
+                <div class="question-header">
+                    <div class="question-step-label">Крок 5 із 5</div>
+                    <div class="question-title">Хто вам ближче по духу?</div>
+                </div>
                 <div class="answers-grid">
                     <div class="answer-card" onclick="selectAnswer(5, 'classic')">
-                        <span class="answer-emoji">👑</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">👑</span></div>
                         <div class="answer-text">Одрі Хепберн / Кейт Міддлтон</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(5, 'boho')">
-                        <span class="answer-emoji">🌿</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🌿</span></div>
                         <div class="answer-text">Зої Кравіц / Флоренс Велч</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(5, 'elegant')">
-                        <span class="answer-emoji">🔥</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🔥</span></div>
                         <div class="answer-text">Бейонсе / Кім Кардашьян</div>
                     </div>
                     <div class="answer-card" onclick="selectAnswer(5, 'streetwear')">
-                        <span class="answer-emoji">🎨</span>
+                        <div class="answer-icon-wrap"><span class="answer-emoji">🎨</span></div>
                         <div class="answer-text">Кара Делевінь / Ріанна</div>
                     </div>
                 </div>
@@ -403,22 +451,32 @@
 
         function updateProgress() {
             const pBar = document.getElementById('progress-bar');
-            pBar.style.width = ((currentStep - 1) / 5) * 100 + '%';
+            pBar.style.width = (currentStep / 5) * 100 + '%';
         }
+
+        // Initialize progress bar on load
+        window.addEventListener('DOMContentLoaded', updateProgress);
 
         function selectAnswer(stepNum, styleKey) {
             SCORES[styleKey]++;
             
-            document.getElementById(`step-${stepNum}`).classList.remove('active');
-            currentStep++;
+            const stepEl = document.getElementById(`step-${stepNum}`);
+            const cards = stepEl.querySelectorAll('.answer-card');
+            cards.forEach(c => c.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
 
-            if (currentStep <= 5) {
-                document.getElementById(`step-${currentStep}`).classList.add('active');
-                updateProgress();
-            } else {
-                updateProgress();
-                showResult();
-            }
+            setTimeout(() => {
+                stepEl.classList.remove('active');
+                currentStep++;
+
+                if (currentStep <= 5) {
+                    document.getElementById(`step-${currentStep}`).classList.add('active');
+                    updateProgress();
+                } else {
+                    updateProgress();
+                    setTimeout(showResult, 300);
+                }
+            }, 400);
         }
 
         function showResult() {
