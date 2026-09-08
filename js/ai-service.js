@@ -15,8 +15,8 @@ const AIService = {
             vision: 'gemini-3.6-flash'
         },
         groq: {
-            standard: 'llama-3.3-70b-versatile',
-            light: 'llama-3.1-8b-instant'
+            standard: 'openai/gpt-oss-120b',
+            light: 'openai/gpt-oss-20b'
         },
         openrouter: {
             standard: 'openrouter/free',
