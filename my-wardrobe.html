@@ -727,8 +727,8 @@ async function showShopRecs(aiText = '') {
             const exclude = ['Intimates', 'Swim', 'Sleep', 'Chemises', 'Legwear'];
             pool = pool.filter(p => !exclude.includes(p.class_name));
         }
-
-        const picks = [...pool].sort(() => Math.random() - .5).slice(0, 4);
+        // Deterministic sort
+        const picks = [...pool].sort((a,b) => (b.avg_rating||0) - (a.avg_rating||0)).slice(0, 4);
         const wrap = document.getElementById('shop-recs-wrap');
         const grid = document.getElementById('shop-recs-grid');
         grid.innerHTML = picks.map(p => `

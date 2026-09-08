@@ -433,7 +433,7 @@
                 <div class="chip" data-v="boho">🌿 Бохо</div>
                 <div class="chip" data-v="minimalist">⬜ Мінімалізм</div>
                 <div class="chip" data-v="romantic">🌺 Романтика</div>
-                <div class="chip" data-v="street">🧢 Стрітвер</div>
+                <div class="chip" data-v="streetwear">🧢 Стрітвер</div>
                 <div class="chip" data-v="elegant">💫 Елегантність</div>
             </div>
         </div>
@@ -680,7 +680,7 @@ const DB={
         boho:      {adj:'вільний та богемний',       tips:['Шарування текстур','Етнічні акценти','Натуральні матеріали']},
         minimalist:{adj:'мінімалістичний та чистий', tips:['Один фокусний елемент','Монохром або 2 кольори','Якість важливіша за кількість']},
         romantic:  {adj:'романтичний та ніжний',     tips:['Легкі тканини','Флоральні мотиви','Пастельні відтінки']},
-        street:    {adj:'вуличний та сміливий',      tips:['Грайте з пропорціями','Оверсайз + облягаючий','Яскраві акценти']},
+        streetwear:{adj:'вуличний та сміливий',      tips:['Грайте з пропорціями','Оверсайз + облягаючий','Яскраві акценти']},
         elegant:   {adj:'елегантний та розкішний',   tips:['Монохромний образ','Мінімум прикрас — максимум ефекту','Ідеальний силует']},
     },
     mood:{
@@ -721,7 +721,7 @@ const PRESETS={
     nightout: {occasion:'party', season:'spring',style:'elegant',  mood:'mysterious',cat:'Dresses'},
     casual:   {occasion:'casual',season:'spring',style:'minimalist',mood:'relaxed', cat:''},
     romantic: {occasion:'date',  season:'spring',style:'romantic', mood:'playful',  cat:'Dresses'},
-    sport:    {occasion:'sport', season:'summer',style:'street',   mood:'powerful', cat:'Tops'},
+    sport:    {occasion:'sport', season:'summer',style:'streetwear', mood:'powerful', cat:'Tops'},
 };
 
 function preset(name){
@@ -930,14 +930,36 @@ function renderStaticTips(ST) {
     ).join('');
 }
 function pickProductsMixed(occ, cat, minR, custom, body, stl, seas, includeWardrobe) {
+    let aiWeather = null;
+    try {
+        const wStr = localStorage.getItem('ai_weather');
+        if (wStr) {
+            const wData = JSON.parse(wStr);
+            // check freshness (e.g. 2 hours)
+            if (Date.now() - wData.updatedAt < 2 * 60 * 60 * 1000) {
+                aiWeather = wData;
+            }
+        }
+    } catch(e){}
+
+    let profileColor = null;
+    let profileBody = body;
+    try {
+        const p = JSON.parse(localStorage.getItem('ai_profile')) || {};
+        if (!profileBody) profileBody = p.body;
+        profileColor = p.color;
+    } catch(e){}
+
     const context = {
         occasion: occ,
         style: stl,
         season: seas,
-        body: body,
+        body: profileBody,
         custom: custom,
-        weather: null,
-        feedbackDislikes: getDislikedItemIds()
+        weather: aiWeather,
+        color: profileColor,
+        feedbackDislikes: getDislikedItemIds(),
+        feedbackLikes: getLikedItemIds()
     };
 
     let allItems = [];
@@ -1017,6 +1039,17 @@ function getDislikedItemIds() {
     } catch(e) { return []; }
 }
 
+function getLikedItemIds() {
+    try {
+        const feedbackList = JSON.parse(localStorage.getItem('ai_feedback') || '[]');
+        const liked = [];
+        feedbackList.forEach(f => {
+            if (f.action === 'like') liked.push(...(f.itemIds || []));
+        });
+        return liked;
+    } catch(e) { return []; }
+}
+
 // URL params & Profile
 let _wardrobeCache = [];
 
@@ -1033,8 +1066,11 @@ window.addEventListener('load', async () => {
             if(profile.name) {
                 document.getElementById('ai-greeting').innerHTML = `Привіт, ${profile.name}! ✨<br>Твій ШІ-Стиліст`;
             }
-            if(!p.get('style') && profile.style) {
-                setChip('g-style', profile.style);
+            let pStyle = profile.style;
+            if(pStyle === 'street') pStyle = 'streetwear';
+            
+            if(!p.get('style') && pStyle) {
+                setChip('g-style', pStyle);
             }
         }
     } catch(e) {}

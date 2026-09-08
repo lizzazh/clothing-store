@@ -171,7 +171,7 @@
             <div class="input-group">
                 <label>Місто</label>
                 <input type="text" id="city-input" class="city-input" placeholder="Наприклад: Київ, Львів...">
-                <button class="btn-primary" onclick="getSimulatedWeather()">🌤️ Дізнатись погоду</button>
+                <button class="btn-primary" onclick="getRealWeather()">🌤️ Дізнатись погоду</button>
             </div>
 
             <div class="divider">АБО ВКАЖІТЬ ВРУЧНУ</div>
@@ -255,32 +255,75 @@
             el.classList.add('active');
         }
 
-        // Simulates weather API since we don't have a backend/key
-        function getSimulatedWeather() {
-            const city = document.getElementById('city-input').value.trim();
-            if(!city) return;
+        // Use real weather API (Open-Meteo)
+        async function getRealWeather() {
+            const cityInput = document.getElementById('city-input').value.trim();
+            if(!cityInput) return;
             
-            // simple hash to generate deterministic weather for a city
-            let hash = 0;
-            for(let i=0; i<city.length; i++) hash += city.charCodeAt(i);
+            const btn = document.querySelector('.search-bar button');
+            const origText = btn.textContent;
+            btn.textContent = '⏳...';
+            btn.disabled = true;
             
-            const temps = [-5, 5, 12, 18, 22, 28, 32, 15];
-            const conds = ['sunny', 'cloudy', 'rainy', 'snowy', 'sunny', 'cloudy'];
-            
-            const temp = temps[hash % temps.length];
-            const cond = conds[hash % conds.length];
-
-            // Update UI sliders
-            document.getElementById('temp-slider').value = temp;
-            updateTempLabel();
-            document.querySelectorAll('.chip').forEach(c => {
-                if(c.textContent.includes(cond === 'sunny' ? 'Сонячно' : cond === 'cloudy' ? 'Хмарно' : cond === 'rainy' ? 'Дощ' : 'Сніг')) {
-                    selectCondition(cond, c);
+            try {
+                // 1. Geocoding
+                const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityInput)}&count=1&language=uk&format=json`);
+                if (!geoRes.ok) throw new Error('Geocoding failed');
+                const geoData = await geoRes.json();
+                
+                if (!geoData.results || geoData.results.length === 0) {
+                    alert('Місто не знайдено. Перевірте назву.');
+                    return;
                 }
-            });
+                
+                const loc = geoData.results[0];
+                const lat = loc.latitude;
+                const lon = loc.longitude;
+                const cityName = loc.name;
+                
+                // 2. Weather
+                const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                if (!weatherRes.ok) throw new Error('Weather API failed');
+                const weatherData = await weatherRes.json();
+                
+                const temp = Math.round(weatherData.current_weather.temperature);
+                const code = weatherData.current_weather.weathercode;
+                
+                // WMO Weather interpretation
+                let cond = 'sunny';
+                if ([1, 2, 3, 45, 48].includes(code)) cond = 'cloudy';
+                else if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(code)) cond = 'rainy';
+                else if ([71, 73, 75, 77, 85, 86].includes(code)) cond = 'snowy';
+                
+                // Update UI sliders
+                document.getElementById('temp-slider').value = temp;
+                updateTempLabel();
+                document.querySelectorAll('.chip').forEach(c => {
+                    const t = c.dataset.cond || c.textContent.toLowerCase();
+                    if(t.includes('сонячно') && cond==='sunny') selectCondition(cond, c);
+                    else if(t.includes('хмарно') && cond==='cloudy') selectCondition(cond, c);
+                    else if(t.includes('дощ') && cond==='rainy') selectCondition(cond, c);
+                    else if(t.includes('сніг') && cond==='snowy') selectCondition(cond, c);
+                });
 
-            document.getElementById('res-city').textContent = `Погода у: ${city}`;
-            applyManualWeather(temp, cond);
+                document.getElementById('res-city').textContent = `Погода у: ${cityName}`;
+                
+                // Save context for AI Stylist
+                localStorage.setItem('ai_weather', JSON.stringify({
+                    city: cityName,
+                    temperature: temp,
+                    condition: cond,
+                    updatedAt: Date.now()
+                }));
+                
+                applyManualWeather(temp, cond);
+            } catch (err) {
+                console.error(err);
+                alert('Не вдалося отримати погоду. Будь ласка, спробуйте пізніше або введіть дані вручну.');
+            } finally {
+                btn.textContent = origText;
+                btn.disabled = false;
+            }
         }
 
         function applyManualWeather(t, c) {
@@ -340,8 +383,11 @@
 
             if(filtered.length < 6) filtered = allProducts; // fallback
             
-            // Randomize and select 6
-            filtered.sort(() => 0.5 - Math.random());
+            // Deterministic sort
+            filtered.sort((a, b) => {
+                if (b.avg_rating !== a.avg_rating) return (b.avg_rating || 0) - (a.avg_rating || 0);
+                return (b.clothing_id || '').localeCompare(a.clothing_id || '');
+            });
             const selected = filtered.slice(0, 6);
 
             document.getElementById('outfit-grid').innerHTML = selected.map(p => `

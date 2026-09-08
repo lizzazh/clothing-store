@@ -481,14 +481,18 @@
 
         function showResult() {
             // Find max score
-            let maxScore = -1;
+            let maxVal = -1;
             let winningStyle = 'classic';
-            for (const [style, score] of Object.entries(SCORES)) {
-                // adding small random factor to resolve ties naturally
-                const finalScore = score + Math.random()*0.1;
-                if (finalScore > maxScore) { maxScore = finalScore; winningStyle = style; }
-            }
-
+            
+            // Deterministic tie-breaking using alphabetical order
+            const keys = Object.keys(SCORES).sort();
+            keys.forEach(k => {
+                const score = SCORES[k];
+                if (score > maxVal) {
+                    maxVal = score;
+                    winningStyle = k;
+                }
+            });
             const info = STYLE_INFO[winningStyle];
 
             document.getElementById('res-emoji').textContent = info.emoji;
@@ -517,8 +521,11 @@
             let filtered = products.filter(p => depts.includes(p.department_name) && p.avg_rating >= 4.0);
             if (filtered.length < 6) filtered = products; // fallback
 
-            // Shuffle
-            filtered.sort(() => 0.5 - Math.random());
+            // Deterministic sort by rating or clothing_id
+            filtered.sort((a, b) => {
+                if (b.avg_rating !== a.avg_rating) return (b.avg_rating || 0) - (a.avg_rating || 0);
+                return (b.clothing_id || '').localeCompare(a.clothing_id || '');
+            });
             const selected = filtered.slice(0, 6);
 
             grid.innerHTML = selected.map(p => `

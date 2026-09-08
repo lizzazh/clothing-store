@@ -43,7 +43,6 @@ const AIService = {
                 const r = await fetch('/api/key');
                 if (!r.ok) throw new Error(`Failed to fetch API keys: ${r.status}`);
                 const data = await r.json();
-                if (!data.key) throw new Error('Gemini API key not configured');
                 this._keys = data;
                 return this._keys;
             } catch (e) {
@@ -141,16 +140,16 @@ const AIService = {
                 return { success: true, content: finalContent, provider };
 
             } catch (e) {
-                const fallbackCodes = ['RATE_LIMIT', 'SERVICE_UNAVAILABLE', 'TIMEOUT', 'NETWORK_ERROR', 'API_ERROR', 'EMPTY_RESPONSE', 'PARSE_ERROR', 'VALIDATION_ERROR'];
+                const fallbackCodes = ['RATE_LIMIT', 'SERVICE_UNAVAILABLE', 'TIMEOUT', 'NETWORK_ERROR', 'API_ERROR', 'EMPTY_RESPONSE', 'PARSE_ERROR', 'VALIDATION_ERROR', 'BAD_REQUEST'];
                 
                 if (e instanceof AIServiceError && fallbackCodes.includes(e.code)) {
-                    console.warn(`[AIService] ${provider} failed: ${e.code}`);
+                    console.warn(`[AIService][${provider}] failed: ${e.code} (HTTP ${e.httpStatus || 'N/A'}) - ${e.message}`);
                     lastError = e;
                     continue; // try next
                 }
                 
-                // For other errors (e.g. BAD_REQUEST, NO_FALLBACK key), abort chain or bubble up
-                console.error(`[AIService] ${provider} unrecoverable error:`, e);
+                // For other errors (e.g. NO_FALLBACK key), abort chain or bubble up
+                console.error(`[AIService][${provider}] unrecoverable error:`, e);
                 throw e;
             }
         }
@@ -314,11 +313,11 @@ const AIService = {
         const status = response.status;
         const apiMsg = errData?.error?.message || '';
 
-        if (status === 429) throw new AIServiceError('RATE_LIMIT', `Rate limit exceeded on ${provider}`);
-        if (status >= 500) throw new AIServiceError('SERVICE_UNAVAILABLE', `Service unavailable on ${provider}`);
-        if (status === 400) throw new AIServiceError('BAD_REQUEST', `Bad request on ${provider}: ${apiMsg}`);
+        if (status === 429) throw new AIServiceError('RATE_LIMIT', `Rate limit exceeded on ${provider}`, null, status);
+        if (status >= 500) throw new AIServiceError('SERVICE_UNAVAILABLE', `Service unavailable on ${provider}`, null, status);
+        if (status === 400) throw new AIServiceError('BAD_REQUEST', `Bad request on ${provider}: ${apiMsg}`, null, status);
 
-        throw new AIServiceError('API_ERROR', `Error ${status} on ${provider}: ${apiMsg}`);
+        throw new AIServiceError('API_ERROR', `Error ${status} on ${provider}: ${apiMsg}`, null, status);
     },
 
     _extractJSON(text) {
@@ -346,11 +345,12 @@ const AIService = {
 };
 
 class AIServiceError extends Error {
-    constructor(code, userMessage, cause) {
+    constructor(code, userMessage, cause, httpStatus = null) {
         super(userMessage);
         this.name = 'AIServiceError';
         this.code = code;
         this.userMessage = userMessage;
+        this.httpStatus = httpStatus;
         if (cause) this.cause = cause;
     }
 }

@@ -304,8 +304,11 @@
 
             if(allProducts.length) {
                 let filtered = allProducts.filter(p => data.depts.includes(p.department_name) && p.avg_rating >= 4.0);
-                if(filtered.length < 12) filtered = allProducts;
-                filtered.sort(() => 0.5 - Math.random());
+                // Deterministic sort by rating or clothing_id
+                filtered.sort((a, b) => {
+                    if (b.avg_rating !== a.avg_rating) return (b.avg_rating || 0) - (a.avg_rating || 0);
+                    return (b.clothing_id || '').localeCompare(a.clothing_id || '');
+                });
                 
                 grid.innerHTML = filtered.slice(0, 16).map(p => `
                     <a href="product.html?id=${p.clothing_id}" class="prod-card">
