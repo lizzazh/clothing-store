@@ -171,7 +171,7 @@
             <div class="input-group">
                 <label>Місто</label>
                 <input type="text" id="city-input" class="city-input" placeholder="Наприклад: Київ, Львів...">
-                <button class="btn-primary" onclick="getRealWeather()">🌤️ Дізнатись погоду</button>
+                <button id="weather-search-btn" class="btn-primary" onclick="getRealWeather()">🌤️ Дізнатись погоду</button>
             </div>
 
             <div class="divider">АБО ВКАЖІТЬ ВРУЧНУ</div>
@@ -260,7 +260,7 @@
             const cityInput = document.getElementById('city-input').value.trim();
             if(!cityInput) return;
             
-            const btn = document.querySelector('.search-bar button');
+            const btn = document.getElementById('weather-search-btn');
             const origText = btn.textContent;
             btn.textContent = '⏳...';
             btn.disabled = true;

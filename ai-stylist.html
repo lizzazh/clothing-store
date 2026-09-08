@@ -958,20 +958,20 @@ function pickProductsMixed(occ, cat, minR, custom, body, stl, seas, includeWardr
         custom: custom,
         weather: aiWeather,
         color: profileColor,
-        feedbackDislikes: getDislikedItemIds(),
-        feedbackLikes: getLikedItemIds()
+        feedbackMap: getFeedbackMap()
     };
 
     let allItems = [];
 
-    // Catalog items
+        // Catalog items
     products.forEach(p => {
         if (p.avg_rating && p.avg_rating < minR) return;
         if (cat && p.department_name !== cat && p.class_name !== cat) return;
         
-        p._score = MatchScore.calculateMatchScore(p, context);
-        p._isWardrobe = false;
-        allItems.push(p);
+        let pCopy = { ...p, color: imageColors[p.clothing_id] || '' };
+        pCopy._score = MatchScore.calculateMatchScore(pCopy, context);
+        pCopy._isWardrobe = false;
+        allItems.push(pCopy);
     });
 
     // Wardrobe items
@@ -1028,26 +1028,21 @@ function submitFeedback(recId, action, reason, occ, stl, itemIds) {
     }
 }
 
-function getDislikedItemIds() {
+function getFeedbackMap() {
     try {
         const feedbackList = JSON.parse(localStorage.getItem('ai_feedback') || '[]');
-        const disliked = [];
+        const map = {};
+        // Iterate backwards or rely on chronological append, assuming appended to end.
+        // If appended to end, iterating forward will naturally let latest action overwrite.
         feedbackList.forEach(f => {
-            if (f.action === 'dislike') disliked.push(...(f.itemIds || []));
+            if (f.itemIds) {
+                f.itemIds.forEach(id => {
+                    map[id] = f.action; // 'like' or 'dislike'
+                });
+            }
         });
-        return disliked;
-    } catch(e) { return []; }
-}
-
-function getLikedItemIds() {
-    try {
-        const feedbackList = JSON.parse(localStorage.getItem('ai_feedback') || '[]');
-        const liked = [];
-        feedbackList.forEach(f => {
-            if (f.action === 'like') liked.push(...(f.itemIds || []));
-        });
-        return liked;
-    } catch(e) { return []; }
+        return map;
+    } catch(e) { return {}; }
 }
 
 // URL params & Profile

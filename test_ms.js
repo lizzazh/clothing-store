@@ -300,4 +300,4 @@ function calculateMatchScore(item, context) {
     return Math.max(0, Math.min(100, Math.round(finalScore)));
 }
 
-window.MatchScore = { calculateMatchScore, normalizeCategory, normalizeColor };
+module.exports = { calculateMatchScore, normalizeCategory, normalizeColor };
