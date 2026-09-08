@@ -44,20 +44,29 @@ const MatchScoreConfig = {
 };
 
 function normalizeCategory(item) {
-    const rawCat = (item.category || item.class_name || item.department_name || '').toLowerCase();
+    const rawParts = [
+        item.category,
+        item.class_name,
+        item.department_name
+    ].filter(Boolean).map(s => s.toLowerCase());
+    
+    const combined = rawParts.join(' ');
     const categories = new Set();
-    categories.add(rawCat);
-    if (item.class_name) categories.add(item.class_name.toLowerCase());
+    
+    rawParts.forEach(p => categories.add(p));
 
-    if (rawCat.includes('dress') || rawCat.includes('сукня')) { categories.add('dresses'); categories.add('dress'); }
-    if (rawCat.includes('top') || rawCat.includes('blouse') || rawCat.includes('shirt') || rawCat.includes('топ') || rawCat.includes('блуза')) { categories.add('tops'); categories.add('blouses'); }
-    if (rawCat.includes('sweater') || rawCat.includes('knit')) { categories.add('tops'); categories.add('sweaters'); categories.add('knits'); }
-    if (rawCat.includes('bottom') || rawCat.includes('pant') || rawCat.includes('jean') || rawCat.includes('брюки')) { categories.add('bottoms'); categories.add('pants'); categories.add('jeans'); }
-    if (rawCat.includes('skirt') || rawCat.includes('спідниця')) { categories.add('bottoms'); categories.add('skirts'); }
-    if (rawCat.includes('short')) { categories.add('bottoms'); categories.add('shorts'); }
-    if (rawCat.includes('jacket') || rawCat.includes('outerwear') || rawCat.includes('coat') || rawCat.includes('куртка') || rawCat.includes('пальто')) { categories.add('jackets'); categories.add('outerwear'); }
-    if (rawCat.includes('swim') || rawCat.includes('купальник')) { categories.add('swim'); }
-    if (rawCat.includes('intimate') || rawCat.includes('sleep') || rawCat.includes('lounge') || rawCat.includes('білизна')) { categories.add('intimates'); categories.add('sleep'); categories.add('lounge'); }
+    if (combined.includes('dress') || combined.includes('сукня')) { categories.add('dresses'); categories.add('dress'); }
+    if (combined.includes('top') || combined.includes('blouse') || combined.includes('shirt') || combined.includes('топ') || combined.includes('блуза')) { categories.add('tops'); categories.add('blouses'); }
+    if (combined.includes('sweater') || combined.includes('knit') || combined.includes('fine gauge')) { categories.add('tops'); categories.add('sweaters'); categories.add('knits'); }
+    if (combined.includes('bottom') || combined.includes('pant') || combined.includes('jean') || combined.includes('брюки')) { categories.add('bottoms'); categories.add('pants'); categories.add('jeans'); }
+    if (combined.includes('skirt') || combined.includes('спідниця')) { categories.add('bottoms'); categories.add('skirts'); }
+    if (combined.includes('short')) { categories.add('bottoms'); categories.add('shorts'); }
+    if (combined.includes('jacket') || combined.includes('outerwear') || combined.includes('coat') || combined.includes('куртка') || combined.includes('пальто')) { categories.add('jackets'); categories.add('outerwear'); }
+    if (combined.includes('swim') || combined.includes('купальник')) { categories.add('swim'); }
+    if (combined.includes('intimate') || combined.includes('sleep') || combined.includes('lounge') || combined.includes('білизна')) { categories.add('intimates'); categories.add('sleep'); categories.add('lounge'); }
+    if (combined.includes('shoe') || combined.includes('взуття')) { categories.add('shoes'); }
+    if (combined.includes('accessor') || combined.includes('аксесуар')) { categories.add('accessories'); }
+    if (combined.includes('інше') || combined.includes('other')) { categories.add('other'); }
 
     return Array.from(categories);
 }

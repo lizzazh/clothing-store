@@ -266,17 +266,33 @@
             btn.disabled = true;
             
             try {
-                // 1. Geocoding
-                const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityInput)}&count=1&language=uk&format=json`);
-                if (!geoRes.ok) throw new Error('Geocoding failed');
-                const geoData = await geoRes.json();
+                // 1. Geocoding with Fallbacks
+                async function resolveCity(query) {
+                    let res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=uk&format=json`);
+                    let data = await res.json();
+                    if (data.results && data.results.length > 0) return data.results[0];
+
+                    // Fallback to English
+                    res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`);
+                    data = await res.json();
+                    if (data.results && data.results.length > 0) return data.results[0];
+
+                    // Fallback alias
+                    const lowerQuery = query.toLowerCase();
+                    if (lowerQuery === 'кишинів' || lowerQuery === 'кишинёв') {
+                        res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=Chisinau&count=1&language=en&format=json`);
+                        data = await res.json();
+                        if (data.results && data.results.length > 0) return data.results[0];
+                    }
+                    return null;
+                }
+
+                const loc = await resolveCity(cityInput);
                 
-                if (!geoData.results || geoData.results.length === 0) {
+                if (!loc) {
                     alert('Місто не знайдено. Перевірте назву.');
                     return;
                 }
-                
-                const loc = geoData.results[0];
                 const lat = loc.latitude;
                 const lon = loc.longitude;
                 const cityName = loc.name;
