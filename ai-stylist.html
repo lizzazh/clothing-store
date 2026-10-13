@@ -86,20 +86,30 @@
     }
 
     /* HERO */
-    .ai-hero{text-align:center;padding:45px 20px 25px;position:relative;z-index:2;}
+    .ai-hero{
+        text-align:center;
+        padding:clamp(25px, 5vw, 45px) clamp(16px, 4vw, 24px) clamp(15px, 3vw, 25px);
+        position:relative;z-index:2;
+        box-sizing:border-box;max-width:100%;
+    }
     .ai-badge{
         display:inline-block;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);
         color:var(--ai-purple);font-size:12px;font-weight:600;padding:6px 18px;border-radius:20px;
         text-transform:uppercase;letter-spacing:1px;margin-bottom:15px;
     }
     .ai-title{
-        font-family:'Great Vibes',cursive;font-size:56px;line-height:1.1;
+        font-family:'Great Vibes',cursive;
+        font-size:clamp(32px, 5.5vw, 56px);
+        line-height:1.25;
         background:linear-gradient(135deg,#fff 0%,var(--ai-purple) 60%,var(--ai-pink) 100%);
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
         margin-bottom:12px;text-shadow:0 10px 30px rgba(168,85,247,0.3);
+        display:inline-block;max-width:100%;box-sizing:border-box;
+        padding:4px 10px 8px;overflow-wrap:break-word;word-break:break-word;
     }
     .ai-subtitle{
         color:rgba(255,255,255,0.6);font-size:16px;max-width:560px;margin:0 auto;font-weight:300;
+        line-height:1.5;
     }
 
     /* ---- MAIN GRID ---- */
@@ -273,28 +283,72 @@
     }
 
     /* Products */
+    .recs-composition-summary{
+        font-size:13px;color:rgba(255,255,255,.78);
+        margin:-4px 0 16px;padding:7px 14px;
+        background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+        border-radius:10px;display:inline-flex;align-items:center;gap:6px;
+        width:fit-content;max-width:100%;box-sizing:border-box;
+    }
     .products-grid{
-        display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));
-        gap:14px;margin-bottom:22px;
+        display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+        gap:14px;margin-bottom:24px;
     }
     .prod-card{
         background:var(--glass-bg);border:1px solid var(--glass-border);
-        border-radius:15px;overflow:hidden;transition:all .3s;
-        cursor:pointer;text-decoration:none;display:block;
+        border-radius:16px;overflow:hidden;
+        transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;
+        cursor:pointer;text-decoration:none;display:flex;flex-direction:column;
+        padding:10px;box-sizing:border-box;position:relative;
+    }
+    .prod-card.wardrobe-card{
+        border-color:rgba(236,72,153,.35);
+        background:linear-gradient(180deg,rgba(236,72,153,.06),rgba(15,12,41,.55));
     }
     .prod-card:hover{
-        border-color:rgba(168,85,247,.45);transform:translateY(-5px);
-        box-shadow:0 10px 28px rgba(168,85,247,.2);
+        border-color:rgba(168,85,247,.6);transform:translateY(-4px);
+        box-shadow:0 10px 24px rgba(168,85,247,.2);
     }
-    .prod-img{width:100%;height:150px;object-fit:contain;
-        background:rgba(255,255,255,.04);display:block;}
-    .prod-info{padding:11px 13px;}
-    .prod-cat{font-size:10px;font-weight:700;text-transform:uppercase;
-        letter-spacing:1px;color:var(--ai-purple);margin-bottom:3px;}
-    .prod-name{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.9);
-        margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .prod-rating{font-size:11.5px;color:rgba(255,255,255,.48);
-        display:flex;align-items:center;gap:4px;}
+    .prod-badges{
+        display:flex;align-items:center;justify-content:space-between;
+        gap:6px;margin-bottom:8px;min-height:22px;flex-wrap:wrap;
+    }
+    .badge-match{
+        font-size:11px;font-weight:700;color:var(--ai-cyan);
+        background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.35);
+        padding:2px 7px;border-radius:6px;letter-spacing:.3px;white-space:nowrap;
+    }
+    .badge-source{
+        font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;
+        white-space:nowrap;letter-spacing:.3px;
+    }
+    .badge-source.wardrobe{
+        background:rgba(236,72,153,.18);border:1px solid rgba(236,72,153,.4);
+        color:#f472b6;
+    }
+    .badge-source.catalog{
+        background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+        color:rgba(255,255,255,.85);
+    }
+    .prod-img-wrap{
+        width:100%;height:140px;border-radius:10px;overflow:hidden;
+        background:rgba(255,255,255,.03);display:flex;align-items:center;
+        justify-content:center;margin-bottom:8px;
+    }
+    .prod-img{width:100%;height:100%;object-fit:contain;display:block;}
+    .prod-info{padding:0 2px 2px;display:flex;flex-direction:column;gap:2px;}
+    .prod-role{
+        font-size:10px;font-weight:800;text-transform:uppercase;
+        letter-spacing:1px;color:var(--ai-purple);
+    }
+    .prod-name{
+        font-size:12.5px;font-weight:600;color:rgba(255,255,255,.92);
+        white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;
+    }
+    .prod-rating{
+        font-size:11.5px;color:rgba(255,255,255,.5);
+        display:flex;align-items:center;gap:4px;margin-top:2px;
+    }
     .star-gold{color:var(--ai-gold);}
 
     /* Tips */
@@ -364,7 +418,6 @@
         .ai-grid{padding:10px 15px 60px;}
         .inspo{padding:10px 15px 60px;}
         .products-grid{grid-template-columns:repeat(2,1fr);}
-        h1.ai-title{font-size:52px;}
     }
     @media(max-width:400px){
         .products-grid{grid-template-columns:1fr;}
@@ -535,8 +588,14 @@
                 <div class="swatches" id="swatches"></div>
             </div>
 
-            <div class="sec-label" style="margin-bottom:14px;">🛍️ Рекомендовані товари</div>
+            <div class="sec-label" id="recs-title" style="margin-bottom:6px;">✨ Основний образ</div>
+            <div class="recs-composition-summary" id="recs-summary" style="display:none;"></div>
             <div class="products-grid" id="prods"></div>
+
+            <div id="alt-wrap" style="display:none;margin-top:20px;margin-bottom:24px;">
+                <div class="sec-label" id="alt-title" style="margin-bottom:10px;color:rgba(255,255,255,.8);">🔄 Альтернативи до образу</div>
+                <div class="products-grid" id="alt-prods" style="margin-bottom:0;"></div>
+            </div>
 
             <div class="tips-box">
                 <div class="sec-label" style="color:var(--ai-cyan);">💡 Поради стиліста</div>
@@ -841,39 +900,80 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
     const cb = document.getElementById('use-wardrobe');
     const includeWardrobe = cb && !cb.disabled && cb.checked;
     
-    const picks = pickProductsMixed(occ, cat, minR, custom, body, stl, seas, includeWardrobe);
+    const recResult = pickProductsMixed(occ, cat, minR, custom, body, stl, seas, includeWardrobe);
+    const primaryLook = recResult.primaryLook || [];
+    const alternatives = recResult.alternatives || [];
+    const allPicks = [...primaryLook, ...alternatives];
     
-    document.getElementById('prods').innerHTML=picks.length?picks.map(p=>{
+    const summaryEl = document.getElementById('recs-summary');
+    if (summaryEl) {
+        const sumText = formatLookSummary(primaryLook, alternatives);
+        if (sumText) {
+            summaryEl.textContent = sumText;
+            summaryEl.style.display = 'inline-flex';
+        } else {
+            summaryEl.style.display = 'none';
+        }
+    }
+
+    function renderCard(p) {
+        const role = p._garmentRole || getGarmentRole(p);
+        const roleLabel = GARMENT_ROLE_LABELS[role] || 'ІНШЕ';
+
         if (p._isWardrobe) {
-            const short = p.name.length > 34 ? p.name.slice(0,32)+'...' : p.name;
-            return `<a href="my-wardrobe.html" class="prod-card" style="border-color:var(--ai-pink);">
-                <div style="position:absolute; top:8px; right:8px; background:var(--ai-pink); color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; z-index:2;">З гардероба</div>
-                <div style="position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.6); color:var(--ai-cyan); font-size:11px; font-weight:700; padding:2px 6px; border-radius:4px; z-index:2; border:1px solid var(--ai-cyan);">${p._score}% Match</div>
-                <img class="prod-img" src="${p.img}" alt="${p.category}">
+            const short = p.name.length > 34 ? p.name.slice(0, 32) + '...' : p.name;
+            return `<a href="my-wardrobe.html" class="prod-card wardrobe-card">
+                <div class="prod-badges">
+                    <span class="badge-match">${p._score}% Match</span>
+                    <span class="badge-source wardrobe">З гардероба</span>
+                </div>
+                <div class="prod-img-wrap">
+                    <img class="prod-img" src="${p.img}" alt="${p.category || 'Річ'}"
+                         onerror="this.src='https://via.placeholder.com/200x200/1e1b4b/ec4899?text=${encodeURIComponent(p.category||'Річ')}';">
+                </div>
                 <div class="prod-info">
-                    <div class="prod-cat">${p.category || 'Річ'}</div>
-                    <div class="prod-name">${short}</div>
+                    <div class="prod-role">${roleLabel}</div>
+                    <div class="prod-name" title="${p.name || ''}">${short}</div>
                     <div class="prod-rating" style="color:var(--ai-pink);">Ваша річ</div>
                 </div>
             </a>`;
         } else {
-            const r=Number.isFinite(Number(p.avg_rating))?Number(p.avg_rating).toFixed(1):'—';
-            const nm=p.title||p.class_name||'Товар';
-            const short=nm.length>34?nm.slice(0,32)+'...':nm;
+            const r = Number.isFinite(Number(p.avg_rating)) ? Number(p.avg_rating).toFixed(1) : '—';
+            const nm = p.title || p.class_name || 'Товар';
+            const short = nm.length > 34 ? nm.slice(0, 32) + '...' : nm;
             return `<a href="product.html?id=${p.clothing_id}" class="prod-card">
-                <div style="position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.1); color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; z-index:2; backdrop-filter:blur(4px);">З каталогу</div>
-                <div style="position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.6); color:var(--ai-cyan); font-size:11px; font-weight:700; padding:2px 6px; border-radius:4px; z-index:2; border:1px solid var(--ai-cyan);">${p._score}% Match</div>
-                <img class="prod-img" src="static/${p.clothing_id}.jpg" alt="${p.class_name||'item'}"
-                    onerror="this.src='https://via.placeholder.com/200x200/1e1b4b/a855f7?text=${encodeURIComponent(p.class_name||'item')}'">
+                <div class="prod-badges">
+                    <span class="badge-match">${p._score}% Match</span>
+                    <span class="badge-source catalog">З каталогу</span>
+                </div>
+                <div class="prod-img-wrap">
+                    <img class="prod-img" src="static/${p.clothing_id}.jpg" alt="${p.class_name || 'item'}"
+                         onerror="this.src='https://via.placeholder.com/200x200/1e1b4b/a855f7?text=${encodeURIComponent(p.class_name||'item')}';">
+                </div>
                 <div class="prod-info">
-                    <div class="prod-cat">${p.class_name||p.department_name||'Товар'}</div>
-                    <div class="prod-name">${short}</div>
+                    <div class="prod-role">${roleLabel}</div>
+                    <div class="prod-name" title="${nm}">${short}</div>
                     <div class="prod-rating"><span class="star-gold">⭐</span>${r} · ${p.review_count} відг.</div>
                 </div>
             </a>`;
         }
-    }).join('')
-    :'<p style="color:rgba(255,255,255,.45);font-size:13px;">Товарів не знайдено за вашими критеріями.</p>';
+    }
+
+    document.getElementById('prods').innerHTML = primaryLook.length
+        ? primaryLook.map(renderCard).join('')
+        : '<p style="color:rgba(255,255,255,.45);font-size:13px;">Товарів не знайдено для основного образу.</p>';
+
+    const altWrap = document.getElementById('alt-wrap');
+    const altProds = document.getElementById('alt-prods');
+    if (altWrap && altProds) {
+        if (alternatives.length > 0) {
+            altWrap.style.display = 'block';
+            altProds.innerHTML = alternatives.map(renderCard).join('');
+        } else {
+            altWrap.style.display = 'none';
+            altProds.innerHTML = '';
+        }
+    }
 
     // Tips & Gemini Integration
     let profile = {};
@@ -885,7 +985,7 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
     let catalogDesc = [];
     let wardrobeDesc = [];
     
-    picks.forEach(p => {
+    allPicks.forEach(p => {
         if (p._isWardrobe) {
             wardrobeDesc.push(`[Ваша річ] ${p.category || 'Річ'}: «${p.name || ''}» (колір: ${p.color||'не вказано'})`);
         } else {
@@ -911,7 +1011,7 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
 - Якщо використовуєш річ клієнтки, відзначай, що це її річ (напр. "Ваша чорна сукня").`;
 
     // Extract item IDs for feedback
-    const itemIds = picks.map(p => p._isWardrobe ? `w_${p.id}` : `c_${p.clothing_id}`);
+    const itemIds = allPicks.map(p => p._isWardrobe ? `w_${p.id}` : `c_${p.clothing_id}`);
 
     AIService.generateText(prompt, { model: 'standard' })
     .then(aiTextRaw => {
@@ -954,13 +1054,305 @@ function renderStaticTips(ST) {
         `<div class="tip-item"><div class="tip-dot"></div><span>${t}</span></div>`
     ).join('');
 }
+const GARMENT_ROLE_LABELS = {
+    upper: 'ВЕРХ',
+    lower: 'НИЗ',
+    dress: 'СУКНЯ',
+    outerwear: 'ВЕРХНІЙ ШАР',
+    swim: 'КУПАЛЬНИК',
+    other: 'ІНШЕ'
+};
+
+function getGarmentRole(item) {
+    if (!item) return 'other';
+    const dept = String(item.department_name || '').toLowerCase().trim();
+    const cls = String(item.class_name || '').toLowerCase().trim();
+    const cat = String(item.category || item.cat || '').toLowerCase().trim();
+    const name = String(item.name || item.title || '').toLowerCase().trim();
+
+    // 0. Swim (Купальник / пляжний одяг) - не змішувати з dress
+    if (cls === 'swim' || dept === 'swim' || cat.includes('купальник') || cat.includes('swim') ||
+        name.includes('купальник') || name.includes('swimsuit') || name.includes('bikini') || name.includes('bathing suit')) {
+        return 'swim';
+    }
+
+    // 1. Dress (Сукня)
+    if (dept === 'dresses' || cls === 'dresses' || cls === 'dress' ||
+        cat.includes('сукн') || cat.includes('платт') || cat.includes('сарафан') || cat.includes('dress') ||
+        name.includes('сукн') || name.includes('платт') || name.includes('сарафан')) {
+        return 'dress';
+    }
+
+    // 2. Outerwear (Верхній шар)
+    if (dept === 'jackets' || cls === 'jackets' || cls === 'outerwear' ||
+        cat.includes('куртк') || cat.includes('пальт') || cat.includes('бомбер') || cat.includes('жакет') ||
+        cat.includes('блейзер') || cat.includes('піджак') || cat.includes('jacket') || cat.includes('coat') || cat.includes('blazer') ||
+        name.includes('куртк') || name.includes('пальт') || name.includes('бомбер') || name.includes('жакет') ||
+        name.includes('блейзер') || name.includes('піджак') || name.includes('jacket') || name.includes('coat') ||
+        name.includes('blazer') || name.includes('тренч') || name.includes('trench')) {
+        return 'outerwear';
+    }
+
+    // 3. Upper (Верх - включає базові шари та топи/джемпери)
+    if (dept === 'tops' ||
+        cls === 'knits' || cls === 'sweaters' || cls === 'fine gauge' || cls === 'blouses' || cls === 'tees' || cls === 'tank' || cls === 'tunics' || cls === 'layering' ||
+        cat.includes('топ') || cat.includes('блуз') || cat.includes('футболк') || cat.includes('сорочк') ||
+        cat.includes('светр') || cat.includes('джемпер') || cat.includes('худі') || cat.includes('світшот') ||
+        cat.includes('top') || cat.includes('blouse') || cat.includes('shirt') || cat.includes('sweater') || cat.includes('knit') ||
+        name.includes('топ') || name.includes('блуз') || name.includes('футболк') || name.includes('сорочк') ||
+        name.includes('светр') || name.includes('джемпер') || name.includes('худі') || name.includes('світшот')) {
+        return 'upper';
+    }
+
+    // 4. Lower (Низ)
+    if (dept === 'bottoms' ||
+        cls === 'jeans' || cls === 'pants' || cls === 'shorts' || cls === 'casual bottoms' || cls === 'skirts' ||
+        cat.includes('брюк') || cat.includes('штан') || cat.includes('джинс') || cat.includes('спідниц') ||
+        cat.includes('шорт') || cat.includes('bottom') || cat.includes('pant') || cat.includes('jean') || cat.includes('skirt') ||
+        name.includes('брюк') || name.includes('штан') || name.includes('джинс') || name.includes('спідниц') ||
+        name.includes('шорт') || name.includes('карго')) {
+        return 'lower';
+    }
+
+    return 'other';
+}
+
+function getItemKey(item) {
+    if (!item) return '';
+    return item._isWardrobe ? 'w_' + item.id : 'c_' + item.clothing_id;
+}
+
+const EXCLUDED_OUTFIT_CLASSES = new Set([
+    'intimates', 'chemises', 'swim', 'sleep', 'lounge', 'legwear'
+]);
+
+function isExcludedFromOutfit(item, options = {}) {
+    if (!item) return false;
+    const occ = (options.occasion || '').toLowerCase().trim();
+    const focus = (options.focusCategory || '').toLowerCase().trim();
+    const custom = (options.custom || '').toLowerCase().trim();
+    const cls = String(item.class_name || '').toLowerCase().trim();
+    const dept = String(item.department_name || '').toLowerCase().trim();
+
+    // 1. Swim is allowed for beach/swim contexts or queries; otherwise excluded from standard everyday outfits
+    const isSwim = cls === 'swim' || dept === 'swim';
+    if (isSwim) {
+        if (occ.includes('beach') || occ.includes('swim') || focus.includes('swim') || custom.includes('купальник') || custom.includes('swim')) {
+            return false;
+        }
+        return true;
+    }
+
+    // 2. Specific lounge/sleep/intimates context: allow if explicitly requested or matching home/sleep occasion
+    if (focus.includes('intimate') || focus.includes('sleep') || focus.includes('lounge') || focus.includes('legwear') ||
+        custom.includes('піжам') || custom.includes('білизн') || custom.includes('сон')) {
+        return false;
+    }
+    if ((occ.includes('lounge') || occ.includes('sleep') || occ.includes('home')) && (cls === 'sleep' || cls === 'lounge' || cls === 'intimates')) {
+        return false;
+    }
+
+    // 3. Default exclusions for standard outfits:
+    if (EXCLUDED_OUTFIT_CLASSES.has(cls)) return true;
+    if (dept === 'intimate' && cls !== 'layering') return true;
+
+    return false;
+}
+
+function formatLookSummary(primaryLook, alternatives = []) {
+    if (!Array.isArray(primaryLook) || primaryLook.length === 0) return '';
+    const roleLabels = {
+        swim: 'купальник',
+        upper: 'верх',
+        lower: 'низ',
+        dress: 'сукня',
+        outerwear: 'верхній шар',
+        other: 'акцент'
+    };
+
+    const rolesPresent = [];
+    const roleOrder = ['swim', 'upper', 'lower', 'dress', 'outerwear'];
+    roleOrder.forEach(r => {
+        if (primaryLook.some(it => (it._garmentRole || getGarmentRole(it)) === r)) {
+            rolesPresent.push(roleLabels[r]);
+        }
+    });
+    primaryLook.forEach(it => {
+        const r = it._garmentRole || getGarmentRole(it);
+        if (!roleOrder.includes(r)) {
+            const lbl = roleLabels[r] || r;
+            if (!rolesPresent.includes(lbl)) rolesPresent.push(lbl);
+        }
+    });
+
+    let s = `Основний образ: ${rolesPresent.join(' · ')}`;
+    if (alternatives && alternatives.length > 0) {
+        const n = alternatives.length;
+        let suffix = 'альтернатив';
+        if (n === 1) suffix = 'альтернатива';
+        else if (n >= 2 && n <= 4) suffix = 'альтернативи';
+        s += ` · + ${n} ${suffix}`;
+    }
+    return s;
+}
+
+function composeBalancedRecommendations(scoredCandidates, options = {}) {
+    if (!Array.isArray(scoredCandidates) || scoredCandidates.length === 0) {
+        return { primaryLook: [], alternatives: [] };
+    }
+
+    const maxTotal = options.maxItems || 8;
+    const focusCat = (options.focusCategory || '').toLowerCase().trim();
+    const occ = (options.occasion || '').toLowerCase().trim();
+    const custom = (options.custom || '').toLowerCase().trim();
+
+    // Determine focus role if explicit category requested
+    let focusRole = null;
+    if (focusCat) {
+        if (focusCat.includes('top') || focusCat.includes('верх') || focusCat.includes('blouse')) focusRole = 'upper';
+        else if (focusCat.includes('bottom') || focusCat.includes('низ') || focusCat.includes('pant') || focusCat.includes('skirt')) focusRole = 'lower';
+        else if (focusCat.includes('dress') || focusCat.includes('сукн')) focusRole = 'dress';
+        else if (focusCat.includes('jacket') || focusCat.includes('outerwear') || focusCat.includes('пальт') || focusCat.includes('куртк')) focusRole = 'outerwear';
+        else if (focusCat.includes('swim') || focusCat.includes('купальник')) focusRole = 'swim';
+    }
+
+    // Filter out unsuitable categories (intimates, chemises, swim, sleep, lounge, legwear) for standard outfit generation
+    const validCandidates = scoredCandidates.filter(it => !isExcludedFromOutfit(it, options));
+
+    const bestScore = validCandidates[0]?._score ?? 0;
+    // Relative quality threshold: items must be within 25 points of best score and at least 60%
+    const qualityThreshold = Math.max(60, bestScore - 25);
+
+    const qualityPool = validCandidates.filter(it => (it._score ?? 0) >= qualityThreshold);
+
+    // Group quality candidates by role
+    const byRole = { swim: [], upper: [], lower: [], dress: [], outerwear: [], other: [] };
+    qualityPool.forEach(it => {
+        const role = getGarmentRole(it);
+        it._garmentRole = role;
+        if (byRole[role]) byRole[role].push(it);
+        else byRole.other.push(it);
+    });
+
+    // Primary Look selection
+    const primaryLook = [];
+    const usedKeys = new Set();
+
+    function addPrimary(item) {
+        if (!item) return false;
+        const k = getItemKey(item);
+        if (usedKeys.has(k)) return false;
+        usedKeys.add(k);
+        item._isPrimaryLook = true;
+        item._garmentRole = item._garmentRole || getGarmentRole(item);
+        primaryLook.push(item);
+        return true;
+    }
+
+    const topSwim = byRole.swim[0] || null;
+    const topUpper = byRole.upper[0] || null;
+    const topLower = byRole.lower[0] || null;
+    const topDress = byRole.dress[0] || null;
+    const topOuterwear = byRole.outerwear[0] || null;
+
+    const isBeachOrSwimOcc = occ.includes('beach') || occ.includes('swim');
+    const isExplicitSwimIntent = custom.includes('купальник') || custom.includes('swim') || custom.includes('swimsuit') || focusRole === 'swim';
+
+    let useSwimOption = false;
+    if (isBeachOrSwimOcc && isExplicitSwimIntent && topSwim) {
+        useSwimOption = true;
+    }
+
+    let useDressOption = false;
+
+    if (focusRole === 'dress') {
+        useDressOption = true;
+    } else if (focusRole === 'upper' || focusRole === 'lower') {
+        useDressOption = false;
+    } else if (!useSwimOption) {
+        // No explicit focus: compare Separates (upper + lower) vs Dress
+        const hasSeparates = !!(topUpper && topLower);
+        const hasDress = !!topDress;
+
+        if (hasDress && !hasSeparates) {
+            useDressOption = true;
+        } else if (hasSeparates && !hasDress) {
+            useDressOption = false;
+        } else if (hasSeparates && hasDress) {
+            const sepAvg = (topUpper._score + topLower._score) / 2;
+            const dressScore = topDress._score;
+            if (dressScore > sepAvg) {
+                useDressOption = true;
+            } else if (sepAvg > dressScore) {
+                useDressOption = false;
+            } else {
+                // Stable tie-break: separates preferred
+                useDressOption = false;
+            }
+        }
+    }
+
+    if (useSwimOption && topSwim) {
+        addPrimary(topSwim);
+        if (topOuterwear && topOuterwear._score >= qualityThreshold) {
+            addPrimary(topOuterwear);
+        }
+    } else if (useDressOption && topDress) {
+        addPrimary(topDress);
+        if (topOuterwear) {
+            addPrimary(topOuterwear);
+        }
+    } else {
+        if (topUpper) addPrimary(topUpper);
+        if (topLower) addPrimary(topLower);
+        if (topOuterwear) addPrimary(topOuterwear);
+    }
+
+    // Determine Alternatives from remaining candidates up to maxTotal
+    const alternatives = [];
+    const remainingSlots = Math.max(0, maxTotal - primaryLook.length);
+
+    // Pass 1: Select diverse alternatives capping identical class_name at 2 items
+    const classCounts = {};
+    for (const it of validCandidates) {
+        if (alternatives.length >= remainingSlots) break;
+        const k = getItemKey(it);
+        if (usedKeys.has(k)) continue;
+        const cls = it.class_name || 'item';
+        if ((classCounts[cls] || 0) >= 2) continue;
+        classCounts[cls] = (classCounts[cls] || 0) + 1;
+        usedKeys.add(k);
+        it._isPrimaryLook = false;
+        it._garmentRole = it._garmentRole || getGarmentRole(it);
+        alternatives.push(it);
+    }
+
+    // Pass 2: Fill remaining slots if needed
+    for (const it of validCandidates) {
+        if (alternatives.length >= remainingSlots) break;
+        const k = getItemKey(it);
+        if (usedKeys.has(k)) continue;
+        usedKeys.add(k);
+        it._isPrimaryLook = false;
+        it._garmentRole = it._garmentRole || getGarmentRole(it);
+        alternatives.push(it);
+    }
+
+    // Sort alternatives by Match Score descending (stable tie-break)
+    alternatives.sort((a, b) => {
+        if (b._score !== a._score) return b._score - a._score;
+        return getItemKey(a).localeCompare(getItemKey(b));
+    });
+
+    return { primaryLook, alternatives };
+}
+
 function pickProductsMixed(occ, cat, minR, custom, body, stl, seas, includeWardrobe) {
     let aiWeather = null;
     try {
         const wStr = localStorage.getItem('ai_weather');
         if (wStr) {
             const wData = JSON.parse(wStr);
-            // check freshness (e.g. 2 hours)
             if (Date.now() - wData.updatedAt < 2 * 60 * 60 * 1000) {
                 aiWeather = wData;
             }
@@ -975,12 +1367,17 @@ function pickProductsMixed(occ, cat, minR, custom, body, stl, seas, includeWardr
         profileColor = p.color;
     } catch(e){}
 
+    let semanticCustom = custom;
+    if (custom && /купальник/i.test(custom) && !/swim/i.test(custom)) {
+        semanticCustom = `${custom} swim`;
+    }
+
     const context = {
         occasion: occ,
         style: stl,
         season: seas,
         body: profileBody,
-        custom: custom,
+        custom: semanticCustom,
         weather: aiWeather,
         color: profileColor,
         feedbackMap: getFeedbackMap()
@@ -988,10 +1385,9 @@ function pickProductsMixed(occ, cat, minR, custom, body, stl, seas, includeWardr
 
     let allItems = [];
 
-        // Catalog items
+    // Catalog items
     products.forEach(p => {
         if (p.avg_rating && p.avg_rating < minR) return;
-        if (cat && p.department_name !== cat && p.class_name !== cat) return;
         
         let pCopy = { ...p, color: imageColors[p.clothing_id] || '' };
         pCopy._score = MatchScore.calculateMatchScore(pCopy, context);
@@ -1001,19 +1397,45 @@ function pickProductsMixed(occ, cat, minR, custom, body, stl, seas, includeWardr
 
     // Wardrobe items
     if (includeWardrobe) {
-        _wardrobeCache.forEach(w => {
+        const wardrobeList = window._wardrobeCache || _wardrobeCache;
+        wardrobeList.forEach(w => {
             const wContext = { ...context, isWardrobeItem: true };
-            w._score = MatchScore.calculateMatchScore(w, wContext);
-            w._isWardrobe = true;
-            allItems.push(w);
+            const wCopy = { ...w };
+            wCopy._score = MatchScore.calculateMatchScore(wCopy, wContext);
+            wCopy._isWardrobe = true;
+            allItems.push(wCopy);
         });
     }
 
-    // Sort by score
-    allItems.sort((a, b) => b._score - a._score);
+    // Deterministic sort by Match Score descending with stable tie-break
+    allItems.sort((a, b) => {
+        if (b._score !== a._score) return b._score - a._score;
+        const aKey = a._isWardrobe ? 'w_' + a.id : 'c_' + a.clothing_id;
+        const bKey = b._isWardrobe ? 'w_' + b.id : 'c_' + b.clothing_id;
+        return aKey.localeCompare(bKey);
+    });
 
-    // Pick top 8, ensure at least some diversity if possible, but keep it simple
-    return allItems.slice(0, 8);
+    // Expose full global Match Score ranking for debugging and verification
+    window.__lastScoredCandidates = allItems;
+
+    // Compose primary look and alternatives for the UI
+    const recResult = composeBalancedRecommendations(allItems, {
+        focusCategory: cat,
+        occasion: occ,
+        season: seas,
+        custom: custom,
+        maxItems: 8
+    });
+
+    const primaryLook = recResult.primaryLook || [];
+    const alternatives = recResult.alternatives || [];
+
+    // Expose for verification and backwards compatibility
+    window.__lastPrimaryLook = primaryLook;
+    window.__lastAlternatives = alternatives;
+    window.__lastDisplayedRecommendations = Object.assign([...primaryLook, ...alternatives], recResult);
+
+    return recResult;
 }
 
 function share(){
@@ -1098,6 +1520,7 @@ window.addEventListener('load', async () => {
     // Load Wardrobe
     try {
         _wardrobeCache = await WardrobeDB.getAll();
+        window._wardrobeCache = _wardrobeCache;
         const cb = document.getElementById('use-wardrobe');
         const msg = document.getElementById('wardrobe-msg');
         if (_wardrobeCache.length === 0) {

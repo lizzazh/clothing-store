@@ -71,18 +71,24 @@
         /* ---- MAIN CONTAINER ---- */
         .main-content {
             flex:1; display:flex; flex-direction:column; align-items:center;
-            padding: 40px 20px; position:relative; z-index:10;
+            padding: clamp(25px, 5vw, 40px) clamp(15px, 4vw, 20px); position:relative; z-index:10;
+            box-sizing:border-box; max-width:100%;
         }
 
         .hero-title {
             font-family:'Great Vibes',cursive;
-            font-size:clamp(40px, 6vw, 64px);
+            font-size:clamp(32px, 5.5vw, 56px);
+            line-height:1.25;
             background:linear-gradient(135deg,#fff 0%,var(--ai-purple) 45%,var(--ai-pink) 100%);
             -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
             margin-bottom:10px; text-align:center;
+            display:inline-block; max-width:100%;
+            padding:4px 10px 8px; box-sizing:border-box;
+            overflow-wrap:break-word; word-break:break-word;
         }
         .hero-subtitle {
-            font-size:16px;color:rgba(255,255,255,0.6); text-align:center; margin-bottom:40px; max-width:500px;
+            font-size:15px; color:rgba(255,255,255,0.6); text-align:center;
+            margin-bottom:30px; max-width:500px; line-height:1.5;
         }
 
         /* ---- PROFILE FORM ---- */
@@ -91,7 +97,52 @@
             background:var(--glass-bg);
             backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
             border:1px solid var(--glass-border); border-radius:24px;
-            padding:40px; box-shadow:var(--glass-shadow);
+            padding:clamp(22px, 4vw, 40px); box-shadow:var(--glass-shadow);
+            box-sizing:border-box; margin-bottom:25px;
+        }
+
+        /* ---- STYLE DNA SECTION ---- */
+        .style-dna-card {
+            width:100%; max-width:600px;
+            background:rgba(255,255,255,0.04);
+            backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+            border:1px solid rgba(168,85,247,0.3); border-radius:24px;
+            padding:clamp(20px, 4vw, 32px); box-shadow:var(--glass-shadow);
+            box-sizing:border-box; animation:fadeIn .4s ease;
+        }
+        @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+        .dna-card-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+        .dna-icon { font-size:28px; }
+        .dna-title { font-size:18px; font-weight:700; color:#fff; margin:0 0 4px; }
+        .dna-subtitle { font-size:12px; color:rgba(255,255,255,0.5); margin:0; }
+        .dna-styles-row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+        .dna-style-badge {
+            flex:1; min-width:200px; background:rgba(255,255,255,0.05);
+            border:1px solid var(--glass-border); border-radius:14px;
+            padding:12px 16px; display:flex; flex-direction:column; gap:4px;
+        }
+        .dna-style-badge.primary { border-color:rgba(168,85,247,0.4); background:rgba(168,85,247,0.1); }
+        .dna-style-badge.secondary { border-color:rgba(236,72,153,0.3); background:rgba(236,72,153,0.08); }
+        .badge-label { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.6); font-weight:600; }
+        .dna-style-badge strong { font-size:15px; color:#fff; }
+        .dna-breakdown { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+        .dna-bar-item { display:flex; flex-direction:column; gap:5px; }
+        .dna-bar-info { display:flex; justify-content:space-between; font-size:13px; color:rgba(255,255,255,0.8); }
+        .dna-bar-info span:first-child { font-weight:500; }
+        .dna-bar-info span:last-child { font-weight:700; color:var(--ai-pink); }
+        .dna-bar-track { width:100%; height:8px; border-radius:6px; background:rgba(255,255,255,0.08); overflow:hidden; }
+        .dna-bar-fill { height:100%; border-radius:6px; background:linear-gradient(90deg,var(--ai-purple),var(--ai-pink)); transition:width .5s ease; }
+        .dna-footer { text-align:center; padding-top:10px; border-top:1px solid rgba(255,255,255,0.08); }
+        .dna-retake-btn {
+            display:inline-block; font-size:13px; font-weight:600; color:rgba(255,255,255,0.8);
+            text-decoration:none; padding:8px 18px; border-radius:18px;
+            background:rgba(255,255,255,0.06); border:1px solid var(--glass-border);
+            transition:all .2s;
+        }
+        .dna-retake-btn:hover { background:rgba(168,85,247,0.2); border-color:var(--ai-purple); color:#fff; }
+
+        @media (max-width: 680px) {
+            .ai-nav { padding: 15px 20px; }
         }
 
         .form-group { margin-bottom: 25px; }
@@ -184,9 +235,90 @@
                 <button type="submit" class="btn-save">✨ Зберегти профіль</button>
             </form>
         </div>
+
+        <!-- STYLE DNA SECTION -->
+        <div id="style-dna-section" class="style-dna-card" style="display:none;">
+            <div class="dna-card-header">
+                <span class="dna-icon">🧬</span>
+                <div>
+                    <h3 class="dna-title">Ваш Style DNA</h3>
+                    <p class="dna-subtitle">Сформований на основі вашого Style DNA Quiz</p>
+                </div>
+            </div>
+            <div class="dna-styles-row">
+                <div class="dna-style-badge primary">
+                    <span class="badge-label">Основний стиль</span>
+                    <strong id="dna-primary-style">—</strong>
+                </div>
+                <div class="dna-style-badge secondary" id="dna-secondary-badge" style="display:none;">
+                    <span class="badge-label">Додатковий стиль</span>
+                    <strong id="dna-secondary-style">—</strong>
+                </div>
+            </div>
+            <div class="dna-breakdown" id="dna-breakdown"></div>
+            <div class="dna-footer">
+                <a href="style-quiz.html" class="dna-retake-btn">🎯 Оновити Style DNA у Quiz</a>
+            </div>
+        </div>
     </div>
 
     <script>
+        const STYLE_META = {
+            classic: { name: 'Classic Chic', emoji: '🖤' },
+            boho: { name: 'Boho Free Spirit', emoji: '🌿' },
+            minimalist: { name: 'Modern Minimalist', emoji: '⬜' },
+            romantic: { name: 'Romantic Dreamer', emoji: '🎀' },
+            streetwear: { name: 'Streetwear Bold', emoji: '🧢' },
+            elegant: { name: 'Glamour & Elegance', emoji: '✨' }
+        };
+
+        function renderStyleDNA(data) {
+            const sec = document.getElementById('style-dna-section');
+            if (!sec || !data || !data.styleDNA) {
+                if (sec) sec.style.display = 'none';
+                return;
+            }
+
+            const pStyle = data.style || '';
+            const pMeta = STYLE_META[pStyle] || { name: pStyle || 'Не визначено', emoji: '✨' };
+            document.getElementById('dna-primary-style').textContent = `${pMeta.emoji} ${pMeta.name}`;
+
+            const secBadge = document.getElementById('dna-secondary-badge');
+            if (data.secondaryStyle && data.secondaryStyle !== data.style && STYLE_META[data.secondaryStyle]) {
+                const sMeta = STYLE_META[data.secondaryStyle];
+                document.getElementById('dna-secondary-style').textContent = `${sMeta.emoji} ${sMeta.name}`;
+                secBadge.style.display = 'flex';
+            } else {
+                secBadge.style.display = 'none';
+            }
+
+            const breakdown = document.getElementById('dna-breakdown');
+            const entries = Object.entries(data.styleDNA)
+                .filter(([_, pct]) => Number(pct) > 0)
+                .sort((a, b) => Number(b[1]) - Number(a[1]));
+
+            if (entries.length > 0) {
+                breakdown.innerHTML = entries.map(([k, pct]) => {
+                    const meta = STYLE_META[k] || { name: k, emoji: '✨' };
+                    return `
+                        <div class="dna-bar-item">
+                            <div class="dna-bar-info">
+                                <span>${meta.emoji} ${meta.name}</span>
+                                <span>${pct}%</span>
+                            </div>
+                            <div class="dna-bar-track">
+                                <div class="dna-bar-fill" style="width: ${pct}%;"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                breakdown.innerHTML = '';
+            }
+
+            sec.style.display = 'block';
+        }
+
         // Inject Nav
         document.getElementById('nav-container').innerHTML = `
             <a href="index.html" class="nav-link">🏠 Головна</a>
@@ -209,21 +341,27 @@
                     if(data.body) document.getElementById('p-body').value = data.body;
                     if(data.style) document.getElementById('p-style').value = data.style;
                     if(data.color) document.getElementById('p-color').value = data.color;
+                    renderStyleDNA(data);
                 } catch(e) {}
             }
         });
 
         function saveProfile(e) {
             e.preventDefault();
+            let existing = {};
+            try { existing = JSON.parse(localStorage.getItem('ai_profile')) || {}; } catch(err) {}
+
             const data = {
+                ...existing,
                 name: document.getElementById('p-name').value.trim(),
                 age: document.getElementById('p-age').value,
                 body: document.getElementById('p-body').value,
-                style: document.getElementById('p-style').value,
+                style: document.getElementById('p-style').value || existing.style || '',
                 color: document.getElementById('p-color').value,
                 updatedAt: new Date().toISOString()
             };
             localStorage.setItem('ai_profile', JSON.stringify(data));
+            renderStyleDNA(data);
             showToast('✨ Профіль успішно збережено!');
         }
 

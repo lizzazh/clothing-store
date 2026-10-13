@@ -53,18 +53,32 @@
 
         /* Layout */
         .container {
-            max-width:1400px; margin:0 auto; padding:40px 20px;
+            max-width:1400px; margin:0 auto; padding:clamp(20px, 4vw, 40px) clamp(12px, 3vw, 20px);
             display:grid; grid-template-columns:380px 1fr; gap:30px;
+            box-sizing:border-box;
         }
         
         .panel {
             background:var(--glass-bg); backdrop-filter:blur(24px);
             border:1px solid var(--glass-border); border-radius:24px;
-            padding:35px; box-shadow:var(--glass-shadow);
+            padding:clamp(18px, 4vw, 35px); box-shadow:var(--glass-shadow);
+            box-sizing:border-box; max-width:100%; min-width:0;
         }
         .left-panel { position:sticky; top:30px; height:max-content; }
 
-        h2 { font-family:'Great Vibes',cursive; font-size:42px; margin-bottom:20px; color:white; }
+        h2 {
+            font-family:'Great Vibes',cursive;
+            font-size:clamp(28px, 5vw, 42px);
+            line-height:1.25;
+            margin-bottom:15px;
+            color:white;
+            display:inline-block;
+            max-width:100%;
+            padding:2px 6px;
+            box-sizing:border-box;
+            overflow-wrap:break-word;
+            word-break:break-word;
+        }
         
         /* Weather Input */
         .input-group { margin-bottom:25px; }
@@ -140,7 +154,8 @@
         .anim-cloud { animation:float 3s ease-in-out infinite; }
 
         @media (max-width: 900px) {
-            .container { grid-template-columns:1fr; }
+            .ai-nav { padding:15px 20px; }
+            .container { grid-template-columns:minmax(0, 1fr); gap:20px; }
             .left-panel { position:static; }
         }
     </style>

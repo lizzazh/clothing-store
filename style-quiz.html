@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* =========================================================
-           Style DNA Quiz — Premium Dark Page
+           Style DNA Quiz — Premium Dark Modular Experience
         ========================================================= */
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
         :root{
@@ -44,6 +44,7 @@
         @keyframes bgPulse{ from{opacity:0.8;} to{opacity:1;} }
 
         a{color:inherit;text-decoration:none}
+
         /* ---- TOP NAV ---- */
         .ai-nav{
             display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;
@@ -70,38 +71,97 @@
         /* ---- MAIN CONTAINER ---- */
         .main-content {
             flex:1; display:flex; flex-direction:column; align-items:center;
-            padding: 30px 20px; position:relative; z-index:10;
+            padding:clamp(25px, 4vw, 40px) clamp(15px, 4vw, 20px);
+            position:relative; z-index:10;
+            box-sizing:border-box; max-width:100%;
         }
 
         .hero-title {
-            font-family:'Great Vibes',cursive; font-size:52px; line-height:1.1;
+            font-family:'Great Vibes',cursive;
+            font-size:clamp(34px, 5.5vw, 54px);
+            line-height:1.25;
             background:linear-gradient(135deg,#fff 0%,var(--ai-purple) 60%,var(--ai-pink) 100%);
-            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
             margin-bottom:10px; text-align:center; text-shadow:0 10px 30px rgba(168,85,247,0.3);
+            display:inline-block; max-width:100%; padding:4px 10px 8px; box-sizing:border-box;
+            overflow-wrap:break-word; word-break:break-word;
         }
         .hero-subtitle {
             font-size:15px; color:rgba(255,255,255,0.6);
-            text-align:center; margin-bottom:30px; max-width:500px;
+            text-align:center; margin-bottom:30px; max-width:540px; line-height:1.5;
         }
 
-        /* ---- QUIZ CONTAINER ---- */
+        /* ---- QUIZ LAYOUT ---- */
+        .quiz-layout {
+            display:flex; gap:24px; width:100%; max-width:1080px;
+            align-items:flex-start; justify-content:center;
+            box-sizing:border-box;
+        }
+
         .quiz-container {
+            flex:1;
             width:100%;
             max-width:720px;
             background:var(--glass-bg);
             border:1px solid var(--glass-border);
             border-radius:24px;
-            padding:30px;
-            backdrop-filter:blur(12px);
+            padding:clamp(22px, 4vw, 32px);
+            backdrop-filter:blur(16px);
+            -webkit-backdrop-filter:blur(16px);
             box-shadow:var(--glass-shadow);
             position:relative;
-            overflow:hidden;
+            box-sizing:border-box;
+        }
+
+        /* LIVE DNA TRACKER PANEL */
+        .dna-live-panel {
+            width:320px;
+            background:var(--glass-bg);
+            border:1px solid var(--glass-border);
+            border-radius:24px;
+            padding:24px;
+            backdrop-filter:blur(16px);
+            -webkit-backdrop-filter:blur(16px);
+            box-shadow:var(--glass-shadow);
+            position:sticky;
+            top:24px;
+            box-sizing:border-box;
+            animation:fadeIn .4s ease;
+        }
+        .dna-live-badge {
+            display:inline-block; font-size:11px; font-weight:700;
+            color:var(--ai-purple); text-transform:uppercase; letter-spacing:1px;
+            background:rgba(168,85,247,0.12); padding:4px 12px; border-radius:20px;
+            border:1px solid rgba(168,85,247,0.3); margin-bottom:12px;
+        }
+        .dna-live-title {
+            font-size:18px; font-weight:700; color:#fff; margin-bottom:16px;
+        }
+        .dna-live-list {
+            display:flex; flex-direction:column; gap:12px; margin-bottom:16px;
+        }
+        .dna-live-row {
+            background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06);
+            border-radius:14px; padding:12px 14px; display:flex; flex-direction:column; gap:3px;
+        }
+        .dna-live-lbl {
+            font-size:11px; text-transform:uppercase; letter-spacing:0.8px;
+            color:rgba(255,255,255,0.5); font-weight:600;
+        }
+        .dna-live-val {
+            font-size:14.5px; font-weight:600; color:#fff;
+        }
+        .dna-live-val.neutral { color:rgba(255,255,255,0.45); font-weight:400; font-style:italic; }
+        .dna-live-val.active { color:var(--ai-pink); }
+        .dna-live-hint {
+            font-size:12px; color:rgba(255,255,255,0.45); line-height:1.45;
+            border-top:1px solid rgba(255,255,255,0.06); padding-top:12px;
         }
 
         /* Progress Bar */
         .progress-wrap {
             width:100%; height:6px; background:rgba(255,255,255,0.1);
-            border-radius:10px; margin-bottom:30px; overflow:hidden;
+            border-radius:10px; margin-bottom:24px; overflow:hidden;
         }
         .progress-bar {
             height:100%; width:20%;
@@ -109,35 +169,57 @@
             transition:width 0.4s ease;
         }
 
-        .step { display:none; animation:fadeIn 0.5s forwards; }
-        .step.active { display:block; }
-        @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
-
-        .question-header {
-            text-align:center; margin-bottom:30px;
+        /* Step header navigation */
+        .question-top-row {
+            display:flex; justify-content:space-between; align-items:center;
+            margin-bottom:10px; gap:10px;
+        }
+        .btn-step-back {
+            background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15);
+            color:rgba(255,255,255,0.85); padding:6px 14px; border-radius:18px;
+            font-size:12px; font-weight:600; cursor:pointer; transition:all .2s;
+            font-family:'Outfit',sans-serif; display:inline-flex; align-items:center; gap:4px;
+        }
+        .btn-step-back:hover {
+            background:rgba(168,85,247,0.2); border-color:var(--ai-purple); color:#fff;
         }
         .question-step-label {
-            font-size:12px; font-weight:700; color:var(--ai-pink); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; display:inline-block;
-            background:rgba(236,72,153,0.1); padding:4px 12px; border-radius:20px; border:1px solid rgba(236,72,153,0.3);
+            font-size:12px; font-weight:700; color:var(--ai-pink);
+            text-transform:uppercase; letter-spacing:1px;
+            background:rgba(236,72,153,0.1); padding:4px 12px; border-radius:20px;
+            border:1px solid rgba(236,72,153,0.3);
+        }
+
+        .question-header {
+            text-align:center; margin-bottom:25px;
         }
         .question-title {
-            font-size:24px; font-weight:600; color:#fff;
+            font-size:22px; font-weight:600; color:#fff; line-height:1.3;
         }
+        .question-sub {
+            font-size:13.5px; color:rgba(255,255,255,0.55); margin-top:6px; font-weight:300;
+        }
+
+        /* Step transitions */
+        .step { display:none; animation:fadeIn 0.4s forwards; }
+        .step.active { display:block; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
 
         /* Options Grid */
         .answers-grid {
-            display:grid; grid-template-columns:repeat(2, 1fr); gap:15px;
+            display:grid; grid-template-columns:repeat(2, 1fr); gap:14px;
         }
         .answer-card {
             background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
-            border-radius:16px; padding:20px 15px; text-align:center; cursor:pointer;
-            transition:all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); display:flex; flex-direction:column; align-items:center; gap:12px;
+            border-radius:16px; padding:18px 14px; text-align:center; cursor:pointer;
+            transition:all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display:flex; flex-direction:column; align-items:center; gap:10px;
             position:relative; overflow:hidden;
         }
         .answer-card:hover {
             background:rgba(255,255,255,0.08); transform:translateY(-3px);
             border-color:rgba(168,85,247,0.4);
-            box-shadow:0 8px 24px rgba(0,0,0,0.2);
+            box-shadow:0 8px 24px rgba(0,0,0,0.25);
         }
         .answer-card.selected {
             background:rgba(168,85,247,0.15); border-color:var(--ai-pink);
@@ -152,72 +234,156 @@
         }
         
         .answer-icon-wrap {
-            width:56px; height:56px; border-radius:50%;
+            width:52px; height:52px; border-radius:50%;
             background:linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
             border:1px solid rgba(255,255,255,0.1);
             display:flex; align-items:center; justify-content:center;
-            margin-bottom:5px; transition:transform 0.3s ease, background 0.3s ease;
+            transition:transform 0.25s ease, background 0.25s ease;
         }
         .answer-card:hover .answer-icon-wrap {
-            transform:scale(1.1); background:rgba(168,85,247,0.1); border-color:rgba(168,85,247,0.3);
+            transform:scale(1.08); background:rgba(168,85,247,0.1); border-color:rgba(168,85,247,0.3);
         }
         .answer-card.selected .answer-icon-wrap {
             background:linear-gradient(135deg, rgba(168,85,247,0.2), rgba(236,72,153,0.2));
             border-color:rgba(236,72,153,0.4);
         }
-        .answer-emoji {
-            font-size:28px; line-height:1;
-        }
+        .answer-emoji { font-size:26px; line-height:1; }
         .answer-text {
-            font-size:15px; font-weight:500; color:rgba(255,255,255,0.9); line-height:1.4;
+            font-size:14.5px; font-weight:500; color:rgba(255,255,255,0.9); line-height:1.35;
         }
 
         /* ---- RESULT SCREEN ---- */
         .result-screen {
-            display:none;
-            animation: fadeInUp 0.6s ease forwards;
+            display:none; animation:fadeInUp 0.5s ease forwards;
             text-align:center;
         }
         .result-screen.active { display:block; }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 
-        @keyframes fadeInUp {
-            from { opacity:0; transform:translateY(30px); }
-            to { opacity:1; transform:translateY(0); }
+        .result-emoji { font-size:64px; margin-bottom:8px; animation:bounce 2s infinite; }
+        @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+
+        .result-lead-badge {
+            display:inline-block; font-size:11px; font-weight:700;
+            color:var(--ai-pink); text-transform:uppercase; letter-spacing:1px;
+            background:rgba(236,72,153,0.12); padding:4px 14px; border-radius:20px;
+            border:1px solid rgba(236,72,153,0.3); margin-bottom:10px;
         }
-
-        .result-emoji { font-size:72px; margin-bottom:10px; animation:bounce 2s infinite; }
-        @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
-
         .result-title {
             font-family:'Great Vibes',cursive;
-            font-size:56px; color:white;
-            text-shadow:0 0 20px rgba(168,85,247,0.5);
-            margin-bottom:15px;
+            font-size:clamp(36px, 6vw, 56px);
+            line-height:1.25;
+            color:white; text-shadow:0 0 20px rgba(168,85,247,0.5);
+            margin-bottom:12px; display:inline-block; max-width:100%;
+            padding:4px 10px; box-sizing:border-box;
+            overflow-wrap:break-word; word-break:break-word;
         }
         .result-desc {
-            font-size:16px; color:rgba(255,255,255,0.7);
-            max-width:600px; margin:0 auto 30px; line-height:1.6;
+            font-size:15px; color:rgba(255,255,255,0.7);
+            max-width:580px; margin:0 auto 24px; line-height:1.6;
         }
 
-        .tags { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:40px; }
+        .tags { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:28px; }
         .tag {
-            padding:8px 16px; border-radius:20px; font-size:13px; font-weight:600;
+            padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600;
             background:rgba(168,85,247,0.15); border:1px solid rgba(168,85,247,0.3); color:white;
         }
 
-        .recs-title { font-size:20px; font-weight:700; margin-bottom:20px; text-align:left; color:white; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; }
+        /* Result Sections */
+        .res-block {
+            background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);
+            border-radius:18px; padding:20px; margin-bottom:24px; text-align:left;
+        }
+        .res-subheading {
+            font-size:15px; font-weight:700; color:#fff; margin-bottom:14px;
+            display:flex; align-items:center; gap:8px;
+        }
+
+        /* Percentage bars */
+        .dna-percent-bars { display:flex; flex-direction:column; gap:10px; }
+        .dna-bar-item { display:flex; flex-direction:column; gap:4px; }
+        .dna-bar-info { display:flex; justify-content:space-between; font-size:13px; color:rgba(255,255,255,0.85); }
+        .dna-bar-info span:first-child { font-weight:500; }
+        .dna-bar-info span:last-child { font-weight:700; color:var(--ai-pink); }
+        .dna-bar-track { width:100%; height:8px; background:rgba(255,255,255,0.08); border-radius:6px; overflow:hidden; }
+        .dna-bar-fill { height:100%; border-radius:6px; background:linear-gradient(90deg,var(--ai-purple),var(--ai-pink)); transition:width .5s ease; }
+
+        /* Style comparison row */
+        .styles-comparison-block {
+            display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px;
+        }
+        .style-duo-card {
+            background:rgba(255,255,255,0.04); border:1px solid var(--glass-border);
+            border-radius:16px; padding:14px 16px; display:flex; flex-direction:column; gap:4px; text-align:left;
+        }
+        .style-duo-card.primary { border-color:rgba(168,85,247,0.4); background:rgba(168,85,247,0.1); }
+        .style-duo-card.secondary { border-color:rgba(236,72,153,0.3); background:rgba(236,72,153,0.08); }
+        .duo-lbl { font-size:11px; text-transform:uppercase; letter-spacing:0.8px; color:rgba(255,255,255,0.55); font-weight:600; }
+        .duo-name { font-size:15px; font-weight:700; color:#fff; }
+        .duo-share { font-size:12px; color:var(--ai-pink); font-weight:600; }
+
+        /* Recommendations 3-grid */
+        .res-recs-grid {
+            display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:24px; text-align:left;
+        }
+        .rec-card {
+            background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);
+            border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px;
+        }
+        .rec-card h4 { font-size:13.5px; font-weight:700; color:#fff; margin:0; }
         
+        .palette-swatches { display:flex; flex-direction:column; gap:6px; }
+        .swatch-chip {
+            display:flex; align-items:center; gap:8px; padding:5px 8px; border-radius:10px;
+            background:rgba(255,255,255,0.04); font-size:12px; color:rgba(255,255,255,0.85);
+        }
+        .swatch-circle {
+            width:14px; height:14px; border-radius:50%; border:1px solid rgba(255,255,255,0.3); flex-shrink:0;
+        }
+
+        .best-fits-list, .style-tips-list {
+            list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px;
+            font-size:12px; color:rgba(255,255,255,0.75);
+        }
+        .best-fits-list li { display:flex; gap:6px; line-height:1.4; }
+        .best-fits-list li::before { content:'👗'; font-size:11px; flex-shrink:0; }
+        .style-tips-list li { display:flex; gap:6px; line-height:1.4; }
+        .style-tips-list li::before { content:'💡'; font-size:11px; flex-shrink:0; }
+
+        /* Action Buttons */
+        .action-btns {
+            display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:30px;
+        }
+        .btn-primary {
+            padding:12px 22px; border-radius:14px; border:none;
+            background:linear-gradient(135deg,#7c3aed,#ec4899); color:white;
+            font-family:'Outfit',sans-serif; font-size:14px; font-weight:700; cursor:pointer;
+            transition:all 0.3s; text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+        }
+        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(236,72,153,0.4); }
+        .btn-secondary {
+            padding:12px 20px; border-radius:14px; border:1px solid rgba(255,255,255,0.2);
+            background:rgba(255,255,255,0.05); color:white;
+            font-family:'Outfit',sans-serif; font-size:14px; font-weight:600; cursor:pointer;
+            transition:all 0.3s; text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+        }
+        .btn-secondary:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.3); }
+
+        /* Products Grid */
+        .recs-title {
+            font-size:18px; font-weight:700; margin-bottom:18px; text-align:left; color:white;
+            border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;
+        }
         .products-grid {
-            display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:15px;
-            margin-bottom:40px; text-align:left;
+            display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:14px;
+            margin-bottom:20px; text-align:left;
         }
         .prod-card {
             background:var(--glass-bg); border:1px solid var(--glass-border);
-            border-radius:12px; overflow:hidden; transition:all 0.3s;
-            display:block;
+            border-radius:12px; overflow:hidden; transition:all 0.3s; display:block;
         }
         .prod-card:hover {
-            border-color:var(--ai-purple); transform:translateY(-5px);
+            border-color:var(--ai-purple); transform:translateY(-4px);
             box-shadow:0 10px 20px rgba(168,85,247,0.2);
         }
         .prod-img { width:100%; height:160px; object-fit:contain; background:rgba(255,255,255,0.02); }
@@ -226,31 +392,34 @@
         .prod-name { font-size:13px; font-weight:600; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; }
         .prod-rating { font-size:11px; color:rgba(255,255,255,0.5); }
 
-        .action-btns { display:flex; gap:15px; justify-content:center; flex-wrap:wrap; }
-        .btn-primary {
-            padding:14px 28px; border-radius:14px; border:none;
-            background:linear-gradient(135deg,#7c3aed,#ec4899); color:white;
-            font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; cursor:pointer;
-            transition:all 0.3s; text-decoration:none;
+        /* Toast */
+        .toast {
+            position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+            background:linear-gradient(135deg, #7c3aed, #ec4899); color:white; padding:12px 24px;
+            border-radius:30px; font-weight:600; font-size:14px; z-index:1000;
+            box-shadow:0 10px 25px rgba(0,0,0,0.4); opacity:0; transition:opacity 0.3s; pointer-events:none;
         }
-        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(236,72,153,0.4); }
-        .btn-secondary {
-            padding:14px 28px; border-radius:14px; border:1px solid rgba(255,255,255,0.2);
-            background:rgba(255,255,255,0.05); color:white;
-            font-family:'Outfit',sans-serif; font-size:15px; font-weight:600; cursor:pointer;
-            transition:all 0.3s;
-        }
-        .btn-secondary:hover { background:rgba(255,255,255,0.1); }
 
-        @media (max-width: 600px) {
-            .quiz-container { padding:25px 15px; }
-            .answers-grid { grid-template-columns:1fr; gap:12px; }
-            .answer-card { padding:12px 15px; flex-direction:row; align-items:center; text-align:left; min-height:auto; }
-            .answer-icon-wrap { width:48px; height:48px; margin-bottom:0; margin-right:15px; flex-shrink:0; }
-            .answer-emoji { font-size:24px; }
-            .answer-card.selected::before { top:50%; margin-top:-11px; right:15px; }
-            .hero-title { font-size:38px; }
-            .hero-subtitle { font-size:14px; margin-bottom:20px; }
+        /* Responsive Queries */
+        @media (max-width: 960px) {
+            .quiz-layout { flex-direction:column; align-items:center; }
+            .dna-live-panel { width:100%; max-width:720px; position:static; margin-top:10px; }
+            .res-recs-grid { grid-template-columns:1fr; }
+        }
+        @media (max-width: 680px) {
+            .ai-nav { padding:15px 20px; }
+            .quiz-container { padding:20px 14px; }
+            .answers-grid { grid-template-columns:1fr; gap:10px; }
+            .answer-card { padding:12px 14px; flex-direction:row; align-items:center; text-align:left; min-height:auto; }
+            .answer-icon-wrap { width:44px; height:44px; margin-bottom:0; margin-right:12px; flex-shrink:0; }
+            .answer-emoji { font-size:22px; }
+            .answer-card.selected::before { top:50%; margin-top:-11px; right:14px; }
+            .styles-comparison-block { grid-template-columns:1fr; }
+            .products-grid { grid-template-columns:repeat(2, 1fr); }
+        }
+        @media (max-width: 440px) {
+            .products-grid { grid-template-columns:1fr; }
+            .action-btns .btn-primary, .action-btns .btn-secondary { width:100%; justify-content:center; }
         }
     </style>
 </head>
@@ -259,7 +428,7 @@
     <!-- NAV -->
     <nav class="ai-nav">
         <a href="index.html" class="ai-brand">Elizabeth's Elegance</a>
-                        <div class="nav-links">
+        <div class="nav-links">
             <a href="index.html" class="nav-link">🏠 Головна</a>
             <a href="my-profile.html" class="nav-link">👤 Мій профіль</a>
             <a href="ai-stylist.html" class="nav-link">✨ AI Stylist</a>
@@ -272,182 +441,416 @@
 
     <div class="main-content">
         <h1 class="hero-title">Style DNA Quiz</h1>
-        <p class="hero-subtitle">5 швидких кроків, щоб розкрити ваш унікальний стилетип та отримати персоналізовані рекомендації.</p>
+        <p class="hero-subtitle">5 вивірених кроків для формування вашого персонального Style DNA та адаптації рекомендацій штучного інтелекту.</p>
 
-        <div class="quiz-container" id="quiz-container">
-            <div class="progress-wrap">
-                <div class="progress-bar" id="progress-bar"></div>
+        <div class="quiz-layout">
+            <!-- MAIN QUIZ CONTAINER -->
+            <div class="quiz-container" id="quiz-container">
+                <div class="progress-wrap">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="step active" id="step-1">
+                    <div class="question-header">
+                        <div class="question-top-row">
+                            <button type="button" class="btn-step-back" id="back-btn-1" style="visibility:hidden;" onclick="prevStep()">← Назад</button>
+                            <div class="question-step-label">Крок 1 із 5</div>
+                            <span style="width:70px;"></span>
+                        </div>
+                        <div class="question-title">Який колір вас приваблює?</div>
+                        <p class="question-sub">Оберіть палітру, в якій ви почуваєтеся найвпевненіше</p>
+                    </div>
+                    <div class="answers-grid">
+                        <div class="answer-card" data-opt="neutral" data-style="classic" onclick="selectAnswer(1, 'neutral', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🖤</span></div>
+                            <div class="answer-text">Чорний / Білий / Нейтральні</div>
+                        </div>
+                        <div class="answer-card" data-opt="earthy" data-style="boho" onclick="selectAnswer(1, 'earthy', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🌿</span></div>
+                            <div class="answer-text">Земляні тони / Осінні</div>
+                        </div>
+                        <div class="answer-card" data-opt="pastel" data-style="romantic" onclick="selectAnswer(1, 'pastel', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">💖</span></div>
+                            <div class="answer-text">Пастельні / Ніжні</div>
+                        </div>
+                        <div class="answer-card" data-opt="bold" data-style="streetwear" onclick="selectAnswer(1, 'bold', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🌈</span></div>
+                            <div class="answer-text">Яскраві / Неоновий поп</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step" id="step-2">
+                    <div class="question-header">
+                        <div class="question-top-row">
+                            <button type="button" class="btn-step-back" onclick="prevStep()">← Назад</button>
+                            <div class="question-step-label">Крок 2 із 5</div>
+                            <span style="width:70px;"></span>
+                        </div>
+                        <div class="question-title">Ваш ідеальний силует?</div>
+                        <p class="question-sub">Форми та лінії, що найкраще резонують з вашим образом</p>
+                    </div>
+                    <div class="answers-grid">
+                        <div class="answer-card" data-opt="fitted" data-style="elegant" onclick="selectAnswer(2, 'fitted', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">👗</span></div>
+                            <div class="answer-text">Облягаючий / Підкреслений</div>
+                        </div>
+                        <div class="answer-card" data-opt="flowing" data-style="boho" onclick="selectAnswer(2, 'flowing', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🌊</span></div>
+                            <div class="answer-text">Вільний та текучий</div>
+                        </div>
+                        <div class="answer-card" data-opt="structured" data-style="classic" onclick="selectAnswer(2, 'structured', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">📐</span></div>
+                            <div class="answer-text">Структурований / Чіткий</div>
+                        </div>
+                        <div class="answer-card" data-opt="layered" data-style="romantic" onclick="selectAnswer(2, 'layered', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🎀</span></div>
+                            <div class="answer-text">Романтичний / Шаруватий</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step" id="step-3">
+                    <div class="question-header">
+                        <div class="question-top-row">
+                            <button type="button" class="btn-step-back" onclick="prevStep()">← Назад</button>
+                            <div class="question-step-label">Крок 3 із 5</div>
+                            <span style="width:70px;"></span>
+                        </div>
+                        <div class="question-title">Ідеальний образ на вихідний?</div>
+                        <p class="question-sub">Формат одягу для невимушеного відпочинку</p>
+                    </div>
+                    <div class="answers-grid">
+                        <div class="answer-card" data-opt="casual_knit" data-style="minimalist" onclick="selectAnswer(3, 'casual_knit', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">☕</span></div>
+                            <div class="answer-text">Джинси та ідеальний светр</div>
+                        </div>
+                        <div class="answer-card" data-opt="floral_dress" data-style="romantic" onclick="selectAnswer(3, 'floral_dress', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🌺</span></div>
+                            <div class="answer-text">Легка сукня з принтом</div>
+                        </div>
+                        <div class="answer-card" data-opt="sport_chic" data-style="streetwear" onclick="selectAnswer(3, 'sport_chic', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">⚡</span></div>
+                            <div class="answer-text">Спортивний шик / Кросівки</div>
+                        </div>
+                        <div class="answer-card" data-opt="statement" data-style="elegant" onclick="selectAnswer(3, 'statement', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🎭</span></div>
+                            <div class="answer-text">Щось ефектне та незвичне</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step" id="step-4">
+                    <div class="question-header">
+                        <div class="question-top-row">
+                            <button type="button" class="btn-step-back" onclick="prevStep()">← Назад</button>
+                            <div class="question-step-label">Крок 4 із 5</div>
+                            <span style="width:70px;"></span>
+                        </div>
+                        <div class="question-title">Улюблена фактура/тканина?</div>
+                        <p class="question-sub">Матеріали, до яких вам найприємніше торкатися</p>
+                    </div>
+                    <div class="answers-grid">
+                        <div class="answer-card" data-opt="denim_leather" data-style="streetwear" onclick="selectAnswer(4, 'denim_leather', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🪨</span></div>
+                            <div class="answer-text">Грубий денім / Шкіра</div>
+                        </div>
+                        <div class="answer-card" data-opt="lace_chiffon" data-style="romantic" onclick="selectAnswer(4, 'lace_chiffon', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🌸</span></div>
+                            <div class="answer-text">Легкий шифон / Мереживо</div>
+                        </div>
+                        <div class="answer-card" data-opt="knit_linen" data-style="boho" onclick="selectAnswer(4, 'knit_linen', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🧶</span></div>
+                            <div class="answer-text">Затишний трикотаж / Льон</div>
+                        </div>
+                        <div class="answer-card" data-opt="silk_satin" data-style="elegant" onclick="selectAnswer(4, 'silk_satin', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">✨</span></div>
+                            <div class="answer-text">Блискуча / Атласна / Шовк</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="step" id="step-5">
+                    <div class="question-header">
+                        <div class="question-top-row">
+                            <button type="button" class="btn-step-back" onclick="prevStep()">← Назад</button>
+                            <div class="question-step-label">Крок 5 із 5</div>
+                            <span style="width:70px;"></span>
+                        </div>
+                        <div class="question-title">Хто вам ближче по духу?</div>
+                        <p class="question-sub">Стильова естетика, яка надихає вас найбільше</p>
+                    </div>
+                    <div class="answers-grid">
+                        <div class="answer-card" data-opt="audrey" data-style="classic" onclick="selectAnswer(5, 'audrey', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">👑</span></div>
+                            <div class="answer-text">Одрі Хепберн / Кейт Міддлтон</div>
+                        </div>
+                        <div class="answer-card" data-opt="zoe" data-style="boho" onclick="selectAnswer(5, 'zoe', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🌿</span></div>
+                            <div class="answer-text">Зої Кравіц / Флоренс Велч</div>
+                        </div>
+                        <div class="answer-card" data-opt="beyonce" data-style="elegant" onclick="selectAnswer(5, 'beyonce', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🔥</span></div>
+                            <div class="answer-text">Бейонсе / Кім Кардашьян</div>
+                        </div>
+                        <div class="answer-card" data-opt="cara" data-style="streetwear" onclick="selectAnswer(5, 'cara', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🎨</span></div>
+                            <div class="answer-text">Кара Делевінь / Ріанна</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESULT SCREEN -->
+                <div class="result-screen" id="result-screen">
+                    <div class="result-emoji" id="res-emoji">✨</div>
+                    <div class="result-lead-badge">ВАШ ПРОВІДНИЙ СТИЛЬ</div>
+                    <div class="result-title" id="res-title">Ваш стиль</div>
+                    <div class="result-desc" id="res-desc">Опис стилю...</div>
+
+                    <div class="tags" id="res-tags"></div>
+
+                    <!-- STYLE DNA PERCENTAGES -->
+                    <div class="res-block">
+                        <h3 class="res-subheading">🧬 Розподіл вашого Style DNA</h3>
+                        <div class="dna-percent-bars" id="res-dna-bars"></div>
+                    </div>
+
+                    <!-- PRIMARY & SECONDARY COMPARISON -->
+                    <div class="styles-comparison-block">
+                        <div class="style-duo-card primary">
+                            <span class="duo-lbl">Основний стиль</span>
+                            <strong class="duo-name" id="duo-primary-name">—</strong>
+                            <span class="duo-share" id="duo-primary-pct">—</span>
+                        </div>
+                        <div class="style-duo-card secondary">
+                            <span class="duo-lbl">Додатковий стиль</span>
+                            <strong class="duo-name" id="duo-secondary-name">—</strong>
+                            <span class="duo-share" id="duo-secondary-pct">—</span>
+                        </div>
+                    </div>
+
+                    <!-- 3 PERSONAL RECOMMENDATIONS -->
+                    <div class="res-recs-grid">
+                        <div class="rec-card">
+                            <h4>🎨 Кольорова палітра</h4>
+                            <div class="palette-swatches" id="res-palette"></div>
+                        </div>
+                        <div class="rec-card">
+                            <h4>👗 Що пасуватиме</h4>
+                            <ul class="best-fits-list" id="res-fits"></ul>
+                        </div>
+                        <div class="rec-card">
+                            <h4>✨ Стильові акценти</h4>
+                            <ul class="style-tips-list" id="res-tips"></ul>
+                        </div>
+                    </div>
+
+                    <!-- ACTION BUTTONS -->
+                    <div class="action-btns">
+                        <button class="btn-primary" onclick="saveStyleDNAAction()">💾 Зберегти Style DNA</button>
+                        <a href="#" id="ai-link" class="btn-primary">✨ Підібрати образ</a>
+                        <a href="my-wardrobe.html" class="btn-secondary">👚 Перейти до гардероба</a>
+                        <button class="btn-secondary" onclick="resetQuiz()">🔄 Пройти ще раз</button>
+                    </div>
+
+                    <!-- RECOMMENDED PRODUCTS -->
+                    <div class="recs-title">🛍️ Рекомендовані товари для вашого стилю</div>
+                    <div class="products-grid" id="res-products"></div>
+                </div>
             </div>
 
-            <!-- Step 1 -->
-            <div class="step active" id="step-1">
-                <div class="question-header">
-                    <div class="question-step-label">Крок 1 із 5</div>
-                    <div class="question-title">Який колір вас приваблює?</div>
-                </div>
-                <div class="answers-grid">
-                    <div class="answer-card" onclick="selectAnswer(1, 'classic', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🖤</span></div>
-                        <div class="answer-text">Чорний / Білий / Нейтральні</div>
+            <!-- LIVE DNA TRACKER PANEL (Desktop sidebar / Mobile bottom) -->
+            <aside class="dna-live-panel" id="dna-live-panel">
+                <div class="dna-live-badge">🧬 СТИЛЬОВИЙ ПРОФІЛЬ</div>
+                <div class="dna-live-title">Ваш Style DNA формується</div>
+                <div class="dna-live-list">
+                    <div class="dna-live-row">
+                        <span class="dna-live-lbl">Провідний стиль:</span>
+                        <strong id="dna-live-primary" class="dna-live-val neutral">Визначається...</strong>
                     </div>
-                    <div class="answer-card" onclick="selectAnswer(1, 'boho', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🌿</span></div>
-                        <div class="answer-text">Земляні тони / Осінні</div>
+                    <div class="dna-live-row">
+                        <span class="dna-live-lbl">Другий стиль:</span>
+                        <strong id="dna-live-secondary" class="dna-live-val neutral">—</strong>
                     </div>
-                    <div class="answer-card" onclick="selectAnswer(1, 'romantic', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">💖</span></div>
-                        <div class="answer-text">Пастельні / Ніжні</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(1, 'streetwear', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🌈</span></div>
-                        <div class="answer-text">Яскраві / Неоновий поп</div>
+                    <div class="dna-live-row">
+                        <span class="dna-live-lbl">Прогрес профілю:</span>
+                        <strong id="dna-live-progress" class="dna-live-val">0 / 5</strong>
                     </div>
                 </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="step" id="step-2">
-                <div class="question-header">
-                    <div class="question-step-label">Крок 2 із 5</div>
-                    <div class="question-title">Ваш ідеальний силует?</div>
+                <div class="dna-live-hint" id="dna-live-hint">
+                    Оберіть відповіді на 5 питань, щоб відкрити персоналізований розподіл вашого Style DNA.
                 </div>
-                <div class="answers-grid">
-                    <div class="answer-card" onclick="selectAnswer(2, 'elegant', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">👗</span></div>
-                        <div class="answer-text">Облягаючий / Підкреслений</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(2, 'boho', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🌊</span></div>
-                        <div class="answer-text">Вільний та текучий</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(2, 'classic', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">📐</span></div>
-                        <div class="answer-text">Структурований / Чіткий</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(2, 'romantic', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🎀</span></div>
-                        <div class="answer-text">Романтичний / Шаруватий</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="step" id="step-3">
-                <div class="question-header">
-                    <div class="question-step-label">Крок 3 із 5</div>
-                    <div class="question-title">Ідеальний образ на вихідний?</div>
-                </div>
-                <div class="answers-grid">
-                    <div class="answer-card" onclick="selectAnswer(3, 'minimalist', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">☕</span></div>
-                        <div class="answer-text">Джинси та ідеальний светр</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(3, 'romantic', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🌺</span></div>
-                        <div class="answer-text">Легка сукня з принтом</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(3, 'streetwear', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">⚡</span></div>
-                        <div class="answer-text">Спортивний шик / Кросівки</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(3, 'elegant', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🎭</span></div>
-                        <div class="answer-text">Щось ефектне та незвичне</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Step 4 -->
-            <div class="step" id="step-4">
-                <div class="question-header">
-                    <div class="question-step-label">Крок 4 із 5</div>
-                    <div class="question-title">Улюблена фактура/тканина?</div>
-                </div>
-                <div class="answers-grid">
-                    <div class="answer-card" onclick="selectAnswer(4, 'streetwear', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🪨</span></div>
-                        <div class="answer-text">Грубий денім / Шкіра</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(4, 'romantic', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🌸</span></div>
-                        <div class="answer-text">Легкий шифон / Мереживо</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(4, 'boho', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🧶</span></div>
-                        <div class="answer-text">Затишний трикотаж / Льон</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(4, 'elegant', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">✨</span></div>
-                        <div class="answer-text">Блискуча / Атласна / Шовк</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Step 5 -->
-            <div class="step" id="step-5">
-                <div class="question-header">
-                    <div class="question-step-label">Крок 5 із 5</div>
-                    <div class="question-title">Хто вам ближче по духу?</div>
-                </div>
-                <div class="answers-grid">
-                    <div class="answer-card" onclick="selectAnswer(5, 'classic', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">👑</span></div>
-                        <div class="answer-text">Одрі Хепберн / Кейт Міддлтон</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(5, 'boho', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🌿</span></div>
-                        <div class="answer-text">Зої Кравіц / Флоренс Велч</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(5, 'elegant', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🔥</span></div>
-                        <div class="answer-text">Бейонсе / Кім Кардашьян</div>
-                    </div>
-                    <div class="answer-card" onclick="selectAnswer(5, 'streetwear', this)">
-                        <div class="answer-icon-wrap"><span class="answer-emoji">🎨</span></div>
-                        <div class="answer-text">Кара Делевінь / Ріанна</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Result -->
-            <div class="result-screen" id="result-screen">
-                <div class="result-emoji" id="res-emoji">✨</div>
-                <div class="result-title" id="res-title">Ваш стиль</div>
-                <div class="result-desc" id="res-desc">Опис стилю...</div>
-                
-                <div class="tags" id="res-tags"></div>
-
-                <div class="recs-title">🛍️ Рекомендовані для вас товари</div>
-                <div class="products-grid" id="res-products"></div>
-
-                <div class="action-btns">
-                    <a href="#" id="ai-link" class="btn-primary">✨ Відкрити AI Stylist з цим стилем</a>
-                    <button class="btn-secondary" onclick="resetQuiz()">🔄 Пройти ще раз</button>
-                </div>
-            </div>
+            </aside>
         </div>
     </div>
 
     <script>
-        const SCORES = {
-            classic: 0, boho: 0, minimalist: 0, 
-            romantic: 0, streetwear: 0, elegant: 0
-        };
-
-        const STYLE_INFO = {
-            classic: { emoji: '🖤', name: 'Classic Chic', desc: 'Ви цінуєте позачасову елегантність, якісні тканини та ідеальний крій. Ваш гардероб — це інвестиція у речі, які ніколи не виходять з моди.', tags: ['Елегантність', 'Мінімалізм', 'Якість'], depts: ['Tops','Bottoms','Jackets'] },
-            boho: { emoji: '🌿', name: 'Boho Free Spirit', desc: 'Ваш стиль дихає свободою, природою та творчістю. Ви любите шарування, натуральні фактури та неординарні візерунки.', tags: ['Свобода', 'Натуральність', 'Етніка'], depts: ['Dresses','Tops','Bottoms'] },
-            minimalist: { emoji: '⬜', name: 'Modern Minimalist', desc: 'Менше означає більше. Ви віддаєте перевагу чистим лініям, монохромній палітрі та відсутності зайвих деталей. Комфорт та лаконічність.', tags: ['Лаконічність', 'Монохром', 'Комфорт'], depts: ['Tops','Bottoms'] },
-            romantic: { emoji: '🎀', name: 'Romantic Dreamer', desc: 'М\'якість, ніжність та жіночність — ваші головні козирі. Пастельні тони, квіткові принти та легкі тканини підкреслюють вашу натуру.', tags: ['Ніжність', 'Флористика', 'Легкість'], depts: ['Dresses','Tops','Intimate'] },
-            streetwear: { emoji: '🧢', name: 'Streetwear Bold', desc: 'Ви не боїтеся виділятися. Яскраві кольори, незвичні пропорції та спортивні елементи створюють ваш динамічний та сучасний образ.', tags: ['Динаміка', 'Тренди', 'Зухвалість'], depts: ['Jackets','Bottoms','Tops'] },
-            elegant: { emoji: '✨', name: 'Glamour & Elegance', desc: 'Ви любите розкіш, блиск та увагу. Ваш стиль випромінює впевненість, а силуети завжди ідеально підкреслюють фігуру.', tags: ['Розкіш', 'Гламур', 'Впевненість'], depts: ['Dresses','Jackets','Tops'] }
-        };
-
+        // State management
+        const userAnswers = { 1: null, 2: null, 3: null, 4: null, 5: null };
         let currentStep = 1;
         let isTransitioning = false;
         let products = [];
+        let lastResultData = null;
 
-        // Load products silently, but never leave an unhandled rejection.
+        const STYLE_INFO = {
+            classic: {
+                emoji: '🖤',
+                name: 'Classic Chic',
+                desc: 'Ви цінуєте позачасову елегантність, якісні тканини та ідеальний крій. Ваш гардероб — це вивірена інвестиція у речі, які завжди актуальні.',
+                tags: ['Елегантність', 'Лаконічність', 'Бездоганний крій'],
+                depts: ['Tops', 'Bottoms', 'Jackets'],
+                palette: [
+                    { name: 'Глибокий чорний', hex: '#111827' },
+                    { name: 'Перлинний білий', hex: '#f9fafb' },
+                    { name: 'Стриманий беж', hex: '#d1b89d' },
+                    { name: 'Темно-синій', hex: '#1e3a8a' },
+                    { name: 'Вугільний сірий', hex: '#4b5563' }
+                ],
+                bestFits: [
+                    'Приталені блейзери та жакети',
+                    'Класичні брюки зі стрілками',
+                    'Шовкові сорочки та блузи',
+                    'Пальто прямого крою'
+                ],
+                tips: [
+                    'Обирайте якісні натуральні тканини: шерсть, шовк, бавовну',
+                    'Робіть ставку на бездоганну посадку по фігурі',
+                    'Доповнюйте мінімалістичними прикрасами із золота чи срібла'
+                ]
+            },
+            boho: {
+                emoji: '🌿',
+                name: 'Boho Free Spirit',
+                desc: 'Ваш стиль дихає свободою, природою та творчістю. Ви любите шарування, м’які натуральні фактури та неординарні візерунки.',
+                tags: ['Свобода', 'Натуральність', 'Етніка'],
+                depts: ['Dresses', 'Tops', 'Bottoms'],
+                palette: [
+                    { name: 'Тепла теракота', hex: '#c2410c' },
+                    { name: 'Оливковий ліс', hex: '#4d7c0f' },
+                    { name: 'Пісочний крем', hex: '#fef3c7' },
+                    { name: 'Гірчичний мед', hex: '#d97706' },
+                    { name: 'Шоколадна кориця', hex: '#78350f' }
+                ],
+                bestFits: [
+                    'Максі-сукні з легким драпіруванням',
+                    'В’язані кардигани та пончо',
+                    'Лляні блузи та вільні туніки',
+                    'Денім вільного крою'
+                ],
+                tips: [
+                    'Експериментуйте з багатошаровістю та різними фактурами',
+                    'Використовуйте акцентні пояси, бахрому та шарфи',
+                    'Поєднуйте вільні силуети із замшевим або шкіряним взуттям'
+                ]
+            },
+            minimalist: {
+                emoji: '⬜',
+                name: 'Modern Minimalist',
+                desc: 'Менше означає більше. Ви віддаєте перевагу чистим лініям, монохромній палітрі та абсолютній відсутності зайвих деталей.',
+                tags: ['Лаконічність', 'Монохром', 'Комфорт'],
+                depts: ['Tops', 'Bottoms'],
+                palette: [
+                    { name: 'Чистий сніг', hex: '#ffffff' },
+                    { name: 'Графітовий сірий', hex: '#374151' },
+                    { name: 'Глибокий антрацит', hex: '#1f2937' },
+                    { name: 'М’який тауп', hex: '#9ca3af' },
+                    { name: 'Холодний беж', hex: '#e5e7eb' }
+                ],
+                bestFits: [
+                    'Однотонні трикотажні водолазки',
+                    'Прямі брюки вільного крою',
+                    'Мінімалістичні оверсайз жакети',
+                    'Лаконічні сукні-комбінації'
+                ],
+                tips: [
+                    'Зосередьтеся на геометричності ліній та чистоті пропорцій',
+                    'Обирайте стриману монохромну або тональну палітру',
+                    'Уникайте складних принтів — дозвольте формі говорити самій'
+                ]
+            },
+            romantic: {
+                emoji: '🎀',
+                name: 'Romantic Dreamer',
+                desc: 'М’якість, ніжність та жіночність — ваші головні козирі. Пастельні тони, квіткові мотиви та летючі тканини підкреслюють вашу індивідуальність.',
+                tags: ['Ніжність', 'Флористика', 'Легкість'],
+                depts: ['Dresses', 'Tops', 'Intimate'],
+                palette: [
+                    { name: 'Пудровий рожевий', hex: '#fbcfe8' },
+                    { name: 'Лавандовий світанок', hex: '#e9d5ff' },
+                    { name: 'Персиковий крем', hex: '#fed7aa' },
+                    { name: 'Ніжна м’ята', hex: '#ccfbf1' },
+                    { name: 'Шовковий ванільний', hex: '#fef9c3' }
+                ],
+                bestFits: [
+                    'Сукні з квітковим принтом та рюшами',
+                    'М’які кашемірові кардигани',
+                    'Шовкові блузи з бантами або воланами',
+                    'Легкі спідниці міді плісе'
+                ],
+                tips: [
+                    'Обирайте струмливі тканини: шифон, шовк, м’який трикотаж',
+                    'Підкреслюйте лінію талії тонкими ремінцями або драпіруванням',
+                    'Додавайте делікатні аксесуари з перлами або квітковими формами'
+                ]
+            },
+            streetwear: {
+                emoji: '🧢',
+                name: 'Streetwear Bold',
+                desc: 'Ви не боїтеся виділятися. Сміливі пропорції, яскраві кольори та спорт-шик елементи створюють динамічний, ультрасучасний образ.',
+                tags: ['Динаміка', 'Тренди', 'Зухвалість'],
+                depts: ['Jackets', 'Bottoms', 'Tops'],
+                palette: [
+                    { name: 'Неоновий лайм', hex: '#84cc16' },
+                    { name: 'Глибокий кобальт', hex: '#2563eb' },
+                    { name: 'Насичений графіт', hex: '#111827' },
+                    { name: 'Яскравий фуксія', hex: '#d946ef' },
+                    { name: 'Спортивний білий', hex: '#f3f4f6' }
+                ],
+                bestFits: [
+                    'Оверсайз худі та свитшоти',
+                    'Бомбери та шкіряні куртки',
+                    'Широкі джинси карго або баггі',
+                    'Кроп-топи та спортивні сети'
+                ],
+                tips: [
+                    'Грайте на контрасті об’ємів: оверсайз верх з облягаючим низом або навпаки',
+                    'Зробіть взуття (кросівки, масивні черевики) центром образу',
+                    'Додавайте трендові бейсболки, бананки та масивні ланцюжки'
+                ]
+            },
+            elegant: {
+                emoji: '✨',
+                name: 'Glamour & Elegance',
+                desc: 'Ви любите розкіш, вишуканість та увагу. Ваш стиль випромінює впевненість, а силуети завжди ефектно підкреслюють фігуру.',
+                tags: ['Розкіш', 'Гламур', 'Впевненість'],
+                depts: ['Dresses', 'Jackets', 'Tops'],
+                palette: [
+                    { name: 'Золотистий шампань', hex: '#fef08a' },
+                    { name: 'Глибокий смарагд', hex: '#065f46' },
+                    { name: 'Оксамитовий рубін', hex: '#991b1b' },
+                    { name: 'Перлинний глянець', hex: '#f8fafc' },
+                    { name: 'Драматичний чорний', hex: '#0f172a' }
+                ],
+                bestFits: [
+                    'Облягаючі вечірні та коктейльні сукні',
+                    'Атласні топи та блузи з відкритими плечима',
+                    'Смокінги та структуровані жакети',
+                    'Спідниці з високим розрізом'
+                ],
+                tips: [
+                    'Звертайте увагу на сяючі фактури: атлас, оксамит, металік',
+                    'Обирайте виразні V-подібні вирізи та акцентні декольте',
+                    'Завершуйте образ вишуканими туфлями на підборах і клатчем'
+                ]
+            }
+        };
+
+        // Load products silently with safe error handling
         fetch('data/products.json')
             .then(r => {
                 if (!r.ok) throw new Error(`Products HTTP ${r.status}`);
@@ -456,29 +859,190 @@
             .then(data => { products = Array.isArray(data) ? data : []; })
             .catch(() => { products = []; });
 
-        function updateProgress() {
-            const pBar = document.getElementById('progress-bar');
-            if (pBar) pBar.style.width = (currentStep / 5) * 100 + '%';
+        const STYLES = ['classic', 'boho', 'minimalist', 'romantic', 'streetwear', 'elegant'];
+
+        const ANSWER_WEIGHTS = {
+            1: {
+                neutral: { minimalist: 1.0, classic: 0.9, elegant: 0.2 },
+                earthy:  { boho: 1.0, romantic: 0.2, minimalist: 0.2 },
+                pastel:  { romantic: 1.0, elegant: 0.3, boho: 0.2 },
+                bold:    { streetwear: 1.0, elegant: 0.3 }
+            },
+            2: {
+                fitted:     { elegant: 1.0, classic: 0.4, romantic: 0.2 },
+                flowing:    { boho: 1.0, romantic: 0.4 },
+                structured: { classic: 1.0, minimalist: 0.8, streetwear: 0.2 },
+                layered:    { romantic: 1.0, boho: 0.4 }
+            },
+            3: {
+                casual_knit:  { minimalist: 1.0, classic: 0.6, boho: 0.2 },
+                floral_dress: { romantic: 1.0, boho: 0.4 },
+                sport_chic:   { streetwear: 1.0, minimalist: 0.3 },
+                statement:    { elegant: 1.0, streetwear: 0.4 }
+            },
+            4: {
+                denim_leather: { streetwear: 1.0, classic: 0.4, minimalist: 0.2 },
+                lace_chiffon:  { romantic: 1.0, elegant: 0.4 },
+                knit_linen:    { boho: 1.0, minimalist: 0.6, classic: 0.3 },
+                silk_satin:    { elegant: 1.0, classic: 0.3, romantic: 0.2 }
+            },
+            5: {
+                audrey:  { classic: 1.0, minimalist: 0.5, elegant: 0.3 },
+                zoe:     { boho: 1.0, streetwear: 0.3, romantic: 0.2 },
+                beyonce: { elegant: 1.0, streetwear: 0.3 },
+                cara:    { streetwear: 1.0, minimalist: 0.4 }
+            }
+        };
+
+        // Calculate raw weighted scores deterministically from userAnswers
+        function calculateRawScores(answers) {
+            const raw = {};
+            STYLES.forEach(s => { raw[s] = 0; });
+            for (let q = 1; q <= 5; q++) {
+                const optKey = answers[q];
+                if (optKey && ANSWER_WEIGHTS[q] && ANSWER_WEIGHTS[q][optKey]) {
+                    const vec = ANSWER_WEIGHTS[q][optKey];
+                    for (const s in vec) {
+                        if (s in raw) raw[s] += vec[s];
+                    }
+                }
+            }
+            return raw;
         }
 
-        // Initialize progress bar on load
-        window.addEventListener('DOMContentLoaded', updateProgress);
+        // Deterministic rankings from raw scores with alphabetical tie-breaking
+        function getRankings(rawScores) {
+            return [...STYLES].sort((a, b) => {
+                const diff = (rawScores[b] || 0) - (rawScores[a] || 0);
+                if (Math.abs(diff) > 1e-9) return diff;
+                return a.localeCompare(b);
+            }).map(s => ({ style: s, score: rawScores[s] || 0 }));
+        }
 
-        function selectAnswer(stepNum, styleKey, cardEl) {
-            // Prevent double-clicks from incrementing the score twice / skipping a step.
-            if (isTransitioning || stepNum !== currentStep || !cardEl || !(styleKey in SCORES)) return;
-            isTransitioning = true;
-            SCORES[styleKey]++;
+        // Percentage calculation strictly normalized to 100% using Largest Remainder Method (Hamilton/Hare)
+        function normalizePercentages(rawScores) {
+            const total = Object.values(rawScores).reduce((a, b) => a + b, 0);
+            const res = {};
+            if (total === 0) {
+                STYLES.forEach(s => { res[s] = 0; });
+                return res;
+            }
+            const exact = {};
+            const floored = {};
+            const remainders = {};
+            let sumFloored = 0;
 
-            const stepEl = document.getElementById(`step-${stepNum}`);
-            if (!stepEl) {
-                isTransitioning = false;
+            for (const s of STYLES) {
+                const val = ((rawScores[s] || 0) / total) * 100;
+                exact[s] = val;
+                floored[s] = Math.floor(val);
+                remainders[s] = val - floored[s];
+                sumFloored += floored[s];
+            }
+
+            const remainderPoints = 100 - sumFloored;
+            const sorted = [...STYLES].sort((a, b) => {
+                const diff = remainders[b] - remainders[a];
+                if (Math.abs(diff) > 1e-9) return diff;
+                return a.localeCompare(b);
+            });
+
+            for (let i = 0; i < remainderPoints; i++) {
+                floored[sorted[i]]++;
+            }
+            return floored;
+        }
+
+        function updateProgress() {
+            const pBar = document.getElementById('progress-bar');
+            if (pBar) {
+                pBar.style.width = (currentStep / 5) * 100 + '%';
+            }
+        }
+
+        function updateLiveDNA() {
+            const rawScores = calculateRawScores(userAnswers);
+            const rankings = getRankings(rawScores);
+            const answeredCount = Object.values(userAnswers).filter(Boolean).length;
+
+            const leadEl = document.getElementById('dna-live-primary');
+            const secondEl = document.getElementById('dna-live-secondary');
+            const progEl = document.getElementById('dna-live-progress');
+            const hintEl = document.getElementById('dna-live-hint');
+
+            if (progEl) progEl.textContent = `${answeredCount} / 5`;
+
+            if (answeredCount === 0) {
+                if (leadEl) { leadEl.textContent = 'Визначається...'; leadEl.className = 'dna-live-val neutral'; }
+                if (secondEl) { secondEl.textContent = '—'; secondEl.className = 'dna-live-val neutral'; }
+                if (hintEl) hintEl.textContent = 'Оберіть перші відповіді, щоб розпочати розрахунок вашого Style DNA.';
                 return;
             }
+
+            const lead = rankings[0];
+            const second = rankings[1];
+            const leadMeta = STYLE_INFO[lead.style];
+            const secondMeta = second ? STYLE_INFO[second.style] : null;
+
+            if (leadEl && leadMeta) {
+                leadEl.textContent = `${leadMeta.emoji} ${leadMeta.name}`;
+                leadEl.className = 'dna-live-val active';
+            }
+
+            if (secondEl) {
+                if (second && second.score > 0 && secondMeta) {
+                    secondEl.textContent = `${secondMeta.emoji} ${secondMeta.name}`;
+                    secondEl.className = 'dna-live-val active';
+                } else {
+                    secondEl.textContent = '—';
+                    secondEl.className = 'dna-live-val neutral';
+                }
+            }
+
+            if (hintEl) {
+                if (answeredCount < 3) {
+                    hintEl.textContent = 'Формується вектор вашого гармонійного образу...';
+                } else if (answeredCount < 5) {
+                    hintEl.textContent = 'Аналізуємо поєднання фактур, крою та настрою...';
+                } else {
+                    hintEl.textContent = 'Style DNA сформовано! Переходимо до персонального звіту.';
+                }
+            }
+        }
+
+        function restoreStepSelection(stepNum) {
+            const stepEl = document.getElementById(`step-${stepNum}`);
+            if (!stepEl) return;
+            const cards = stepEl.querySelectorAll('.answer-card');
+            cards.forEach(c => c.classList.remove('selected'));
+            const chosen = userAnswers[stepNum];
+            if (chosen) {
+                cards.forEach(c => {
+                    const opt = c.getAttribute('data-opt') || c.getAttribute('data-style');
+                    if (opt === chosen) {
+                        c.classList.add('selected');
+                    }
+                });
+            }
+        }
+
+        function selectAnswer(stepNum, optKey, cardEl) {
+            // Anti-spam & transition lock
+            if (isTransitioning || stepNum !== currentStep || !cardEl) return;
+            if (!ANSWER_WEIGHTS[stepNum] || !ANSWER_WEIGHTS[stepNum][optKey]) return;
+            isTransitioning = true;
+
+            // Save single answer for this step in single source of truth
+            userAnswers[stepNum] = optKey;
+
+            const stepEl = document.getElementById(`step-${stepNum}`);
+            if (!stepEl) { isTransitioning = false; return; }
 
             const cards = stepEl.querySelectorAll('.answer-card');
             cards.forEach(c => c.classList.remove('selected'));
             cardEl.classList.add('selected');
+
+            updateLiveDNA();
 
             setTimeout(() => {
                 stepEl.classList.remove('active');
@@ -486,60 +1050,157 @@
 
                 if (currentStep <= 5) {
                     const nextStep = document.getElementById(`step-${currentStep}`);
-                    if (nextStep) nextStep.classList.add('active');
+                    if (nextStep) {
+                        nextStep.classList.add('active');
+                        restoreStepSelection(currentStep);
+                    }
                     updateProgress();
                     isTransitioning = false;
                 } else {
                     updateProgress();
                     isTransitioning = false;
-                    setTimeout(showResult, 300);
+                    setTimeout(showResult, 250);
                 }
-            }, 400);
+            }, 380);
+        }
+
+        function prevStep() {
+            if (isTransitioning || currentStep <= 1) return;
+            isTransitioning = true;
+
+            const curEl = document.getElementById(`step-${currentStep}`);
+            if (curEl) curEl.classList.remove('active');
+
+            currentStep--;
+            const prevEl = document.getElementById(`step-${currentStep}`);
+            if (prevEl) {
+                prevEl.classList.add('active');
+                restoreStepSelection(currentStep);
+            }
+
+            updateProgress();
+            updateLiveDNA();
+            isTransitioning = false;
         }
 
         function showResult() {
-            // Find max score
-            let maxVal = -1;
-            let winningStyle = 'classic';
-            
-            // Deterministic tie-breaking using alphabetical order
-            const keys = Object.keys(SCORES).sort();
-            keys.forEach(k => {
-                const score = SCORES[k];
-                if (score > maxVal) {
-                    maxVal = score;
-                    winningStyle = k;
-                }
-            });
-            const info = STYLE_INFO[winningStyle];
+            const rawScores = calculateRawScores(userAnswers);
+            const rankings = getRankings(rawScores);
+            const percentages = normalizePercentages(rawScores);
 
+            const primaryStyle = rankings[0].style;
+            const secondaryStyle = (rankings[1] && rankings[1].score > 0) ? rankings[1].style : null;
+
+            const info = STYLE_INFO[primaryStyle];
+            const secInfo = secondaryStyle ? STYLE_INFO[secondaryStyle] : null;
+
+            lastResultData = {
+                primaryStyle: primaryStyle,
+                secondaryStyle: secondaryStyle,
+                percentages: percentages
+            };
+
+            // Header info
             document.getElementById('res-emoji').textContent = info.emoji;
             document.getElementById('res-title').textContent = info.name;
             document.getElementById('res-desc').textContent = info.desc;
             document.getElementById('res-tags').innerHTML = info.tags.map(t => `<span class="tag">#${t}</span>`).join('');
-            
-            document.getElementById('ai-link').href = `ai-stylist.html?style=${winningStyle}`;
 
-            // Save to profile
+            // DNA Percentage Bars in rankings order
+            const barsContainer = document.getElementById('res-dna-bars');
+            const rankingEntries = rankings
+                .map(r => ({ style: r.style, pct: percentages[r.style] || 0 }))
+                .filter(e => e.pct > 0);
+
+            barsContainer.innerHTML = rankingEntries.map(e => {
+                const sMeta = STYLE_INFO[e.style];
+                return `
+                    <div class="dna-bar-item">
+                        <div class="dna-bar-info">
+                            <span>${sMeta ? sMeta.emoji : ''} ${sMeta ? sMeta.name : e.style}</span>
+                            <span>${e.pct}%</span>
+                        </div>
+                        <div class="dna-bar-track">
+                            <div class="dna-bar-fill" style="width: ${e.pct}%;"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Primary & Secondary Comparison
+            document.getElementById('duo-primary-name').textContent = `${info.emoji} ${info.name}`;
+            document.getElementById('duo-primary-pct').textContent = `${percentages[primaryStyle]}% гармонії`;
+
+            if (secondaryStyle) {
+                document.getElementById('duo-secondary-name').textContent = `${secInfo.emoji} ${secInfo.name}`;
+                document.getElementById('duo-secondary-pct').textContent = `${percentages[secondaryStyle]}% доповнення`;
+            } else {
+                document.getElementById('duo-secondary-name').textContent = '—';
+                document.getElementById('duo-secondary-pct').textContent = '100% чистий стиль';
+            }
+
+            // Recommendations: Palette
+            const palContainer = document.getElementById('res-palette');
+            palContainer.innerHTML = (info.palette || []).map(c => `
+                <div class="swatch-chip" title="${c.name} (${c.hex})">
+                    <span class="swatch-circle" style="background:${c.hex};"></span>
+                    <span>${c.name}</span>
+                </div>
+            `).join('');
+
+            // Recommendations: Best fits
+            const fitsContainer = document.getElementById('res-fits');
+            fitsContainer.innerHTML = (info.bestFits || []).map(f => `<li>${f}</li>`).join('');
+
+            // Recommendations: Stylist tips
+            const tipsContainer = document.getElementById('res-tips');
+            tipsContainer.innerHTML = (info.tips || []).map(t => `<li>${t}</li>`).join('');
+
+            // AI Stylist link - MUST strictly target primaryStyle
+            document.getElementById('ai-link').href = `ai-stylist.html?style=${encodeURIComponent(primaryStyle)}`;
+
+            // Auto-persist into localStorage.ai_profile with backward compatibility
             let profile = {};
             try { profile = JSON.parse(localStorage.getItem('ai_profile')) || {}; } catch(e){}
-            profile.style = winningStyle;
+            profile.style = primaryStyle;
+            profile.secondaryStyle = secondaryStyle;
+            profile.styleDNA = percentages;
             profile.updatedAt = new Date().toISOString();
             localStorage.setItem('ai_profile', JSON.stringify(profile));
 
+            // Render matching products
             renderProducts(info.depts);
+
+            // Hide DNA live panel on result view to give full width to results
+            const livePanel = document.getElementById('dna-live-panel');
+            if (livePanel) livePanel.style.display = 'none';
 
             document.getElementById('result-screen').classList.add('active');
         }
 
+        function saveStyleDNAAction() {
+            if (!lastResultData) return;
+            let profile = {};
+            try { profile = JSON.parse(localStorage.getItem('ai_profile')) || {}; } catch(e){}
+            profile.style = lastResultData.primaryStyle;
+            profile.secondaryStyle = lastResultData.secondaryStyle;
+            profile.styleDNA = lastResultData.percentages;
+            profile.updatedAt = new Date().toISOString();
+            localStorage.setItem('ai_profile', JSON.stringify(profile));
+            showToast('🧬 Style DNA успішно збережено у ваш профіль!');
+        }
+
         function renderProducts(depts) {
             const grid = document.getElementById('res-products');
-            if (!products.length) { grid.innerHTML = '<p style="color:gray;">Каталог недоступний</p>'; return; }
+            if (!products.length) {
+                grid.innerHTML = '<p style="color:rgba(255,255,255,0.5); padding:10px 0;">Каталог рекомендацій тимчасово недоступний.</p>';
+                return;
+            }
 
-            let filtered = products.filter(p => depts.includes(p.department_name) && p.avg_rating >= 4.0);
-            if (filtered.length < 6) filtered = products; // fallback
+            let filtered = products.filter(p => depts.includes(p.department_name) && Number(p.avg_rating) >= 4.0);
+            if (filtered.length < 6) filtered = products;
 
-            // Deterministic sort by rating, then numeric clothing_id.
+            // Deterministic sort: rating desc, numeric clothing_id desc
             filtered.sort((a, b) => {
                 const ratingDiff = (Number(b.avg_rating) || 0) - (Number(a.avg_rating) || 0);
                 if (ratingDiff !== 0) return ratingDiff;
@@ -549,7 +1210,7 @@
 
             grid.innerHTML = selected.map(p => `
                 <a href="product.html?id=${p.clothing_id}" class="prod-card">
-                    <img src="static/${p.clothing_id}.jpg" class="prod-img" alt="${p.class_name}" 
+                    <img src="static/${p.clothing_id}.jpg" class="prod-img" alt="${p.class_name || 'Item'}"
                          onerror="this.src='https://via.placeholder.com/150/1e1b4b/a855f7?text=${encodeURIComponent(p.class_name||'Item')}'">
                     <div class="prod-info">
                         <div class="prod-cat">${p.class_name || p.department_name}</div>
@@ -561,18 +1222,39 @@
         }
 
         function resetQuiz() {
-            for (let k in SCORES) SCORES[k] = 0;
+            for (let i = 1; i <= 5; i++) userAnswers[i] = null;
             currentStep = 1;
             isTransitioning = false;
+            lastResultData = null;
+
             document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
             document.querySelectorAll('.answer-card').forEach(card => card.classList.remove('selected'));
             document.getElementById('result-screen').classList.remove('active');
             document.getElementById('step-1').classList.add('active');
             document.getElementById('res-products').innerHTML = '';
+
+            const livePanel = document.getElementById('dna-live-panel');
+            if (livePanel) livePanel.style.display = '';
+
             updateProgress();
+            updateLiveDNA();
         }
 
-        updateProgress();
+        function showToast(msg) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const t = document.createElement('div');
+            t.className = 'toast'; t.textContent = msg;
+            document.body.appendChild(t);
+            requestAnimationFrame(() => { t.style.opacity = '1'; });
+            setTimeout(() => { t.style.opacity = '0'; }, 2200);
+            setTimeout(() => { t.remove(); }, 2600);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateProgress();
+            updateLiveDNA();
+        });
     </script>
 </body>
 </html>

@@ -73,10 +73,17 @@
         }
         .page-title {
             font-family:'Great Vibes',cursive;
-            font-size:clamp(40px, 6vw, 64px);
+            font-size:clamp(32px, 5.5vw, 58px);
+            line-height:1.25;
             background:linear-gradient(135deg,#fff 0%,var(--ai-cyan) 45%,var(--ai-purple) 100%);
             -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
             margin-bottom:10px;
+            display:inline-block;
+            max-width:100%;
+            padding:4px 10px 8px;
+            box-sizing:border-box;
+            overflow-wrap:break-word;
+            word-break:break-word;
         }
         .page-subtitle { font-size:15px; color:rgba(255,255,255,0.6); }
 
