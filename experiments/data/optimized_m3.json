@@ -1,0 +1,51 @@
+{
+  "seed": 42,
+  "configs_count": 1201,
+  "best_config_index": 192,
+  "objective": "maximize mean nDCG@8 on calibration set (scenarios 1-10)",
+  "calibration_scenarios": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "baseline_weights": {
+    "event": 0.15,
+    "style": 0.15,
+    "season": 0.1,
+    "weather": 0.15,
+    "bodyType": 0.1,
+    "color": 0.1,
+    "semantic": 0.1,
+    "rating": 0.05,
+    "feedback": 0.1
+  },
+  "optimized_weights": {
+    "event": 0.667516,
+    "style": 0.001386,
+    "season": 0.048752,
+    "weather": 0.021117,
+    "bodyType": 0.009645,
+    "color": 0.155878,
+    "semantic": 0.023216,
+    "rating": 0.007894,
+    "feedback": 0.064596
+  },
+  "weights_sum": 1,
+  "all_weights_non_negative": true,
+  "calibration_metrics": {
+    "m1_mean_ndcg8": 0.3583,
+    "m2_mean_ndcg8": 0.3583,
+    "m3_mean_ndcg8": 0.4433,
+    "abs_improvement_vs_m1": 0.085,
+    "rel_improvement_percent_vs_m1": 23.72
+  },
+  "git_sha": "c86c4ae05a45b881545bd8f503740ca0dfff3c0a",
+  "timestamp": "2026-10-13T17:19:52.012Z"
+}
