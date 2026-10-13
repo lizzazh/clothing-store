@@ -1,0 +1,29 @@
+{
+  "work_feedback": {
+    "c_1080": "like",
+    "c_990": "like",
+    "w_w1": "like",
+    "c_861": "dislike",
+    "c_299": "dislike"
+  },
+  "date_feedback": {
+    "c_1085": "like",
+    "c_1092": "like",
+    "w_w6": "like",
+    "c_1070": "dislike",
+    "c_861": "dislike"
+  },
+  "sport_feedback": {
+    "c_861": "like",
+    "c_299": "like",
+    "c_1080": "dislike",
+    "w_w4": "dislike"
+  },
+  "vacation_feedback": {
+    "c_1085": "like",
+    "c_299": "like",
+    "c_861": "like",
+    "w_w4": "dislike",
+    "w_w2": "dislike"
+  }
+}

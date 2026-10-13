@@ -1,0 +1,499 @@
+[
+  {
+    "id": 1,
+    "name": "Casual, autumn",
+    "split": "calibration",
+    "occasion": "casual",
+    "season": "autumn",
+    "style": "minimalist",
+    "styleDNA": {
+      "minimalist": 60,
+      "classic": 25,
+      "boho": 15
+    },
+    "body": "rectangle",
+    "weatherFixture": "mild",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Повсякденний осінній образ, стиль мінімалізм, помірна погода (16°C)"
+  },
+  {
+    "id": 2,
+    "name": "Work, autumn",
+    "split": "calibration",
+    "occasion": "work",
+    "season": "autumn",
+    "style": "classic",
+    "styleDNA": {
+      "classic": 70,
+      "elegant": 20,
+      "minimalist": 10
+    },
+    "body": "hourglass",
+    "weatherFixture": "cold_rain",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Діловий осінній образ для офісу під час холодного дощу (8°C)"
+  },
+  {
+    "id": 3,
+    "name": "Date, autumn",
+    "split": "calibration",
+    "occasion": "date",
+    "season": "autumn",
+    "style": "romantic",
+    "styleDNA": {
+      "romantic": 65,
+      "elegant": 25,
+      "boho": 10
+    },
+    "body": "pear",
+    "weatherFixture": "mild",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Романтичний осінній образ на побачення (16°C)"
+  },
+  {
+    "id": 4,
+    "name": "Sport, autumn",
+    "split": "calibration",
+    "occasion": "sport",
+    "season": "autumn",
+    "style": "streetwear",
+    "styleDNA": {
+      "streetwear": 70,
+      "minimalist": 20,
+      "classic": 10
+    },
+    "body": "inverted",
+    "weatherFixture": "mild",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Спортивний активний осінній образ (16°C)"
+  },
+  {
+    "id": 5,
+    "name": "Party",
+    "split": "calibration",
+    "occasion": "party",
+    "season": "spring",
+    "style": "elegant",
+    "styleDNA": {
+      "elegant": 60,
+      "romantic": 25,
+      "streetwear": 15
+    },
+    "body": "hourglass",
+    "weatherFixture": "warm_dry",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Святковий елегантний образ для вечірки (22°C)"
+  },
+  {
+    "id": 6,
+    "name": "Formal",
+    "split": "calibration",
+    "occasion": "formal",
+    "season": "winter",
+    "style": "classic",
+    "styleDNA": {
+      "classic": 65,
+      "elegant": 35
+    },
+    "body": "rectangle",
+    "weatherFixture": "cold",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Офіційний урочистий протокольний образ для зими (3°C)"
+  },
+  {
+    "id": 7,
+    "name": "Beach, summer, custom=\"\"",
+    "split": "calibration",
+    "occasion": "beach",
+    "season": "summer",
+    "style": "boho",
+    "styleDNA": {
+      "boho": 60,
+      "romantic": 30,
+      "minimalist": 10
+    },
+    "body": "pear",
+    "weatherFixture": "hot_sunny",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": false,
+    "description": "Літній пляжний відпочинок без прямого запиту купальника (30°C)"
+  },
+  {
+    "id": 8,
+    "name": "Beach, summer, custom=\"купальник\"",
+    "split": "calibration",
+    "occasion": "beach",
+    "season": "summer",
+    "style": "boho",
+    "styleDNA": {
+      "boho": 60,
+      "romantic": 30,
+      "minimalist": 10
+    },
+    "body": "pear",
+    "weatherFixture": "hot_sunny",
+    "custom": "купальник",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": false,
+    "description": "Літній пляжний образ з явним цільовим запитом купальника (30°C)"
+  },
+  {
+    "id": 9,
+    "name": "Vacation",
+    "split": "calibration",
+    "occasion": "vacation",
+    "season": "spring",
+    "style": "boho",
+    "styleDNA": {
+      "boho": 50,
+      "minimalist": 30,
+      "classic": 20
+    },
+    "body": "apple",
+    "weatherFixture": "warm_dry",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Комфортний образ для весняної подорожі та відпочинку (22°C)"
+  },
+  {
+    "id": 10,
+    "name": "Work + сформована історія feedback",
+    "split": "calibration",
+    "occasion": "work",
+    "season": "autumn",
+    "style": "classic",
+    "styleDNA": {
+      "classic": 70,
+      "elegant": 20,
+      "minimalist": 10
+    },
+    "body": "hourglass",
+    "weatherFixture": "mild",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": "work_feedback",
+    "includeWardrobe": true,
+    "description": "Діловий образ із персоналізованою історією попередніх лайків та дизлайків"
+  },
+  {
+    "id": 11,
+    "name": "Casual + інший Style DNA",
+    "split": "test",
+    "occasion": "casual",
+    "season": "spring",
+    "style": "streetwear",
+    "styleDNA": {
+      "streetwear": 65,
+      "boho": 20,
+      "minimalist": 15
+    },
+    "body": "rectangle",
+    "weatherFixture": "warm_dry",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Повсякденний весняний міський образ із акцентом на стрітвер Style DNA (22°C)"
+  },
+  {
+    "id": 12,
+    "name": "Casual + інший body type",
+    "split": "test",
+    "occasion": "casual",
+    "season": "summer",
+    "style": "minimalist",
+    "styleDNA": {
+      "minimalist": 60,
+      "classic": 25,
+      "boho": 15
+    },
+    "body": "apple",
+    "weatherFixture": "warm_dry",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Повсякденний легкий літній образ для фігури типу «яблуко» (22°C)"
+  },
+  {
+    "id": 13,
+    "name": "Work + summer",
+    "split": "test",
+    "occasion": "work",
+    "season": "summer",
+    "style": "classic",
+    "styleDNA": {
+      "classic": 60,
+      "elegant": 30,
+      "minimalist": 10
+    },
+    "body": "hourglass",
+    "weatherFixture": "hot_sunny",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Літній діловий гардероб для спекотної погоди в офісі (30°C)"
+  },
+  {
+    "id": 14,
+    "name": "Work + winter",
+    "split": "test",
+    "occasion": "work",
+    "season": "winter",
+    "style": "classic",
+    "styleDNA": {
+      "classic": 70,
+      "minimalist": 20,
+      "elegant": 10
+    },
+    "body": "pear",
+    "weatherFixture": "cold",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Зимовий теплий офісний гардероб для низьких температур (3°C)"
+  },
+  {
+    "id": 15,
+    "name": "Work + explicit text query",
+    "split": "test",
+    "occasion": "work",
+    "season": "autumn",
+    "style": "classic",
+    "styleDNA": {
+      "classic": 65,
+      "elegant": 25,
+      "minimalist": 10
+    },
+    "body": "rectangle",
+    "weatherFixture": "mild",
+    "custom": "блейзер жакет",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Осінній офісний образ із семантичним запитом «блейзер жакет»"
+  },
+  {
+    "id": 16,
+    "name": "Date + інший Style DNA",
+    "split": "test",
+    "occasion": "date",
+    "season": "spring",
+    "style": "elegant",
+    "styleDNA": {
+      "elegant": 70,
+      "romantic": 20,
+      "classic": 10
+    },
+    "body": "hourglass",
+    "weatherFixture": "warm_dry",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Образ на побачення з виразним елегантним ухилом у Style DNA"
+  },
+  {
+    "id": 17,
+    "name": "Date + feedback",
+    "split": "test",
+    "occasion": "date",
+    "season": "summer",
+    "style": "romantic",
+    "styleDNA": {
+      "romantic": 60,
+      "boho": 25,
+      "elegant": 15
+    },
+    "body": "pear",
+    "weatherFixture": "warm_dry",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": "date_feedback",
+    "includeWardrobe": true,
+    "description": "Романтичний образ на побачення із накопиченими уподобаннями користувачки"
+  },
+  {
+    "id": 18,
+    "name": "Party + інший стиль",
+    "split": "test",
+    "occasion": "party",
+    "season": "autumn",
+    "style": "streetwear",
+    "styleDNA": {
+      "streetwear": 70,
+      "elegant": 20,
+      "romantic": 10
+    },
+    "body": "inverted",
+    "weatherFixture": "mild",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Вечірка у сміливому вуличному стилі (streetwear) на осінь"
+  },
+  {
+    "id": 19,
+    "name": "Party + explicit text query",
+    "split": "test",
+    "occasion": "party",
+    "season": "spring",
+    "style": "elegant",
+    "styleDNA": {
+      "elegant": 65,
+      "romantic": 25,
+      "minimalist": 10
+    },
+    "body": "hourglass",
+    "weatherFixture": "warm_dry",
+    "custom": "сукня шовк",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Вечірній образ із конкретним текстовим запитом «сукня шовк»"
+  },
+  {
+    "id": 20,
+    "name": "Sport + summer",
+    "split": "test",
+    "occasion": "sport",
+    "season": "summer",
+    "style": "streetwear",
+    "styleDNA": {
+      "streetwear": 75,
+      "minimalist": 25
+    },
+    "body": "rectangle",
+    "weatherFixture": "hot_sunny",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Літній спортивний образ для спекотного дня (30°C)"
+  },
+  {
+    "id": 21,
+    "name": "Sport + feedback",
+    "split": "test",
+    "occasion": "sport",
+    "season": "autumn",
+    "style": "streetwear",
+    "styleDNA": {
+      "streetwear": 70,
+      "minimalist": 20,
+      "classic": 10
+    },
+    "body": "inverted",
+    "weatherFixture": "mild",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": "sport_feedback",
+    "includeWardrobe": true,
+    "description": "Спортивний образ із врахуванням історії фідбеку на активний одяг"
+  },
+  {
+    "id": 22,
+    "name": "Formal + інший body/style",
+    "split": "test",
+    "occasion": "formal",
+    "season": "spring",
+    "style": "elegant",
+    "styleDNA": {
+      "elegant": 75,
+      "classic": 25
+    },
+    "body": "apple",
+    "weatherFixture": "warm_dry",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": true,
+    "description": "Офіційний протокольний захід, елегантний стиль, тип фігури «яблуко»"
+  },
+  {
+    "id": 23,
+    "name": "Beach + custom=\"\"",
+    "split": "test",
+    "occasion": "beach",
+    "season": "summer",
+    "style": "minimalist",
+    "styleDNA": {
+      "minimalist": 60,
+      "boho": 30,
+      "casual": 10
+    },
+    "body": "hourglass",
+    "weatherFixture": "hot_sunny",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": false,
+    "description": "Пляжний сценарій без вказання типу одягу (загальний відпочинок біля води)"
+  },
+  {
+    "id": 24,
+    "name": "Beach + custom=\"купальник\"",
+    "split": "test",
+    "occasion": "beach",
+    "season": "summer",
+    "style": "minimalist",
+    "styleDNA": {
+      "minimalist": 60,
+      "boho": 30,
+      "casual": 10
+    },
+    "body": "hourglass",
+    "weatherFixture": "hot_sunny",
+    "custom": "купальник",
+    "focusCategory": "",
+    "feedbackFixture": null,
+    "includeWardrobe": false,
+    "description": "Пляжний сценарій із прямим наміром підібрати купальник"
+  },
+  {
+    "id": 25,
+    "name": "Vacation + feedback",
+    "split": "test",
+    "occasion": "vacation",
+    "season": "summer",
+    "style": "boho",
+    "styleDNA": {
+      "boho": 65,
+      "romantic": 25,
+      "minimalist": 10
+    },
+    "body": "pear",
+    "weatherFixture": "hot_sunny",
+    "custom": "",
+    "focusCategory": "",
+    "feedbackFixture": "vacation_feedback",
+    "includeWardrobe": true,
+    "description": "Літня відпустка із врахуванням індивідуального фідбеку мандрівниці"
+  }
+]

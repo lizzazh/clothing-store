@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Експертне оцінювання релевантності — Магістерське дослідження</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #0f0c29;
+            --bg-mid: #302b63;
+            --bg-end: #24243e;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            --accent-cyan: #06b6d4;
+            --accent-gold: #f59e0b;
+            --grade-0: #ef4444;
+            --grade-1: #f59e0b;
+            --grade-2: #10b981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-mid), var(--bg-end));
+            color: #f8fafc;
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1080px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 16px 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            backdrop-filter: blur(12px);
+        }
+
+        .header-title h1 {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-title p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 3px;
+        }
+
+        .export-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            font-family: 'Outfit', sans-serif;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-action:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-purple);
+        }
+
+        /* Progress Bar */
+        .progress-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 14px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13.5px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink));
+            border-radius: 99px;
+            transition: width 0.3s ease;
+        }
+
+        /* Context Box */
+        .context-card {
+            background: rgba(168, 85, 247, 0.06);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 18px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .context-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .scenario-badge {
+            background: linear-gradient(135deg, #7c3aed, #ec4899);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .scenario-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .context-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .context-pill {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .context-lbl {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .context-val {
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        /* Main Evaluation Stage */
+        .eval-stage {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: relative;
+        }
+
+        /* Item Evaluation Card */
+        .item-view {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .item-view { grid-template-columns: 1fr; }
+        }
+
+        .item-img-wrap {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #000;
+            border: 1px solid var(--glass-border);
+        }
+
+        .item-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .item-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .item-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .item-role-badge {
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            color: #d8b4fe;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .item-source-badge {
+            background: rgba(6, 182, 212, 0.15);
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            color: #67e8f9;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .item-title {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: #fff;
+        }
+
+        .item-desc-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+
+        /* Grade Buttons */
+        .grade-prompt {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 6px;
+        }
+
+        .grade-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .grade-btn {
+            border-radius: 14px;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .grade-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .grade-btn.btn-0:hover, .grade-btn.btn-0.selected {
+            background: rgba(239, 68, 68, 0.18);
+            border-color: var(--grade-0);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .grade-btn.btn-1:hover, .grade-btn.btn-1.selected {
+            background: rgba(245, 158, 11, 0.18);
+            border-color: var(--grade-1);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .grade-btn.btn-2:hover, .grade-btn.btn-2.selected {
+            background: rgba(16, 185, 129, 0.18);
+            border-color: var(--grade-2);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .grade-val { font-size: 18px; font-weight: 700; }
+        .grade-name { font-size: 12px; font-weight: 600; }
+        .grade-hint { font-size: 10px; color: rgba(255, 255, 255, 0.5); text-align: center; }
+
+        /* Navigation controls */
+        .stage-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 18px;
+            margin-top: 8px;
+        }
+
+        .btn-nav {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .btn-nav:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-purple);
+        }
+        .btn-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .item-counter {
+            font-size: 13.5px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Primary Look Stage */
+        .look-card {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .look-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .look-items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .look-item-thumb {
+            border-radius: 10px;
+            overflow: hidden;
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .look-item-thumb img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        .look-item-thumb-info {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .look-item-role {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+        }
+
+        .look-item-nm {
+            font-size: 11px;
+            font-weight: 500;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, #7c3aed, #ec4899);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="header-title">
+            <h1>🔬 Експертне сліпе оцінювання релевантності</h1>
+            <p>Магістерське дослідження: порівняння математичних моделей ранжування M1, M2, M3</p>
+        </div>
+        <div class="export-group">
+            <button class="btn-action" onclick="exportJSON()">💾 Експорт JSON</button>
+            <button class="btn-action" onclick="exportCSV()">📊 Експорт CSV</button>
+            <button class="btn-action" onclick="copyJSON()">📋 Скопіювати JSON</button>
+        </div>
+    </header>
+
+    <div class="progress-card">
+        <div class="progress-header">
+            <span>Прогрес оцінювання: <strong id="progress-stats">0 / 0</strong></span>
+            <span id="progress-percent">0%</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- Scenario Context Card -->
+    <div class="context-card" id="context-card">
+        <div class="context-header">
+            <span class="scenario-badge" id="sc-badge">Сценарій 1 з 25 · Calibration</span>
+            <span class="scenario-name" id="sc-name">Casual, autumn</span>
+        </div>
+        <div class="context-grid" id="context-grid">
+            <!-- Dynamic context pills -->
+        </div>
+    </div>
+
+    <!-- Main Dynamic Stage -->
+    <div class="eval-stage" id="eval-stage">
+        <!-- Rendered dynamically (Item or Primary Look) -->
+    </div>
+</div>
+
+<div id="toast" class="toast" style="display:none;"></div>
+
+<script>
+let DATASET = null;
+let currentScenarioIdx = 0;
+let currentItemIdx = 0; // 0..N-1 for items, then N..N+L-1 for looks
+let evaluations = {}; // key: evaluation_id -> grade
+
+const STORAGE_KEY = 'thesis_blind_evaluations_v1';
+
+// Load evaluations from localStorage
+function loadSavedEvaluations() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) evaluations = JSON.parse(saved);
+    } catch(e) {}
+}
+
+function saveEvaluations() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(evaluations));
+        updateProgress();
+    } catch(e) {}
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    t.style.opacity = '1';
+    setTimeout(() => {
+        t.style.opacity = '0';
+        setTimeout(() => t.style.display = 'none', 300);
+    }, 2200);
+}
+
+// Fetch blind dataset
+async function initDataset() {
+    loadSavedEvaluations();
+    try {
+        const res = await fetch('data/blind_evaluation_dataset.json');
+        DATASET = await res.json();
+    } catch (err) {
+        console.warn("Could not fetch relative data, attempting window fallback", err);
+    }
+
+    if (!DATASET || !Array.isArray(DATASET) || DATASET.length === 0) {
+        document.getElementById('eval-stage').innerHTML = `
+            <div style="text-align:center; padding:40px;">
+                <h3>⚠️ Не вдалося автоматично завантажити data/blind_evaluation_dataset.json</h3>
+                <p style="color:rgba(255,255,255,0.6); margin:12px 0;">Запустіть локальний сервер або завантажте файл датасету вручну:</p>
+                <input type="file" id="file-input" accept=".json" onchange="handleFileUpload(event)" style="margin-top:10px;">
+            </div>
+        `;
+        return;
+    }
+
+    render();
+}
+
+function handleFileUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+        DATASET = JSON.parse(evt.target.result);
+        render();
+    };
+    reader.readAsText(file);
+}
+
+function updateProgress() {
+    if (!DATASET) return;
+    let totalObjects = 0;
+    DATASET.forEach(sc => {
+        totalObjects += sc.items.length;
+        totalObjects += sc.primary_looks.length;
+    });
+
+    const evaluatedCount = Object.keys(evaluations).length;
+    const pct = totalObjects > 0 ? Math.round((evaluatedCount / totalObjects) * 100) : 0;
+
+    document.getElementById('progress-stats').textContent = `${evaluatedCount} / ${totalObjects} об'єктів`;
+    document.getElementById('progress-percent').textContent = `${pct}%`;
+    document.getElementById('progress-bar').style.width = `${pct}%`;
+}
+
+function render() {
+    if (!DATASET || DATASET.length === 0) return;
+    updateProgress();
+
+    const sc = DATASET[currentScenarioIdx];
+    document.getElementById('sc-badge').textContent = `Сценарій ${sc.scenario_id} із ${DATASET.length} · ${sc.split.toUpperCase()}`;
+    document.getElementById('sc-name').textContent = sc.scenario_name;
+
+    // Render Context
+    const dnaStr = sc.context.styleDNA ? Object.entries(sc.context.styleDNA).map(([k, v]) => `${k}: ${v}%`).join(', ') : 'Базовий';
+    document.getElementById('context-grid').innerHTML = `
+        <div class="context-pill"><span class="context-lbl">Привід / Подія</span><span class="context-val">${sc.context.occasion}</span></div>
+        <div class="context-pill"><span class="context-lbl">Стиль & Style DNA</span><span class="context-val">${sc.context.style} (${dnaStr})</span></div>
+        <div class="context-pill"><span class="context-lbl">Сезон</span><span class="context-val">${sc.context.season}</span></div>
+        <div class="context-pill"><span class="context-lbl">Тип фігури</span><span class="context-val">${sc.context.body}</span></div>
+        <div class="context-pill"><span class="context-lbl">Погодні умови</span><span class="context-val">${sc.context.weather.name} (${sc.context.weather.temp}°C)</span></div>
+        ${sc.context.custom ? `<div class="context-pill"><span class="context-lbl">Текстовий запит</span><span class="context-val">"${sc.context.custom}"</span></div>` : ''}
+    `;
+
+    const totalItems = sc.items.length;
+    const totalLooks = sc.primary_looks.length;
+    const stage = document.getElementById('eval-stage');
+
+    if (currentItemIdx < totalItems) {
+        // Render Single Item Evaluation
+        const it = sc.items[currentItemIdx];
+        const currentGrade = evaluations[it.evaluation_id];
+
+        stage.innerHTML = `
+            <div class="item-view">
+                <div class="item-img-wrap">
+                    <img class="item-img" src="../${it.img}" onerror="this.src='https://via.placeholder.com/320x380/1e1b4b/a855f7?text=${encodeURIComponent(it.title)}';">
+                </div>
+                <div class="item-meta">
+                    <div class="item-meta-top">
+                        <span class="item-role-badge">${it.garment_role.toUpperCase()}</span>
+                        <span class="item-source-badge">${it.source === 'wardrobe' ? 'З гардероба' : 'З каталогу'}</span>
+                    </div>
+                    <h2 class="item-title">${it.title}</h2>
+                    <div class="item-desc-box">
+                        Категорія: <strong>${it.category}</strong> · Клас: <strong>${it.class_name}</strong>
+                    </div>
+
+                    <div class="grade-prompt">Оцініть релевантність речі для цього сценарію:</div>
+                    <div class="grade-grid">
+                        <button class="grade-btn btn-0 ${currentGrade === 0 ? 'selected' : ''}" onclick="setGrade('${it.evaluation_id}', 0)">
+                            <span class="grade-val">0</span>
+                            <span class="grade-name">Не підходить</span>
+                            <span class="grade-hint">Суперечить умовам чи запиту</span>
+                        </button>
+                        <button class="grade-btn btn-1 ${currentGrade === 1 ? 'selected' : ''}" onclick="setGrade('${it.evaluation_id}', 1)">
+                            <span class="grade-val">1</span>
+                            <span class="grade-name">Частково підходить</span>
+                            <span class="grade-hint">Допустима, але є компроміси</span>
+                        </button>
+                        <button class="grade-btn btn-2 ${currentGrade === 2 ? 'selected' : ''}" onclick="setGrade('${it.evaluation_id}', 2)">
+                            <span class="grade-val">2</span>
+                            <span class="grade-name">Підходить</span>
+                            <span class="grade-hint">Добре відповідає контексту</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stage-nav">
+                <button class="btn-nav" onclick="prevStep()" ${currentScenarioIdx === 0 && currentItemIdx === 0 ? 'disabled' : ''}>← Назад</button>
+                <span class="item-counter">Товар ${currentItemIdx + 1} із ${totalItems} (Сценарій ${currentScenarioIdx + 1} з ${DATASET.length})</span>
+                <button class="btn-nav" onclick="nextStep()">Вперед →</button>
+            </div>
+        `;
+    } else {
+        // Render Primary Look Evaluation
+        const lookIdx = currentItemIdx - totalItems;
+        const lk = sc.primary_looks[lookIdx];
+        const currentGrade = evaluations[lk.evaluation_id];
+
+        stage.innerHTML = `
+            <div class="look-card">
+                <div class="look-title">👗 Оцінка основного образу (${lk.label})</div>
+                <div class="look-items-grid">
+                    ${lk.items.map(p => `
+                        <div class="look-item-thumb">
+                            <img src="../${p.img}" onerror="this.src='https://via.placeholder.com/140x140/1e1b4b/a855f7?text=${encodeURIComponent(p.title)}';">
+                            <div class="look-item-thumb-info">
+                                <span class="look-item-role">${p.garment_role}</span>
+                                <span class="look-item-nm" title="${p.title}">${p.title}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="grade-prompt">Оцініть цілісність та доречність комплекту:</div>
+                <div class="grade-grid">
+                    <button class="grade-btn btn-0 ${currentGrade === 0 ? 'selected' : ''}" onclick="setGrade('${lk.evaluation_id}', 0)">
+                        <span class="grade-val">0</span>
+                        <span class="grade-name">Невдалий образ</span>
+                        <span class="grade-hint">Не відповідає запиту або дисгармонійний</span>
+                    </button>
+                    <button class="grade-btn btn-1 ${currentGrade === 1 ? 'selected' : ''}" onclick="setGrade('${lk.evaluation_id}', 1)">
+                        <span class="grade-val">1</span>
+                        <span class="grade-name">Загалом допустимий</span>
+                        <span class="grade-hint">Є спірні чи компромісні елементи</span>
+                    </button>
+                    <button class="grade-btn btn-2 ${currentGrade === 2 ? 'selected' : ''}" onclick="setGrade('${lk.evaluation_id}', 2)">
+                        <span class="grade-val">2</span>
+                        <span class="grade-name">Цілісний гармонійний</span>
+                        <span class="grade-hint">Повністю відповідає призначенню</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="stage-nav">
+                <button class="btn-nav" onclick="prevStep()">← Назад</button>
+                <span class="item-counter">Основний образ ${lookIdx + 1} із ${totalLooks} (Сценарій ${currentScenarioIdx + 1} з ${DATASET.length})</span>
+                <button class="btn-nav" onclick="nextStep()">${currentScenarioIdx === DATASET.length - 1 && lookIdx === totalLooks - 1 ? '🏁 Завершити' : 'Вперед →'}</button>
+            </div>
+        `;
+    }
+}
+
+function setGrade(evalId, grade) {
+    evaluations[evalId] = grade;
+    saveEvaluations();
+    showToast(`Оцінку [${grade}] збережено`);
+    render();
+}
+
+function nextStep() {
+    const sc = DATASET[currentScenarioIdx];
+    const totalInScenario = sc.items.length + sc.primary_looks.length;
+
+    if (currentItemIdx < totalInScenario - 1) {
+        currentItemIdx++;
+    } else {
+        if (currentScenarioIdx < DATASET.length - 1) {
+            currentScenarioIdx++;
+            currentItemIdx = 0;
+        } else {
+            showToast('🎉 Всі сценарії пройдено! Експортуйте результати.');
+        }
+    }
+    render();
+}
+
+function prevStep() {
+    if (currentItemIdx > 0) {
+        currentItemIdx--;
+    } else {
+        if (currentScenarioIdx > 0) {
+            currentScenarioIdx--;
+            const prevSc = DATASET[currentScenarioIdx];
+            currentItemIdx = prevSc.items.length + prevSc.primary_looks.length - 1;
+        }
+    }
+    render();
+}
+
+// Keyboard shortcuts: 0, 1, 2, ArrowLeft, ArrowRight
+window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === '0') {
+        const btn = document.querySelector('.grade-btn.btn-0');
+        if (btn) btn.click();
+    } else if (e.key === '1') {
+        const btn = document.querySelector('.grade-btn.btn-1');
+        if (btn) btn.click();
+    } else if (e.key === '2') {
+        const btn = document.querySelector('.grade-btn.btn-2');
+        if (btn) btn.click();
+    } else if (e.key === 'ArrowRight') {
+        nextStep();
+    } else if (e.key === 'ArrowLeft') {
+        prevStep();
+    }
+});
+
+function exportJSON() {
+    const exportData = [];
+    DATASET.forEach(sc => {
+        sc.items.forEach(it => {
+            if (evaluations[it.evaluation_id] !== undefined) {
+                exportData.push({
+                    evaluation_id: it.evaluation_id,
+                    scenario_id: sc.scenario_id,
+                    item_title: it.title,
+                    relevance_grade: evaluations[it.evaluation_id],
+                    type: 'item',
+                    timestamp: new Date().toISOString()
+                });
+            }
+        });
+        sc.primary_looks.forEach(lk => {
+            if (evaluations[lk.evaluation_id] !== undefined) {
+                exportData.push({
+                    evaluation_id: lk.evaluation_id,
+                    scenario_id: sc.scenario_id,
+                    label: lk.label,
+                    relevance_grade: evaluations[lk.evaluation_id],
+                    type: 'primary_look',
+                    timestamp: new Date().toISOString()
+                });
+            }
+        });
+    });
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `evaluations_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('💾 Файл JSON успішно завантажено!');
+}
+
+function exportCSV() {
+    const rows = [
+        ['evaluation_id', 'scenario_id', 'type', 'relevance_grade', 'timestamp']
+    ];
+
+    DATASET.forEach(sc => {
+        sc.items.forEach(it => {
+            if (evaluations[it.evaluation_id] !== undefined) {
+                rows.push([it.evaluation_id, sc.scenario_id, 'item', evaluations[it.evaluation_id], new Date().toISOString()]);
+            }
+        });
+        sc.primary_looks.forEach(lk => {
+            if (evaluations[lk.evaluation_id] !== undefined) {
+                rows.push([lk.evaluation_id, sc.scenario_id, 'primary_look', evaluations[lk.evaluation_id], new Date().toISOString()]);
+            }
+        });
+    });
+
+    const csvContent = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `evaluations_${Date.now()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('📊 Файл CSV успішно завантажено!');
+}
+
+function copyJSON() {
+    const exportData = [];
+    DATASET.forEach(sc => {
+        sc.items.forEach(it => {
+            if (evaluations[it.evaluation_id] !== undefined) {
+                exportData.push({
+                    evaluation_id: it.evaluation_id,
+                    scenario_id: sc.scenario_id,
+                    relevance_grade: evaluations[it.evaluation_id],
+                    type: 'item'
+                });
+            }
+        });
+        sc.primary_looks.forEach(lk => {
+            if (evaluations[lk.evaluation_id] !== undefined) {
+                exportData.push({
+                    evaluation_id: lk.evaluation_id,
+                    scenario_id: sc.scenario_id,
+                    relevance_grade: evaluations[lk.evaluation_id],
+                    type: 'primary_look'
+                });
+            }
+        });
+    });
+    navigator.clipboard.writeText(JSON.stringify(exportData, null, 2))
+        .then(() => showToast('📋 JSON скопійовано в буфер обміну!'))
+        .catch(() => showToast('⚠️ Не вдалося скопіювати'));
+}
+
+window.addEventListener('DOMContentLoaded', initDataset);
+</script>
+
+</body>
+</html>

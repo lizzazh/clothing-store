@@ -1,0 +1,6100 @@
+[
+  {
+    "scenario_id": 1,
+    "scenario_name": "Casual, autumn",
+    "split": "calibration",
+    "description": "Повсякденний осінній образ, стиль мінімалізм, помірна погода (16°C)",
+    "context": {
+      "occasion": "casual",
+      "season": "autumn",
+      "style": "minimalist",
+      "styleDNA": {
+        "minimalist": 60,
+        "classic": 25,
+        "boho": 15
+      },
+      "body": "rectangle",
+      "weather": {
+        "name": "Помірно / хмарно",
+        "temp": 16,
+        "condition": "cloudy",
+        "description": "16°C, мінлива хмарність, помірна прохолода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s01_it01",
+        "scenario_id": 1,
+        "title": "Too smalllllll",
+        "category": "Jackets",
+        "class_name": "Jackets",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/955.jpg"
+      },
+      {
+        "evaluation_id": "s01_it02",
+        "scenario_id": 1,
+        "title": "Fantastic for fall",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1118.jpg"
+      },
+      {
+        "evaluation_id": "s01_it03",
+        "scenario_id": 1,
+        "title": "Elegant classic dress",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1072.jpg"
+      },
+      {
+        "evaluation_id": "s01_it04",
+        "scenario_id": 1,
+        "title": "Темно-синій структурований блейзер",
+        "category": "jackets",
+        "class_name": "jackets",
+        "garment_role": "outerwear",
+        "source": "wardrobe",
+        "img": "static/990.jpg"
+      },
+      {
+        "evaluation_id": "s01_it05",
+        "scenario_id": 1,
+        "title": "Great fall jeans!",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1040.jpg"
+      },
+      {
+        "evaluation_id": "s01_it06",
+        "scenario_id": 1,
+        "title": "Gorgeous and warm",
+        "category": "Jackets",
+        "class_name": "Jackets",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/957.jpg"
+      },
+      {
+        "evaluation_id": "s01_it07",
+        "scenario_id": 1,
+        "title": "Товар",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1194.jpg"
+      },
+      {
+        "evaluation_id": "s01_it08",
+        "scenario_id": 1,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1025.jpg"
+      },
+      {
+        "evaluation_id": "s01_it09",
+        "scenario_id": 1,
+        "title": "My new holiday skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1012.jpg"
+      },
+      {
+        "evaluation_id": "s01_it10",
+        "scenario_id": 1,
+        "title": "Pretty but runs long",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1179.jpg"
+      },
+      {
+        "evaluation_id": "s01_it11",
+        "scenario_id": 1,
+        "title": "Uniquely terrific cape",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1112.jpg"
+      },
+      {
+        "evaluation_id": "s01_it12",
+        "scenario_id": 1,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1019.jpg"
+      },
+      {
+        "evaluation_id": "s01_it13",
+        "scenario_id": 1,
+        "title": "Beautiful, all wool coat",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1114.jpg"
+      },
+      {
+        "evaluation_id": "s01_it14",
+        "scenario_id": 1,
+        "title": "Much better in person",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1193.jpg"
+      },
+      {
+        "evaluation_id": "s01_it15",
+        "scenario_id": 1,
+        "title": "Love it!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1124.jpg"
+      },
+      {
+        "evaluation_id": "s01_it16",
+        "scenario_id": 1,
+        "title": "Love love love!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1043.jpg"
+      },
+      {
+        "evaluation_id": "s01_it17",
+        "scenario_id": 1,
+        "title": "Loved, but returned",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1003.jpg"
+      },
+      {
+        "evaluation_id": "s01_it18",
+        "scenario_id": 1,
+        "title": "Бежевий кашеміровий джемпер",
+        "category": "knits",
+        "class_name": "knits",
+        "garment_role": "upper",
+        "source": "wardrobe",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s01_it19",
+        "scenario_id": 1,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1002.jpg"
+      },
+      {
+        "evaluation_id": "s01_it20",
+        "scenario_id": 1,
+        "title": "Stunning!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1047.jpg"
+      },
+      {
+        "evaluation_id": "s01_it21",
+        "scenario_id": 1,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1001.jpg"
+      },
+      {
+        "evaluation_id": "s01_it22",
+        "scenario_id": 1,
+        "title": "Very soft and swingy!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1130.jpg"
+      },
+      {
+        "evaluation_id": "s01_it23",
+        "scenario_id": 1,
+        "title": "Great find!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1113.jpg"
+      },
+      {
+        "evaluation_id": "s01_it24",
+        "scenario_id": 1,
+        "title": "Beautiful but runs huge",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1023.jpg"
+      },
+      {
+        "evaluation_id": "s01_it25",
+        "scenario_id": 1,
+        "title": "Classic and flattering",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1151.jpg"
+      },
+      {
+        "evaluation_id": "s01_it26",
+        "scenario_id": 1,
+        "title": "Why so long?",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1026.jpg"
+      },
+      {
+        "evaluation_id": "s01_it27",
+        "scenario_id": 1,
+        "title": "Eh...",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1004.jpg"
+      },
+      {
+        "evaluation_id": "s01_it28",
+        "scenario_id": 1,
+        "title": "Sexy and flows",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1048.jpg"
+      },
+      {
+        "evaluation_id": "s01_it29",
+        "scenario_id": 1,
+        "title": "Sophisticated feminine overalls (?)",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1041.jpg"
+      },
+      {
+        "evaluation_id": "s01_it30",
+        "scenario_id": 1,
+        "title": "Super nice",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1024.jpg"
+      },
+      {
+        "evaluation_id": "s01_it31",
+        "scenario_id": 1,
+        "title": "Маленька чорна вечірня сукня",
+        "category": "dresses",
+        "class_name": "dresses",
+        "garment_role": "dress",
+        "source": "wardrobe",
+        "img": "static/1085.jpg"
+      },
+      {
+        "evaluation_id": "s01_it32",
+        "scenario_id": 1,
+        "title": "Loose waist",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1022.jpg"
+      },
+      {
+        "evaluation_id": "s01_it33",
+        "scenario_id": 1,
+        "title": "In love",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1071.jpg"
+      },
+      {
+        "evaluation_id": "s01_it34",
+        "scenario_id": 1,
+        "title": "Біла шовкова сорочка",
+        "category": "blouses",
+        "class_name": "blouses",
+        "garment_role": "upper",
+        "source": "wardrobe",
+        "img": "static/1080.jpg"
+      },
+      {
+        "evaluation_id": "s01_it35",
+        "scenario_id": 1,
+        "title": "Love it",
+        "category": "Jackets",
+        "class_name": "Jackets",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/956.jpg"
+      },
+      {
+        "evaluation_id": "s01_it36",
+        "scenario_id": 1,
+        "title": "Товар",
+        "category": "Jackets",
+        "class_name": "Jackets",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/958.jpg"
+      },
+      {
+        "evaluation_id": "s01_it37",
+        "scenario_id": 1,
+        "title": "Pretty much just like picture",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1042.jpg"
+      },
+      {
+        "evaluation_id": "s01_it38",
+        "scenario_id": 1,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1029.jpg"
+      },
+      {
+        "evaluation_id": "s01_it39",
+        "scenario_id": 1,
+        "title": "Love. love. love this skirt!!",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1008.jpg"
+      },
+      {
+        "evaluation_id": "s01_it40",
+        "scenario_id": 1,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s01_it41",
+        "scenario_id": 1,
+        "title": "Cute and edgy",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1005.jpg"
+      },
+      {
+        "evaluation_id": "s01_it42",
+        "scenario_id": 1,
+        "title": "I am a big fan of bailey 44 brand",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1149.jpg"
+      },
+      {
+        "evaluation_id": "s01_it43",
+        "scenario_id": 1,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s01_it44",
+        "scenario_id": 1,
+        "title": "Very pretty - runs large (busty petites rejoice 3)",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1074.jpg"
+      },
+      {
+        "evaluation_id": "s01_it45",
+        "scenario_id": 1,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s01_it46",
+        "scenario_id": 1,
+        "title": "Beautiful",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1067.jpg"
+      },
+      {
+        "evaluation_id": "s01_it47",
+        "scenario_id": 1,
+        "title": "Awesome skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1000.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s01_look1",
+        "scenario_id": 1,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1181",
+            "clothing_id": 1181,
+            "title": "Wardrobe staple",
+            "class_name": "Knits",
+            "garment_role": "upper",
+            "img": "static/1181.jpg"
+          },
+          {
+            "item_id": "c_1014",
+            "clothing_id": 1014,
+            "title": "Lovely multi-season skirt",
+            "class_name": "Skirts",
+            "garment_role": "lower",
+            "img": "static/1014.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 2,
+    "scenario_name": "Work, autumn",
+    "split": "calibration",
+    "description": "Діловий осінній образ для офісу під час холодного дощу (8°C)",
+    "context": {
+      "occasion": "work",
+      "season": "autumn",
+      "style": "classic",
+      "styleDNA": {
+        "classic": 70,
+        "elegant": 20,
+        "minimalist": 10
+      },
+      "body": "hourglass",
+      "weather": {
+        "name": "Холодний дощ",
+        "temp": 8,
+        "condition": "rainy",
+        "description": "8°C, затяжний холодний дощ та вітер"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s02_it01",
+        "scenario_id": 2,
+        "title": "Sophisticated feminine overalls (?)",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1041.jpg"
+      },
+      {
+        "evaluation_id": "s02_it02",
+        "scenario_id": 2,
+        "title": "Eh...",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1004.jpg"
+      },
+      {
+        "evaluation_id": "s02_it03",
+        "scenario_id": 2,
+        "title": "Pretty much just like picture",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1042.jpg"
+      },
+      {
+        "evaluation_id": "s02_it04",
+        "scenario_id": 2,
+        "title": "Чорні класичні брюки зі стрілками",
+        "category": "pants",
+        "class_name": "pants",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1090.jpg"
+      },
+      {
+        "evaluation_id": "s02_it05",
+        "scenario_id": 2,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1019.jpg"
+      },
+      {
+        "evaluation_id": "s02_it06",
+        "scenario_id": 2,
+        "title": "Uniquely terrific cape",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1112.jpg"
+      },
+      {
+        "evaluation_id": "s02_it07",
+        "scenario_id": 2,
+        "title": "Great find!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1113.jpg"
+      },
+      {
+        "evaluation_id": "s02_it08",
+        "scenario_id": 2,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1002.jpg"
+      },
+      {
+        "evaluation_id": "s02_it09",
+        "scenario_id": 2,
+        "title": "Loved, but returned",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1003.jpg"
+      },
+      {
+        "evaluation_id": "s02_it10",
+        "scenario_id": 2,
+        "title": "Cute",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/133.jpg"
+      },
+      {
+        "evaluation_id": "s02_it11",
+        "scenario_id": 2,
+        "title": "Love. love. love this skirt!!",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1008.jpg"
+      },
+      {
+        "evaluation_id": "s02_it12",
+        "scenario_id": 2,
+        "title": "Маленька чорна вечірня сукня",
+        "category": "dresses",
+        "class_name": "dresses",
+        "garment_role": "dress",
+        "source": "wardrobe",
+        "img": "static/1085.jpg"
+      },
+      {
+        "evaluation_id": "s02_it13",
+        "scenario_id": 2,
+        "title": "Sexy and flows",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1048.jpg"
+      },
+      {
+        "evaluation_id": "s02_it14",
+        "scenario_id": 2,
+        "title": "I am a big fan of bailey 44 brand",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1149.jpg"
+      },
+      {
+        "evaluation_id": "s02_it15",
+        "scenario_id": 2,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1029.jpg"
+      },
+      {
+        "evaluation_id": "s02_it16",
+        "scenario_id": 2,
+        "title": "Why so long?",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1026.jpg"
+      },
+      {
+        "evaluation_id": "s02_it17",
+        "scenario_id": 2,
+        "title": "Classic",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1075.jpg"
+      },
+      {
+        "evaluation_id": "s02_it18",
+        "scenario_id": 2,
+        "title": "Бежевий кашеміровий джемпер",
+        "category": "knits",
+        "class_name": "knits",
+        "garment_role": "upper",
+        "source": "wardrobe",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s02_it19",
+        "scenario_id": 2,
+        "title": "Cute and edgy",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1005.jpg"
+      },
+      {
+        "evaluation_id": "s02_it20",
+        "scenario_id": 2,
+        "title": "Awesome skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s02_it21",
+        "scenario_id": 2,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1025.jpg"
+      },
+      {
+        "evaluation_id": "s02_it22",
+        "scenario_id": 2,
+        "title": "Темно-синій структурований блейзер",
+        "category": "jackets",
+        "class_name": "jackets",
+        "garment_role": "outerwear",
+        "source": "wardrobe",
+        "img": "static/990.jpg"
+      },
+      {
+        "evaluation_id": "s02_it23",
+        "scenario_id": 2,
+        "title": "Great fall jeans!",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1040.jpg"
+      },
+      {
+        "evaluation_id": "s02_it24",
+        "scenario_id": 2,
+        "title": "Loose waist",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1022.jpg"
+      },
+      {
+        "evaluation_id": "s02_it25",
+        "scenario_id": 2,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1001.jpg"
+      },
+      {
+        "evaluation_id": "s02_it26",
+        "scenario_id": 2,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s02_it27",
+        "scenario_id": 2,
+        "title": "Love love love!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1043.jpg"
+      },
+      {
+        "evaluation_id": "s02_it28",
+        "scenario_id": 2,
+        "title": "Classic tee",
+        "category": "Layering",
+        "class_name": "Layering",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/261.jpg"
+      },
+      {
+        "evaluation_id": "s02_it29",
+        "scenario_id": 2,
+        "title": "Beautiful",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1067.jpg"
+      },
+      {
+        "evaluation_id": "s02_it30",
+        "scenario_id": 2,
+        "title": "Classic",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/582.jpg"
+      },
+      {
+        "evaluation_id": "s02_it31",
+        "scenario_id": 2,
+        "title": "Interesting cut",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1062.jpg"
+      },
+      {
+        "evaluation_id": "s02_it32",
+        "scenario_id": 2,
+        "title": "Beautiful but runs huge",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1023.jpg"
+      },
+      {
+        "evaluation_id": "s02_it33",
+        "scenario_id": 2,
+        "title": "Must have, right on trend, but still classic",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1030.jpg"
+      },
+      {
+        "evaluation_id": "s02_it34",
+        "scenario_id": 2,
+        "title": "Біла шовкова сорочка",
+        "category": "blouses",
+        "class_name": "blouses",
+        "garment_role": "upper",
+        "source": "wardrobe",
+        "img": "static/1080.jpg"
+      },
+      {
+        "evaluation_id": "s02_it35",
+        "scenario_id": 2,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s02_it36",
+        "scenario_id": 2,
+        "title": "Super nice",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1024.jpg"
+      },
+      {
+        "evaluation_id": "s02_it37",
+        "scenario_id": 2,
+        "title": "Elegant classic dress",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1072.jpg"
+      },
+      {
+        "evaluation_id": "s02_it38",
+        "scenario_id": 2,
+        "title": "Classic and flattering",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1151.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s02_look1",
+        "scenario_id": 2,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1181",
+            "clothing_id": 1181,
+            "title": "Wardrobe staple",
+            "class_name": "Knits",
+            "garment_role": "upper",
+            "img": "static/1181.jpg"
+          },
+          {
+            "item_id": "w_w2",
+            "clothing_id": "w2",
+            "title": "Чорні класичні брюки зі стрілками",
+            "class_name": "pants",
+            "garment_role": "lower",
+            "img": "static/1090.jpg"
+          },
+          {
+            "item_id": "w_w4",
+            "clothing_id": "w4",
+            "title": "Темно-синій структурований блейзер",
+            "class_name": "jackets",
+            "garment_role": "outerwear",
+            "img": "static/990.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 3,
+    "scenario_name": "Date, autumn",
+    "split": "calibration",
+    "description": "Романтичний осінній образ на побачення (16°C)",
+    "context": {
+      "occasion": "date",
+      "season": "autumn",
+      "style": "romantic",
+      "styleDNA": {
+        "romantic": 65,
+        "elegant": 25,
+        "boho": 10
+      },
+      "body": "pear",
+      "weather": {
+        "name": "Помірно / хмарно",
+        "temp": 16,
+        "condition": "cloudy",
+        "description": "16°C, мінлива хмарність, помірна прохолода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s03_it01",
+        "scenario_id": 3,
+        "title": "Gorgeous top, perfect for summer",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1180.jpg"
+      },
+      {
+        "evaluation_id": "s03_it02",
+        "scenario_id": 3,
+        "title": "Маленька чорна вечірня сукня",
+        "category": "dresses",
+        "class_name": "dresses",
+        "garment_role": "dress",
+        "source": "wardrobe",
+        "img": "static/1085.jpg"
+      },
+      {
+        "evaluation_id": "s03_it03",
+        "scenario_id": 3,
+        "title": "Beautiful",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1067.jpg"
+      },
+      {
+        "evaluation_id": "s03_it04",
+        "scenario_id": 3,
+        "title": "Cute and edgy",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1005.jpg"
+      },
+      {
+        "evaluation_id": "s03_it05",
+        "scenario_id": 3,
+        "title": "Great layering piece",
+        "category": "Sweaters",
+        "class_name": "Sweaters",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/4.jpg"
+      },
+      {
+        "evaluation_id": "s03_it06",
+        "scenario_id": 3,
+        "title": "Crisp and clean",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/846.jpg"
+      },
+      {
+        "evaluation_id": "s03_it07",
+        "scenario_id": 3,
+        "title": "Біла шовкова сорочка",
+        "category": "blouses",
+        "class_name": "blouses",
+        "garment_role": "upper",
+        "source": "wardrobe",
+        "img": "static/1080.jpg"
+      },
+      {
+        "evaluation_id": "s03_it08",
+        "scenario_id": 3,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s03_it09",
+        "scenario_id": 3,
+        "title": "Great fall jeans!",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1040.jpg"
+      },
+      {
+        "evaluation_id": "s03_it10",
+        "scenario_id": 3,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s03_it11",
+        "scenario_id": 3,
+        "title": "Very soft and swingy!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1130.jpg"
+      },
+      {
+        "evaluation_id": "s03_it12",
+        "scenario_id": 3,
+        "title": "Romantic top",
+        "category": "Layering",
+        "class_name": "Layering",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/125.jpg"
+      },
+      {
+        "evaluation_id": "s03_it13",
+        "scenario_id": 3,
+        "title": "Love it!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1124.jpg"
+      },
+      {
+        "evaluation_id": "s03_it14",
+        "scenario_id": 3,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s03_it15",
+        "scenario_id": 3,
+        "title": "Товар",
+        "category": "Sweaters",
+        "class_name": "Sweaters",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/3.jpg"
+      },
+      {
+        "evaluation_id": "s03_it16",
+        "scenario_id": 3,
+        "title": "Pretty but runs long",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1179.jpg"
+      },
+      {
+        "evaluation_id": "s03_it17",
+        "scenario_id": 3,
+        "title": "Love love love",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/21.jpg"
+      },
+      {
+        "evaluation_id": "s03_it18",
+        "scenario_id": 3,
+        "title": "Бежевий кашеміровий джемпер",
+        "category": "knits",
+        "class_name": "knits",
+        "garment_role": "upper",
+        "source": "wardrobe",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s03_it19",
+        "scenario_id": 3,
+        "title": "Uniquely terrific cape",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1112.jpg"
+      },
+      {
+        "evaluation_id": "s03_it20",
+        "scenario_id": 3,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1019.jpg"
+      },
+      {
+        "evaluation_id": "s03_it21",
+        "scenario_id": 3,
+        "title": "Fantastic for fall",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1118.jpg"
+      },
+      {
+        "evaluation_id": "s03_it22",
+        "scenario_id": 3,
+        "title": "Awesome skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s03_it23",
+        "scenario_id": 3,
+        "title": "Feminine, romantic skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/994.jpg"
+      },
+      {
+        "evaluation_id": "s03_it24",
+        "scenario_id": 3,
+        "title": "Soft & buttery!",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1183.jpg"
+      },
+      {
+        "evaluation_id": "s03_it25",
+        "scenario_id": 3,
+        "title": "I am a big fan of bailey 44 brand",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1149.jpg"
+      },
+      {
+        "evaluation_id": "s03_it26",
+        "scenario_id": 3,
+        "title": "Classic and flattering",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1151.jpg"
+      },
+      {
+        "evaluation_id": "s03_it27",
+        "scenario_id": 3,
+        "title": "Lovely romantic blouse",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/833.jpg"
+      },
+      {
+        "evaluation_id": "s03_it28",
+        "scenario_id": 3,
+        "title": "Great tunic or dress",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1188.jpg"
+      },
+      {
+        "evaluation_id": "s03_it29",
+        "scenario_id": 3,
+        "title": "Темно-синій структурований блейзер",
+        "category": "jackets",
+        "class_name": "jackets",
+        "garment_role": "outerwear",
+        "source": "wardrobe",
+        "img": "static/990.jpg"
+      },
+      {
+        "evaluation_id": "s03_it30",
+        "scenario_id": 3,
+        "title": "Great find!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1113.jpg"
+      },
+      {
+        "evaluation_id": "s03_it31",
+        "scenario_id": 3,
+        "title": "Beautiful, all wool coat",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1114.jpg"
+      },
+      {
+        "evaluation_id": "s03_it32",
+        "scenario_id": 3,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1029.jpg"
+      },
+      {
+        "evaluation_id": "s03_it33",
+        "scenario_id": 3,
+        "title": "Love love love!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1043.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s03_look1",
+        "scenario_id": 3,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "w_w6",
+            "clothing_id": "w6",
+            "title": "Маленька чорна вечірня сукня",
+            "class_name": "dresses",
+            "garment_role": "dress",
+            "img": "static/1085.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 4,
+    "scenario_name": "Sport, autumn",
+    "split": "calibration",
+    "description": "Спортивний активний осінній образ (16°C)",
+    "context": {
+      "occasion": "sport",
+      "season": "autumn",
+      "style": "streetwear",
+      "styleDNA": {
+        "streetwear": 70,
+        "minimalist": 20,
+        "classic": 10
+      },
+      "body": "inverted",
+      "weather": {
+        "name": "Помірно / хмарно",
+        "temp": 16,
+        "condition": "cloudy",
+        "description": "16°C, мінлива хмарність, помірна прохолода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s04_it01",
+        "scenario_id": 4,
+        "title": "Sexy and flows",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1048.jpg"
+      },
+      {
+        "evaluation_id": "s04_it02",
+        "scenario_id": 4,
+        "title": "Pretty much just like picture",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1042.jpg"
+      },
+      {
+        "evaluation_id": "s04_it03",
+        "scenario_id": 4,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1019.jpg"
+      },
+      {
+        "evaluation_id": "s04_it04",
+        "scenario_id": 4,
+        "title": "Pretty but runs long",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1179.jpg"
+      },
+      {
+        "evaluation_id": "s04_it05",
+        "scenario_id": 4,
+        "title": "Love love love!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1043.jpg"
+      },
+      {
+        "evaluation_id": "s04_it06",
+        "scenario_id": 4,
+        "title": "Sophisticated feminine overalls (?)",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1041.jpg"
+      },
+      {
+        "evaluation_id": "s04_it07",
+        "scenario_id": 4,
+        "title": "Stunning!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1047.jpg"
+      },
+      {
+        "evaluation_id": "s04_it08",
+        "scenario_id": 4,
+        "title": "Loved, but returned",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1003.jpg"
+      },
+      {
+        "evaluation_id": "s04_it09",
+        "scenario_id": 4,
+        "title": "Love it but....",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/132.jpg"
+      },
+      {
+        "evaluation_id": "s04_it10",
+        "scenario_id": 4,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1025.jpg"
+      },
+      {
+        "evaluation_id": "s04_it11",
+        "scenario_id": 4,
+        "title": "Awesome skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s04_it12",
+        "scenario_id": 4,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s04_it13",
+        "scenario_id": 4,
+        "title": "Why so long?",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1026.jpg"
+      },
+      {
+        "evaluation_id": "s04_it14",
+        "scenario_id": 4,
+        "title": "Loose waist",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1022.jpg"
+      },
+      {
+        "evaluation_id": "s04_it15",
+        "scenario_id": 4,
+        "title": "Beautiful but runs huge",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1023.jpg"
+      },
+      {
+        "evaluation_id": "s04_it16",
+        "scenario_id": 4,
+        "title": "Eh...",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1004.jpg"
+      },
+      {
+        "evaluation_id": "s04_it17",
+        "scenario_id": 4,
+        "title": "Interesting cut",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1062.jpg"
+      },
+      {
+        "evaluation_id": "s04_it18",
+        "scenario_id": 4,
+        "title": "Cute",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/133.jpg"
+      },
+      {
+        "evaluation_id": "s04_it19",
+        "scenario_id": 4,
+        "title": "Love the stretch",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/167.jpg"
+      },
+      {
+        "evaluation_id": "s04_it20",
+        "scenario_id": 4,
+        "title": "Темно-синій структурований блейзер",
+        "category": "jackets",
+        "class_name": "jackets",
+        "garment_role": "outerwear",
+        "source": "wardrobe",
+        "img": "static/990.jpg"
+      },
+      {
+        "evaluation_id": "s04_it21",
+        "scenario_id": 4,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s04_it22",
+        "scenario_id": 4,
+        "title": "Love. love. love this skirt!!",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1008.jpg"
+      },
+      {
+        "evaluation_id": "s04_it23",
+        "scenario_id": 4,
+        "title": "Uniquely terrific cape",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1112.jpg"
+      },
+      {
+        "evaluation_id": "s04_it24",
+        "scenario_id": 4,
+        "title": "Comfy chic",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/131.jpg"
+      },
+      {
+        "evaluation_id": "s04_it25",
+        "scenario_id": 4,
+        "title": "Beautiful",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1067.jpg"
+      },
+      {
+        "evaluation_id": "s04_it26",
+        "scenario_id": 4,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1029.jpg"
+      },
+      {
+        "evaluation_id": "s04_it27",
+        "scenario_id": 4,
+        "title": "Great find!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1113.jpg"
+      },
+      {
+        "evaluation_id": "s04_it28",
+        "scenario_id": 4,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1001.jpg"
+      },
+      {
+        "evaluation_id": "s04_it29",
+        "scenario_id": 4,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1002.jpg"
+      },
+      {
+        "evaluation_id": "s04_it30",
+        "scenario_id": 4,
+        "title": "Great fall jeans!",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1040.jpg"
+      },
+      {
+        "evaluation_id": "s04_it31",
+        "scenario_id": 4,
+        "title": "Super nice",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1024.jpg"
+      },
+      {
+        "evaluation_id": "s04_it32",
+        "scenario_id": 4,
+        "title": "Сині прямі базові джинси",
+        "category": "jeans",
+        "class_name": "jeans",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1070.jpg"
+      },
+      {
+        "evaluation_id": "s04_it33",
+        "scenario_id": 4,
+        "title": "Cute and edgy",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1005.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s04_look1",
+        "scenario_id": 4,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1181",
+            "clothing_id": 1181,
+            "title": "Wardrobe staple",
+            "class_name": "Knits",
+            "garment_role": "upper",
+            "img": "static/1181.jpg"
+          },
+          {
+            "item_id": "w_w5",
+            "clothing_id": "w5",
+            "title": "Сині прямі базові джинси",
+            "class_name": "jeans",
+            "garment_role": "lower",
+            "img": "static/1070.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 5,
+    "scenario_name": "Party",
+    "split": "calibration",
+    "description": "Святковий елегантний образ для вечірки (22°C)",
+    "context": {
+      "occasion": "party",
+      "season": "spring",
+      "style": "elegant",
+      "styleDNA": {
+        "elegant": 60,
+        "romantic": 25,
+        "streetwear": 15
+      },
+      "body": "hourglass",
+      "weather": {
+        "name": "Тепло та сухо",
+        "temp": 22,
+        "condition": "sunny",
+        "description": "22°C, суха комфортна погода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s05_it01",
+        "scenario_id": 5,
+        "title": "Flattering and great buy on sale!",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1083.jpg"
+      },
+      {
+        "evaluation_id": "s05_it02",
+        "scenario_id": 5,
+        "title": "Товар",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1073.jpg"
+      },
+      {
+        "evaluation_id": "s05_it03",
+        "scenario_id": 5,
+        "title": "Товар",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1194.jpg"
+      },
+      {
+        "evaluation_id": "s05_it04",
+        "scenario_id": 5,
+        "title": "Beautiful but runs huge",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1023.jpg"
+      },
+      {
+        "evaluation_id": "s05_it05",
+        "scenario_id": 5,
+        "title": "Great tunic or dress",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1188.jpg"
+      },
+      {
+        "evaluation_id": "s05_it06",
+        "scenario_id": 5,
+        "title": "Great find!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1113.jpg"
+      },
+      {
+        "evaluation_id": "s05_it07",
+        "scenario_id": 5,
+        "title": "Very pretty - runs large (busty petites rejoice 3)",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1074.jpg"
+      },
+      {
+        "evaluation_id": "s05_it08",
+        "scenario_id": 5,
+        "title": "Cute and edgy",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1005.jpg"
+      },
+      {
+        "evaluation_id": "s05_it09",
+        "scenario_id": 5,
+        "title": "Much better in person",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1193.jpg"
+      },
+      {
+        "evaluation_id": "s05_it10",
+        "scenario_id": 5,
+        "title": "In love",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1071.jpg"
+      },
+      {
+        "evaluation_id": "s05_it11",
+        "scenario_id": 5,
+        "title": "Pretty but runs long",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1179.jpg"
+      },
+      {
+        "evaluation_id": "s05_it12",
+        "scenario_id": 5,
+        "title": "Elegant classic dress",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1072.jpg"
+      },
+      {
+        "evaluation_id": "s05_it13",
+        "scenario_id": 5,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s05_it14",
+        "scenario_id": 5,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1019.jpg"
+      },
+      {
+        "evaluation_id": "s05_it15",
+        "scenario_id": 5,
+        "title": "Awesome skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s05_it16",
+        "scenario_id": 5,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1001.jpg"
+      },
+      {
+        "evaluation_id": "s05_it17",
+        "scenario_id": 5,
+        "title": "Why so long?",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1026.jpg"
+      },
+      {
+        "evaluation_id": "s05_it18",
+        "scenario_id": 5,
+        "title": "Чорні класичні брюки зі стрілками",
+        "category": "pants",
+        "class_name": "pants",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1090.jpg"
+      },
+      {
+        "evaluation_id": "s05_it19",
+        "scenario_id": 5,
+        "title": "Petite busty girls rejoice 2",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1099.jpg"
+      },
+      {
+        "evaluation_id": "s05_it20",
+        "scenario_id": 5,
+        "title": "I am a big fan of bailey 44 brand",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1149.jpg"
+      },
+      {
+        "evaluation_id": "s05_it21",
+        "scenario_id": 5,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1029.jpg"
+      },
+      {
+        "evaluation_id": "s05_it22",
+        "scenario_id": 5,
+        "title": "Super nice",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1024.jpg"
+      },
+      {
+        "evaluation_id": "s05_it23",
+        "scenario_id": 5,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1025.jpg"
+      },
+      {
+        "evaluation_id": "s05_it24",
+        "scenario_id": 5,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s05_it25",
+        "scenario_id": 5,
+        "title": "Темно-синій структурований блейзер",
+        "category": "jackets",
+        "class_name": "jackets",
+        "garment_role": "outerwear",
+        "source": "wardrobe",
+        "img": "static/990.jpg"
+      },
+      {
+        "evaluation_id": "s05_it26",
+        "scenario_id": 5,
+        "title": "Маленька чорна вечірня сукня",
+        "category": "dresses",
+        "class_name": "dresses",
+        "garment_role": "dress",
+        "source": "wardrobe",
+        "img": "static/1085.jpg"
+      },
+      {
+        "evaluation_id": "s05_it27",
+        "scenario_id": 5,
+        "title": "Great fall jeans!",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1040.jpg"
+      },
+      {
+        "evaluation_id": "s05_it28",
+        "scenario_id": 5,
+        "title": "Great lbd for the winter",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1109.jpg"
+      },
+      {
+        "evaluation_id": "s05_it29",
+        "scenario_id": 5,
+        "title": "Great summer fabric!",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1078.jpg"
+      },
+      {
+        "evaluation_id": "s05_it30",
+        "scenario_id": 5,
+        "title": "Love love love!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1043.jpg"
+      },
+      {
+        "evaluation_id": "s05_it31",
+        "scenario_id": 5,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s05_it32",
+        "scenario_id": 5,
+        "title": "Classic and flattering",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1151.jpg"
+      },
+      {
+        "evaluation_id": "s05_it33",
+        "scenario_id": 5,
+        "title": "Gorgeous top, perfect for summer",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1180.jpg"
+      },
+      {
+        "evaluation_id": "s05_it34",
+        "scenario_id": 5,
+        "title": "Eh...",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1004.jpg"
+      },
+      {
+        "evaluation_id": "s05_it35",
+        "scenario_id": 5,
+        "title": "Elegant skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/998.jpg"
+      },
+      {
+        "evaluation_id": "s05_it36",
+        "scenario_id": 5,
+        "title": "Loose waist",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1022.jpg"
+      },
+      {
+        "evaluation_id": "s05_it37",
+        "scenario_id": 5,
+        "title": "Uniquely terrific cape",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1112.jpg"
+      },
+      {
+        "evaluation_id": "s05_it38",
+        "scenario_id": 5,
+        "title": "Сині прямі базові джинси",
+        "category": "jeans",
+        "class_name": "jeans",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1070.jpg"
+      },
+      {
+        "evaluation_id": "s05_it39",
+        "scenario_id": 5,
+        "title": "Soft & buttery!",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1183.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s05_look1",
+        "scenario_id": 5,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "w_w6",
+            "clothing_id": "w6",
+            "title": "Маленька чорна вечірня сукня",
+            "class_name": "dresses",
+            "garment_role": "dress",
+            "img": "static/1085.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 6,
+    "scenario_name": "Formal",
+    "split": "calibration",
+    "description": "Офіційний урочистий протокольний образ для зими (3°C)",
+    "context": {
+      "occasion": "formal",
+      "season": "winter",
+      "style": "classic",
+      "styleDNA": {
+        "classic": 65,
+        "elegant": 35
+      },
+      "body": "rectangle",
+      "weather": {
+        "name": "Холодно / морозно",
+        "temp": 3,
+        "condition": "cloudy",
+        "description": "3°C, хмарно з холодним вітром"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s06_it01",
+        "scenario_id": 6,
+        "title": "Товар",
+        "category": "Jackets",
+        "class_name": "Jackets",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/958.jpg"
+      },
+      {
+        "evaluation_id": "s06_it02",
+        "scenario_id": 6,
+        "title": "Classic tee",
+        "category": "Layering",
+        "class_name": "Layering",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/261.jpg"
+      },
+      {
+        "evaluation_id": "s06_it03",
+        "scenario_id": 6,
+        "title": "Classic",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/582.jpg"
+      },
+      {
+        "evaluation_id": "s06_it04",
+        "scenario_id": 6,
+        "title": "Great find!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1113.jpg"
+      },
+      {
+        "evaluation_id": "s06_it05",
+        "scenario_id": 6,
+        "title": "Elegant classic dress",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1072.jpg"
+      },
+      {
+        "evaluation_id": "s06_it06",
+        "scenario_id": 6,
+        "title": "Classic and flattering",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1151.jpg"
+      },
+      {
+        "evaluation_id": "s06_it07",
+        "scenario_id": 6,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1029.jpg"
+      },
+      {
+        "evaluation_id": "s06_it08",
+        "scenario_id": 6,
+        "title": "Чорні класичні брюки зі стрілками",
+        "category": "pants",
+        "class_name": "pants",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1090.jpg"
+      },
+      {
+        "evaluation_id": "s06_it09",
+        "scenario_id": 6,
+        "title": "Love it!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1124.jpg"
+      },
+      {
+        "evaluation_id": "s06_it10",
+        "scenario_id": 6,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1019.jpg"
+      },
+      {
+        "evaluation_id": "s06_it11",
+        "scenario_id": 6,
+        "title": "Beautiful",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1067.jpg"
+      },
+      {
+        "evaluation_id": "s06_it12",
+        "scenario_id": 6,
+        "title": "Love it",
+        "category": "Jackets",
+        "class_name": "Jackets",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/956.jpg"
+      },
+      {
+        "evaluation_id": "s06_it13",
+        "scenario_id": 6,
+        "title": "Cute and edgy",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1005.jpg"
+      },
+      {
+        "evaluation_id": "s06_it14",
+        "scenario_id": 6,
+        "title": "Awesome skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s06_it15",
+        "scenario_id": 6,
+        "title": "Too smalllllll",
+        "category": "Jackets",
+        "class_name": "Jackets",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/955.jpg"
+      },
+      {
+        "evaluation_id": "s06_it16",
+        "scenario_id": 6,
+        "title": "Super nice",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1024.jpg"
+      },
+      {
+        "evaluation_id": "s06_it17",
+        "scenario_id": 6,
+        "title": "Темно-синій структурований блейзер",
+        "category": "jackets",
+        "class_name": "jackets",
+        "garment_role": "outerwear",
+        "source": "wardrobe",
+        "img": "static/990.jpg"
+      },
+      {
+        "evaluation_id": "s06_it18",
+        "scenario_id": 6,
+        "title": "Classic",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1075.jpg"
+      },
+      {
+        "evaluation_id": "s06_it19",
+        "scenario_id": 6,
+        "title": "Маленька чорна вечірня сукня",
+        "category": "dresses",
+        "class_name": "dresses",
+        "garment_role": "dress",
+        "source": "wardrobe",
+        "img": "static/1085.jpg"
+      },
+      {
+        "evaluation_id": "s06_it20",
+        "scenario_id": 6,
+        "title": "Great fall jeans!",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1040.jpg"
+      },
+      {
+        "evaluation_id": "s06_it21",
+        "scenario_id": 6,
+        "title": "I am a big fan of bailey 44 brand",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1149.jpg"
+      },
+      {
+        "evaluation_id": "s06_it22",
+        "scenario_id": 6,
+        "title": "Gorgeous and warm",
+        "category": "Jackets",
+        "class_name": "Jackets",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/957.jpg"
+      },
+      {
+        "evaluation_id": "s06_it23",
+        "scenario_id": 6,
+        "title": "Beautiful, all wool coat",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1114.jpg"
+      },
+      {
+        "evaluation_id": "s06_it24",
+        "scenario_id": 6,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1001.jpg"
+      },
+      {
+        "evaluation_id": "s06_it25",
+        "scenario_id": 6,
+        "title": "Loose waist",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1022.jpg"
+      },
+      {
+        "evaluation_id": "s06_it26",
+        "scenario_id": 6,
+        "title": "Loved, but returned",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1003.jpg"
+      },
+      {
+        "evaluation_id": "s06_it27",
+        "scenario_id": 6,
+        "title": "My new holiday skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1012.jpg"
+      },
+      {
+        "evaluation_id": "s06_it28",
+        "scenario_id": 6,
+        "title": "Very soft and swingy!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1130.jpg"
+      },
+      {
+        "evaluation_id": "s06_it29",
+        "scenario_id": 6,
+        "title": "Бежевий кашеміровий джемпер",
+        "category": "knits",
+        "class_name": "knits",
+        "garment_role": "upper",
+        "source": "wardrobe",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s06_it30",
+        "scenario_id": 6,
+        "title": "Uniquely terrific cape",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1112.jpg"
+      },
+      {
+        "evaluation_id": "s06_it31",
+        "scenario_id": 6,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1002.jpg"
+      },
+      {
+        "evaluation_id": "s06_it32",
+        "scenario_id": 6,
+        "title": "Must have, right on trend, but still classic",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1030.jpg"
+      },
+      {
+        "evaluation_id": "s06_it33",
+        "scenario_id": 6,
+        "title": "Love love love!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1043.jpg"
+      },
+      {
+        "evaluation_id": "s06_it34",
+        "scenario_id": 6,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s06_it35",
+        "scenario_id": 6,
+        "title": "Eh...",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1004.jpg"
+      },
+      {
+        "evaluation_id": "s06_it36",
+        "scenario_id": 6,
+        "title": "Why so long?",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1026.jpg"
+      },
+      {
+        "evaluation_id": "s06_it37",
+        "scenario_id": 6,
+        "title": "Love. love. love this skirt!!",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1008.jpg"
+      },
+      {
+        "evaluation_id": "s06_it38",
+        "scenario_id": 6,
+        "title": "Fantastic for fall",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1118.jpg"
+      },
+      {
+        "evaluation_id": "s06_it39",
+        "scenario_id": 6,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s06_it40",
+        "scenario_id": 6,
+        "title": "Біла шовкова сорочка",
+        "category": "blouses",
+        "class_name": "blouses",
+        "garment_role": "upper",
+        "source": "wardrobe",
+        "img": "static/1080.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s06_look1",
+        "scenario_id": 6,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1181",
+            "clothing_id": 1181,
+            "title": "Wardrobe staple",
+            "class_name": "Knits",
+            "garment_role": "upper",
+            "img": "static/1181.jpg"
+          },
+          {
+            "item_id": "w_w2",
+            "clothing_id": "w2",
+            "title": "Чорні класичні брюки зі стрілками",
+            "class_name": "pants",
+            "garment_role": "lower",
+            "img": "static/1090.jpg"
+          },
+          {
+            "item_id": "w_w4",
+            "clothing_id": "w4",
+            "title": "Темно-синій структурований блейзер",
+            "class_name": "jackets",
+            "garment_role": "outerwear",
+            "img": "static/990.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 7,
+    "scenario_name": "Beach, summer, custom=\"\"",
+    "split": "calibration",
+    "description": "Літній пляжний відпочинок без прямого запиту купальника (30°C)",
+    "context": {
+      "occasion": "beach",
+      "season": "summer",
+      "style": "boho",
+      "styleDNA": {
+        "boho": 60,
+        "romantic": 30,
+        "minimalist": 10
+      },
+      "body": "pear",
+      "weather": {
+        "name": "Спекотно та сонячно",
+        "temp": 30,
+        "condition": "sunny",
+        "description": "30°C, без опадів, ясне сонячне небо"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s07_it01",
+        "scenario_id": 7,
+        "title": "Beautiful, unique jacket",
+        "category": "Trend",
+        "class_name": "Trend",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/551.jpg"
+      },
+      {
+        "evaluation_id": "s07_it02",
+        "scenario_id": 7,
+        "title": "Comfy chic",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/131.jpg"
+      },
+      {
+        "evaluation_id": "s07_it03",
+        "scenario_id": 7,
+        "title": "Swim",
+        "category": "Swim",
+        "class_name": "Swim",
+        "garment_role": "swim",
+        "source": "catalog",
+        "img": "static/1155.jpg"
+      },
+      {
+        "evaluation_id": "s07_it04",
+        "scenario_id": 7,
+        "title": "Soft & buttery!",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1183.jpg"
+      },
+      {
+        "evaluation_id": "s07_it05",
+        "scenario_id": 7,
+        "title": "Summer ready",
+        "category": "Swim",
+        "class_name": "Swim",
+        "garment_role": "swim",
+        "source": "catalog",
+        "img": "static/1157.jpg"
+      },
+      {
+        "evaluation_id": "s07_it06",
+        "scenario_id": 7,
+        "title": "I am a big fan of bailey 44 brand",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1149.jpg"
+      },
+      {
+        "evaluation_id": "s07_it07",
+        "scenario_id": 7,
+        "title": "Not flattering on anyone",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/834.jpg"
+      },
+      {
+        "evaluation_id": "s07_it08",
+        "scenario_id": 7,
+        "title": "Love the stretch",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/167.jpg"
+      },
+      {
+        "evaluation_id": "s07_it09",
+        "scenario_id": 7,
+        "title": "Love love love",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/21.jpg"
+      },
+      {
+        "evaluation_id": "s07_it10",
+        "scenario_id": 7,
+        "title": "Pretty but runs long",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1179.jpg"
+      },
+      {
+        "evaluation_id": "s07_it11",
+        "scenario_id": 7,
+        "title": "Cute",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/133.jpg"
+      },
+      {
+        "evaluation_id": "s07_it12",
+        "scenario_id": 7,
+        "title": "Great tunic or dress",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1188.jpg"
+      },
+      {
+        "evaluation_id": "s07_it13",
+        "scenario_id": 7,
+        "title": "Gorgeous top, perfect for summer",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1180.jpg"
+      },
+      {
+        "evaluation_id": "s07_it14",
+        "scenario_id": 7,
+        "title": "Bottoms",
+        "category": "Swim",
+        "class_name": "Swim",
+        "garment_role": "swim",
+        "source": "catalog",
+        "img": "static/1156.jpg"
+      },
+      {
+        "evaluation_id": "s07_it15",
+        "scenario_id": 7,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s07_it16",
+        "scenario_id": 7,
+        "title": "Pretty",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/815.jpg"
+      },
+      {
+        "evaluation_id": "s07_it17",
+        "scenario_id": 7,
+        "title": "Great layering piece",
+        "category": "Sweaters",
+        "class_name": "Sweaters",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/4.jpg"
+      },
+      {
+        "evaluation_id": "s07_it18",
+        "scenario_id": 7,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s07_it19",
+        "scenario_id": 7,
+        "title": "Love it but....",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/132.jpg"
+      },
+      {
+        "evaluation_id": "s07_it20",
+        "scenario_id": 7,
+        "title": "Uniquely terrific cape",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1112.jpg"
+      },
+      {
+        "evaluation_id": "s07_it21",
+        "scenario_id": 7,
+        "title": "Crisp and clean",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/846.jpg"
+      },
+      {
+        "evaluation_id": "s07_it22",
+        "scenario_id": 7,
+        "title": "Great find!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1113.jpg"
+      },
+      {
+        "evaluation_id": "s07_it23",
+        "scenario_id": 7,
+        "title": "Товар",
+        "category": "Sweaters",
+        "class_name": "Sweaters",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/3.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s07_look1",
+        "scenario_id": 7,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1180",
+            "clothing_id": 1180,
+            "title": "Gorgeous top, perfect for summer",
+            "class_name": "Blouses",
+            "garment_role": "upper",
+            "img": "static/1180.jpg"
+          },
+          {
+            "item_id": "c_133",
+            "clothing_id": 133,
+            "title": "Cute",
+            "class_name": "Shorts",
+            "garment_role": "lower",
+            "img": "static/133.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 8,
+    "scenario_name": "Beach, summer, custom=\"купальник\"",
+    "split": "calibration",
+    "description": "Літній пляжний образ з явним цільовим запитом купальника (30°C)",
+    "context": {
+      "occasion": "beach",
+      "season": "summer",
+      "style": "boho",
+      "styleDNA": {
+        "boho": 60,
+        "romantic": 30,
+        "minimalist": 10
+      },
+      "body": "pear",
+      "weather": {
+        "name": "Спекотно та сонячно",
+        "temp": 30,
+        "condition": "sunny",
+        "description": "30°C, без опадів, ясне сонячне небо"
+      },
+      "custom": "купальник"
+    },
+    "items": [
+      {
+        "evaluation_id": "s08_it01",
+        "scenario_id": 8,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s08_it02",
+        "scenario_id": 8,
+        "title": "Great layering piece",
+        "category": "Sweaters",
+        "class_name": "Sweaters",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/4.jpg"
+      },
+      {
+        "evaluation_id": "s08_it03",
+        "scenario_id": 8,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s08_it04",
+        "scenario_id": 8,
+        "title": "Much better in person",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1193.jpg"
+      },
+      {
+        "evaluation_id": "s08_it05",
+        "scenario_id": 8,
+        "title": "Soft & buttery!",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1183.jpg"
+      },
+      {
+        "evaluation_id": "s08_it06",
+        "scenario_id": 8,
+        "title": "Love love love",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/21.jpg"
+      },
+      {
+        "evaluation_id": "s08_it07",
+        "scenario_id": 8,
+        "title": "Beautiful, unique jacket",
+        "category": "Trend",
+        "class_name": "Trend",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/551.jpg"
+      },
+      {
+        "evaluation_id": "s08_it08",
+        "scenario_id": 8,
+        "title": "Pretty but runs long",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1179.jpg"
+      },
+      {
+        "evaluation_id": "s08_it09",
+        "scenario_id": 8,
+        "title": "Bottoms",
+        "category": "Swim",
+        "class_name": "Swim",
+        "garment_role": "swim",
+        "source": "catalog",
+        "img": "static/1156.jpg"
+      },
+      {
+        "evaluation_id": "s08_it10",
+        "scenario_id": 8,
+        "title": "Crisp and clean",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/846.jpg"
+      },
+      {
+        "evaluation_id": "s08_it11",
+        "scenario_id": 8,
+        "title": "Love it but....",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/132.jpg"
+      },
+      {
+        "evaluation_id": "s08_it12",
+        "scenario_id": 8,
+        "title": "Much thinner",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/839.jpg"
+      },
+      {
+        "evaluation_id": "s08_it13",
+        "scenario_id": 8,
+        "title": "Not flattering on anyone",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/834.jpg"
+      },
+      {
+        "evaluation_id": "s08_it14",
+        "scenario_id": 8,
+        "title": "Gorgeous top, perfect for summer",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1180.jpg"
+      },
+      {
+        "evaluation_id": "s08_it15",
+        "scenario_id": 8,
+        "title": "Love retailer bathing suits!",
+        "category": "Swim",
+        "class_name": "Swim",
+        "garment_role": "swim",
+        "source": "catalog",
+        "img": "static/1166.jpg"
+      },
+      {
+        "evaluation_id": "s08_it16",
+        "scenario_id": 8,
+        "title": "Summer ready",
+        "category": "Swim",
+        "class_name": "Swim",
+        "garment_role": "swim",
+        "source": "catalog",
+        "img": "static/1157.jpg"
+      },
+      {
+        "evaluation_id": "s08_it17",
+        "scenario_id": 8,
+        "title": "Cute",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/133.jpg"
+      },
+      {
+        "evaluation_id": "s08_it18",
+        "scenario_id": 8,
+        "title": "Uniquely terrific cape",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1112.jpg"
+      },
+      {
+        "evaluation_id": "s08_it19",
+        "scenario_id": 8,
+        "title": "Great tunic or dress",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1188.jpg"
+      },
+      {
+        "evaluation_id": "s08_it20",
+        "scenario_id": 8,
+        "title": "Comfy chic",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/131.jpg"
+      },
+      {
+        "evaluation_id": "s08_it21",
+        "scenario_id": 8,
+        "title": "I am a big fan of bailey 44 brand",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1149.jpg"
+      },
+      {
+        "evaluation_id": "s08_it22",
+        "scenario_id": 8,
+        "title": "Swim",
+        "category": "Swim",
+        "class_name": "Swim",
+        "garment_role": "swim",
+        "source": "catalog",
+        "img": "static/1155.jpg"
+      },
+      {
+        "evaluation_id": "s08_it23",
+        "scenario_id": 8,
+        "title": "Great find!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1113.jpg"
+      },
+      {
+        "evaluation_id": "s08_it24",
+        "scenario_id": 8,
+        "title": "Love the stretch",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/167.jpg"
+      },
+      {
+        "evaluation_id": "s08_it25",
+        "scenario_id": 8,
+        "title": "Товар",
+        "category": "Sweaters",
+        "class_name": "Sweaters",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/3.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s08_look1",
+        "scenario_id": 8,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1156",
+            "clothing_id": 1156,
+            "title": "Bottoms",
+            "class_name": "Swim",
+            "garment_role": "swim",
+            "img": "static/1156.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 9,
+    "scenario_name": "Vacation",
+    "split": "calibration",
+    "description": "Комфортний образ для весняної подорожі та відпочинку (22°C)",
+    "context": {
+      "occasion": "vacation",
+      "season": "spring",
+      "style": "boho",
+      "styleDNA": {
+        "boho": 50,
+        "minimalist": 30,
+        "classic": 20
+      },
+      "body": "apple",
+      "weather": {
+        "name": "Тепло та сухо",
+        "temp": 22,
+        "condition": "sunny",
+        "description": "22°C, суха комфортна погода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s09_it01",
+        "scenario_id": 9,
+        "title": "Great summer fabric!",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1078.jpg"
+      },
+      {
+        "evaluation_id": "s09_it02",
+        "scenario_id": 9,
+        "title": "Pretty but runs long",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1179.jpg"
+      },
+      {
+        "evaluation_id": "s09_it03",
+        "scenario_id": 9,
+        "title": "Маленька чорна вечірня сукня",
+        "category": "dresses",
+        "class_name": "dresses",
+        "garment_role": "dress",
+        "source": "wardrobe",
+        "img": "static/1085.jpg"
+      },
+      {
+        "evaluation_id": "s09_it04",
+        "scenario_id": 9,
+        "title": "Beautiful",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1067.jpg"
+      },
+      {
+        "evaluation_id": "s09_it05",
+        "scenario_id": 9,
+        "title": "Why so long?",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1026.jpg"
+      },
+      {
+        "evaluation_id": "s09_it06",
+        "scenario_id": 9,
+        "title": "Sophisticated feminine overalls (?)",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1041.jpg"
+      },
+      {
+        "evaluation_id": "s09_it07",
+        "scenario_id": 9,
+        "title": "Very soft and swingy!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1130.jpg"
+      },
+      {
+        "evaluation_id": "s09_it08",
+        "scenario_id": 9,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1029.jpg"
+      },
+      {
+        "evaluation_id": "s09_it09",
+        "scenario_id": 9,
+        "title": "Love it!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1124.jpg"
+      },
+      {
+        "evaluation_id": "s09_it10",
+        "scenario_id": 9,
+        "title": "Love. love. love this skirt!!",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1008.jpg"
+      },
+      {
+        "evaluation_id": "s09_it11",
+        "scenario_id": 9,
+        "title": "Loose waist",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1022.jpg"
+      },
+      {
+        "evaluation_id": "s09_it12",
+        "scenario_id": 9,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1002.jpg"
+      },
+      {
+        "evaluation_id": "s09_it13",
+        "scenario_id": 9,
+        "title": "Great fall jeans!",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1040.jpg"
+      },
+      {
+        "evaluation_id": "s09_it14",
+        "scenario_id": 9,
+        "title": "Товар",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1073.jpg"
+      },
+      {
+        "evaluation_id": "s09_it15",
+        "scenario_id": 9,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s09_it16",
+        "scenario_id": 9,
+        "title": "Very pretty - runs large (busty petites rejoice 3)",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1074.jpg"
+      },
+      {
+        "evaluation_id": "s09_it17",
+        "scenario_id": 9,
+        "title": "Flattering and great buy on sale!",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1083.jpg"
+      },
+      {
+        "evaluation_id": "s09_it18",
+        "scenario_id": 9,
+        "title": "Товар",
+        "category": "Jackets",
+        "class_name": "Jackets",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/958.jpg"
+      },
+      {
+        "evaluation_id": "s09_it19",
+        "scenario_id": 9,
+        "title": "Awesome skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s09_it20",
+        "scenario_id": 9,
+        "title": "I am a big fan of bailey 44 brand",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1149.jpg"
+      },
+      {
+        "evaluation_id": "s09_it21",
+        "scenario_id": 9,
+        "title": "Товар",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1080.jpg"
+      },
+      {
+        "evaluation_id": "s09_it22",
+        "scenario_id": 9,
+        "title": "Some major design flaws",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1077.jpg"
+      },
+      {
+        "evaluation_id": "s09_it23",
+        "scenario_id": 9,
+        "title": "Elegant classic dress",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1072.jpg"
+      },
+      {
+        "evaluation_id": "s09_it24",
+        "scenario_id": 9,
+        "title": "Uniquely terrific cape",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1112.jpg"
+      },
+      {
+        "evaluation_id": "s09_it25",
+        "scenario_id": 9,
+        "title": "Gorgeous top, perfect for summer",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1180.jpg"
+      },
+      {
+        "evaluation_id": "s09_it26",
+        "scenario_id": 9,
+        "title": "Товар",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1194.jpg"
+      },
+      {
+        "evaluation_id": "s09_it27",
+        "scenario_id": 9,
+        "title": "Great find!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1113.jpg"
+      },
+      {
+        "evaluation_id": "s09_it28",
+        "scenario_id": 9,
+        "title": "Beautiful, all wool coat",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1114.jpg"
+      },
+      {
+        "evaluation_id": "s09_it29",
+        "scenario_id": 9,
+        "title": "Fantastic for fall",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1118.jpg"
+      },
+      {
+        "evaluation_id": "s09_it30",
+        "scenario_id": 9,
+        "title": "Loved, but returned",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1003.jpg"
+      },
+      {
+        "evaluation_id": "s09_it31",
+        "scenario_id": 9,
+        "title": "Темно-синій структурований блейзер",
+        "category": "jackets",
+        "class_name": "jackets",
+        "garment_role": "outerwear",
+        "source": "wardrobe",
+        "img": "static/990.jpg"
+      },
+      {
+        "evaluation_id": "s09_it32",
+        "scenario_id": 9,
+        "title": "Much better in person",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1193.jpg"
+      },
+      {
+        "evaluation_id": "s09_it33",
+        "scenario_id": 9,
+        "title": "Great lbd for the winter",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1109.jpg"
+      },
+      {
+        "evaluation_id": "s09_it34",
+        "scenario_id": 9,
+        "title": "Classic and flattering",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1151.jpg"
+      },
+      {
+        "evaluation_id": "s09_it35",
+        "scenario_id": 9,
+        "title": "My new holiday skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1012.jpg"
+      },
+      {
+        "evaluation_id": "s09_it36",
+        "scenario_id": 9,
+        "title": "Love it",
+        "category": "Jackets",
+        "class_name": "Jackets",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/956.jpg"
+      },
+      {
+        "evaluation_id": "s09_it37",
+        "scenario_id": 9,
+        "title": "Gorgeous and warm",
+        "category": "Jackets",
+        "class_name": "Jackets",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/957.jpg"
+      },
+      {
+        "evaluation_id": "s09_it38",
+        "scenario_id": 9,
+        "title": "Beautiful but runs huge",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1023.jpg"
+      },
+      {
+        "evaluation_id": "s09_it39",
+        "scenario_id": 9,
+        "title": "Super nice",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1024.jpg"
+      },
+      {
+        "evaluation_id": "s09_it40",
+        "scenario_id": 9,
+        "title": "Love love love!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1043.jpg"
+      },
+      {
+        "evaluation_id": "s09_it41",
+        "scenario_id": 9,
+        "title": "In love",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1071.jpg"
+      },
+      {
+        "evaluation_id": "s09_it42",
+        "scenario_id": 9,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s09_it43",
+        "scenario_id": 9,
+        "title": "Petite busty girls rejoice 2",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1099.jpg"
+      },
+      {
+        "evaluation_id": "s09_it44",
+        "scenario_id": 9,
+        "title": "Cute and edgy",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1005.jpg"
+      },
+      {
+        "evaluation_id": "s09_it45",
+        "scenario_id": 9,
+        "title": "Too smalllllll",
+        "category": "Jackets",
+        "class_name": "Jackets",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/955.jpg"
+      },
+      {
+        "evaluation_id": "s09_it46",
+        "scenario_id": 9,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1001.jpg"
+      },
+      {
+        "evaluation_id": "s09_it47",
+        "scenario_id": 9,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1019.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s09_look1",
+        "scenario_id": 9,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1149",
+            "clothing_id": 1149,
+            "title": "I am a big fan of bailey 44 brand",
+            "class_name": "Dresses",
+            "garment_role": "dress",
+            "img": "static/1149.jpg"
+          },
+          {
+            "item_id": "c_1113",
+            "clothing_id": 1113,
+            "title": "Great find!",
+            "class_name": "Outerwear",
+            "garment_role": "outerwear",
+            "img": "static/1113.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 10,
+    "scenario_name": "Work + сформована історія feedback",
+    "split": "calibration",
+    "description": "Діловий образ із персоналізованою історією попередніх лайків та дизлайків",
+    "context": {
+      "occasion": "work",
+      "season": "autumn",
+      "style": "classic",
+      "styleDNA": {
+        "classic": 70,
+        "elegant": 20,
+        "minimalist": 10
+      },
+      "body": "hourglass",
+      "weather": {
+        "name": "Помірно / хмарно",
+        "temp": 16,
+        "condition": "cloudy",
+        "description": "16°C, мінлива хмарність, помірна прохолода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s10_it01",
+        "scenario_id": 10,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1029.jpg"
+      },
+      {
+        "evaluation_id": "s10_it02",
+        "scenario_id": 10,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s10_it03",
+        "scenario_id": 10,
+        "title": "Elegant classic dress",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1072.jpg"
+      },
+      {
+        "evaluation_id": "s10_it04",
+        "scenario_id": 10,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1019.jpg"
+      },
+      {
+        "evaluation_id": "s10_it05",
+        "scenario_id": 10,
+        "title": "Loose waist",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1022.jpg"
+      },
+      {
+        "evaluation_id": "s10_it06",
+        "scenario_id": 10,
+        "title": "Uniquely terrific cape",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1112.jpg"
+      },
+      {
+        "evaluation_id": "s10_it07",
+        "scenario_id": 10,
+        "title": "Маленька чорна вечірня сукня",
+        "category": "dresses",
+        "class_name": "dresses",
+        "garment_role": "dress",
+        "source": "wardrobe",
+        "img": "static/1085.jpg"
+      },
+      {
+        "evaluation_id": "s10_it08",
+        "scenario_id": 10,
+        "title": "Sexy and flows",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1048.jpg"
+      },
+      {
+        "evaluation_id": "s10_it09",
+        "scenario_id": 10,
+        "title": "Stunning!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1047.jpg"
+      },
+      {
+        "evaluation_id": "s10_it10",
+        "scenario_id": 10,
+        "title": "I am a big fan of bailey 44 brand",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1149.jpg"
+      },
+      {
+        "evaluation_id": "s10_it11",
+        "scenario_id": 10,
+        "title": "Love love love!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1043.jpg"
+      },
+      {
+        "evaluation_id": "s10_it12",
+        "scenario_id": 10,
+        "title": "Товар",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1080.jpg"
+      },
+      {
+        "evaluation_id": "s10_it13",
+        "scenario_id": 10,
+        "title": "Beautiful but runs huge",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1023.jpg"
+      },
+      {
+        "evaluation_id": "s10_it14",
+        "scenario_id": 10,
+        "title": "Beautiful",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1067.jpg"
+      },
+      {
+        "evaluation_id": "s10_it15",
+        "scenario_id": 10,
+        "title": "Must have, right on trend, but still classic",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1030.jpg"
+      },
+      {
+        "evaluation_id": "s10_it16",
+        "scenario_id": 10,
+        "title": "Cute and edgy",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1005.jpg"
+      },
+      {
+        "evaluation_id": "s10_it17",
+        "scenario_id": 10,
+        "title": "Pretty much just like picture",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1042.jpg"
+      },
+      {
+        "evaluation_id": "s10_it18",
+        "scenario_id": 10,
+        "title": "Great find!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1113.jpg"
+      },
+      {
+        "evaluation_id": "s10_it19",
+        "scenario_id": 10,
+        "title": "Бежевий кашеміровий джемпер",
+        "category": "knits",
+        "class_name": "knits",
+        "garment_role": "upper",
+        "source": "wardrobe",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s10_it20",
+        "scenario_id": 10,
+        "title": "Sophisticated feminine overalls (?)",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1041.jpg"
+      },
+      {
+        "evaluation_id": "s10_it21",
+        "scenario_id": 10,
+        "title": "Classic and flattering",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1151.jpg"
+      },
+      {
+        "evaluation_id": "s10_it22",
+        "scenario_id": 10,
+        "title": "Біла шовкова сорочка",
+        "category": "blouses",
+        "class_name": "blouses",
+        "garment_role": "upper",
+        "source": "wardrobe",
+        "img": "static/1080.jpg"
+      },
+      {
+        "evaluation_id": "s10_it23",
+        "scenario_id": 10,
+        "title": "Classic",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1075.jpg"
+      },
+      {
+        "evaluation_id": "s10_it24",
+        "scenario_id": 10,
+        "title": "Why so long?",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1026.jpg"
+      },
+      {
+        "evaluation_id": "s10_it25",
+        "scenario_id": 10,
+        "title": "Not as advertised",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/990.jpg"
+      },
+      {
+        "evaluation_id": "s10_it26",
+        "scenario_id": 10,
+        "title": "Great fall jeans!",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1040.jpg"
+      },
+      {
+        "evaluation_id": "s10_it27",
+        "scenario_id": 10,
+        "title": "Темно-синій структурований блейзер",
+        "category": "jackets",
+        "class_name": "jackets",
+        "garment_role": "outerwear",
+        "source": "wardrobe",
+        "img": "static/990.jpg"
+      },
+      {
+        "evaluation_id": "s10_it28",
+        "scenario_id": 10,
+        "title": "Super nice",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1024.jpg"
+      },
+      {
+        "evaluation_id": "s10_it29",
+        "scenario_id": 10,
+        "title": "Classic tee",
+        "category": "Layering",
+        "class_name": "Layering",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/261.jpg"
+      },
+      {
+        "evaluation_id": "s10_it30",
+        "scenario_id": 10,
+        "title": "Чорні класичні брюки зі стрілками",
+        "category": "pants",
+        "class_name": "pants",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1090.jpg"
+      },
+      {
+        "evaluation_id": "s10_it31",
+        "scenario_id": 10,
+        "title": "Interesting cut",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1062.jpg"
+      },
+      {
+        "evaluation_id": "s10_it32",
+        "scenario_id": 10,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1001.jpg"
+      },
+      {
+        "evaluation_id": "s10_it33",
+        "scenario_id": 10,
+        "title": "Eh...",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1004.jpg"
+      },
+      {
+        "evaluation_id": "s10_it34",
+        "scenario_id": 10,
+        "title": "Awesome skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s10_it35",
+        "scenario_id": 10,
+        "title": "Cute",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/133.jpg"
+      },
+      {
+        "evaluation_id": "s10_it36",
+        "scenario_id": 10,
+        "title": "Classic",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/582.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s10_look1",
+        "scenario_id": 10,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "w_w1",
+            "clothing_id": "w1",
+            "title": "Біла шовкова сорочка",
+            "class_name": "blouses",
+            "garment_role": "upper",
+            "img": "static/1080.jpg"
+          },
+          {
+            "item_id": "w_w2",
+            "clothing_id": "w2",
+            "title": "Чорні класичні брюки зі стрілками",
+            "class_name": "pants",
+            "garment_role": "lower",
+            "img": "static/1090.jpg"
+          },
+          {
+            "item_id": "w_w4",
+            "clothing_id": "w4",
+            "title": "Темно-синій структурований блейзер",
+            "class_name": "jackets",
+            "garment_role": "outerwear",
+            "img": "static/990.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 11,
+    "scenario_name": "Casual + інший Style DNA",
+    "split": "test",
+    "description": "Повсякденний весняний міський образ із акцентом на стрітвер Style DNA (22°C)",
+    "context": {
+      "occasion": "casual",
+      "season": "spring",
+      "style": "streetwear",
+      "styleDNA": {
+        "streetwear": 65,
+        "boho": 20,
+        "minimalist": 15
+      },
+      "body": "rectangle",
+      "weather": {
+        "name": "Тепло та сухо",
+        "temp": 22,
+        "condition": "sunny",
+        "description": "22°C, суха комфортна погода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s11_it01",
+        "scenario_id": 11,
+        "title": "Stunning!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1047.jpg"
+      },
+      {
+        "evaluation_id": "s11_it02",
+        "scenario_id": 11,
+        "title": "Loose waist",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1022.jpg"
+      },
+      {
+        "evaluation_id": "s11_it03",
+        "scenario_id": 11,
+        "title": "Super nice",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1024.jpg"
+      },
+      {
+        "evaluation_id": "s11_it04",
+        "scenario_id": 11,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1019.jpg"
+      },
+      {
+        "evaluation_id": "s11_it05",
+        "scenario_id": 11,
+        "title": "Сині прямі базові джинси",
+        "category": "jeans",
+        "class_name": "jeans",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1070.jpg"
+      },
+      {
+        "evaluation_id": "s11_it06",
+        "scenario_id": 11,
+        "title": "Gorgeous top, perfect for summer",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1180.jpg"
+      },
+      {
+        "evaluation_id": "s11_it07",
+        "scenario_id": 11,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s11_it08",
+        "scenario_id": 11,
+        "title": "Love love love!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1043.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s11_look1",
+        "scenario_id": 11,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1180",
+            "clothing_id": 1180,
+            "title": "Gorgeous top, perfect for summer",
+            "class_name": "Blouses",
+            "garment_role": "upper",
+            "img": "static/1180.jpg"
+          },
+          {
+            "item_id": "w_w5",
+            "clothing_id": "w5",
+            "title": "Сині прямі базові джинси",
+            "class_name": "jeans",
+            "garment_role": "lower",
+            "img": "static/1070.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 12,
+    "scenario_name": "Casual + інший body type",
+    "split": "test",
+    "description": "Повсякденний легкий літній образ для фігури типу «яблуко» (22°C)",
+    "context": {
+      "occasion": "casual",
+      "season": "summer",
+      "style": "minimalist",
+      "styleDNA": {
+        "minimalist": 60,
+        "classic": 25,
+        "boho": 15
+      },
+      "body": "apple",
+      "weather": {
+        "name": "Тепло та сухо",
+        "temp": 22,
+        "condition": "sunny",
+        "description": "22°C, суха комфортна погода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s12_it01",
+        "scenario_id": 12,
+        "title": "Gorgeous top, perfect for summer",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1180.jpg"
+      },
+      {
+        "evaluation_id": "s12_it02",
+        "scenario_id": 12,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s12_it03",
+        "scenario_id": 12,
+        "title": "Love it but....",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/132.jpg"
+      },
+      {
+        "evaluation_id": "s12_it04",
+        "scenario_id": 12,
+        "title": "Love love love",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/21.jpg"
+      },
+      {
+        "evaluation_id": "s12_it05",
+        "scenario_id": 12,
+        "title": "Cute",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/133.jpg"
+      },
+      {
+        "evaluation_id": "s12_it06",
+        "scenario_id": 12,
+        "title": "Great tunic or dress",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1188.jpg"
+      },
+      {
+        "evaluation_id": "s12_it07",
+        "scenario_id": 12,
+        "title": "Love the stretch",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/167.jpg"
+      },
+      {
+        "evaluation_id": "s12_it08",
+        "scenario_id": 12,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s12_look1",
+        "scenario_id": 12,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1180",
+            "clothing_id": 1180,
+            "title": "Gorgeous top, perfect for summer",
+            "class_name": "Blouses",
+            "garment_role": "upper",
+            "img": "static/1180.jpg"
+          },
+          {
+            "item_id": "c_132",
+            "clothing_id": 132,
+            "title": "Love it but....",
+            "class_name": "Shorts",
+            "garment_role": "lower",
+            "img": "static/132.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 13,
+    "scenario_name": "Work + summer",
+    "split": "test",
+    "description": "Літній діловий гардероб для спекотної погоди в офісі (30°C)",
+    "context": {
+      "occasion": "work",
+      "season": "summer",
+      "style": "classic",
+      "styleDNA": {
+        "classic": 60,
+        "elegant": 30,
+        "minimalist": 10
+      },
+      "body": "hourglass",
+      "weather": {
+        "name": "Спекотно та сонячно",
+        "temp": 30,
+        "condition": "sunny",
+        "description": "30°C, без опадів, ясне сонячне небо"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s13_it01",
+        "scenario_id": 13,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s13_it02",
+        "scenario_id": 13,
+        "title": "Cute",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/133.jpg"
+      },
+      {
+        "evaluation_id": "s13_it03",
+        "scenario_id": 13,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s13_it04",
+        "scenario_id": 13,
+        "title": "Біла шовкова сорочка",
+        "category": "blouses",
+        "class_name": "blouses",
+        "garment_role": "upper",
+        "source": "wardrobe",
+        "img": "static/1080.jpg"
+      },
+      {
+        "evaluation_id": "s13_it05",
+        "scenario_id": 13,
+        "title": "Classic",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1075.jpg"
+      },
+      {
+        "evaluation_id": "s13_it06",
+        "scenario_id": 13,
+        "title": "Classic",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/582.jpg"
+      },
+      {
+        "evaluation_id": "s13_it07",
+        "scenario_id": 13,
+        "title": "Classic and flattering",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1151.jpg"
+      },
+      {
+        "evaluation_id": "s13_it08",
+        "scenario_id": 13,
+        "title": "Elegant classic dress",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1072.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s13_look1",
+        "scenario_id": 13,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1072",
+            "clothing_id": 1072,
+            "title": "Elegant classic dress",
+            "class_name": "Dresses",
+            "garment_role": "dress",
+            "img": "static/1072.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 14,
+    "scenario_name": "Work + winter",
+    "split": "test",
+    "description": "Зимовий теплий офісний гардероб для низьких температур (3°C)",
+    "context": {
+      "occasion": "work",
+      "season": "winter",
+      "style": "classic",
+      "styleDNA": {
+        "classic": 70,
+        "minimalist": 20,
+        "elegant": 10
+      },
+      "body": "pear",
+      "weather": {
+        "name": "Холодно / морозно",
+        "temp": 3,
+        "condition": "cloudy",
+        "description": "3°C, хмарно з холодним вітром"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s14_it01",
+        "scenario_id": 14,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s14_it02",
+        "scenario_id": 14,
+        "title": "Classic",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/582.jpg"
+      },
+      {
+        "evaluation_id": "s14_it03",
+        "scenario_id": 14,
+        "title": "Uniquely terrific cape",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1112.jpg"
+      },
+      {
+        "evaluation_id": "s14_it04",
+        "scenario_id": 14,
+        "title": "Темно-синій структурований блейзер",
+        "category": "jackets",
+        "class_name": "jackets",
+        "garment_role": "outerwear",
+        "source": "wardrobe",
+        "img": "static/990.jpg"
+      },
+      {
+        "evaluation_id": "s14_it05",
+        "scenario_id": 14,
+        "title": "Must have, right on trend, but still classic",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1030.jpg"
+      },
+      {
+        "evaluation_id": "s14_it06",
+        "scenario_id": 14,
+        "title": "Great find!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1113.jpg"
+      },
+      {
+        "evaluation_id": "s14_it07",
+        "scenario_id": 14,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s14_it08",
+        "scenario_id": 14,
+        "title": "Чорні класичні брюки зі стрілками",
+        "category": "pants",
+        "class_name": "pants",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1090.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s14_look1",
+        "scenario_id": 14,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1181",
+            "clothing_id": 1181,
+            "title": "Wardrobe staple",
+            "class_name": "Knits",
+            "garment_role": "upper",
+            "img": "static/1181.jpg"
+          },
+          {
+            "item_id": "w_w2",
+            "clothing_id": "w2",
+            "title": "Чорні класичні брюки зі стрілками",
+            "class_name": "pants",
+            "garment_role": "lower",
+            "img": "static/1090.jpg"
+          },
+          {
+            "item_id": "w_w4",
+            "clothing_id": "w4",
+            "title": "Темно-синій структурований блейзер",
+            "class_name": "jackets",
+            "garment_role": "outerwear",
+            "img": "static/990.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 15,
+    "scenario_name": "Work + explicit text query",
+    "split": "test",
+    "description": "Осінній офісний образ із семантичним запитом «блейзер жакет»",
+    "context": {
+      "occasion": "work",
+      "season": "autumn",
+      "style": "classic",
+      "styleDNA": {
+        "classic": 65,
+        "elegant": 25,
+        "minimalist": 10
+      },
+      "body": "rectangle",
+      "weather": {
+        "name": "Помірно / хмарно",
+        "temp": 16,
+        "condition": "cloudy",
+        "description": "16°C, мінлива хмарність, помірна прохолода"
+      },
+      "custom": "блейзер жакет"
+    },
+    "items": [
+      {
+        "evaluation_id": "s15_it01",
+        "scenario_id": 15,
+        "title": "Біла шовкова сорочка",
+        "category": "blouses",
+        "class_name": "blouses",
+        "garment_role": "upper",
+        "source": "wardrobe",
+        "img": "static/1080.jpg"
+      },
+      {
+        "evaluation_id": "s15_it02",
+        "scenario_id": 15,
+        "title": "Classic and flattering",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1151.jpg"
+      },
+      {
+        "evaluation_id": "s15_it03",
+        "scenario_id": 15,
+        "title": "Classic",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/582.jpg"
+      },
+      {
+        "evaluation_id": "s15_it04",
+        "scenario_id": 15,
+        "title": "Чорні класичні брюки зі стрілками",
+        "category": "pants",
+        "class_name": "pants",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1090.jpg"
+      },
+      {
+        "evaluation_id": "s15_it05",
+        "scenario_id": 15,
+        "title": "Elegant classic dress",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1072.jpg"
+      },
+      {
+        "evaluation_id": "s15_it06",
+        "scenario_id": 15,
+        "title": "Must have, right on trend, but still classic",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1030.jpg"
+      },
+      {
+        "evaluation_id": "s15_it07",
+        "scenario_id": 15,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s15_it08",
+        "scenario_id": 15,
+        "title": "Темно-синій структурований блейзер",
+        "category": "jackets",
+        "class_name": "jackets",
+        "garment_role": "outerwear",
+        "source": "wardrobe",
+        "img": "static/990.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s15_look1",
+        "scenario_id": 15,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "w_w1",
+            "clothing_id": "w1",
+            "title": "Біла шовкова сорочка",
+            "class_name": "blouses",
+            "garment_role": "upper",
+            "img": "static/1080.jpg"
+          },
+          {
+            "item_id": "w_w2",
+            "clothing_id": "w2",
+            "title": "Чорні класичні брюки зі стрілками",
+            "class_name": "pants",
+            "garment_role": "lower",
+            "img": "static/1090.jpg"
+          },
+          {
+            "item_id": "w_w4",
+            "clothing_id": "w4",
+            "title": "Темно-синій структурований блейзер",
+            "class_name": "jackets",
+            "garment_role": "outerwear",
+            "img": "static/990.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 16,
+    "scenario_name": "Date + інший Style DNA",
+    "split": "test",
+    "description": "Образ на побачення з виразним елегантним ухилом у Style DNA",
+    "context": {
+      "occasion": "date",
+      "season": "spring",
+      "style": "elegant",
+      "styleDNA": {
+        "elegant": 70,
+        "romantic": 20,
+        "classic": 10
+      },
+      "body": "hourglass",
+      "weather": {
+        "name": "Тепло та сухо",
+        "temp": 22,
+        "condition": "sunny",
+        "description": "22°C, суха комфортна погода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s16_it01",
+        "scenario_id": 16,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s16_it02",
+        "scenario_id": 16,
+        "title": "Elegant classic dress",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1072.jpg"
+      },
+      {
+        "evaluation_id": "s16_it03",
+        "scenario_id": 16,
+        "title": "Gorgeous top, perfect for summer",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1180.jpg"
+      },
+      {
+        "evaluation_id": "s16_it04",
+        "scenario_id": 16,
+        "title": "I am a big fan of bailey 44 brand",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1149.jpg"
+      },
+      {
+        "evaluation_id": "s16_it05",
+        "scenario_id": 16,
+        "title": "Elegant skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/998.jpg"
+      },
+      {
+        "evaluation_id": "s16_it06",
+        "scenario_id": 16,
+        "title": "Чорні класичні брюки зі стрілками",
+        "category": "pants",
+        "class_name": "pants",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1090.jpg"
+      },
+      {
+        "evaluation_id": "s16_it07",
+        "scenario_id": 16,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s16_it08",
+        "scenario_id": 16,
+        "title": "Маленька чорна вечірня сукня",
+        "category": "dresses",
+        "class_name": "dresses",
+        "garment_role": "dress",
+        "source": "wardrobe",
+        "img": "static/1085.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s16_look1",
+        "scenario_id": 16,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "w_w6",
+            "clothing_id": "w6",
+            "title": "Маленька чорна вечірня сукня",
+            "class_name": "dresses",
+            "garment_role": "dress",
+            "img": "static/1085.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 17,
+    "scenario_name": "Date + feedback",
+    "split": "test",
+    "description": "Романтичний образ на побачення із накопиченими уподобаннями користувачки",
+    "context": {
+      "occasion": "date",
+      "season": "summer",
+      "style": "romantic",
+      "styleDNA": {
+        "romantic": 60,
+        "boho": 25,
+        "elegant": 15
+      },
+      "body": "pear",
+      "weather": {
+        "name": "Тепло та сухо",
+        "temp": 22,
+        "condition": "sunny",
+        "description": "22°C, суха комфортна погода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s17_it01",
+        "scenario_id": 17,
+        "title": "Товар",
+        "category": "Sweaters",
+        "class_name": "Sweaters",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/3.jpg"
+      },
+      {
+        "evaluation_id": "s17_it02",
+        "scenario_id": 17,
+        "title": "Маленька чорна вечірня сукня",
+        "category": "dresses",
+        "class_name": "dresses",
+        "garment_role": "dress",
+        "source": "wardrobe",
+        "img": "static/1085.jpg"
+      },
+      {
+        "evaluation_id": "s17_it03",
+        "scenario_id": 17,
+        "title": "Lovely romantic blouse",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/833.jpg"
+      },
+      {
+        "evaluation_id": "s17_it04",
+        "scenario_id": 17,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s17_it05",
+        "scenario_id": 17,
+        "title": "Great layering piece",
+        "category": "Sweaters",
+        "class_name": "Sweaters",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/4.jpg"
+      },
+      {
+        "evaluation_id": "s17_it06",
+        "scenario_id": 17,
+        "title": "Great tunic or dress",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1188.jpg"
+      },
+      {
+        "evaluation_id": "s17_it07",
+        "scenario_id": 17,
+        "title": "Love love love",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/21.jpg"
+      },
+      {
+        "evaluation_id": "s17_it08",
+        "scenario_id": 17,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s17_look1",
+        "scenario_id": 17,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "w_w6",
+            "clothing_id": "w6",
+            "title": "Маленька чорна вечірня сукня",
+            "class_name": "dresses",
+            "garment_role": "dress",
+            "img": "static/1085.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 18,
+    "scenario_name": "Party + інший стиль",
+    "split": "test",
+    "description": "Вечірка у сміливому вуличному стилі (streetwear) на осінь",
+    "context": {
+      "occasion": "party",
+      "season": "autumn",
+      "style": "streetwear",
+      "styleDNA": {
+        "streetwear": 70,
+        "elegant": 20,
+        "romantic": 10
+      },
+      "body": "inverted",
+      "weather": {
+        "name": "Помірно / хмарно",
+        "temp": 16,
+        "condition": "cloudy",
+        "description": "16°C, мінлива хмарність, помірна прохолода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s18_it01",
+        "scenario_id": 18,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s18_it02",
+        "scenario_id": 18,
+        "title": "Awesome skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s18_it03",
+        "scenario_id": 18,
+        "title": "Сині прямі базові джинси",
+        "category": "jeans",
+        "class_name": "jeans",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1070.jpg"
+      },
+      {
+        "evaluation_id": "s18_it04",
+        "scenario_id": 18,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s18_it05",
+        "scenario_id": 18,
+        "title": "Great tunic or dress",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1188.jpg"
+      },
+      {
+        "evaluation_id": "s18_it06",
+        "scenario_id": 18,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s18_it07",
+        "scenario_id": 18,
+        "title": "Soft & buttery!",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1183.jpg"
+      },
+      {
+        "evaluation_id": "s18_it08",
+        "scenario_id": 18,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1019.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s18_look1",
+        "scenario_id": 18,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1181",
+            "clothing_id": 1181,
+            "title": "Wardrobe staple",
+            "class_name": "Knits",
+            "garment_role": "upper",
+            "img": "static/1181.jpg"
+          },
+          {
+            "item_id": "c_1014",
+            "clothing_id": 1014,
+            "title": "Lovely multi-season skirt",
+            "class_name": "Skirts",
+            "garment_role": "lower",
+            "img": "static/1014.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 19,
+    "scenario_name": "Party + explicit text query",
+    "split": "test",
+    "description": "Вечірній образ із конкретним текстовим запитом «сукня шовк»",
+    "context": {
+      "occasion": "party",
+      "season": "spring",
+      "style": "elegant",
+      "styleDNA": {
+        "elegant": 65,
+        "romantic": 25,
+        "minimalist": 10
+      },
+      "body": "hourglass",
+      "weather": {
+        "name": "Тепло та сухо",
+        "temp": 22,
+        "condition": "sunny",
+        "description": "22°C, суха комфортна погода"
+      },
+      "custom": "сукня шовк"
+    },
+    "items": [
+      {
+        "evaluation_id": "s19_it01",
+        "scenario_id": 19,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s19_it02",
+        "scenario_id": 19,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s19_it03",
+        "scenario_id": 19,
+        "title": "Elegant skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/998.jpg"
+      },
+      {
+        "evaluation_id": "s19_it04",
+        "scenario_id": 19,
+        "title": "Gorgeous top, perfect for summer",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1180.jpg"
+      },
+      {
+        "evaluation_id": "s19_it05",
+        "scenario_id": 19,
+        "title": "Elegant classic dress",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1072.jpg"
+      },
+      {
+        "evaluation_id": "s19_it06",
+        "scenario_id": 19,
+        "title": "I am a big fan of bailey 44 brand",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1149.jpg"
+      },
+      {
+        "evaluation_id": "s19_it07",
+        "scenario_id": 19,
+        "title": "Чорні класичні брюки зі стрілками",
+        "category": "pants",
+        "class_name": "pants",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1090.jpg"
+      },
+      {
+        "evaluation_id": "s19_it08",
+        "scenario_id": 19,
+        "title": "Маленька чорна вечірня сукня",
+        "category": "dresses",
+        "class_name": "dresses",
+        "garment_role": "dress",
+        "source": "wardrobe",
+        "img": "static/1085.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s19_look1",
+        "scenario_id": 19,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "w_w6",
+            "clothing_id": "w6",
+            "title": "Маленька чорна вечірня сукня",
+            "class_name": "dresses",
+            "garment_role": "dress",
+            "img": "static/1085.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 20,
+    "scenario_name": "Sport + summer",
+    "split": "test",
+    "description": "Літній спортивний образ для спекотного дня (30°C)",
+    "context": {
+      "occasion": "sport",
+      "season": "summer",
+      "style": "streetwear",
+      "styleDNA": {
+        "streetwear": 75,
+        "minimalist": 25
+      },
+      "body": "rectangle",
+      "weather": {
+        "name": "Спекотно та сонячно",
+        "temp": 30,
+        "condition": "sunny",
+        "description": "30°C, без опадів, ясне сонячне небо"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s20_it01",
+        "scenario_id": 20,
+        "title": "Love love love",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/21.jpg"
+      },
+      {
+        "evaluation_id": "s20_it02",
+        "scenario_id": 20,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s20_it03",
+        "scenario_id": 20,
+        "title": "Great tunic or dress",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1188.jpg"
+      },
+      {
+        "evaluation_id": "s20_it04",
+        "scenario_id": 20,
+        "title": "Cute",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/133.jpg"
+      },
+      {
+        "evaluation_id": "s20_it05",
+        "scenario_id": 20,
+        "title": "Love the stretch",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/167.jpg"
+      },
+      {
+        "evaluation_id": "s20_it06",
+        "scenario_id": 20,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s20_it07",
+        "scenario_id": 20,
+        "title": "Soft & buttery!",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1183.jpg"
+      },
+      {
+        "evaluation_id": "s20_it08",
+        "scenario_id": 20,
+        "title": "Товар",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/177.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s20_look1",
+        "scenario_id": 20,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1181",
+            "clothing_id": 1181,
+            "title": "Wardrobe staple",
+            "class_name": "Knits",
+            "garment_role": "upper",
+            "img": "static/1181.jpg"
+          },
+          {
+            "item_id": "c_133",
+            "clothing_id": 133,
+            "title": "Cute",
+            "class_name": "Shorts",
+            "garment_role": "lower",
+            "img": "static/133.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 21,
+    "scenario_name": "Sport + feedback",
+    "split": "test",
+    "description": "Спортивний образ із врахуванням історії фідбеку на активний одяг",
+    "context": {
+      "occasion": "sport",
+      "season": "autumn",
+      "style": "streetwear",
+      "styleDNA": {
+        "streetwear": 70,
+        "minimalist": 20,
+        "classic": 10
+      },
+      "body": "inverted",
+      "weather": {
+        "name": "Помірно / хмарно",
+        "temp": 16,
+        "condition": "cloudy",
+        "description": "16°C, мінлива хмарність, помірна прохолода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s21_it01",
+        "scenario_id": 21,
+        "title": "Casual & unique tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/861.jpg"
+      },
+      {
+        "evaluation_id": "s21_it02",
+        "scenario_id": 21,
+        "title": "Great fall jeans!",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1040.jpg"
+      },
+      {
+        "evaluation_id": "s21_it03",
+        "scenario_id": 21,
+        "title": "Cute casual shorts",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/299.jpg"
+      },
+      {
+        "evaluation_id": "s21_it04",
+        "scenario_id": 21,
+        "title": "Товар",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1029.jpg"
+      },
+      {
+        "evaluation_id": "s21_it05",
+        "scenario_id": 21,
+        "title": "Товар",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1019.jpg"
+      },
+      {
+        "evaluation_id": "s21_it06",
+        "scenario_id": 21,
+        "title": "Love love love!",
+        "category": "Pants",
+        "class_name": "Pants",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1043.jpg"
+      },
+      {
+        "evaluation_id": "s21_it07",
+        "scenario_id": 21,
+        "title": "Cute and edgy",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1005.jpg"
+      },
+      {
+        "evaluation_id": "s21_it08",
+        "scenario_id": 21,
+        "title": "Awesome skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1000.jpg"
+      },
+      {
+        "evaluation_id": "s21_it09",
+        "scenario_id": 21,
+        "title": "Сині прямі базові джинси",
+        "category": "jeans",
+        "class_name": "jeans",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1070.jpg"
+      },
+      {
+        "evaluation_id": "s21_it10",
+        "scenario_id": 21,
+        "title": "Super nice",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1024.jpg"
+      },
+      {
+        "evaluation_id": "s21_it11",
+        "scenario_id": 21,
+        "title": "Lovely multi-season skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1014.jpg"
+      },
+      {
+        "evaluation_id": "s21_it12",
+        "scenario_id": 21,
+        "title": "Why so long?",
+        "category": "Jeans",
+        "class_name": "Jeans",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/1026.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s21_look1",
+        "scenario_id": 21,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_861",
+            "clothing_id": 861,
+            "title": "Casual & unique tee",
+            "class_name": "Knits",
+            "garment_role": "upper",
+            "img": "static/861.jpg"
+          },
+          {
+            "item_id": "w_w5",
+            "clothing_id": "w5",
+            "title": "Сині прямі базові джинси",
+            "class_name": "jeans",
+            "garment_role": "lower",
+            "img": "static/1070.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 22,
+    "scenario_name": "Formal + інший body/style",
+    "split": "test",
+    "description": "Офіційний протокольний захід, елегантний стиль, тип фігури «яблуко»",
+    "context": {
+      "occasion": "formal",
+      "season": "spring",
+      "style": "elegant",
+      "styleDNA": {
+        "elegant": 75,
+        "classic": 25
+      },
+      "body": "apple",
+      "weather": {
+        "name": "Тепло та сухо",
+        "temp": 22,
+        "condition": "sunny",
+        "description": "22°C, суха комфортна погода"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s22_it01",
+        "scenario_id": 22,
+        "title": "Great find!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1113.jpg"
+      },
+      {
+        "evaluation_id": "s22_it02",
+        "scenario_id": 22,
+        "title": "Elegant skirt",
+        "category": "Skirts",
+        "class_name": "Skirts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/998.jpg"
+      },
+      {
+        "evaluation_id": "s22_it03",
+        "scenario_id": 22,
+        "title": "Love it!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1124.jpg"
+      },
+      {
+        "evaluation_id": "s22_it04",
+        "scenario_id": 22,
+        "title": "I am a big fan of bailey 44 brand",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1149.jpg"
+      },
+      {
+        "evaluation_id": "s22_it05",
+        "scenario_id": 22,
+        "title": "Very soft and swingy!",
+        "category": "Outerwear",
+        "class_name": "Outerwear",
+        "garment_role": "outerwear",
+        "source": "catalog",
+        "img": "static/1130.jpg"
+      },
+      {
+        "evaluation_id": "s22_it06",
+        "scenario_id": 22,
+        "title": "Маленька чорна вечірня сукня",
+        "category": "dresses",
+        "class_name": "dresses",
+        "garment_role": "dress",
+        "source": "wardrobe",
+        "img": "static/1085.jpg"
+      },
+      {
+        "evaluation_id": "s22_it07",
+        "scenario_id": 22,
+        "title": "Чорні класичні брюки зі стрілками",
+        "category": "pants",
+        "class_name": "pants",
+        "garment_role": "lower",
+        "source": "wardrobe",
+        "img": "static/1090.jpg"
+      },
+      {
+        "evaluation_id": "s22_it08",
+        "scenario_id": 22,
+        "title": "Elegant classic dress",
+        "category": "Dresses",
+        "class_name": "Dresses",
+        "garment_role": "dress",
+        "source": "catalog",
+        "img": "static/1072.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s22_look1",
+        "scenario_id": 22,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "w_w6",
+            "clothing_id": "w6",
+            "title": "Маленька чорна вечірня сукня",
+            "class_name": "dresses",
+            "garment_role": "dress",
+            "img": "static/1085.jpg"
+          },
+          {
+            "item_id": "c_1113",
+            "clothing_id": 1113,
+            "title": "Great find!",
+            "class_name": "Outerwear",
+            "garment_role": "outerwear",
+            "img": "static/1113.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 23,
+    "scenario_name": "Beach + custom=\"\"",
+    "split": "test",
+    "description": "Пляжний сценарій без вказання типу одягу (загальний відпочинок біля води)",
+    "context": {
+      "occasion": "beach",
+      "season": "summer",
+      "style": "minimalist",
+      "styleDNA": {
+        "minimalist": 60,
+        "boho": 30,
+        "casual": 10
+      },
+      "body": "hourglass",
+      "weather": {
+        "name": "Спекотно та сонячно",
+        "temp": 30,
+        "condition": "sunny",
+        "description": "30°C, без опадів, ясне сонячне небо"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s23_it01",
+        "scenario_id": 23,
+        "title": "Bottoms",
+        "category": "Swim",
+        "class_name": "Swim",
+        "garment_role": "swim",
+        "source": "catalog",
+        "img": "static/1156.jpg"
+      },
+      {
+        "evaluation_id": "s23_it02",
+        "scenario_id": 23,
+        "title": "Love the stretch",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/167.jpg"
+      },
+      {
+        "evaluation_id": "s23_it03",
+        "scenario_id": 23,
+        "title": "Товар",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/177.jpg"
+      },
+      {
+        "evaluation_id": "s23_it04",
+        "scenario_id": 23,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s23_it05",
+        "scenario_id": 23,
+        "title": "Summer ready",
+        "category": "Swim",
+        "class_name": "Swim",
+        "garment_role": "swim",
+        "source": "catalog",
+        "img": "static/1157.jpg"
+      },
+      {
+        "evaluation_id": "s23_it06",
+        "scenario_id": 23,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s23_it07",
+        "scenario_id": 23,
+        "title": "Soft & buttery!",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1183.jpg"
+      },
+      {
+        "evaluation_id": "s23_it08",
+        "scenario_id": 23,
+        "title": "Cute",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/133.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s23_look1",
+        "scenario_id": 23,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1181",
+            "clothing_id": 1181,
+            "title": "Wardrobe staple",
+            "class_name": "Knits",
+            "garment_role": "upper",
+            "img": "static/1181.jpg"
+          },
+          {
+            "item_id": "c_133",
+            "clothing_id": 133,
+            "title": "Cute",
+            "class_name": "Shorts",
+            "garment_role": "lower",
+            "img": "static/133.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 24,
+    "scenario_name": "Beach + custom=\"купальник\"",
+    "split": "test",
+    "description": "Пляжний сценарій із прямим наміром підібрати купальник",
+    "context": {
+      "occasion": "beach",
+      "season": "summer",
+      "style": "minimalist",
+      "styleDNA": {
+        "minimalist": 60,
+        "boho": 30,
+        "casual": 10
+      },
+      "body": "hourglass",
+      "weather": {
+        "name": "Спекотно та сонячно",
+        "temp": 30,
+        "condition": "sunny",
+        "description": "30°C, без опадів, ясне сонячне небо"
+      },
+      "custom": "купальник"
+    },
+    "items": [
+      {
+        "evaluation_id": "s24_it01",
+        "scenario_id": 24,
+        "title": "Bottoms",
+        "category": "Swim",
+        "class_name": "Swim",
+        "garment_role": "swim",
+        "source": "catalog",
+        "img": "static/1156.jpg"
+      },
+      {
+        "evaluation_id": "s24_it02",
+        "scenario_id": 24,
+        "title": "Summer ready",
+        "category": "Swim",
+        "class_name": "Swim",
+        "garment_role": "swim",
+        "source": "catalog",
+        "img": "static/1157.jpg"
+      },
+      {
+        "evaluation_id": "s24_it03",
+        "scenario_id": 24,
+        "title": "Love retailer bathing suits!",
+        "category": "Swim",
+        "class_name": "Swim",
+        "garment_role": "swim",
+        "source": "catalog",
+        "img": "static/1166.jpg"
+      },
+      {
+        "evaluation_id": "s24_it04",
+        "scenario_id": 24,
+        "title": "Love the stretch",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/167.jpg"
+      },
+      {
+        "evaluation_id": "s24_it05",
+        "scenario_id": 24,
+        "title": "Cute",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/133.jpg"
+      },
+      {
+        "evaluation_id": "s24_it06",
+        "scenario_id": 24,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      },
+      {
+        "evaluation_id": "s24_it07",
+        "scenario_id": 24,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s24_it08",
+        "scenario_id": 24,
+        "title": "Great tunic or dress",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1188.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s24_look1",
+        "scenario_id": 24,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_1156",
+            "clothing_id": 1156,
+            "title": "Bottoms",
+            "class_name": "Swim",
+            "garment_role": "swim",
+            "img": "static/1156.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 25,
+    "scenario_name": "Vacation + feedback",
+    "split": "test",
+    "description": "Літня відпустка із врахуванням індивідуального фідбеку мандрівниці",
+    "context": {
+      "occasion": "vacation",
+      "season": "summer",
+      "style": "boho",
+      "styleDNA": {
+        "boho": 65,
+        "romantic": 25,
+        "minimalist": 10
+      },
+      "body": "pear",
+      "weather": {
+        "name": "Спекотно та сонячно",
+        "temp": 30,
+        "condition": "sunny",
+        "description": "30°C, без опадів, ясне сонячне небо"
+      },
+      "custom": ""
+    },
+    "items": [
+      {
+        "evaluation_id": "s25_it01",
+        "scenario_id": 25,
+        "title": "Great tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1182.jpg"
+      },
+      {
+        "evaluation_id": "s25_it02",
+        "scenario_id": 25,
+        "title": "Great tunic or dress",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1188.jpg"
+      },
+      {
+        "evaluation_id": "s25_it03",
+        "scenario_id": 25,
+        "title": "Casual & unique tee",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/861.jpg"
+      },
+      {
+        "evaluation_id": "s25_it04",
+        "scenario_id": 25,
+        "title": "Gorgeous top, perfect for summer",
+        "category": "Blouses",
+        "class_name": "Blouses",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1180.jpg"
+      },
+      {
+        "evaluation_id": "s25_it05",
+        "scenario_id": 25,
+        "title": "Cute casual shorts",
+        "category": "Shorts",
+        "class_name": "Shorts",
+        "garment_role": "lower",
+        "source": "catalog",
+        "img": "static/299.jpg"
+      },
+      {
+        "evaluation_id": "s25_it06",
+        "scenario_id": 25,
+        "title": "Love love love",
+        "category": "Fine gauge",
+        "class_name": "Fine gauge",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/21.jpg"
+      },
+      {
+        "evaluation_id": "s25_it07",
+        "scenario_id": 25,
+        "title": "Товар",
+        "category": "Sweaters",
+        "class_name": "Sweaters",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/3.jpg"
+      },
+      {
+        "evaluation_id": "s25_it08",
+        "scenario_id": 25,
+        "title": "Wardrobe staple",
+        "category": "Knits",
+        "class_name": "Knits",
+        "garment_role": "upper",
+        "source": "catalog",
+        "img": "static/1181.jpg"
+      }
+    ],
+    "primary_looks": [
+      {
+        "evaluation_id": "s25_look1",
+        "scenario_id": 25,
+        "label": "Варіант образу A",
+        "items": [
+          {
+            "item_id": "c_861",
+            "clothing_id": 861,
+            "title": "Casual & unique tee",
+            "class_name": "Knits",
+            "garment_role": "upper",
+            "img": "static/861.jpg"
+          },
+          {
+            "item_id": "c_299",
+            "clothing_id": 299,
+            "title": "Cute casual shorts",
+            "class_name": "Shorts",
+            "garment_role": "lower",
+            "img": "static/299.jpg"
+          }
+        ]
+      }
+    ]
+  }
+]

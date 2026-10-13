@@ -1,0 +1,62 @@
+{
+  "hot_sunny": {
+    "id": "hot_sunny",
+    "name": "Спекотно та сонячно",
+    "temperature": 30,
+    "condition": "sunny",
+    "precipitation": 0.0,
+    "wind": 8.5,
+    "weatherCode": 800,
+    "description": "30°C, без опадів, ясне сонячне небо"
+  },
+  "warm_dry": {
+    "id": "warm_dry",
+    "name": "Тепло та сухо",
+    "temperature": 22,
+    "condition": "sunny",
+    "precipitation": 0.0,
+    "wind": 11.0,
+    "weatherCode": 801,
+    "description": "22°C, суха комфортна погода"
+  },
+  "mild": {
+    "id": "mild",
+    "name": "Помірно / хмарно",
+    "temperature": 16,
+    "condition": "cloudy",
+    "precipitation": 0.2,
+    "wind": 14.0,
+    "weatherCode": 802,
+    "description": "16°C, мінлива хмарність, помірна прохолода"
+  },
+  "cold": {
+    "id": "cold",
+    "name": "Холодно / морозно",
+    "temperature": 3,
+    "condition": "cloudy",
+    "precipitation": 0.0,
+    "wind": 18.0,
+    "weatherCode": 803,
+    "description": "3°C, хмарно з холодним вітром"
+  },
+  "cold_rain": {
+    "id": "cold_rain",
+    "name": "Холодний дощ",
+    "temperature": 8,
+    "condition": "rainy",
+    "precipitation": 8.4,
+    "wind": 22.0,
+    "weatherCode": 501,
+    "description": "8°C, затяжний холодний дощ та вітер"
+  },
+  "warm_rain": {
+    "id": "warm_rain",
+    "name": "Теплий літній дощ",
+    "temperature": 21,
+    "condition": "rainy",
+    "precipitation": 4.5,
+    "wind": 12.0,
+    "weatherCode": 500,
+    "description": "21°C, короткочасний теплий літній дощ"
+  }
+}

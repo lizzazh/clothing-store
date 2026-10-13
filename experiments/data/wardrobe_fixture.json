@@ -1,0 +1,80 @@
+[
+  {
+    "id": "w1",
+    "name": "Біла шовкова сорочка",
+    "title": "Біла шовкова сорочка",
+    "category": "blouses",
+    "class_name": "blouses",
+    "department_name": "tops",
+    "color": "white",
+    "style": ["classic", "minimalist"],
+    "season": ["spring", "autumn", "summer", "all-season"],
+    "formality": 0.8,
+    "img": "static/1080.jpg"
+  },
+  {
+    "id": "w2",
+    "name": "Чорні класичні брюки зі стрілками",
+    "title": "Чорні класичні брюки зі стрілками",
+    "category": "pants",
+    "class_name": "pants",
+    "department_name": "bottoms",
+    "color": "black",
+    "style": ["classic", "elegant"],
+    "season": ["all-season"],
+    "formality": 0.85,
+    "img": "static/1090.jpg"
+  },
+  {
+    "id": "w3",
+    "name": "Бежевий кашеміровий джемпер",
+    "title": "Бежевий кашеміровий джемпер",
+    "category": "knits",
+    "class_name": "knits",
+    "department_name": "tops",
+    "color": "beige",
+    "style": ["classic", "minimalist", "casual"],
+    "season": ["autumn", "winter", "spring"],
+    "formality": 0.5,
+    "img": "static/1000.jpg"
+  },
+  {
+    "id": "w4",
+    "name": "Темно-синій структурований блейзер",
+    "title": "Темно-синій структурований блейзер",
+    "category": "jackets",
+    "class_name": "jackets",
+    "department_name": "jackets",
+    "color": "blue",
+    "style": ["classic", "formal"],
+    "season": ["autumn", "spring", "all-season"],
+    "formality": 0.9,
+    "img": "static/990.jpg"
+  },
+  {
+    "id": "w5",
+    "name": "Сині прямі базові джинси",
+    "title": "Сині прямі базові джинси",
+    "category": "jeans",
+    "class_name": "jeans",
+    "department_name": "bottoms",
+    "color": "blue",
+    "style": ["casual", "streetwear"],
+    "season": ["all-season"],
+    "formality": 0.3,
+    "img": "static/1070.jpg"
+  },
+  {
+    "id": "w6",
+    "name": "Маленька чорна вечірня сукня",
+    "title": "Маленька чорна вечірня сукня",
+    "category": "dresses",
+    "class_name": "dresses",
+    "department_name": "dresses",
+    "color": "black",
+    "style": ["elegant", "romantic"],
+    "season": ["all-season"],
+    "formality": 0.85,
+    "img": "static/1085.jpg"
+  }
+]
