@@ -160,13 +160,16 @@ function optimizeWeights(options = {}) {
     const baselineScore = evaluateWeightsOnCalibration(BASE_WEIGHTS);
     let bestScore = baselineScore;
     let bestWeights = { ...BASE_WEIGHTS };
+    let bestConfigIndex = 0;
 
     // Search through fixed configurations
-    for (const candidateWeights of configs) {
+    for (let i = 0; i < configs.length; i++) {
+        const candidateWeights = configs[i];
         const score = evaluateWeightsOnCalibration(candidateWeights);
         if (score > bestScore) {
             bestScore = score;
             bestWeights = candidateWeights;
+            bestConfigIndex = i;
         }
     }
 
@@ -176,6 +179,7 @@ function optimizeWeights(options = {}) {
         numConfigurationsChecked: configs.length,
         baselineNdcg: Number(baselineScore.toFixed(4)),
         bestNdcg: Number(bestScore.toFixed(4)),
+        bestConfigIndex,
         optimizedWeights: bestWeights
     };
 }
