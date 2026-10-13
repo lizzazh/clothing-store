@@ -269,12 +269,25 @@
         let currentFilter = '';
 
         // Load catalog
-        fetch('data/products.json').then(r=>r.json()).then(data => {
-            // Keep top 200 by rating for the browser
-            allProducts = data.filter(p => p.avg_rating).sort((a,b) => b.avg_rating - a.avg_rating).slice(0, 200);
-            loadBoard();
-            renderList();
-        });
+        fetch('data/products.json')
+            .then(r => {
+                if (!r.ok) throw new Error(`Products HTTP ${r.status}`);
+                return r.json();
+            })
+            .then(data => {
+                // Keep top 200 by rating for the browser
+                allProducts = Array.isArray(data)
+                    ? data.filter(p => p.avg_rating).sort((a,b) => (Number(b.avg_rating) || 0) - (Number(a.avg_rating) || 0)).slice(0, 200)
+                    : [];
+                loadBoard();
+                renderList();
+            })
+            .catch(err => {
+                console.warn('Mood Board: catalog load failed', err);
+                allProducts = [];
+                const list = document.getElementById('items-list');
+                if (list) list.innerHTML = '<p style="text-align:center;color:#999;font-size:12px;margin-top:20px;">Каталог тимчасово недоступний.</p>';
+            });
 
         function setFilter(dept) {
             currentFilter = dept;

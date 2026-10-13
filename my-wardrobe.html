@@ -469,10 +469,10 @@ async function detectItemAttributes(base64Data) {
         const msg = e.userMessage || 'Помилка розпізнавання.';
         alert(`${msg} Заповніть характеристики вручну.`);
         // Не блокуємо збереження — користувач може заповнити вручну
+    } finally {
+        btn.innerHTML = '✅ Зберегти в гардероб';
+        btn.disabled = false;
     }
-
-    btn.innerHTML = '✅ Зберегти в гардероб';
-    btn.disabled = false;
 }
 
 // =============================================
@@ -692,11 +692,11 @@ async function generateCapsule() {
     } catch(err) {
         const msg = err.userMessage || err.message || 'Невідома помилка';
         document.getElementById('ai-text').innerHTML = `<span style="color:#f87171;">⚠️ ${msg}</span>`;
+    } finally {
+        btn.disabled = false;
+        document.getElementById('gen-txt').textContent = 'Запитати Gemini';
+        document.getElementById('gen-icon').textContent = '🤖';
     }
-
-    btn.disabled = false;
-    document.getElementById('gen-txt').textContent = 'Запитати Gemini';
-    document.getElementById('gen-icon').textContent = '🤖';
 }
 
 // =============================================
@@ -739,7 +739,7 @@ async function showShopRecs(aiText = '') {
                     <div style="padding:8px 10px;">
                         <div style="font-size:10px;color:var(--ai-cyan);font-weight:600;margin-bottom:2px;">${p.class_name}</div>
                         <div style="font-size:12px;font-weight:600;">${(p.title||p.class_name).slice(0,30)}</div>
-                        <div style="font-size:11px;color:rgba(255,255,255,0.5);">⭐ ${p.avg_rating?.toFixed(1)}</div>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.5);">⭐ ${Number.isFinite(Number(p.avg_rating)) ? Number(p.avg_rating).toFixed(1) : '—'}</div>
                     </div>
                 </div>
             </a>

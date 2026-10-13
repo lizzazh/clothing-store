@@ -194,7 +194,8 @@
             document.getElementById('detail-class').textContent = product.class_name || 'Невідомо';
             document.getElementById('detail-division').textContent = product.division_name || 'Невідомо';
             document.getElementById('detail-department').textContent = product.department_name || 'Невідомо';
-            document.getElementById('detail-rating').textContent = product.avg_rating !== null ? product.avg_rating.toFixed(2) : 'Немає';
+            document.getElementById('detail-rating').textContent =
+                Number.isFinite(Number(product.avg_rating)) ? Number(product.avg_rating).toFixed(2) : 'Немає';
             document.getElementById('detail-reviews').textContent = product.review_count;
 
             // Схожі товари (та сама категорія, не цей товар)
@@ -205,7 +206,7 @@
 
             if (similar.length > 0) {
                 document.getElementById('similar').innerHTML = similar.map(p => {
-                    const r = p.avg_rating !== null ? p.avg_rating.toFixed(1) : '0';
+                    const r = Number.isFinite(Number(p.avg_rating)) ? Number(p.avg_rating).toFixed(1) : '—';
                     const n = p.class_name || 'Невідомо';
                     return `<a href="product.html?id=${p.clothing_id}#sorting-bar" class="product" style="text-decoration:none; color:inherit; display:flex; flex-direction:column;">
                         <img src="static/${p.clothing_id}.jpg" alt="${n}" onerror="this.onerror=null; this.src='https://via.placeholder.com/150.jpg'">
@@ -224,7 +225,7 @@
             const minAgeInput = document.getElementById('min_age_value');
             const maxAgeInput = document.getElementById('max_age_value');
 
-            if (ageSliderEl) {
+            if (ageSliderEl && window.noUiSlider) {
                 ageSliderObj = noUiSlider.create(ageSliderEl, {
                     start: [0, 99],
                     connect: true,
@@ -278,6 +279,9 @@
                         }
                     });
                 });
+            } else if (ageSliderEl) {
+                ageSliderEl.innerHTML =
+                    '<span style="font-size:12px;color:#777;">Фільтр віку тимчасово недоступний.</span>';
             }
 
             renderReviews();

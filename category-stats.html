@@ -444,7 +444,6 @@
                         <select id="xAxis" aria-label="Вибір даних для осі X">
                             <option value="categories">Категорії</option>
                             <option value="avgRating">Середній рейтинг</option>
-                            <option value="avgPrice">Середня ціна</option>
                         </select>
                     </div>
 
@@ -593,6 +592,7 @@
         async function fetchChartData() {
             try {
                 const response = await fetch('data/stats.json');
+                if (!response.ok) throw new Error(`Stats HTTP ${response.status}`);
                 chartData = await response.json();
                 initializeChart();
             } catch (error) {
@@ -602,6 +602,15 @@
         }
 
         function initializeChart() {
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js is unavailable');
+                const canvas = document.getElementById('interactiveChart');
+                if (canvas) canvas.replaceWith(Object.assign(document.createElement('p'), {
+                    textContent: 'Інтерактивний графік тимчасово недоступний.'
+                }));
+                return;
+            }
+
             if (!chartData || !chartData.categories || chartData.categories.length !== chartData.itemCount.length ||
                 chartData.categories.length !== chartData.positiveFeedback.length ||
                 chartData.categories.length !== chartData.avgRating.length ||
@@ -699,6 +708,7 @@
         }
 
         function updateChart() {
+            if (!chartData || typeof Chart === 'undefined') return;
             const chartType = document.getElementById('chartType').value;
             const xAxis = document.getElementById('xAxis').value;
             const yAxis = document.getElementById('yAxis').value;
@@ -711,9 +721,9 @@
             if (xAxis === 'categories') {
                 labels = filteredData.categories;
             } else if (xAxis === 'avgRating') {
-                labels = filteredData.avgRating.map(rating => rating.toFixed(2));
+                labels = filteredData.avgRating.map(rating => Number.isFinite(Number(rating)) ? Number(rating).toFixed(2) : '0.00');
             } else if (xAxis === 'avgPrice') {
-                labels = filteredData.avgPrice ? filteredData.avgPrice.map(price => price.toFixed(2)) : [];
+                labels = filteredData.avgPrice ? filteredData.avgPrice.map(price => Number.isFinite(Number(price)) ? Number(price).toFixed(2) : '0.00') : [];
             }
 
             // Формуємо набір даних
@@ -792,12 +802,14 @@
             if ((xAxis === 'avgRating' || xAxis === 'avgPrice') && chartType !== 'pie' && chartType !== 'radar') {
                 for (let i = 0; i < filteredData.categories.length; i++) {
                     let point = { label: filteredData.categories[i] };
-                    point.x = xAxis === 'avgRating' ? filteredData.avgRating[i] : filteredData.avgPrice[i];
+                    point.x = xAxis === 'avgRating'
+                        ? (Number(filteredData.avgRating[i]) || 0)
+                        : (filteredData.avgPrice ? (Number(filteredData.avgPrice[i]) || 0) : 0);
                     point.y = dataset.data[i];
                     dataPoints.push(point);
                 }
                 dataPoints.sort((a, b) => a.x - b.x);
-                labels = dataPoints.map(point => point.x.toFixed(2));
+                labels = dataPoints.map(point => Number.isFinite(Number(point.x)) ? Number(point.x).toFixed(2) : '0.00');
                 dataset.data = dataPoints.map(point => point.y);
             }
 
@@ -836,8 +848,8 @@
                                         label += context.raw;
                                         if (yAxis === 'positiveFeedbackPercentage') label += '%';
                                         // Додаємо відсоток від загальної суми
-                                        const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
-                                        const percentage = ((context.raw / total) * 100).toFixed(2);
+                                        const total = context.dataset.data.reduce((sum, val) => sum + (Number(val) || 0), 0);
+                                        const percentage = total > 0 ? (((Number(context.raw) || 0) / total) * 100).toFixed(2) : '0.00';
                                         label += ` (${percentage}%)`;
                                         return label;
                                     }

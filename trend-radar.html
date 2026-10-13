@@ -218,23 +218,29 @@
     </div>
 
     <script>
-        // Set Chart.js defaults for dark theme
-        Chart.defaults.color = 'rgba(255,255,255,0.7)';
-        Chart.defaults.font.family = "'Outfit', sans-serif";
-        Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
+        // Set Chart.js defaults for dark theme if available
+        if (typeof Chart !== 'undefined') {
+            Chart.defaults.color = 'rgba(255,255,255,0.7)';
+            Chart.defaults.font.family = "'Outfit', sans-serif";
+            Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
+        }
 
         const COLORS = ['#a855f7', '#ec4899', '#06b6d4', '#f59e0b', '#10b981', '#3b82f6'];
         const BG_COLORS = COLORS.map(c => c + '40'); // 25% opacity
 
         async function initDashboard() {
             try {
+                if (typeof Chart === 'undefined') {
+                    throw new Error('Chart.js бібліотека недоступна');
+                }
                 const res = await fetch('data/products.json');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const products = await res.json();
                 
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('dashboard-content').style.display = 'block';
                 
-                processData(products);
+                processData(Array.isArray(products) ? products : []);
             } catch (e) {
                 document.getElementById('loader').textContent = 'Помилка завантаження даних.';
                 console.error(e);
@@ -242,12 +248,13 @@
         }
 
         function animateValue(obj, start, end, duration, isFloat=false) {
+            if (!obj) return;
             let startTimestamp = null;
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
                 const current = progress * (end - start) + start;
-                obj.innerHTML = isFloat ? current.toFixed(1) : Math.floor(current);
+                obj.innerHTML = isFloat ? (Number.isFinite(current) ? current.toFixed(1) : '0.0') : Math.floor(current || 0);
                 if (progress < 1) window.requestAnimationFrame(step);
             };
             window.requestAnimationFrame(step);
@@ -285,10 +292,11 @@
                 if (p.avg_rating !== null) { classes[cName].sumRating += p.avg_rating; classes[cName].rCount++; }
             });
 
-            const avgRating = totalRating / ratedCount;
+            const avgRating = ratedCount > 0 ? totalRating / ratedCount : 0;
             
             // Top dept by reviews
-            const topDept = Object.keys(depts).reduce((a, b) => depts[a].reviews > depts[b].reviews ? a : b);
+            const deptKeys = Object.keys(depts);
+            const topDept = deptKeys.length > 0 ? deptKeys.reduce((a, b) => depts[a].reviews > depts[b].reviews ? a : b) : 'Немає';
 
             // Animate Top Stats
             animateValue(document.getElementById('stat-total'), 0, products.length, 1500);

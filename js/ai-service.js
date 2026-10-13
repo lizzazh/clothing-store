@@ -337,10 +337,20 @@ const AIService = {
 
     formatMarkdown(text) {
         if (!text) return '';
-        return text
+
+        // AI output is inserted into innerHTML by several pages.
+        // Escape raw HTML first, then allow only the tiny markdown subset we render.
+        const escaped = String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+
+        return escaped
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
             .replace(/\n\n/g, '<br><br>')
-            .replace(/\n/g, '<br>')
-            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            .replace(/\n/g, '<br>');
     }
 };
 

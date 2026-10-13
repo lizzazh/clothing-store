@@ -304,7 +304,7 @@
     }
 
     function productCard(p) {
-        const rating = p.avg_rating !== null ? p.avg_rating.toFixed(2) : 'Немає';
+        const rating = Number.isFinite(Number(p.avg_rating)) ? Number(p.avg_rating).toFixed(2) : 'Немає';
         const name = p.class_name || 'Невідомо';
         return `<a href="product.html?id=${p.clothing_id}#sorting-bar" class="product" style="text-decoration:none; color:inherit; display:flex; flex-direction:column;">
             <img src="static/${p.clothing_id}.jpg" alt="${name}" onerror="this.onerror=null; this.src='https://via.placeholder.com/150.jpg'">
@@ -372,7 +372,7 @@
 
     function sliderCard(p, showAvgRating) {
         const rating = (showAvgRating ? p.avg_rating : p.avg_rating);
-        const rStr = rating !== null ? rating.toFixed(2) : 'Немає';
+        const rStr = Number.isFinite(Number(rating)) ? Number(rating).toFixed(2) : 'Немає';
         const name = p.class_name || 'Невідомо';
         return `<a href="product.html?id=${p.clothing_id}#sorting-bar" class="product" style="text-decoration:none; color:inherit; display:flex; flex-direction:column;">
             <img src="static/${p.clothing_id}.jpg" alt="${name}" onerror="this.onerror=null; this.src='https://via.placeholder.com/150.jpg'">

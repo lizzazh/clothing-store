@@ -600,16 +600,19 @@
 // ============================================================
 (function(){
     const c=document.getElementById('particles');
+    if(!c) return;
+    let seed = 12345;
+    const prng = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
     for(let i=0;i<45;i++){
         const d=document.createElement('div');
         d.className='dot';
-        const sz=Math.random()*3+1;
+        const sz=prng()*3+1;
         d.style.cssText=`
             width:${sz}px;height:${sz}px;
-            left:${Math.random()*100}%;
-            animation-duration:${Math.random()*18+9}s;
-            animation-delay:${Math.random()*14}s;
-            opacity:${Math.random()*.6+.1};
+            left:${prng()*100}%;
+            animation-duration:${prng()*18+9}s;
+            animation-delay:${prng()*14}s;
+            opacity:${prng()*.6+.1};
         `;
         c.appendChild(d);
     }
@@ -649,10 +652,20 @@ let imageColors={};
 (async function(){
     try{
         const r=await fetch('data/products.json');
-        if(r.ok) products=await r.json();
+        if (!r.ok) throw new Error(`Products HTTP ${r.status}`);
+        const productData = await r.json();
+        products = Array.isArray(productData) ? productData : [];
+
         const rColors = await fetch('data/image_colors.json');
-        if (rColors.ok) imageColors = await rColors.json();
-    }catch(e){console.warn('Demo mode (no server)');}
+        if (rColors.ok) {
+            const colorData = await rColors.json();
+            imageColors = colorData && typeof colorData === 'object' ? colorData : {};
+        }
+    }catch(e){
+        products = [];
+        imageColors = {};
+        console.warn('AI Stylist: catalog data unavailable', e);
+    }
 })();
 
 // ============================================================
@@ -739,6 +752,11 @@ function preset(name){
 let loadTimer=null;
 
 function generate(){
+    if (!products.length && !_wardrobeCache.length) {
+        toast('⏳ Каталог ще завантажується або тимчасово недоступний.');
+        return;
+    }
+
     const occ  = getChip('g-occasion')||'casual';
     const seas  = getChip('g-season')  ||'spring';
     const stl   = getChip('g-style')   ||'classic';
@@ -786,9 +804,16 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
     const S=DB.season[seas]  ||DB.season.spring;
     const ST=DB.style[stl]   ||DB.style.classic;
     const names=DB.names[occ]||['Style Statement'];
-    const outfitName=names[Math.floor(Math.random()*names.length)];
     const moodTxt=DB.mood[mood]||'';
     const custom=document.getElementById('custom-txt').value.trim();
+
+    // Stable decorative name: same inputs -> same output.
+    const nameSeed = `${occ}|${seas}|${stl}|${mood}|${body}|${cat}|${custom}`;
+    let nameHash = 0;
+    for (let i = 0; i < nameSeed.length; i++) {
+        nameHash = ((nameHash << 5) - nameHash + nameSeed.charCodeAt(i)) | 0;
+    }
+    const outfitName = names[Math.abs(nameHash) % names.length];
 
     document.getElementById('r-occ').textContent=`${O.emoji} ${O.label} · ${S.label} · ${ST.adj}`;
     document.getElementById('r-name').textContent=outfitName;
@@ -832,7 +857,7 @@ function renderResult(occ,seas,stl,mood,body,cat,minR){
                 </div>
             </a>`;
         } else {
-            const r=p.avg_rating!=null?p.avg_rating.toFixed(1):'—';
+            const r=Number.isFinite(Number(p.avg_rating))?Number(p.avg_rating).toFixed(1):'—';
             const nm=p.title||p.class_name||'Товар';
             const short=nm.length>34?nm.slice(0,32)+'...':nm;
             return `<a href="product.html?id=${p.clothing_id}" class="prod-card">

@@ -266,12 +266,23 @@
             }
         } catch(e){}
 
-        fetch('data/products.json').then(r=>r.json()).then(data => {
-            // Only keep decent rated products for capsule
-            allProducts = data.filter(p => p.avg_rating && p.avg_rating >= 3.5);
-            loadWardrobe();
-            renderCatalog();
-        });
+        fetch('data/products.json')
+            .then(r => {
+                if (!r.ok) throw new Error(`Products HTTP ${r.status}`);
+                return r.json();
+            })
+            .then(data => {
+                // Only keep decent rated products for capsule
+                allProducts = Array.isArray(data) ? data.filter(p => p.avg_rating && p.avg_rating >= 3.5) : [];
+                loadWardrobe();
+                renderCatalog();
+            })
+            .catch(err => {
+                console.warn('Capsule Wardrobe: products load failed', err);
+                allProducts = [];
+                const grid = document.getElementById('catalog-grid');
+                if (grid) grid.innerHTML = '<p style="color:gray;">Каталог тимчасово недоступний.</p>';
+            });
 
         function setFilter(dept) {
             currentFilter = dept;
@@ -301,7 +312,7 @@
                         <div class="c-dept">${p.class_name || p.department_name || 'Item'}</div>
                         <div class="c-name">${p.title ? p.title.slice(0,40)+'...' : 'No name'}</div>
                         <div class="c-bottom">
-                            <span style="font-size:12px; color:#666;">⭐ ${p.avg_rating.toFixed(1)}</span>
+                            <span style="font-size:12px; color:#666;">⭐ ${Number.isFinite(Number(p.avg_rating)) ? Number(p.avg_rating).toFixed(1) : '—'}</span>
                             <button class="add-btn ${isAdded?'added':''}" onclick="toggleItem(${p.clothing_id})">
                                 ${isAdded ? '✓' : '+'}
                             </button>

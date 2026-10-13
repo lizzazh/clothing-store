@@ -238,10 +238,21 @@
             if(profile && profile.style) userStyle = profile.style;
         } catch(e){}
 
-        fetch('data/products.json').then(r=>r.json()).then(data=>{ 
-            allProducts = data; 
-            applyManualWeather(); // load default
-        });
+        fetch('data/products.json')
+            .then(r => {
+                if (!r.ok) throw new Error(`Products HTTP ${r.status}`);
+                return r.json();
+            })
+            .then(data => {
+                allProducts = Array.isArray(data) ? data : [];
+                applyManualWeather(); // load default
+            })
+            .catch(err => {
+                console.warn('Weather: catalog unavailable', err);
+                allProducts = [];
+                document.getElementById('outfit-grid').innerHTML =
+                    '<p style="color:gray;">Каталог тимчасово недоступний. Погодні дані можна використовувати далі.</p>';
+            });
 
         function updateTempLabel() {
             let val = document.getElementById('temp-slider').value;
@@ -358,7 +369,17 @@
 
             document.getElementById('w-icon').innerHTML = `<span class="${anim}">${icon}</span>`;
             document.getElementById('res-cond').textContent = text;
-            if(t===undefined) document.getElementById('res-city').textContent = 'Ручний вибір';
+
+            // Manual weather must be available to AI Stylist too.
+            if (t === undefined) {
+                document.getElementById('res-city').textContent = 'Ручний вибір';
+                localStorage.setItem('ai_weather', JSON.stringify({
+                    city: 'Ручний вибір',
+                    temperature: temp,
+                    condition: cond,
+                    updatedAt: Date.now()
+                }));
+            }
 
             generateOutfit(temp, cond);
         }
@@ -397,12 +418,14 @@
                 filtered = filtered.filter(p => !['Shorts', 'Skirts', 'Swim', 'Intimates'].includes(p.class_name));
             }
 
-            if(filtered.length < 6) filtered = allProducts; // fallback
-            
+            // If filtering is very restrictive, show fewer relevant items rather than
+            // falling back to unrelated summer/cold-weather products.
+
             // Deterministic sort
             filtered.sort((a, b) => {
-                if (b.avg_rating !== a.avg_rating) return (b.avg_rating || 0) - (a.avg_rating || 0);
-                return (b.clothing_id || '').localeCompare(a.clothing_id || '');
+                const ratingDiff = (Number(b.avg_rating) || 0) - (Number(a.avg_rating) || 0);
+                if (ratingDiff !== 0) return ratingDiff;
+                return (Number(b.clothing_id) || 0) - (Number(a.clothing_id) || 0);
             });
             const selected = filtered.slice(0, 6);
 
@@ -413,7 +436,7 @@
                     <div class="prod-info">
                         <div class="prod-cat">${p.class_name || p.department_name}</div>
                         <div class="prod-name">${p.title || p.class_name}</div>
-                        <div class="prod-rating">⭐ ${p.avg_rating ? p.avg_rating.toFixed(1) : '—'}</div>
+                        <div class="prod-rating">⭐ ${Number.isFinite(Number(p.avg_rating)) ? Number(p.avg_rating).toFixed(1) : '—'}</div>
                     </div>
                 </a>
             `).join('');
