@@ -41,12 +41,21 @@
             color:#fff;background:rgba(168,85,247,0.18); border-color:rgba(168,85,247,0.45);
         }
 
-        .container { max-width:1200px; margin:0 auto; padding:40px 20px; }
+        .container { max-width:1200px; margin:0 auto; padding:clamp(20px, 4vw, 40px) clamp(12px, 3vw, 20px); box-sizing:border-box; text-align:center; }
         .page-title {
-            font-family:'Great Vibes',cursive; font-size:54px; text-align:center;
+            font-family:'Great Vibes',cursive;
+            font-size:clamp(32px, 5.5vw, 54px);
+            line-height:1.25;
+            text-align:center;
             background:linear-gradient(135deg,#fff 0%,var(--ai-purple) 100%);
-            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-            margin-bottom:10px;
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+            margin:0 auto 10px;
+            display:inline-block;
+            max-width:100%;
+            padding:4px 10px 8px;
+            box-sizing:border-box;
+            overflow-wrap:break-word;
+            word-break:break-word;
         }
         .page-subtitle { text-align:center; color:rgba(255,255,255,0.6); margin-bottom:40px; }
 
