@@ -130,6 +130,23 @@
         .prod-card {
             background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:16px;
             overflow:hidden; text-decoration:none; display:block; transition:all 0.3s;
+            position:relative;
+        }
+        .source-badge {
+            position:absolute; top:10px; left:10px; z-index:2;
+            display:inline-flex; align-items:center; gap:4px;
+            font-size:11px; font-weight:700; padding:4px 9px; border-radius:999px;
+            backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+            line-height:1.2; pointer-events:none;
+            box-shadow:0 4px 10px rgba(0,0,0,0.35);
+        }
+        .source-badge.wardrobe {
+            background:rgba(168,85,247,0.35); color:#f3e8ff;
+            border:1px solid rgba(168,85,247,0.65);
+        }
+        .source-badge.catalog {
+            background:rgba(6,182,212,0.28); color:#cffafe;
+            border:1px solid rgba(6,182,212,0.55);
         }
         .prod-card:hover { border-color:var(--ai-cyan); transform:translateY(-5px); box-shadow:0 10px 25px rgba(6,182,212,0.2); }
         .prod-img { width:100%; height:200px; object-fit:contain; background:rgba(255,255,255,0.02); }
@@ -243,15 +260,179 @@
 
     </div>
 
+    <script src="js/wardrobe-db.js"></script>
     <script>
         let currentCondition = 'sunny';
         let allProducts = [];
+        let wardrobeItems = [];
         let userStyle = '';
         
         try {
             const profile = JSON.parse(localStorage.getItem('ai_profile'));
             if(profile && profile.style) userStyle = profile.style;
         } catch(e){}
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function mapWardrobeCategoryToDept(cat) {
+            if (!cat) return 'Other';
+            const c = String(cat).toLowerCase();
+            if (c.includes('сукня') || c.includes('плаття') || c.includes('dress')) return 'Dresses';
+            if (c.includes('топ') || c.includes('блуз') || c.includes('сорочк') || c.includes('светр') || c.includes('top')) return 'Tops';
+            if (c.includes('брюк') || c.includes('спідниц') || c.includes('джинс') || c.includes('штан') || c.includes('bottom')) return 'Bottoms';
+            if (c.includes('куртк') || c.includes('пальто') || c.includes('піджак') || c.includes('жакет') || c.includes('плащ') || c.includes('jacket')) return 'Jackets';
+            if (c.includes('білизн') || c.includes('intimate')) return 'Intimate';
+            return 'Other';
+        }
+
+        function getWardrobeSeasons(item) {
+            if (Array.isArray(item.season)) return item.season.map(s => String(s).toLowerCase());
+            if (typeof item.season === 'string' && item.season) return [item.season.toLowerCase()];
+            return [];
+        }
+
+        function scoreWardrobeItemForWeather(item, temp, cond, uStyle, depts) {
+            const seasons = getWardrobeSeasons(item);
+            const dept = mapWardrobeCategoryToDept(item.category);
+            const nameLower = String(item.name || '').toLowerCase();
+            const catLower = String(item.category || '').toLowerCase();
+            let score = 0;
+
+            // 1. Extreme temperature season checks
+            if (temp >= 25) {
+                // Hot summer: purely winter items excluded
+                if (seasons.includes('winter') && !seasons.includes('summer')) return 0;
+                if (catLower.includes('пальто') || catLower.includes('пуховик') || nameLower.includes('пальто') || nameLower.includes('пуховик') || nameLower.includes('теплий светр')) return 0;
+                if (seasons.includes('summer')) score += 40;
+                else if (seasons.includes('all-season')) score += 30;
+                else if (seasons.includes('spring') || seasons.includes('autumn')) score += 15;
+                else if (seasons.length === 0) score += 20;
+            } else if (temp >= 15 && temp < 25) {
+                // Mild / comfortable: versatile
+                if (seasons.includes('spring') || seasons.includes('autumn') || seasons.includes('all-season')) score += 40;
+                else if (seasons.includes('summer')) score += 25;
+                else if (seasons.includes('winter')) score += 15;
+                else if (seasons.length === 0) score += 20;
+            } else if (temp >= 5 && temp < 15) {
+                // Cool / chilly: exclude pure summer
+                if (seasons.includes('summer') && !seasons.includes('winter') && !seasons.includes('autumn')) return 0;
+                if (catLower.includes('шорти') || catLower.includes('купальник') || nameLower.includes('літня') || nameLower.includes('лляна')) return 0;
+                if (seasons.includes('autumn') || seasons.includes('winter') || seasons.includes('all-season')) score += 40;
+                else if (seasons.includes('spring')) score += 25;
+                else if (seasons.length === 0) score += 20;
+            } else {
+                // Cold / freezing: strictly exclude summer items, require warm wear
+                if (seasons.includes('summer') && !seasons.includes('winter')) return 0;
+                if (catLower.includes('шорти') || catLower.includes('купальник') || catLower.includes('босоніжки') || nameLower.includes('літня') || nameLower.includes('лляна')) return 0;
+                if (seasons.includes('winter')) score += 45;
+                else if (seasons.includes('autumn') || seasons.includes('all-season')) score += 30;
+                else if (seasons.length === 0) score += 20;
+            }
+
+            // 2. Department / category match
+            if (depts.includes(dept)) {
+                score += 35;
+            } else if (item.category === 'Взуття' || item.category === 'Аксесуар') {
+                score += 20;
+            }
+
+            // 3. Weather condition match
+            if (cond === 'rainy' && (dept === 'Jackets' || String(item.name).toLowerCase().includes('тренч') || String(item.name).toLowerCase().includes('куртк'))) {
+                score += 15;
+            }
+
+            // 4. Style affinity bonus
+            if (uStyle && Array.isArray(item.style) && item.style.includes(uStyle)) {
+                score += 10;
+            }
+
+            return score;
+        }
+
+        function mixCandidates(wCandidates, cCandidates, targetTotal = 6) {
+            const selected = [];
+            const seen = new Set();
+
+            let wCount = 0;
+            if (wCandidates.length > 0) {
+                if (cCandidates.length === 0) {
+                    wCount = Math.min(wCandidates.length, targetTotal);
+                } else if (cCandidates.length < 3) {
+                    wCount = Math.min(wCandidates.length, targetTotal - cCandidates.length);
+                } else {
+                    wCount = Math.min(Math.max(2, Math.min(wCandidates.length, 3)), 4);
+                    if (wCandidates.length < 2) wCount = wCandidates.length;
+                }
+            }
+            const cCount = Math.min(cCandidates.length, targetTotal - wCount);
+
+            const wSlice = wCandidates.slice(0, wCount);
+            const cSlice = cCandidates.slice(0, cCount);
+
+            let wIdx = 0, cIdx = 0;
+            while ((wIdx < wSlice.length || cIdx < cSlice.length) && selected.length < targetTotal) {
+                if (wIdx < wSlice.length) {
+                    const item = wSlice[wIdx++];
+                    const key = 'w_' + item.id;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        selected.push({ isWardrobe: true, data: item });
+                    }
+                }
+                if (cIdx < cSlice.length && selected.length < targetTotal) {
+                    const item = cSlice[cIdx++];
+                    const key = 'c_' + item.clothing_id;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        selected.push({ isWardrobe: false, data: item });
+                    }
+                }
+            }
+
+            while (selected.length < targetTotal && cIdx < cCandidates.length) {
+                const item = cCandidates[cIdx++];
+                const key = 'c_' + item.clothing_id;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    selected.push({ isWardrobe: false, data: item });
+                }
+            }
+            while (selected.length < targetTotal && wIdx < wCandidates.length) {
+                const item = wCandidates[wIdx++];
+                const key = 'w_' + item.id;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    selected.push({ isWardrobe: true, data: item });
+                }
+            }
+
+            return selected;
+        }
+
+        async function loadWardrobe() {
+            try {
+                if (typeof WardrobeDB !== 'undefined') {
+                    wardrobeItems = await WardrobeDB.getAll();
+                }
+            } catch(e) {
+                console.warn('Weather: failed to load wardrobe', e);
+                wardrobeItems = [];
+            }
+        }
+
+        loadWardrobe().then(() => {
+            if (allProducts.length) {
+                applyManualWeather();
+            }
+        });
 
         fetch('data/products.json')
             .then(r => {
@@ -265,8 +446,7 @@
             .catch(err => {
                 console.warn('Weather: catalog unavailable', err);
                 allProducts = [];
-                document.getElementById('outfit-grid').innerHTML =
-                    '<p style="color:gray;">Каталог тимчасово недоступний. Погодні дані можна використовувати далі.</p>';
+                applyManualWeather();
             });
 
         function updateTempLabel() {
@@ -418,43 +598,77 @@
                 tips = ['Максимальне утеплення: термобілизна', 'Пуховик або тепле вовняне пальто', 'Об\'ємний шарф та шапка'];
             }
 
-            // Filter products
-            if(!allProducts.length) return;
-            let filtered = allProducts.filter(p => depts.includes(p.department_name));
+            // Filter catalog products
+            let cFiltered = (allProducts || []).filter(p => depts.includes(p.department_name));
 
             // Personalization: If user has a style, heavily bias recommendations if we have tags (mock logic)
-            if (userStyle === 'boho') filtered = filtered.filter(p => !['Formal', 'Suit'].includes(p.class_name));
+            if (userStyle === 'boho') cFiltered = cFiltered.filter(p => !['Formal', 'Suit'].includes(p.class_name));
             if (userStyle === 'minimalist') tips.push('💡 Ваш мінімалістичний стиль вимагає монохрому: обирайте базові кольори.');
             
             document.getElementById('tips-list').innerHTML = tips.map(t => `<li>${t.replace('💡 ', '')}</li>`).join('');
             
             // Exclude summer items for cold weather
             if (temp < 15) {
-                filtered = filtered.filter(p => !['Shorts', 'Skirts', 'Swim', 'Intimates'].includes(p.class_name));
+                cFiltered = cFiltered.filter(p => !['Shorts', 'Skirts', 'Swim', 'Intimates'].includes(p.class_name));
             }
 
-            // If filtering is very restrictive, show fewer relevant items rather than
-            // falling back to unrelated summer/cold-weather products.
-
-            // Deterministic sort
-            filtered.sort((a, b) => {
+            // Deterministic sort for catalog
+            cFiltered.sort((a, b) => {
                 const ratingDiff = (Number(b.avg_rating) || 0) - (Number(a.avg_rating) || 0);
                 if (ratingDiff !== 0) return ratingDiff;
                 return (Number(b.clothing_id) || 0) - (Number(a.clothing_id) || 0);
             });
-            const selected = filtered.slice(0, 6);
 
-            document.getElementById('outfit-grid').innerHTML = selected.map(p => `
-                <a href="product.html?id=${p.clothing_id}" class="prod-card">
-                    <img src="static/${p.clothing_id}.jpg" class="prod-img" alt="${p.class_name}" 
-                         onerror="this.src='https://via.placeholder.com/200/1e1b4b/06b6d4?text=${encodeURIComponent(p.class_name||'Item')}'">
-                    <div class="prod-info">
-                        <div class="prod-cat">${p.class_name || p.department_name}</div>
-                        <div class="prod-name">${p.title || p.class_name}</div>
-                        <div class="prod-rating">⭐ ${Number.isFinite(Number(p.avg_rating)) ? Number(p.avg_rating).toFixed(1) : '—'}</div>
-                    </div>
-                </a>
-            `).join('');
+            // Score and rank wardrobe candidates
+            const wCandidates = (wardrobeItems || [])
+                .map(item => ({
+                    item,
+                    score: scoreWardrobeItemForWeather(item, temp, cond, userStyle, depts)
+                }))
+                .filter(entry => entry.score >= 40)
+                .sort((a, b) => b.score - a.score || (Number(b.item.id) || 0) - (Number(a.item.id) || 0))
+                .map(entry => entry.item);
+
+            const mixed = mixCandidates(wCandidates, cFiltered, 6);
+
+            const grid = document.getElementById('outfit-grid');
+            if (!mixed.length) {
+                grid.innerHTML = '<p style="color:gray;">Рекомендації для цих погодних умов тимчасово недоступні.</p>';
+                return;
+            }
+
+            grid.innerHTML = mixed.map(card => {
+                if (card.isWardrobe) {
+                    const w = card.data;
+                    const meta = w.color ? (w.color + (w.style && w.style.length ? ' • ' + w.style.join(', ') : '')) : (w.style && w.style.length ? w.style.join(', ') : 'Власний гардероб');
+                    return `
+                        <a href="my-wardrobe.html" class="prod-card wardrobe-card" title="Переглянути в гардеробі">
+                            <span class="source-badge wardrobe">👗 З мого гардероба</span>
+                            <img src="${escapeHtml(w.img)}" class="prod-img" alt="${escapeHtml(w.name || 'Річ')}"
+                                 onerror="this.src='https://via.placeholder.com/200/1e1b4b/a855f7?text=${encodeURIComponent(w.name||'Wardrobe')}'">
+                            <div class="prod-info">
+                                <div class="prod-cat">${escapeHtml(w.category || 'Гардероб')}</div>
+                                <div class="prod-name">${escapeHtml(w.name || 'Власна річ')}</div>
+                                <div class="prod-rating">✨ ${escapeHtml(meta)}</div>
+                            </div>
+                        </a>
+                    `;
+                } else {
+                    const p = card.data;
+                    return `
+                        <a href="product.html?id=${p.clothing_id}" class="prod-card">
+                            <span class="source-badge catalog">🛍 Каталог</span>
+                            <img src="static/${p.clothing_id}.jpg" class="prod-img" alt="${escapeHtml(p.class_name || 'Item')}"
+                                 onerror="this.src='https://via.placeholder.com/200/1e1b4b/06b6d4?text=${encodeURIComponent(p.class_name||'Item')}'">
+                            <div class="prod-info">
+                                <div class="prod-cat">${escapeHtml(p.class_name || p.department_name)}</div>
+                                <div class="prod-name">${escapeHtml(p.title || p.class_name)}</div>
+                                <div class="prod-rating">⭐ ${Number.isFinite(Number(p.avg_rating)) ? Number(p.avg_rating).toFixed(1) : '—'}</div>
+                            </div>
+                        </a>
+                    `;
+                }
+            }).join('');
         }
     </script>
 </body>

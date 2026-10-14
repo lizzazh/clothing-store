@@ -381,6 +381,23 @@
         .prod-card {
             background:var(--glass-bg); border:1px solid var(--glass-border);
             border-radius:12px; overflow:hidden; transition:all 0.3s; display:block;
+            position:relative; text-decoration:none;
+        }
+        .source-badge {
+            position:absolute; top:8px; left:8px; z-index:2;
+            display:inline-flex; align-items:center; gap:4px;
+            font-size:10px; font-weight:700; padding:3px 8px; border-radius:999px;
+            backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+            line-height:1.2; pointer-events:none;
+            box-shadow:0 4px 10px rgba(0,0,0,0.35);
+        }
+        .source-badge.wardrobe {
+            background:rgba(168,85,247,0.35); color:#f3e8ff;
+            border:1px solid rgba(168,85,247,0.65);
+        }
+        .source-badge.catalog {
+            background:rgba(6,182,212,0.28); color:#cffafe;
+            border:1px solid rgba(6,182,212,0.55);
         }
         .prod-card:hover {
             border-color:var(--ai-purple); transform:translateY(-4px);
@@ -441,7 +458,7 @@
 
     <div class="main-content">
         <h1 class="hero-title">Style DNA Quiz</h1>
-        <p class="hero-subtitle">5 вивірених кроків для формування вашого персонального Style DNA та адаптації рекомендацій штучного інтелекту.</p>
+        <p class="hero-subtitle">7 вивірених кроків для формування вашого персонального Style DNA та адаптації рекомендацій штучного інтелекту.</p>
 
         <div class="quiz-layout">
             <!-- MAIN QUIZ CONTAINER -->
@@ -455,7 +472,7 @@
                     <div class="question-header">
                         <div class="question-top-row">
                             <button type="button" class="btn-step-back" id="back-btn-1" style="visibility:hidden;" onclick="prevStep()">← Назад</button>
-                            <div class="question-step-label">Крок 1 із 5</div>
+                            <div class="question-step-label">Крок 1 із 7</div>
                             <span style="width:70px;"></span>
                         </div>
                         <div class="question-title">Який колір вас приваблює?</div>
@@ -486,7 +503,7 @@
                     <div class="question-header">
                         <div class="question-top-row">
                             <button type="button" class="btn-step-back" onclick="prevStep()">← Назад</button>
-                            <div class="question-step-label">Крок 2 із 5</div>
+                            <div class="question-step-label">Крок 2 із 7</div>
                             <span style="width:70px;"></span>
                         </div>
                         <div class="question-title">Ваш ідеальний силует?</div>
@@ -517,7 +534,7 @@
                     <div class="question-header">
                         <div class="question-top-row">
                             <button type="button" class="btn-step-back" onclick="prevStep()">← Назад</button>
-                            <div class="question-step-label">Крок 3 із 5</div>
+                            <div class="question-step-label">Крок 3 із 7</div>
                             <span style="width:70px;"></span>
                         </div>
                         <div class="question-title">Ідеальний образ на вихідний?</div>
@@ -548,7 +565,7 @@
                     <div class="question-header">
                         <div class="question-top-row">
                             <button type="button" class="btn-step-back" onclick="prevStep()">← Назад</button>
-                            <div class="question-step-label">Крок 4 із 5</div>
+                            <div class="question-step-label">Крок 4 із 7</div>
                             <span style="width:70px;"></span>
                         </div>
                         <div class="question-title">Улюблена фактура/тканина?</div>
@@ -579,7 +596,7 @@
                     <div class="question-header">
                         <div class="question-top-row">
                             <button type="button" class="btn-step-back" onclick="prevStep()">← Назад</button>
-                            <div class="question-step-label">Крок 5 із 5</div>
+                            <div class="question-step-label">Крок 5 із 7</div>
                             <span style="width:70px;"></span>
                         </div>
                         <div class="question-title">Хто вам ближче по духу?</div>
@@ -601,6 +618,68 @@
                         <div class="answer-card" data-opt="cara" data-style="streetwear" onclick="selectAnswer(5, 'cara', this)">
                             <div class="answer-icon-wrap"><span class="answer-emoji">🎨</span></div>
                             <div class="answer-text">Кара Делевінь / Ріанна</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="step" id="step-6">
+                    <div class="question-header">
+                        <div class="question-top-row">
+                            <button type="button" class="btn-step-back" onclick="prevStep()">← Назад</button>
+                            <div class="question-step-label">Крок 6 із 7</div>
+                            <span style="width:70px;"></span>
+                        </div>
+                        <div class="question-title">Яке взуття та аксесуари вам найближчі?</div>
+                        <p class="question-sub">Деталі, що гармонійно завершують ваш образ та настрій</p>
+                    </div>
+                    <div class="answers-grid">
+                        <div class="answer-card" data-opt="minimal_acc" data-style="minimalist" onclick="selectAnswer(6, 'minimal_acc', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">👟</span></div>
+                            <div class="answer-text">Лаконічні лофери, кеди та мінімалістичні аксесуари</div>
+                        </div>
+                        <div class="answer-card" data-opt="natural_boho" data-style="boho" onclick="selectAnswer(6, 'natural_boho', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">👒</span></div>
+                            <div class="answer-text">Натуральні матеріали, сандалі, капелюхи, етнічні деталі</div>
+                        </div>
+                        <div class="answer-card" data-opt="refined_elegant" data-style="elegant" onclick="selectAnswer(6, 'refined_elegant', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">👠</span></div>
+                            <div class="answer-text">Витончені туфлі, невеликі сумки та делікатні прикраси</div>
+                        </div>
+                        <div class="answer-card" data-opt="bold_street" data-style="streetwear" onclick="selectAnswer(6, 'bold_street', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🥾</span></div>
+                            <div class="answer-text">Масивні кросівки, грубі черевики та акцентні аксесуари</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 7 -->
+                <div class="step" id="step-7">
+                    <div class="question-header">
+                        <div class="question-top-row">
+                            <button type="button" class="btn-step-back" onclick="prevStep()">← Назад</button>
+                            <div class="question-step-label">Крок 7 із 7</div>
+                            <span style="width:70px;"></span>
+                        </div>
+                        <div class="question-title">Який рівень деталей в одязі вам ближчий?</div>
+                        <p class="question-sub">Баланс між лаконічністю, витонченістю та акцентними деталями</p>
+                    </div>
+                    <div class="answers-grid">
+                        <div class="answer-card" data-opt="minimal_details" data-style="minimalist" onclick="selectAnswer(7, 'minimal_details', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🤍</span></div>
+                            <div class="answer-text">Мінімум деталей</div>
+                        </div>
+                        <div class="answer-card" data-opt="neat_accents" data-style="classic" onclick="selectAnswer(7, 'neat_accents', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">✨</span></div>
+                            <div class="answer-text">Класичні акуратні акценти</div>
+                        </div>
+                        <div class="answer-card" data-opt="romantic_decor" data-style="romantic" onclick="selectAnswer(7, 'romantic_decor', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">🎀</span></div>
+                            <div class="answer-text">Романтичні деталі / драпірування / декор</div>
+                        </div>
+                        <div class="answer-card" data-opt="statement_bold" data-style="streetwear" onclick="selectAnswer(7, 'statement_bold', this)">
+                            <div class="answer-icon-wrap"><span class="answer-emoji">⚡</span></div>
+                            <div class="answer-text">Виразні або незвичайні деталі</div>
                         </div>
                     </div>
                 </div>
@@ -679,19 +758,20 @@
                     </div>
                     <div class="dna-live-row">
                         <span class="dna-live-lbl">Прогрес профілю:</span>
-                        <strong id="dna-live-progress" class="dna-live-val">0 / 5</strong>
+                        <strong id="dna-live-progress" class="dna-live-val">0 / 7</strong>
                     </div>
                 </div>
                 <div class="dna-live-hint" id="dna-live-hint">
-                    Оберіть відповіді на 5 питань, щоб відкрити персоналізований розподіл вашого Style DNA.
+                    Оберіть відповіді на 7 питань, щоб відкрити персоналізований розподіл вашого Style DNA.
                 </div>
             </aside>
         </div>
     </div>
 
+    <script src="js/wardrobe-db.js"></script>
     <script>
         // State management
-        const userAnswers = { 1: null, 2: null, 3: null, 4: null, 5: null };
+        const userAnswers = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null };
         let currentStep = 1;
         let isTransitioning = false;
         let products = [];
@@ -891,6 +971,18 @@
                 zoe:     { boho: 1.0, streetwear: 0.3, romantic: 0.2 },
                 beyonce: { elegant: 1.0, streetwear: 0.3 },
                 cara:    { streetwear: 1.0, minimalist: 0.4 }
+            },
+            6: {
+                minimal_acc:     { minimalist: 1.0, classic: 0.6 },
+                natural_boho:    { boho: 1.0, romantic: 0.3 },
+                refined_elegant: { elegant: 1.0, romantic: 0.5, classic: 0.3 },
+                bold_street:     { streetwear: 1.0, minimalist: 0.3 }
+            },
+            7: {
+                minimal_details: { minimalist: 1.0, classic: 0.6 },
+                neat_accents:    { classic: 1.0, elegant: 0.7, minimalist: 0.2 },
+                romantic_decor:  { romantic: 1.0, boho: 0.7, elegant: 0.3 },
+                statement_bold:  { streetwear: 1.0, boho: 0.5, elegant: 0.5 }
             }
         };
 
@@ -898,7 +990,7 @@
         function calculateRawScores(answers) {
             const raw = {};
             STYLES.forEach(s => { raw[s] = 0; });
-            for (let q = 1; q <= 5; q++) {
+            for (let q = 1; q <= 7; q++) {
                 const optKey = answers[q];
                 if (optKey && ANSWER_WEIGHTS[q] && ANSWER_WEIGHTS[q][optKey]) {
                     const vec = ANSWER_WEIGHTS[q][optKey];
@@ -956,7 +1048,7 @@
         function updateProgress() {
             const pBar = document.getElementById('progress-bar');
             if (pBar) {
-                pBar.style.width = (currentStep / 5) * 100 + '%';
+                pBar.style.width = (currentStep / 7) * 100 + '%';
             }
         }
 
@@ -970,7 +1062,7 @@
             const progEl = document.getElementById('dna-live-progress');
             const hintEl = document.getElementById('dna-live-hint');
 
-            if (progEl) progEl.textContent = `${answeredCount} / 5`;
+            if (progEl) progEl.textContent = `${answeredCount} / 7`;
 
             if (answeredCount === 0) {
                 if (leadEl) { leadEl.textContent = 'Визначається...'; leadEl.className = 'dna-live-val neutral'; }
@@ -1002,8 +1094,8 @@
             if (hintEl) {
                 if (answeredCount < 3) {
                     hintEl.textContent = 'Формується вектор вашого гармонійного образу...';
-                } else if (answeredCount < 5) {
-                    hintEl.textContent = 'Аналізуємо поєднання фактур, крою та настрою...';
+                } else if (answeredCount < 7) {
+                    hintEl.textContent = 'Аналізуємо поєднання фактур, крою та деталей...';
                 } else {
                     hintEl.textContent = 'Style DNA сформовано! Переходимо до персонального звіту.';
                 }
@@ -1048,7 +1140,7 @@
                 stepEl.classList.remove('active');
                 currentStep++;
 
-                if (currentStep <= 5) {
+                if (currentStep <= 7) {
                     const nextStep = document.getElementById(`step-${currentStep}`);
                     if (nextStep) {
                         nextStep.classList.add('active');
@@ -1169,7 +1261,7 @@
             localStorage.setItem('ai_profile', JSON.stringify(profile));
 
             // Render matching products
-            renderProducts(info.depts);
+            renderProducts(info.depts, percentages);
 
             // Hide DNA live panel on result view to give full width to results
             const livePanel = document.getElementById('dna-live-panel');
@@ -1190,39 +1282,192 @@
             showToast('🧬 Style DNA успішно збережено у ваш профіль!');
         }
 
-        function renderProducts(depts) {
-            const grid = document.getElementById('res-products');
-            if (!products.length) {
-                grid.innerHTML = '<p style="color:rgba(255,255,255,0.5); padding:10px 0;">Каталог рекомендацій тимчасово недоступний.</p>';
-                return;
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function mapWardrobeCategoryToDept(cat) {
+            if (!cat) return 'Other';
+            const c = String(cat).toLowerCase();
+            if (c.includes('сукня') || c.includes('плаття') || c.includes('dress')) return 'Dresses';
+            if (c.includes('топ') || c.includes('блуз') || c.includes('сорочк') || c.includes('светр') || c.includes('top')) return 'Tops';
+            if (c.includes('брюк') || c.includes('спідниц') || c.includes('джинс') || c.includes('штан') || c.includes('bottom')) return 'Bottoms';
+            if (c.includes('куртк') || c.includes('пальто') || c.includes('піджак') || c.includes('жакет') || c.includes('плащ') || c.includes('jacket')) return 'Jackets';
+            if (c.includes('білизн') || c.includes('intimate')) return 'Intimate';
+            return 'Other';
+        }
+
+        function scoreWardrobeItemForStyleDNA(item, styleDNA, depts) {
+            const dna = styleDNA || {};
+            let styleScore = 0;
+            const itemStyles = Array.isArray(item.style) ? item.style : (item.style ? [item.style] : []);
+
+            if (itemStyles.length > 0) {
+                for (const s of itemStyles) {
+                    const key = String(s).toLowerCase();
+                    if (dna[key] !== undefined) {
+                        styleScore += Number(dna[key]) || 0;
+                    }
+                }
             }
 
-            let filtered = products.filter(p => depts.includes(p.department_name) && Number(p.avg_rating) >= 4.0);
-            if (filtered.length < 6) filtered = products;
+            // Require meaningful style match with Style DNA (at least 10% representation).
+            // A category bonus alone cannot qualify an unrelated wardrobe item.
+            if (styleScore < 10) {
+                return 0;
+            }
 
-            // Deterministic sort: rating desc, numeric clothing_id desc
-            filtered.sort((a, b) => {
+            let catBonus = 0;
+            const dept = mapWardrobeCategoryToDept(item.category);
+            if (depts && depts.includes(dept)) {
+                catBonus = 15;
+            }
+
+            return styleScore + catBonus;
+        }
+
+        function mixCandidates(wCandidates, cCandidates, targetTotal = 6) {
+            const selected = [];
+            const seen = new Set();
+
+            let wCount = 0;
+            if (wCandidates.length > 0) {
+                if (cCandidates.length === 0) {
+                    wCount = Math.min(wCandidates.length, targetTotal);
+                } else if (cCandidates.length < 3) {
+                    wCount = Math.min(wCandidates.length, targetTotal - cCandidates.length);
+                } else {
+                    wCount = Math.min(Math.max(2, Math.min(wCandidates.length, 3)), 4);
+                    if (wCandidates.length < 2) wCount = wCandidates.length;
+                }
+            }
+            const cCount = Math.min(cCandidates.length, targetTotal - wCount);
+
+            const wSlice = wCandidates.slice(0, wCount);
+            const cSlice = cCandidates.slice(0, cCount);
+
+            let wIdx = 0, cIdx = 0;
+            while ((wIdx < wSlice.length || cIdx < cSlice.length) && selected.length < targetTotal) {
+                if (wIdx < wSlice.length) {
+                    const item = wSlice[wIdx++];
+                    const key = 'w_' + item.id;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        selected.push({ isWardrobe: true, data: item });
+                    }
+                }
+                if (cIdx < cSlice.length && selected.length < targetTotal) {
+                    const item = cSlice[cIdx++];
+                    const key = 'c_' + item.clothing_id;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        selected.push({ isWardrobe: false, data: item });
+                    }
+                }
+            }
+
+            while (selected.length < targetTotal && cIdx < cCandidates.length) {
+                const item = cCandidates[cIdx++];
+                const key = 'c_' + item.clothing_id;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    selected.push({ isWardrobe: false, data: item });
+                }
+            }
+            while (selected.length < targetTotal && wIdx < wCandidates.length) {
+                const item = wCandidates[wIdx++];
+                const key = 'w_' + item.id;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    selected.push({ isWardrobe: true, data: item });
+                }
+            }
+
+            return selected;
+        }
+
+        async function renderProducts(depts, styleDNA) {
+            const grid = document.getElementById('res-products');
+
+            // 1. Filter and sort catalog
+            let cFiltered = (products || []).filter(p => depts.includes(p.department_name) && Number(p.avg_rating) >= 4.0);
+            if (cFiltered.length < 6 && products && products.length) cFiltered = products;
+
+            cFiltered.sort((a, b) => {
                 const ratingDiff = (Number(b.avg_rating) || 0) - (Number(a.avg_rating) || 0);
                 if (ratingDiff !== 0) return ratingDiff;
                 return (Number(b.clothing_id) || 0) - (Number(a.clothing_id) || 0);
             });
-            const selected = filtered.slice(0, 6);
 
-            grid.innerHTML = selected.map(p => `
-                <a href="product.html?id=${p.clothing_id}" class="prod-card">
-                    <img src="static/${p.clothing_id}.jpg" class="prod-img" alt="${p.class_name || 'Item'}"
-                         onerror="this.src='https://via.placeholder.com/150/1e1b4b/a855f7?text=${encodeURIComponent(p.class_name||'Item')}'">
-                    <div class="prod-info">
-                        <div class="prod-cat">${p.class_name || p.department_name}</div>
-                        <div class="prod-name">${p.title || p.class_name}</div>
-                        <div class="prod-rating">⭐ ${Number.isFinite(Number(p.avg_rating)) ? Number(p.avg_rating).toFixed(1) : '—'}</div>
-                    </div>
-                </a>
-            `).join('');
+            // 2. Fetch and score wardrobe items
+            let wardrobeAll = [];
+            try {
+                if (typeof WardrobeDB !== 'undefined') {
+                    wardrobeAll = await WardrobeDB.getAll();
+                }
+            } catch(e) {
+                console.warn('Quiz: wardrobe load error', e);
+                wardrobeAll = [];
+            }
+
+            const wCandidates = (wardrobeAll || [])
+                .map(item => ({
+                    item,
+                    score: scoreWardrobeItemForStyleDNA(item, styleDNA, depts)
+                }))
+                .filter(entry => entry.score > 0)
+                .sort((a, b) => b.score - a.score || (Number(b.item.id) || 0) - (Number(a.item.id) || 0))
+                .map(entry => entry.item);
+
+            const mixed = mixCandidates(wCandidates, cFiltered, 6);
+
+            if (!mixed.length) {
+                grid.innerHTML = '<p style="color:rgba(255,255,255,0.5); padding:10px 0;">Каталог та гардероб рекомендацій тимчасово недоступні.</p>';
+                return;
+            }
+
+            grid.innerHTML = mixed.map(card => {
+                if (card.isWardrobe) {
+                    const w = card.data;
+                    const meta = w.color ? (w.color + (w.style && w.style.length ? ' • ' + w.style.join(', ') : '')) : (w.style && w.style.length ? w.style.join(', ') : 'Власний гардероб');
+                    return `
+                        <a href="my-wardrobe.html" class="prod-card wardrobe-card" title="Переглянути в гардеробі">
+                            <span class="source-badge wardrobe">👗 З мого гардероба</span>
+                            <img src="${escapeHtml(w.img)}" class="prod-img" alt="${escapeHtml(w.name || 'Річ')}"
+                                 onerror="this.src='https://via.placeholder.com/150/1e1b4b/a855f7?text=${encodeURIComponent(w.name||'Wardrobe')}'">
+                            <div class="prod-info">
+                                <div class="prod-cat">${escapeHtml(w.category || 'Гардероб')}</div>
+                                <div class="prod-name">${escapeHtml(w.name || 'Власна річ')}</div>
+                                <div class="prod-rating">✨ ${escapeHtml(meta)}</div>
+                            </div>
+                        </a>
+                    `;
+                } else {
+                    const p = card.data;
+                    return `
+                        <a href="product.html?id=${p.clothing_id}" class="prod-card">
+                            <span class="source-badge catalog">🛍 Каталог</span>
+                            <img src="static/${p.clothing_id}.jpg" class="prod-img" alt="${escapeHtml(p.class_name || 'Item')}"
+                                 onerror="this.src='https://via.placeholder.com/150/1e1b4b/a855f7?text=${encodeURIComponent(p.class_name||'Item')}'">
+                            <div class="prod-info">
+                                <div class="prod-cat">${escapeHtml(p.class_name || p.department_name)}</div>
+                                <div class="prod-name">${escapeHtml(p.title || p.class_name)}</div>
+                                <div class="prod-rating">⭐ ${Number.isFinite(Number(p.avg_rating)) ? Number(p.avg_rating).toFixed(1) : '—'}</div>
+                            </div>
+                        </a>
+                    `;
+                }
+            }).join('');
         }
 
         function resetQuiz() {
-            for (let i = 1; i <= 5; i++) userAnswers[i] = null;
+            for (let i = 1; i <= 7; i++) userAnswers[i] = null;
             currentStep = 1;
             isTransitioning = false;
             lastResultData = null;
