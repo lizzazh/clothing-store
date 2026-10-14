@@ -10,9 +10,9 @@ const AIService = {
     // =============================================
     AI_MODELS: {
         gemini: {
-            standard: 'gemini-3.6-flash',
+            standard: 'gemini-3.5-flash-lite',
             light: 'gemini-3.5-flash-lite',
-            vision: 'gemini-3.6-flash'
+            vision: 'gemini-3.5-flash-lite'
         },
         groq: {
             standard: 'openai/gpt-oss-120b',
