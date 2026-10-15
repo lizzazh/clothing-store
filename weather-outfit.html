@@ -343,6 +343,8 @@
             const cats = normalizeWeatherCategories(item);
             const name = String(item.name || item.class_name || '').toLowerCase();
             const seasons = getWardrobeSeasons(item);
+            // Temperature is the base physical suitability signal. Weather conditions may
+            // re-rank items, but they must never rewrite the entered temperature.
 
             const isOuterwear = cats.includes('outerwear');
             const isHeavyOuterwear = isOuterwear && (
@@ -359,6 +361,13 @@
 
             let tempScore = 0.5;
             let condModifier = 0;
+
+            // Snow is a hard incompatibility for exposed lower-body / beach categories.
+            // This is applied before temperature scoring so contradictory manual input
+            // cannot keep a skirt or shorts in the visible recommendations.
+            if (cond === 'snowy' && (isSkirt || isShorts || isSwim)) {
+                return { tempScore: 0, condModifier: 0, finalScore: 0, allowed: false };
+            }
 
             if (temp < 0) {
                 if (isShorts || isSwim || isSkirt) return { tempScore: 0, condModifier: 0, finalScore: 0, allowed: false };
@@ -432,6 +441,73 @@
                 finalScore: Math.round(finalScore * 100) / 100,
                 allowed: finalScore > 0
             };
+        }
+
+        function getWeatherRole(item) {
+            const cats = normalizeWeatherCategories(item);
+            if (cats.includes('outerwear')) return 'outerwear';
+            if (cats.includes('knit')) return 'knit';
+            if (cats.includes('dress')) return 'dress';
+            if (cats.includes('shorts')) return 'shorts';
+            if (cats.includes('skirt')) return 'skirt';
+            if (cats.includes('pants')) return 'pants';
+            if (cats.includes('top')) return 'top';
+            return 'other';
+        }
+
+        function getCatalogRolePlan(temp, cond) {
+            if (cond === 'snowy') {
+                if (temp < 0) return ['outerwear', 'knit', 'pants', 'outerwear', 'knit', 'pants'];
+                if (temp < 15) return ['outerwear', 'knit', 'pants', 'outerwear', 'pants', 'top'];
+                if (temp < 25) return ['outerwear', 'pants', 'knit', 'top', 'outerwear', 'pants'];
+                return ['top', 'pants', 'outerwear', 'knit', 'top', 'pants'];
+            }
+            if (cond === 'rainy') {
+                if (temp < 0) return ['outerwear', 'pants', 'knit', 'outerwear', 'pants', 'knit'];
+                if (temp < 15) return ['outerwear', 'pants', 'knit', 'outerwear', 'pants', 'top'];
+                return ['outerwear', 'pants', 'top', 'outerwear', 'pants', 'knit'];
+            }
+            if (temp < 0) {
+                return cond === 'cloudy'
+                    ? ['knit', 'outerwear', 'pants', 'knit', 'outerwear', 'pants']
+                    : ['outerwear', 'pants', 'knit', 'outerwear', 'pants', 'knit'];
+            }
+            if (temp < 15) {
+                return cond === 'cloudy'
+                    ? ['outerwear', 'knit', 'pants', 'outerwear', 'pants', 'knit']
+                    : ['knit', 'pants', 'outerwear', 'knit', 'pants', 'outerwear'];
+            }
+            if (temp < 25) {
+                return cond === 'cloudy'
+                    ? ['knit', 'pants', 'top', 'outerwear', 'pants', 'dress']
+                    : ['top', 'dress', 'pants', 'top', 'dress', 'skirt'];
+            }
+            return cond === 'cloudy'
+                ? ['top', 'dress', 'pants', 'top', 'skirt', 'dress']
+                : ['dress', 'top', 'shorts', 'dress', 'top', 'skirt'];
+        }
+
+        function selectDiverseCatalogCandidates(entries, temp, cond, limit = 6) {
+            const remaining = entries.map(entry => ({ ...entry, role: getWeatherRole(entry.item) }));
+            const selected = [];
+            const used = new Set();
+            const plan = getCatalogRolePlan(temp, cond);
+
+            for (const wantedRole of plan) {
+                if (selected.length >= limit) break;
+                const idx = remaining.findIndex((entry, i) => !used.has(i) && entry.role === wantedRole);
+                if (idx !== -1) {
+                    selected.push(remaining[idx].item);
+                    used.add(idx);
+                }
+            }
+
+            // Graceful fallback if the dataset lacks one of the planned roles.
+            for (let i = 0; i < remaining.length && selected.length < limit; i++) {
+                if (!used.has(i)) selected.push(remaining[i].item);
+            }
+
+            return selected;
         }
 
         function scoreWardrobeItemForWeather(item, temp, cond, uStyle, depts) {
@@ -683,17 +759,32 @@
             if (temp >= 25) {
                 depts = ['Tops', 'Dresses', 'Intimate', 'Bottoms'];
                 tips = ['Легкі натуральні тканини (льон, бавовна)', 'Відкрите взуття та сонцезахисні окуляри', 'Світлі кольори відбивають сонячні промені'];
+                if (cond === 'rainy') {
+                    depts = ['Jackets', 'Tops', 'Bottoms', 'Dresses'];
+                    tips.push('Для зливи додайте легкий водозахисний верхній шар');
+                } else if (cond === 'snowy') {
+                    depts = ['Jackets', 'Tops', 'Bottoms'];
+                    tips = ['Температура залишається теплою — обирайте легкий захисний верхній шар', 'Закритий низ і взуття доречніші за відкриті речі', 'Сніг коригує образ, але не перетворює теплу погоду на зимову'];
+                }
             } else if (temp >= 15 && temp < 25) {
                 depts = ['Tops', 'Bottoms', 'Jackets', 'Dresses'];
                 tips = ['Ідеальна погода для багатошаровості', 'Джинсова куртка або легкий кардиган', 'Зручні кросівки або лофери'];
-                if(cond==='rainy') { depts.push('Jackets'); tips.push('Не забудьте тренч або водонепроникну куртку'); }
+                if (cond === 'rainy') {
+                    depts = ['Jackets', 'Bottoms', 'Tops'];
+                    tips.push('Не забудьте тренч або водонепроникну куртку');
+                } else if (cond === 'snowy') {
+                    depts = ['Jackets', 'Bottoms', 'Tops'];
+                    tips = ['Легкий верхній шар захистить від опадів', 'Віддайте перевагу закритому низу та трикотажу', 'Температура важливіша за сам факт снігу: важкий зимовий одяг не є пріоритетом'];
+                }
             } else if (temp >= 0 && temp < 15) {
                 depts = ['Jackets', 'Bottoms', 'Tops'];
                 if (cond === 'rainy' || cond === 'snowy') depts = ['Jackets', 'Tops', 'Bottoms'];
                 tips = ['Щільний денім або вовняні брюки', 'Теплий светр — основа образу', 'Пальто або куртка обов\'язкові'];
+                if (cond === 'snowy') tips.push('Для снігу обирайте більш закритий і теплий верхній шар');
             } else {
-                depts = ['Jackets', 'Bottoms'];
+                depts = ['Jackets', 'Bottoms', 'Tops'];
                 tips = ['Максимальне утеплення: термобілизна', 'Пуховик або тепле вовняне пальто', 'Об\'ємний шарф та шапка'];
+                if (cond === 'snowy') tips.push('Сніг підсилює пріоритет теплого outerwear і трикотажу');
             }
 
             // Apply the same weather score to catalog items before rating tie-breaks.
@@ -716,7 +807,7 @@
                 return (Number(b.item.clothing_id) || 0) - (Number(a.item.clothing_id) || 0);
             });
 
-            const cFiltered = cCandidates.map(entry => entry.item);
+            const cFiltered = selectDiverseCatalogCandidates(cCandidates, temp, cond, 6);
 
             // Score and rank wardrobe candidates
             const wCandidates = (wardrobeItems || [])
