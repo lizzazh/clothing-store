@@ -299,57 +299,230 @@
             return [];
         }
 
-        function scoreWardrobeItemForWeather(item, temp, cond, uStyle, depts) {
-            const seasons = getWardrobeSeasons(item);
-            const dept = mapWardrobeCategoryToDept(item.category);
-            const nameLower = String(item.name || '').toLowerCase();
-            const catLower = String(item.category || '').toLowerCase();
-            let score = 0;
+        // Weather-Outfit-specific normalization/scoring. It intentionally stays local to this
+        // module so the frozen thesis M1 algorithm in js/match-score.js remains unchanged.
+        function normalizeWeatherCategories(item) {
+            if (!item) return [];
 
-            // 1. Extreme temperature season checks
-            if (temp >= 25) {
-                // Hot summer: purely winter items excluded
-                if (seasons.includes('winter') && !seasons.includes('summer')) return 0;
-                if (catLower.includes('пальто') || catLower.includes('пуховик') || nameLower.includes('пальто') || nameLower.includes('пуховик') || nameLower.includes('теплий светр')) return 0;
-                if (seasons.includes('summer')) score += 40;
-                else if (seasons.includes('all-season')) score += 30;
-                else if (seasons.includes('spring') || seasons.includes('autumn')) score += 15;
-                else if (seasons.length === 0) score += 20;
-            } else if (temp >= 15 && temp < 25) {
-                // Mild / comfortable: versatile
-                if (seasons.includes('spring') || seasons.includes('autumn') || seasons.includes('all-season')) score += 40;
-                else if (seasons.includes('summer')) score += 25;
-                else if (seasons.includes('winter')) score += 15;
-                else if (seasons.length === 0) score += 20;
-            } else if (temp >= 5 && temp < 15) {
-                // Cool / chilly: exclude pure summer
-                if (seasons.includes('summer') && !seasons.includes('winter') && !seasons.includes('autumn')) return 0;
-                if (catLower.includes('шорти') || catLower.includes('купальник') || nameLower.includes('літня') || nameLower.includes('лляна')) return 0;
-                if (seasons.includes('autumn') || seasons.includes('winter') || seasons.includes('all-season')) score += 40;
-                else if (seasons.includes('spring')) score += 25;
-                else if (seasons.length === 0) score += 20;
-            } else {
-                // Cold / freezing: strictly exclude summer items, require warm wear
-                if (seasons.includes('summer') && !seasons.includes('winter')) return 0;
-                if (catLower.includes('шорти') || catLower.includes('купальник') || catLower.includes('босоніжки') || nameLower.includes('літня') || nameLower.includes('лляна')) return 0;
-                if (seasons.includes('winter')) score += 45;
-                else if (seasons.includes('autumn') || seasons.includes('all-season')) score += 30;
-                else if (seasons.length === 0) score += 20;
+            const name = String(item.name || '').toLowerCase();
+            const category = String(item.category || '').toLowerCase();
+            const className = String(item.class_name || '').toLowerCase();
+            const department = String(item.department_name || '').toLowerCase();
+            const combined = `${category} ${className} ${department} ${name}`;
+            const categories = new Set();
+
+            if (combined.includes('dress') || combined.includes('сукн') || combined.includes('платт')) categories.add('dress');
+            if (combined.includes('jacket') || combined.includes('outerwear') || combined.includes('coat') ||
+                combined.includes('куртк') || combined.includes('пальт') || combined.includes('пуховик') ||
+                combined.includes('плащ') || combined.includes('тренч') || combined.includes('жакет')) categories.add('outerwear');
+            if (combined.includes('sweater') || combined.includes('knit') || combined.includes('fine gauge') ||
+                combined.includes('светр') || combined.includes('кардиган')) categories.add('knit');
+            if (combined.includes('top') || combined.includes('blouse') || combined.includes('shirt') ||
+                combined.includes('топ') || combined.includes('блуз') || combined.includes('сорочк')) categories.add('top');
+            if (combined.includes('swim') || combined.includes('купальник')) categories.add('swim');
+
+            const isSkirt = className.includes('skirt') || name.includes('skirt') || name.includes('спідниц') ||
+                (category.includes('спідниц') && !name.includes('брюк') && !name.includes('штан'));
+            const isShorts = className.includes('short') || name.includes('short') || name.includes('шорт') || category.includes('шорт');
+            const isPants = className.includes('pant') || className.includes('jean') || className.includes('casual bottoms') ||
+                name.includes('pant') || name.includes('jean') || name.includes('брюк') || name.includes('штан') || name.includes('джинс') ||
+                (category.includes('брюк') && !isSkirt);
+
+            if (isSkirt) categories.add('skirt');
+            if (isShorts) categories.add('shorts');
+            if (isPants) categories.add('pants');
+
+            return Array.from(categories);
+        }
+
+        function calculateWeatherMatch(item, temp, cond) {
+            if (!item || typeof temp !== 'number' || Number.isNaN(temp)) {
+                return { tempScore: 0, condModifier: 0, finalScore: 0, allowed: false };
             }
 
-            // 2. Department / category match
+            const cats = normalizeWeatherCategories(item);
+            const name = String(item.name || item.class_name || '').toLowerCase();
+            const seasons = getWardrobeSeasons(item);
+            // Temperature is the base physical suitability signal. Weather conditions may
+            // re-rank items, but they must never rewrite the entered temperature.
+
+            const isOuterwear = cats.includes('outerwear');
+            const isHeavyOuterwear = isOuterwear && (
+                name.includes('пуховик') || name.includes('пальто') || name.includes('тепл') ||
+                name.includes('parka') || name.includes('coat') || String(item.class_name || '').toLowerCase() === 'outerwear'
+            );
+            const isKnit = cats.includes('knit');
+            const isPants = cats.includes('pants');
+            const isSkirt = cats.includes('skirt');
+            const isShorts = cats.includes('shorts');
+            const isSwim = cats.includes('swim');
+            const isDress = cats.includes('dress');
+            const isTop = cats.includes('top') && !isKnit;
+
+            let tempScore = 0.5;
+            let condModifier = 0;
+
+            // Snow is a hard incompatibility for exposed lower-body / beach categories.
+            // This is applied before temperature scoring so contradictory manual input
+            // cannot keep a skirt or shorts in the visible recommendations.
+            if (cond === 'snowy' && (isSkirt || isShorts || isSwim)) {
+                return { tempScore: 0, condModifier: 0, finalScore: 0, allowed: false };
+            }
+
+            if (temp < 0) {
+                if (isShorts || isSwim || isSkirt) return { tempScore: 0, condModifier: 0, finalScore: 0, allowed: false };
+                if (seasons.includes('summer') && !seasons.includes('winter')) return { tempScore: 0, condModifier: 0, finalScore: 0, allowed: false };
+                if (name.includes('літня') || name.includes('лляна') || name.includes('босоніжки')) return { tempScore: 0, condModifier: 0, finalScore: 0, allowed: false };
+
+                if (isHeavyOuterwear) tempScore = 1.0;
+                else if (isOuterwear) tempScore = 0.90;
+                else if (isKnit) tempScore = 0.80;
+                else if (isPants) tempScore = 0.70;
+                else if (isDress) tempScore = 0.20;
+                else tempScore = 0.30;
+            } else if (temp < 15) {
+                if (isShorts || isSwim) return { tempScore: 0, condModifier: 0, finalScore: 0, allowed: false };
+                if (seasons.includes('summer') && !seasons.includes('winter') && !seasons.includes('autumn')) return { tempScore: 0, condModifier: 0, finalScore: 0, allowed: false };
+                if (name.includes('літня') || name.includes('лляна') || name.includes('босоніжки')) return { tempScore: 0, condModifier: 0, finalScore: 0, allowed: false };
+
+                if (isOuterwear) tempScore = 0.85;
+                else if (isKnit) tempScore = 0.85;
+                else if (isPants) tempScore = 0.80;
+                else if (isTop) tempScore = 0.65;
+                else if (isSkirt || isDress) tempScore = 0.50;
+                else tempScore = 0.50;
+            } else if (temp < 25) {
+                if (isHeavyOuterwear) tempScore = 0.20;
+                else if (isTop) tempScore = 0.90;
+                else if (isDress) tempScore = 0.85;
+                else if (isPants || isSkirt) tempScore = 0.80;
+                else if (isOuterwear || isKnit) tempScore = 0.75;
+                else if (isShorts) tempScore = 0.60;
+                else if (isSwim) tempScore = 0.30;
+                else tempScore = 0.60;
+            } else {
+                if (isHeavyOuterwear || isKnit || (seasons.includes('winter') && !seasons.includes('summer'))) {
+                    return { tempScore: 0, condModifier: 0, finalScore: 0, allowed: false };
+                }
+                if (name.includes('пальто') || name.includes('пуховик') || name.includes('теплий светр')) {
+                    return { tempScore: 0, condModifier: 0, finalScore: 0, allowed: false };
+                }
+
+                if (isDress || isShorts || isSwim) tempScore = 1.0;
+                else if (isTop || isSkirt) tempScore = 0.90;
+                else if (isPants) tempScore = 0.50;
+                else if (isOuterwear) tempScore = 0.20;
+                else tempScore = 0.40;
+            }
+
+            if (cond === 'rainy') {
+                if (isOuterwear) condModifier += 0.20;
+                if (name.includes('тренч') || name.includes('плащ') || name.includes('jacket') || name.includes('куртк')) condModifier += 0.05;
+                if (isPants) condModifier += 0.05;
+                if (isSwim || isShorts || isSkirt) condModifier -= 0.15;
+            } else if (cond === 'snowy') {
+                if (isHeavyOuterwear) condModifier += 0.20;
+                else if (isOuterwear) condModifier += 0.15;
+                if (isKnit) condModifier += 0.10;
+                if (isPants) condModifier += 0.05;
+                if (isSkirt || isShorts || isSwim) condModifier -= 0.30;
+            } else if (cond === 'sunny') {
+                if (temp >= 15 && (isDress || isTop || isShorts)) condModifier += 0.10;
+                else if (temp < 15 && isOuterwear) condModifier += 0.05;
+            } else if (cond === 'cloudy') {
+                if (isKnit || (isOuterwear && !isHeavyOuterwear)) condModifier += 0.05;
+                if (isPants) condModifier += 0.05;
+            }
+
+            const finalScore = Math.max(0, Math.min(1, tempScore + condModifier));
+            return {
+                tempScore: Math.round(tempScore * 100) / 100,
+                condModifier: Math.round(condModifier * 100) / 100,
+                finalScore: Math.round(finalScore * 100) / 100,
+                allowed: finalScore > 0
+            };
+        }
+
+        function getWeatherRole(item) {
+            const cats = normalizeWeatherCategories(item);
+            if (cats.includes('outerwear')) return 'outerwear';
+            if (cats.includes('knit')) return 'knit';
+            if (cats.includes('dress')) return 'dress';
+            if (cats.includes('shorts')) return 'shorts';
+            if (cats.includes('skirt')) return 'skirt';
+            if (cats.includes('pants')) return 'pants';
+            if (cats.includes('top')) return 'top';
+            return 'other';
+        }
+
+        function getCatalogRolePlan(temp, cond) {
+            if (cond === 'snowy') {
+                if (temp < 0) return ['outerwear', 'knit', 'pants', 'outerwear', 'knit', 'pants'];
+                if (temp < 15) return ['outerwear', 'knit', 'pants', 'outerwear', 'pants', 'top'];
+                if (temp < 25) return ['outerwear', 'pants', 'knit', 'top', 'outerwear', 'pants'];
+                return ['top', 'pants', 'outerwear', 'knit', 'top', 'pants'];
+            }
+            if (cond === 'rainy') {
+                if (temp < 0) return ['outerwear', 'pants', 'knit', 'outerwear', 'pants', 'knit'];
+                if (temp < 15) return ['outerwear', 'pants', 'knit', 'outerwear', 'pants', 'top'];
+                return ['outerwear', 'pants', 'top', 'outerwear', 'pants', 'knit'];
+            }
+            if (temp < 0) {
+                return cond === 'cloudy'
+                    ? ['knit', 'outerwear', 'pants', 'knit', 'outerwear', 'pants']
+                    : ['outerwear', 'pants', 'knit', 'outerwear', 'pants', 'knit'];
+            }
+            if (temp < 15) {
+                return cond === 'cloudy'
+                    ? ['outerwear', 'knit', 'pants', 'outerwear', 'pants', 'knit']
+                    : ['knit', 'pants', 'outerwear', 'knit', 'pants', 'outerwear'];
+            }
+            if (temp < 25) {
+                return cond === 'cloudy'
+                    ? ['knit', 'pants', 'top', 'outerwear', 'pants', 'dress']
+                    : ['top', 'dress', 'pants', 'top', 'dress', 'skirt'];
+            }
+            return cond === 'cloudy'
+                ? ['top', 'dress', 'pants', 'top', 'skirt', 'dress']
+                : ['dress', 'top', 'shorts', 'dress', 'top', 'skirt'];
+        }
+
+        function selectDiverseCatalogCandidates(entries, temp, cond, limit = 6) {
+            const remaining = entries.map(entry => ({ ...entry, role: getWeatherRole(entry.item) }));
+            const selected = [];
+            const used = new Set();
+            const plan = getCatalogRolePlan(temp, cond);
+
+            for (const wantedRole of plan) {
+                if (selected.length >= limit) break;
+                const idx = remaining.findIndex((entry, i) => !used.has(i) && entry.role === wantedRole);
+                if (idx !== -1) {
+                    selected.push(remaining[idx].item);
+                    used.add(idx);
+                }
+            }
+
+            // Graceful fallback if the dataset lacks one of the planned roles.
+            for (let i = 0; i < remaining.length && selected.length < limit; i++) {
+                if (!used.has(i)) selected.push(remaining[i].item);
+            }
+
+            return selected;
+        }
+
+        function scoreWardrobeItemForWeather(item, temp, cond, uStyle, depts) {
+            const weatherMatch = calculateWeatherMatch(item, temp, cond);
+            if (!weatherMatch.allowed || weatherMatch.finalScore <= 0) return 0;
+
+            let score = Math.round(weatherMatch.finalScore * 65);
+            const dept = mapWardrobeCategoryToDept(item.category);
+
             if (depts.includes(dept)) {
                 score += 35;
             } else if (item.category === 'Взуття' || item.category === 'Аксесуар') {
-                score += 20;
-            }
-
-            // 3. Weather condition match
-            if (cond === 'rainy' && (dept === 'Jackets' || String(item.name).toLowerCase().includes('тренч') || String(item.name).toLowerCase().includes('куртк'))) {
                 score += 15;
             }
 
-            // 4. Style affinity bonus
             if (uStyle && Array.isArray(item.style) && item.style.includes(uStyle)) {
                 score += 10;
             }
@@ -586,38 +759,55 @@
             if (temp >= 25) {
                 depts = ['Tops', 'Dresses', 'Intimate', 'Bottoms'];
                 tips = ['Легкі натуральні тканини (льон, бавовна)', 'Відкрите взуття та сонцезахисні окуляри', 'Світлі кольори відбивають сонячні промені'];
+                if (cond === 'rainy') {
+                    depts = ['Jackets', 'Tops', 'Bottoms', 'Dresses'];
+                    tips.push('Для зливи додайте легкий водозахисний верхній шар');
+                } else if (cond === 'snowy') {
+                    depts = ['Jackets', 'Tops', 'Bottoms'];
+                    tips = ['Температура залишається теплою — обирайте легкий захисний верхній шар', 'Закритий низ і взуття доречніші за відкриті речі', 'Сніг коригує образ, але не перетворює теплу погоду на зимову'];
+                }
             } else if (temp >= 15 && temp < 25) {
                 depts = ['Tops', 'Bottoms', 'Jackets', 'Dresses'];
                 tips = ['Ідеальна погода для багатошаровості', 'Джинсова куртка або легкий кардиган', 'Зручні кросівки або лофери'];
-                if(cond==='rainy') { depts.push('Jackets'); tips.push('Не забудьте тренч або водонепроникну куртку'); }
-            } else if (temp >= 5 && temp < 15) {
+                if (cond === 'rainy') {
+                    depts = ['Jackets', 'Bottoms', 'Tops'];
+                    tips.push('Не забудьте тренч або водонепроникну куртку');
+                } else if (cond === 'snowy') {
+                    depts = ['Jackets', 'Bottoms', 'Tops'];
+                    tips = ['Легкий верхній шар захистить від опадів', 'Віддайте перевагу закритому низу та трикотажу', 'Температура важливіша за сам факт снігу: важкий зимовий одяг не є пріоритетом'];
+                }
+            } else if (temp >= 0 && temp < 15) {
                 depts = ['Jackets', 'Bottoms', 'Tops'];
+                if (cond === 'rainy' || cond === 'snowy') depts = ['Jackets', 'Tops', 'Bottoms'];
                 tips = ['Щільний денім або вовняні брюки', 'Теплий светр — основа образу', 'Пальто або куртка обов\'язкові'];
+                if (cond === 'snowy') tips.push('Для снігу обирайте більш закритий і теплий верхній шар');
             } else {
-                depts = ['Jackets', 'Bottoms'];
+                depts = ['Jackets', 'Bottoms', 'Tops'];
                 tips = ['Максимальне утеплення: термобілизна', 'Пуховик або тепле вовняне пальто', 'Об\'ємний шарф та шапка'];
+                if (cond === 'snowy') tips.push('Сніг підсилює пріоритет теплого outerwear і трикотажу');
             }
 
-            // Filter catalog products
-            let cFiltered = (allProducts || []).filter(p => depts.includes(p.department_name));
+            // Apply the same weather score to catalog items before rating tie-breaks.
+            let cCandidates = (allProducts || [])
+                .filter(p => depts.includes(p.department_name))
+                .map(p => ({ item: p, weatherMatch: calculateWeatherMatch(p, temp, cond) }))
+                .filter(entry => entry.weatherMatch.allowed && entry.weatherMatch.finalScore > 0);
 
             // Personalization: If user has a style, heavily bias recommendations if we have tags (mock logic)
-            if (userStyle === 'boho') cFiltered = cFiltered.filter(p => !['Formal', 'Suit'].includes(p.class_name));
+            if (userStyle === 'boho') cCandidates = cCandidates.filter(entry => !['Formal', 'Suit'].includes(entry.item.class_name));
             if (userStyle === 'minimalist') tips.push('💡 Ваш мінімалістичний стиль вимагає монохрому: обирайте базові кольори.');
-            
-            document.getElementById('tips-list').innerHTML = tips.map(t => `<li>${t.replace('💡 ', '')}</li>`).join('');
-            
-            // Exclude summer items for cold weather
-            if (temp < 15) {
-                cFiltered = cFiltered.filter(p => !['Shorts', 'Skirts', 'Swim', 'Intimates'].includes(p.class_name));
-            }
 
-            // Deterministic sort for catalog
-            cFiltered.sort((a, b) => {
-                const ratingDiff = (Number(b.avg_rating) || 0) - (Number(a.avg_rating) || 0);
+            document.getElementById('tips-list').innerHTML = tips.map(t => `<li>${t.replace('💡 ', '')}</li>`).join('');
+
+            cCandidates.sort((a, b) => {
+                const weatherDiff = b.weatherMatch.finalScore - a.weatherMatch.finalScore;
+                if (weatherDiff !== 0) return weatherDiff;
+                const ratingDiff = (Number(b.item.avg_rating) || 0) - (Number(a.item.avg_rating) || 0);
                 if (ratingDiff !== 0) return ratingDiff;
-                return (Number(b.clothing_id) || 0) - (Number(a.clothing_id) || 0);
+                return (Number(b.item.clothing_id) || 0) - (Number(a.item.clothing_id) || 0);
             });
+
+            const cFiltered = selectDiverseCatalogCandidates(cCandidates, temp, cond, 6);
 
             // Score and rank wardrobe candidates
             const wCandidates = (wardrobeItems || [])
