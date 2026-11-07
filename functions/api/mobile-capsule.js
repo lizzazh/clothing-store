@@ -63,7 +63,7 @@ export async function onRequestPost({request,env}){
   if(pwaFallbackEnabled(env)){
    const alternative=await tryPwaFallback({
     env,task:"capsule",instruction:sys,input:requestInput,
-    validator:validResult
+    validator:validResult,timeoutMs:28000
    });
    if(alternative?.data)return formatResult(alternative.data,alternative.provider);
    if(alternative?.failure){
