@@ -4,8 +4,9 @@
 const $ = id => document.getElementById(id);
 const STORAGE_PLANS = "ee_mobile_capsules_v1";
 const STORAGE_ACCESS = "ee_mobile_ai_passcode";
+const STORAGE_VISION_CONSENT = "ee_mobile_vision_consent_v1";
 const STYLES = ["classic","minimalist","romantic","elegant","streetwear","boho"];
-const state = { items:[], styleDNA:{}, selectedStyles:new Set(), plans:[], history:[], photo:null, busy:false, installPrompt:null };
+const state = { items:[], styleDNA:{}, selectedStyles:new Set(), plans:[], history:[], photo:null, photoEpoch:0, recognitionBusy:false, recognitionPrediction:null, busy:false, installPrompt:null };
 let toastTimer=null;
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n;}
 function clear(node){node.replaceChildren();}
@@ -83,30 +84,125 @@ async function convertPhoto(file){
   if(objectUrl)URL.revokeObjectURL(objectUrl);
  }
 }
+function visionStatus(message,warning=false){
+ const n=$("recognition-status");n.textContent=message;
+ n.classList.toggle("vision-warning",warning);
+}
+function visionReady(){ $("recognize-photo").disabled=!state.photo||state.recognitionBusy; }
+async function recognizePhoto(){
+ if(!state.photo){visionStatus("Сначала выбери фото вещи.",true);return;}
+ // Explicit button click also counts as the user's opt-in after viewing the disclosure.
+ if(!$("vision-auto").checked){
+  $("vision-auto").checked=true;
+  try{localStorage.setItem(STORAGE_VISION_CONSENT,"true");}catch(_){}
+ }
+ const passcode=getAccessCode();
+ if(!passcode){visionStatus("Для AI нужен код. Введи его в поле выше и нажми «Код AI».",true);return;}
+ if(state.recognitionBusy)return;
+ const requestId=++state.photoEpoch;
+ const imageData=state.photo;
+ const previous={
+  name:$("item-name").value,category:$("item-category").value,color:$("item-color").value,
+  season:$("item-season").value,style:$("item-style").value,formality:$("item-formality").value
+ };
+ state.recognitionBusy=true;visionReady();$("save-item").disabled=true;
+ visionStatus("✦ Gemini анализирует фото…");
+ try{
+  const response=await fetch("/api/mobile-vision",{
+   method:"POST",
+   headers:{"Content-Type":"application/json","X-Travel-Passcode":passcode},
+   body:JSON.stringify({imageData})
+  });
+  const data=await response.json();
+  if(requestId!==state.photoEpoch||state.photo!==imageData)return; // discarded stale photo
+  if(!response.ok){
+   if(data&&data.code==="ACCESS_DENIED"){
+    try{sessionStorage.removeItem(STORAGE_ACCESS);}catch(_){}
+   }
+   throw Error((data&&data.error)||"Не удалось распознать вещь.");
+  }
+  const result=data&&data.item;
+  if(!result||typeof result!=="object")throw Error("AI не вернул характеристики.");
+  const safeStyles=["classic","minimalist","romantic","elegant","streetwear","boho"];
+  const safeSeasons=["all-season","spring","summer","autumn","winter"];
+  const safeCategories=["Топ / Блуза","Брюки / Спідниця","Сукня","Куртка / Пальто","Взуття","Аксесуар","Інше"];
+  const seasons=Array.isArray(result.season)?result.season.filter(x=>safeSeasons.includes(x)):[];
+  const styles=Array.isArray(result.style)?result.style.filter(x=>safeStyles.includes(x)):[];
+  const category=safeCategories.includes(result.category)?result.category:"Інше";
+  const mainSeason=seasons.includes("all-season")?"all-season":seasons[0]||"all-season";
+  const mainStyle=styles[0]||"";
+  const f=Number(result.formality),confidence=Number(result.confidence);
+  const formality=Number.isFinite(f)?f>=0.72?"0.85":f<0.33?"0.2":"0.5":"0.5";
+  // Keep user changes made while the request was in flight.
+  const changes={name:result.name||"",category,color:result.color||"",season:mainSeason,style:mainStyle,formality};
+  const fields={name:"item-name",category:"item-category",color:"item-color",season:"item-season",style:"item-style",formality:"item-formality"};
+  for(const [k,value] of Object.entries(changes)){
+   const input=$(fields[k]);
+   if(String(input.value)===String(previous[k])&&value)input.value=String(value);
+  }
+  state.recognitionPrediction={season:seasons,style:styles,seasonSelected:mainSeason,styleSelected:mainStyle};
+  const percent=Number.isFinite(confidence)?Math.round(Math.max(0,Math.min(1,confidence))*100):null;
+  const caution=result.warning?String(result.warning).slice(0,240):"";
+  visionStatus("✓ AI заполнил характеристики"+(percent===null?"":". Уверенность: "+percent+"%")+
+   ". Проверь поля перед сохранением."+(caution?" "+caution:""),percent!==null&&percent<60);
+ }catch(error){
+  if(requestId===state.photoEpoch)visionStatus((error&&error.message||"AI недоступен.")+" Все поля можно заполнить вручную.",true);
+ }finally{
+  if(requestId===state.photoEpoch){state.recognitionBusy=false;visionReady();$("save-item").disabled=false;}
+ }
+}
 async function onPhotoChange(event){
  const file=event.target.files&&event.target.files[0];if(!file)return;
+ const token=++state.photoEpoch;
+ state.photo=null;state.recognitionBusy=false;state.recognitionPrediction=null;visionReady();
+ $("photo-preview").hidden=true;$("photo-label").textContent="Обрабатываю фото…";
+ visionStatus("Фото будет сохранено локально. AI распознавание доступно после согласия.");
  try{
-  $("photo-label").textContent="Обрабатываю фото…";
-  state.photo=await convertPhoto(file);
-  const preview=$("photo-preview");preview.src=state.photo;preview.hidden=false;
-  $("photo-label").textContent="Фото готово";
- }catch(err){state.photo=null;$("photo-preview").hidden=true;toast(err.message||"Не удалось прочитать фото.");$("photo-label").textContent="Выбрать фото";}
+  const photo=await convertPhoto(file);
+  if(token!==state.photoEpoch)return;
+  state.photo=photo;const preview=$("photo-preview");preview.src=photo;preview.hidden=false;
+  $("photo-label").textContent="Фото готово";visionReady();
+  if($("vision-auto").checked)await recognizePhoto();
+ }catch(error){
+  if(token!==state.photoEpoch)return;
+  state.photo=null;$("photo-preview").hidden=true;$("photo-label").textContent="Выбрать фото";
+  visionReady();visionStatus(error&&error.message||"Не удалось прочитать фото.",true);
+ }
 }
 async function saveItem(event){
  event.preventDefault();
+ if(state.recognitionBusy){toast("Дождись распознавания или отключи AI и загрузи фото заново.");return;}
  const name=$("item-name").value.trim();if(!name){toast("Укажи название вещи.");return;}
  $("save-item").disabled=true;
  try{
+  const currentSeason=$("item-season").value,currentStyle=$("item-style").value;
+  const ai=state.recognitionPrediction;
+  const season=ai&&currentSeason===ai.seasonSelected&&ai.season.length?ai.season:[currentSeason];
+  const style=ai&&currentStyle===ai.styleSelected&&ai.style.length?ai.style:(currentStyle?[currentStyle]:[]);
   const item={id:Date.now()*100+Math.floor(Math.random()*100),name,category:$("item-category").value,
-   color:$("item-color").value.trim(),season:[$("item-season").value],style:[],formality:Number($("item-formality").value),
+   color:$("item-color").value.trim(),season,style,formality:Number($("item-formality").value),
    img:state.photo||"",createdAt:new Date().toISOString()};
   await WardrobeDB.add(item);
   if(typeof WardrobeDB.markInitialized==="function")WardrobeDB.markInitialized();
-  state.photo=null;$("add-item-form").reset();$("photo-preview").hidden=true;$("photo-preview").removeAttribute("src");
+  state.photo=null;state.photoEpoch++;state.recognitionPrediction=null;
+  $("add-item-form").reset();
+  $("vision-auto").checked=localStorage.getItem(STORAGE_VISION_CONSENT)==="true";
+  $("photo-preview").hidden=true;$("photo-preview").removeAttribute("src");
   $("photo-input").value="";$("photo-label").textContent="Выбрать фото";
+  visionReady();visionStatus("Вещь сохранена. Добавь следующее фото.");
   await refreshWardrobe();toast("Добавлено в гардероб!");
- }catch(err){toast("Не удалось сохранить вещь: "+(err.message||"ошибка"));}
+ }catch(error){toast("Не удалось сохранить вещь: "+(error.message||"ошибка"));}
  finally{$("save-item").disabled=false;}
+}
+function saveVisionAccess(){
+ const code=$("vision-access-code").value.trim();
+ if(!code){visionStatus("Введи код доступа к AI.",true);return;}
+ try{
+  sessionStorage.setItem(STORAGE_ACCESS,code);
+  $("vision-access-code").value="";
+  visionStatus("Код сохранён на время сессии. Можно распознавать вещи.");
+  if(state.photo&&$("vision-auto").checked)recognizePhoto();
+ }catch(_){visionStatus("Не удалось сохранить код. Проверь настройки браузера.",true);}
 }
 function readStyles(){
  const profile=getJSON("ai_profile",{});
@@ -302,6 +398,15 @@ async function boot(){
  $("prompt").addEventListener("keydown",event=>{if(event.key==="Enter"&&(event.ctrlKey||event.metaKey)){event.preventDefault();askStylist();}});
  $("save-access").addEventListener("click",saveAccess);
  $("photo-input").addEventListener("change",onPhotoChange);
+ $("recognize-photo").addEventListener("click",recognizePhoto);
+ $("vision-save-access").addEventListener("click",saveVisionAccess);
+ $("vision-auto").checked=localStorage.getItem(STORAGE_VISION_CONSENT)==="true";
+ $("vision-auto").addEventListener("change",()=>{
+   try{localStorage.setItem(STORAGE_VISION_CONSENT,$("vision-auto").checked?"true":"false");}catch(_){}
+   if($("vision-auto").checked&&state.photo)recognizePhoto();
+   else if(!$("vision-auto").checked)visionStatus("Распознавание отключено. Фото остаётся на устройстве.");
+ });
+ visionReady();
  $("add-item-form").addEventListener("submit",saveItem);
  for(const button of document.querySelectorAll(".style-card"))button.addEventListener("click",()=>{
   const s=button.dataset.style;if(state.selectedStyles.has(s))state.selectedStyles.delete(s);else state.selectedStyles.add(s);renderStyles();
