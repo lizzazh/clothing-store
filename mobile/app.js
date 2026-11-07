@@ -262,6 +262,25 @@ function connectivity(){
  $("connection-status").textContent=online?"● Онлайн":"● Офлайн";
  $("connection-status").style.color=online?"#b9d7bc":"#f3bd9b";
 }
+function initVoice(){
+ const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+ const mic=$("mic-button");if(!Speech)return;
+ mic.hidden=false;
+ let active=null;
+ mic.addEventListener("click",()=>{
+   if(active){active.stop();return;}
+   const r=new Speech();active=r;r.lang=/^uk/i.test(navigator.language)?"uk-UA":"ru-RU";
+   r.interimResults=false;r.continuous=false;r.maxAlternatives=1;
+   r.onresult=(event)=>{
+     const result=event.results&&event.results[0]&&event.results[0][0];
+     if(result&&result.transcript){$("prompt").value=($("prompt").value.trim()+" "+result.transcript).trim();$("prompt").focus();}
+   };
+   r.onerror=()=>toast("Голосовой ввод недоступен. Напиши запрос текстом.");
+   r.onend=()=>{active=null;mic.classList.remove("recording");mic.setAttribute("aria-label","Надиктовать запрос");};
+   try{r.start();mic.classList.add("recording");mic.setAttribute("aria-label","Остановить диктовку");}
+   catch(_){active=null;mic.classList.remove("recording");toast("Не получилось включить микрофон.");}
+ });
+}
 function initInstall(){
  let deferred=null;
  window.addEventListener("beforeinstallprompt",ev=>{ev.preventDefault();deferred=ev;$("install-button").title="Установить приложение";});
@@ -288,7 +307,7 @@ async function boot(){
   const s=button.dataset.style;if(state.selectedStyles.has(s))state.selectedStyles.delete(s);else state.selectedStyles.add(s);renderStyles();
  });
  $("save-style").addEventListener("click",saveStyles);
- window.addEventListener("online",connectivity);window.addEventListener("offline",connectivity);connectivity();initInstall();
+ window.addEventListener("online",connectivity);window.addEventListener("offline",connectivity);connectivity();initInstall();initVoice();
  state.plans=getJSON(STORAGE_PLANS,[]);if(!Array.isArray(state.plans))state.plans=[];
  readStyles();renderPlans();
  try{await refreshWardrobe();}catch(error){toast("Ошибка гардероба: "+(error.message||"IndexedDB недоступна"));}
