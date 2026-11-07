@@ -1,3 +1,4 @@
+import {authenticated,sameOrigin} from "../_lib/mobile-auth.js";
 // Mobile PWA AI proxy. Secrets remain server-side.
 const jsonHeaders = {"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff"};
 function reply(value,status=200){return new Response(JSON.stringify(value),{status,headers:jsonHeaders});}
@@ -10,10 +11,9 @@ export async function onRequestPost({request,env}){
  const url=new URL(request.url);
  const origin=request.headers.get("Origin");
  if(origin && new URL(origin).host!==url.host)return reply({error:"Origin not allowed"},403);
- const pass=env.TRAVEL_PWA_PASSCODE,key=env.PWA_GEMINI_API_KEY;
- if(!pass||!key)return reply({error:"AI недоступен: в Cloudflare нужно настроить PWA_GEMINI_API_KEY и TRAVEL_PWA_PASSCODE."},503);
- const supplied=request.headers.get("X-Travel-Passcode")||"";
- if(!supplied||supplied.length>256||supplied!==pass)return reply({error:"Неверный код доступа к AI.",code:"ACCESS_DENIED"},401);
+ const key=env.PWA_GEMINI_API_KEY;
+ if(!env.TRAVEL_PWA_PASSCODE||!key)return reply({error:"AI не настроен в этом окружении Cloudflare.",code:"NOT_CONFIGURED"},503);
+ if(!await authenticated(request,env.TRAVEL_PWA_PASSCODE))return reply({error:"Войди в AI один раз в настройках приложения.",code:"ACCESS_DENIED"},401);
  if(Number(request.headers.get("Content-Length")||0)>40000)return reply({error:"Запрос слишком большой"},413);
  let data;
  try{const raw=await request.text();if(raw.length>40000)throw Error("large");data=JSON.parse(raw);}catch(_){return reply({error:"Некорректный JSON или слишком большой запрос"},400);}
