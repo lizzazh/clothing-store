@@ -32,6 +32,14 @@ test("one-time sign-in sets secure 30-day HttpOnly cookie",async()=>{
  const status=await authApi.onRequestGet({request:request("GET",null,cookieHeader),env});
  assert.deepEqual(await status.json(),{connected:true,configured:true});
 });
+test("accepts same TRAVEL_PWA_PASSCODE with trailing Cloudflare secret whitespace",async()=>{
+ const copied={...env,TRAVEL_PWA_PASSCODE:"  "+env.TRAVEL_PWA_PASSCODE+"\\n"};
+ const login=await authApi.onRequestPost({request:request("POST",{passcode:env.TRAVEL_PWA_PASSCODE}),env:copied});
+ assert.equal(login.status,200);
+ const cookie=login.headers.get("set-cookie").split(";")[0];
+ const status=await authApi.onRequestGet({request:request("GET",null,cookie),env:copied});
+ assert.deepEqual(await status.json(),{connected:true,configured:true});
+});
 test("invalid code and cross-origin requests cannot create session",async()=>{
  const bad=await authApi.onRequestPost({request:request("POST",{passcode:"not-it"}),env});
  assert.equal(bad.status,401);assert.equal(bad.headers.get("set-cookie"),null);
