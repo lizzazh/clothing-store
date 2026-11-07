@@ -29,7 +29,7 @@
   <div class="feature-mini"><span>✦ Travel capsule</span><span>✦ На мероприятие</span><span>✦ На каждый день</span></div>
  </div>
  <div class="messages" id="messages" role="log" aria-label="Чат со стилистом" aria-live="polite">
-  <article class="bubble assistant"><div class="bubble-label">ELEGANCE AI</div>Привет! Добавь одежду в «Мой гардероб», выбери свой стиль и напиши, какой образ тебе нужен. Фото останутся на телефоне.</article>
+  <article class="bubble assistant"><div class="bubble-label">ELEGANCE AI</div>Привет! Добавь одежду, выбери стиль и напиши, какая капсула нужна. Фото сохраняются на устройстве; при включённом AI-распознавании выбранное фото временно отправляется в Gemini.</article>
  </div>
  <div id="suggestions" class="suggestions" aria-label="Примеры запросов">
   <button class="suggestion" type="button" data-prompt="Я еду в Париж на 7 дней только с ручной кладью. Подбери небольшую стильную капсулу из моей одежды.">✈ Париж, 7 дней</button>
@@ -45,7 +45,7 @@
  <div class="composer-footer"><span id="wardrobe-status">Гардероб: 0 вещей</span><span id="connection-status">● Локально</span></div>
  <details class="secure-access" id="access-panel">
   <summary>Настроить подключение AI <span aria-hidden="true">⌄</span></summary>
-  <p>Для защиты AI нужен код доступа. Он хранится только до закрытия сессии. Фотографии гардероба не отправляются.</p>
+  <p>Для защиты AI нужен код доступа. Он хранится только в текущей сессии. В чат отправляются описания вещей без фото; при отдельном AI-распознавании выбранное фото временно передаётся Gemini.</p>
   <label for="access-code">Код доступа к AI</label>
   <div class="access-row"><input id="access-code" type="password" autocomplete="off" placeholder="Код из Cloudflare" spellcheck="false"><button type="button" id="save-access" class="soft-button">Сохранить</button></div>
   <p class="micro" id="access-feedback"></p>
@@ -53,11 +53,18 @@
 </section>
 
 <section class="screen" id="screen-wardrobe" aria-labelledby="wardrobe-title" hidden>
- <div class="section-head"><div><div class="eyebrow">YOUR COLLECTION</div><h1 id="wardrobe-title">Мой гардероб</h1><p>Добавляй вещи с камеры или из галереи. Всё сохраняется на этом устройстве.</p></div><span class="counter" id="wardrobe-count">0</span></div>
+ <div class="section-head"><div><div class="eyebrow">YOUR COLLECTION</div><h1 id="wardrobe-title">Мой гардероб</h1><p>Загружай фото с камеры или из галереи. AI может определить категорию, цвет, сезон и стиль; ты подтверждаешь результат перед сохранением.</p></div><span class="counter" id="wardrobe-count">0</span></div>
  <div class="panel add-panel">
   <h2>✦ Добавить вещь</h2>
   <form id="add-item-form">
    <label for="photo-input" class="photo-drop" id="photo-drop"><span class="camera-icon">＋</span><strong id="photo-label">Выбрать фото</strong><small>Камера или галерея · JPEG, PNG, HEIC*</small><img id="photo-preview" alt="Предпросмотр вещи" hidden><input id="photo-input" type="file" accept="image/*"></label>
+   <div class="vision-panel">
+    <label class="vision-switch" for="vision-auto"><input id="vision-auto" type="checkbox"> <span>✨ Автоматически распознавать фото с AI</span></label>
+    <p class="micro">Если включить, выбранное фото отправится в Google Gemini для распознавания одежды. Фото не сохраняется на нашем сервере; обработка выполняется внешним AI-провайдером. Без согласия фото остаётся на устройстве.</p>
+    <div class="access-row"><input id="vision-access-code" type="password" autocomplete="off" spellcheck="false" placeholder="Код доступа к AI (если ещё не ввела)" aria-label="Код доступа к AI"><button type="button" id="vision-save-access" class="soft-button">Код AI</button></div>
+    <button id="recognize-photo" class="soft-button recognize-button" type="button" disabled>✦ Распознать выбранное фото</button>
+    <p class="vision-status" id="recognition-status" role="status" aria-live="polite">AI заполнит поля, но ты сможешь их изменить.</p>
+   </div>
    <label for="item-name">Название вещи</label><input id="item-name" required maxlength="80" placeholder="Например, чёрное платье">
    <div class="two-col">
     <div><label for="item-category">Категория</label><select id="item-category"><option>Топ / Блуза</option><option>Брюки / Спідниця</option><option>Сукня</option><option>Куртка / Пальто</option><option>Взуття</option><option>Аксесуар</option><option>Інше</option></select></div>
@@ -65,8 +72,10 @@
    </div>
    <div class="two-col">
     <div><label for="item-season">Сезон</label><select id="item-season"><option value="all-season">Любой</option><option value="spring">Весна</option><option value="summer">Лето</option><option value="autumn">Осень</option><option value="winter">Зима</option></select></div>
-    <div><label for="item-formality">Стиль вещи</label><select id="item-formality"><option value="0.5">Повседневный</option><option value="0.85">Нарядный</option><option value="0.2">Спортивный</option></select></div>
+    <div><label for="item-formality">Назначение</label><select id="item-formality"><option value="0.5">Повседневный</option><option value="0.85">Нарядный</option><option value="0.2">Спортивный</option></select></div>
    </div>
+   <label for="item-style">Стиль вещи</label>
+   <select id="item-style"><option value="">Не определён</option><option value="classic">Classic</option><option value="minimalist">Minimalist</option><option value="romantic">Romantic</option><option value="elegant">Elegant</option><option value="streetwear">Streetwear</option><option value="boho">Boho</option></select>
    <button class="primary full" type="submit" id="save-item">Сохранить в гардероб ✦</button>
   </form>
   <p class="micro">*Некоторые форматы HEIC могут не открываться в конкретном браузере. В таком случае выбери JPEG.</p>
@@ -93,7 +102,7 @@
 <section class="screen" id="screen-capsules" aria-labelledby="capsules-title" hidden>
  <div class="section-head"><div><div class="eyebrow">SAVED CAPSULES</div><h1 id="capsules-title">Мои капсулы</h1><p>Сохраняем последние подборки на этом устройстве, чтобы ты могла вернуться к ним.</p></div></div>
  <div id="capsules-list" class="saved-list"><p class="empty">Сначала попроси AI собрать капсулу.</p></div>
- <div class="panel note-panel"><strong>Приватность</strong><p>Фото и гардероб остаются в IndexedDB браузера. В AI отправляются только названия, категории, цвета и стилистические характеристики вещей при отправке запроса. Не удаляй данные браузера, если хочешь сохранить коллекцию.</p></div>
+ <div class="panel note-panel"><strong>Приватность</strong><p>Гардероб и сохранённые фото хранятся в IndexedDB на этом устройстве. Для AI-капсулы отправляются только описания вещей. Если включить распознавание, выбранное фото временно отправляется в Google Gemini; локальное хранение фотографии не меняется. Не очищай данные браузера, если хочешь сохранить коллекцию.</p></div>
  <a href="../index.html" class="back-link">← Вернуться на полный сайт Elizabeth’s Elegance</a>
 </section>
 </main>
