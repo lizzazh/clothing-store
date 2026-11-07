@@ -144,7 +144,8 @@ async function recognizePhoto(){
   state.recognitionPrediction={season:seasons,style:styles,seasonSelected:mainSeason,styleSelected:mainStyle};
   const percent=Number.isFinite(confidence)?Math.round(Math.max(0,Math.min(1,confidence))*100):null;
   const caution=result.warning?String(result.warning).slice(0,240):"";
-  visionStatus("✓ AI заполнил характеристики"+(percent===null?"":". Уверенность: "+percent+"%")+
+  const provider=data?.provider==="OpenRouter Free"?"OpenRouter Free":data?.provider==="Groq"?"Groq":"Gemini";
+  visionStatus("✓ AI ("+provider+") заполнил характеристики"+(percent===null?"":". Уверенность: "+percent+"%")+
    ". Проверь поля перед сохранением."+(caution?" "+caution:""),percent!==null&&percent<60);
  }catch(error){
   if(requestId===state.photoEpoch)visionStatus((error&&error.message||"AI недоступен.")+" Все поля можно заполнить вручную.",true);
@@ -304,7 +305,8 @@ function createPiece(item){
 }
 function addResponse(result,source){
  const wrapper=el("article","capsule-response");
- wrapper.append(el("div","response-head",source==="ai"?"✦ ELEGANCE AI":"✦ ЛОКАЛЬНЫЙ ПОДБОР"));
+ const provider=result?.provider==="OpenRouter Free"?"OpenRouter Free":result?.provider==="Groq"?"Groq":"Gemini";
+ wrapper.append(el("div","response-head",source==="ai"?"✦ ELEGANCE AI · "+provider:"✦ ЛОКАЛЬНЫЙ ПОДБОР"));
  if(result.message)wrapper.append(el("p","",result.message));
  for(const outfit of result.outfits||[]){
   const card=el("div","outfit-card");card.append(el("h3","",outfit.name||"Образ"));
@@ -351,12 +353,13 @@ function sanitizeResponse(result){
   itemIds:[...new Set((Array.isArray(o.itemIds)?o.itemIds:[]).map(String).filter(x=>set.has(x)))].slice(0,7)
  })).filter(o=>o.itemIds.length);
  return {message:String(result.message||"").slice(0,1600),outfits,packingIds:[...new Set(outfits.flatMap(o=>o.itemIds))],
- missing:(Array.isArray(result.missing)?result.missing:[]).slice(0,6).map(x=>String(x).slice(0,100))};
+ missing:(Array.isArray(result.missing)?result.missing:[]).slice(0,6).map(x=>String(x).slice(0,100)),
+ provider:["Gemini","OpenRouter Free","Groq"].includes(result.provider)?result.provider:"Gemini"};
 }
 function savePlan(query,result,source){
  if(!result.outfits.length)return;
  const plan={id:Date.now(),query:query.slice(0,240),createdAt:new Date().toISOString(),source,
-  message:result.message,outfits:result.outfits,packingIds:result.packingIds,missing:result.missing};
+  message:result.message,outfits:result.outfits,packingIds:result.packingIds,missing:result.missing,provider:result.provider};
  state.plans.unshift(plan);state.plans=state.plans.slice(0,15);saveJSON(STORAGE_PLANS,state.plans);renderPlans();
 }
 async function askStylist(){
@@ -397,7 +400,7 @@ function renderPlans(){
   card.append(el("small","",(date?date+" · ":"")+plan.outfits.length+" образов · "+(plan.source==="ai"?"AI":"Локальный подбор")));
   const open=el("button","soft-button","Открыть");open.type="button";open.onclick=()=>{
    showTab("chat");
-   const result={message:plan.message,outfits:plan.outfits,packingIds:plan.packingIds,missing:plan.missing};
+   const result={message:plan.message,outfits:plan.outfits,packingIds:plan.packingIds,missing:plan.missing,provider:plan.provider};
    addResponse(result,plan.source);
    if((plan.packingIds||[]).some(id=>!itemById(id)))toast("В гардеробе уже нет части вещей из этой капсулы.");
   };
