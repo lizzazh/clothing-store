@@ -5,6 +5,7 @@ const $ = id => document.getElementById(id);
 const STORAGE_PLANS = "ee_mobile_capsules_v1";
 const STORAGE_ACCESS = "ee_mobile_ai_passcode";
 const STORAGE_VISION_CONSENT = "ee_mobile_vision_consent_v1";
+const STORAGE_VISION_CACHE = "ee_mobile_vision_cache_v1";
 const STYLES = ["classic","minimalist","romantic","elegant","streetwear","boho"];
 const state = { items:[], styleDNA:{}, selectedStyles:new Set(), plans:[], history:[], photo:null, photoEpoch:0, recognitionBusy:false, recognitionPrediction:null, aiConnected:false, aiConfigured:null, busy:false, installPrompt:null };
 let toastTimer=null;
@@ -84,6 +85,31 @@ async function convertPhoto(file){
   if(objectUrl)URL.revokeObjectURL(objectUrl);
  }
 }
+/* Cache only verified AI metadata, never the photo itself. */
+async function imageCacheKey(imageData){
+ try{
+  if(!globalThis.crypto?.subtle||!imageData)return null;
+  const bytes=new TextEncoder().encode(imageData);
+  const digest=await globalThis.crypto.subtle.digest("SHA-256",bytes);
+  return Array.from(new Uint8Array(digest),x=>x.toString(16).padStart(2,"0")).join("");
+ }catch(_){return null;}
+}
+function cachedVision(key){
+ if(!key)return null;
+ const entries=getJSON(STORAGE_VISION_CACHE,[]);
+ if(!Array.isArray(entries))return null;
+ const hit=entries.find(x=>x&&x.hash===key&&Date.now()-x.createdAt<30*86400000);
+ if(!hit||!hit.item||typeof hit.item.name!=="string")return null;
+ return {item:hit.item,provider:"Кеш",fallback:false};
+}
+function rememberVision(key,item,provider){
+ if(!key||!item||typeof item.name!=="string")return;
+ const previous=getJSON(STORAGE_VISION_CACHE,[]);
+ const next=(Array.isArray(previous)?previous:[]).filter(x=>x?.hash!==key&&x?.createdAt>Date.now()-30*86400000);
+ next.unshift({hash:key,createdAt:Date.now(),item,provider});
+ try{localStorage.setItem(STORAGE_VISION_CACHE,JSON.stringify(next.slice(0,35)));}catch(_){}
+}
+
 function visionStatus(message,warning=false){
  const n=$("recognition-status");n.textContent=message;
  n.classList.toggle("vision-warning",warning);
@@ -111,17 +137,23 @@ async function recognizePhoto(){
  state.recognitionBusy=true;visionReady();$("save-item").disabled=true;
  visionStatus("✦ Gemini анализирует фото…");
  try{
-  const response=await fetch("/api/mobile-vision",{
-   method:"POST",
-   credentials:"same-origin",headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({imageData})
-  });
-  const data=await response.json();
-  if(requestId!==state.photoEpoch||state.photo!==imageData)return; // discarded stale photo
-  if(!response.ok){
-   if(data&&data.code==="ACCESS_DENIED"){state.aiConnected=false;syncAuthUI();}
-   throw Error((data&&data.error)||"Не удалось распознать вещь.");
+  const photoKey=await imageCacheKey(imageData);
+  let data=cachedVision(photoKey);
+  if(!data){
+   const response=await fetch("/api/mobile-vision",{
+    method:"POST",
+    credentials:"same-origin",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({imageData})
+   });
+   data=await response.json();
+   if(requestId!==state.photoEpoch||state.photo!==imageData)return; // discarded stale photo
+   if(!response.ok){
+    if(data&&data.code==="ACCESS_DENIED"){state.aiConnected=false;syncAuthUI();}
+    throw Error((data&&data.error)||"Не удалось распознать вещь.");
+   }
+   if(data?.item)rememberVision(photoKey,data.item,data.provider);
   }
+  if(requestId!==state.photoEpoch||state.photo!==imageData)return;
   const result=data&&data.item;
   if(!result||typeof result!=="object")throw Error("AI не вернул характеристики.");
   const safeStyles=["classic","minimalist","romantic","elegant","streetwear","boho"];
@@ -144,7 +176,7 @@ async function recognizePhoto(){
   state.recognitionPrediction={season:seasons,style:styles,seasonSelected:mainSeason,styleSelected:mainStyle};
   const percent=Number.isFinite(confidence)?Math.round(Math.max(0,Math.min(1,confidence))*100):null;
   const caution=result.warning?String(result.warning).slice(0,240):"";
-  const provider=data?.provider==="OpenRouter Free"?"OpenRouter Free":data?.provider==="Groq"?"Groq":"Gemini";
+  const provider=data?.provider==="Кеш"?"локального кеша":data?.provider==="OpenRouter Free"?"OpenRouter Free":data?.provider==="Groq"?"Groq":"Gemini";
   visionStatus("✓ AI ("+provider+") заполнил характеристики"+(percent===null?"":". Уверенность: "+percent+"%")+
    ". Проверь поля перед сохранением."+(caution?" "+caution:""),percent!==null&&percent<60);
  }catch(error){
