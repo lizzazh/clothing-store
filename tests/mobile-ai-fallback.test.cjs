@@ -105,3 +105,58 @@ test("with consent and explicit opt-in, Groq vision uses supported Qwen model",a
  assert.equal(out.status,200);assert.equal((await out.json()).provider,"Groq");
  assert.equal(seen.length,2);
 });
+
+test("OpenRouter quota HTTP 429 is shown, not incorrectly described as missing Secret",async()=>{
+ const seen=[];
+ const call=load("functions/api/mobile-vision.js",async(url)=>{
+  seen.push(url);
+  return response({},429);
+ });
+ const res=await call({request:request("mobile-vision",{imageData}),env});
+ assert.equal(res.status,429);
+ const body=await res.json();
+ assert.equal(body.code,"FALLBACK_RATE_LIMIT");
+ assert.equal(body.provider,"OpenRouter Free");
+ assert.match(body.error,/OpenRouter Free.*429/);
+ assert.doesNotMatch(body.error,/Добавь секрет/);
+ assert.equal(seen.length,2);
+});
+test("OpenRouter credit cap HTTP 402 is distinguished from Gemini quota",async()=>{
+ const call=load("functions/api/mobile-vision.js",async(url)=>
+  response({},url.includes("generativelanguage")?429:402)
+ );
+ const res=await call({request:request("mobile-vision",{imageData}),env});
+ assert.equal(res.status,402);
+ const body=await res.json();
+ assert.equal(body.code,"FALLBACK_CREDITS");
+ assert.match(body.error,/HTTP 402/);
+ assert.doesNotMatch(JSON.stringify(body),/free-key|gemini-key|AAAA/);
+});
+test("OpenRouter 401 returns key error while keeping secrets private",async()=>{
+ const call=load("functions/api/mobile-vision.js",async(url)=>
+  response({},url.includes("generativelanguage")?429:401)
+ );
+ const res=await call({request:request("mobile-vision",{imageData}),env});
+ const body=await res.json();
+ assert.equal(body.code,"FALLBACK_AUTH");
+ assert.match(body.error,/401/);
+ assert.doesNotMatch(JSON.stringify(body),/free-key|gemini-key/);
+});
+test("OpenRouter malformed response reports format issue and does not invent item",async()=>{
+ const call=load("functions/api/mobile-vision.js",async(url)=>
+  url.includes("generativelanguage")?response({},429):response({choices:[{message:{content:"not JSON"}}]})
+ );
+ const res=await call({request:request("mobile-vision",{imageData}),env});
+ assert.equal(res.status,502);
+ const body=await res.json();
+ assert.equal(body.code,"FALLBACK_INVALID_OUTPUT");
+ assert.equal(body.item,undefined);
+});
+test("OpenRouter quota also propagates to chat capsule with local fallback intact",async()=>{
+ const call=load("functions/api/mobile-capsule.js",async()=>response({},429));
+ const wardrobe=[{id:"j",name:"Брюки",category:"Брюки / Спідниця"}];
+ const res=await call({request:request("mobile-capsule",{message:"Собери образы из вещей",wardrobe}),env});
+ assert.equal(res.status,429);const body=await res.json();
+ assert.equal(body.code,"FALLBACK_RATE_LIMIT");
+ assert.match(body.error,/OpenRouter Free/);
+});
