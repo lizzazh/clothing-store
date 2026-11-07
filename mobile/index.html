@@ -29,7 +29,7 @@
   <div class="feature-mini"><span>✦ Travel capsule</span><span>✦ На мероприятие</span><span>✦ На каждый день</span></div>
  </div>
  <div class="messages" id="messages" role="log" aria-label="Чат со стилистом" aria-live="polite">
-  <article class="bubble assistant"><div class="bubble-label">ELEGANCE AI</div>Привет! Добавь одежду, выбери стиль и напиши, какая капсула нужна. Фото сохраняются на устройстве; при включённом AI-распознавании выбранное фото временно отправляется в Gemini.</article>
+  <article class="bubble assistant"><div class="bubble-label">ELEGANCE AI</div>Привет! Добавь одежду, выбери стиль и напиши, какая капсула нужна. Фото сохраняются на устройстве; при включённом AI-распознавании выбранное фото временно отправляется в Gemini, а при его недоступности — в подключённый резервный AI.</article>
  </div>
  <div id="suggestions" class="suggestions" aria-label="Примеры запросов">
   <button class="suggestion" type="button" data-prompt="Я еду в Париж на 7 дней только с ручной кладью. Подбери небольшую стильную капсулу из моей одежды.">✈ Париж, 7 дней</button>
@@ -60,7 +60,7 @@
    <label for="photo-input" class="photo-drop" id="photo-drop"><span class="camera-icon">＋</span><strong id="photo-label">Выбрать фото</strong><small>Камера или галерея · JPEG, PNG, HEIC*</small><img id="photo-preview" alt="Предпросмотр вещи" hidden><input id="photo-input" type="file" accept="image/*"></label>
    <div class="vision-panel">
     <label class="vision-switch" for="vision-auto"><input id="vision-auto" type="checkbox"> <span>✨ Автоматически распознавать фото с AI</span></label>
-    <p class="micro">Если включить, выбранное фото отправится в Google Gemini для распознавания одежды. Фото не сохраняется на нашем сервере; обработка выполняется внешним AI-провайдером. Без согласия фото остаётся на устройстве.</p>
+    <p class="micro">Если включить, выбранное фото отправится в Google Gemini для распознавания одежды. Фото не сохраняется на нашем сервере. При недоступности Gemini фото может быть передано подключённому резервному провайдеру (OpenRouter Free или, при отдельном включении, Groq). Без согласия фото остаётся на устройстве.</p>
     <div class="access-row" id="vision-access-row"><input id="vision-access-code" type="password" autocomplete="off" spellcheck="false" placeholder="Значение TRAVEL_PWA_PASSCODE (Preview)" aria-label="Код доступа к AI"><button type="button" id="vision-save-access" class="soft-button">Подключить один раз</button></div>
     <p class="micro">Нужен пароль, который ты сама сохранила как TRAVEL_PWA_PASSCODE в Cloudflare → Preview. Не вводи название переменной или Gemini API key.</p>
     <p class="micro" id="vision-auth-status">AI ещё не подключён.</p><button id="recognize-photo" class="soft-button recognize-button" type="button" disabled>✦ Распознать выбранное фото</button>
@@ -103,7 +103,7 @@
 <section class="screen" id="screen-capsules" aria-labelledby="capsules-title" hidden>
  <div class="section-head"><div><div class="eyebrow">SAVED CAPSULES</div><h1 id="capsules-title">Мои капсулы</h1><p>Сохраняем последние подборки на этом устройстве, чтобы ты могла вернуться к ним.</p></div></div>
  <div id="capsules-list" class="saved-list"><p class="empty">Сначала попроси AI собрать капсулу.</p></div>
- <div class="panel note-panel"><strong>Приватность</strong><p>Гардероб и сохранённые фото хранятся в IndexedDB на этом устройстве. Для AI-капсулы отправляются только описания вещей. Если включить распознавание, выбранное фото временно отправляется в Google Gemini; локальное хранение фотографии не меняется. Не очищай данные браузера, если хочешь сохранить коллекцию.</p></div>
+ <div class="panel note-panel"><strong>Приватность</strong><p>Гардероб и сохранённые фото хранятся в IndexedDB на этом устройстве. Для AI-капсулы отправляются только описания вещей в Gemini или, при ошибке, подключённому резервному AI. Если включить распознавание, выбранное фото может быть передано Google Gemini или настроенному резервному провайдеру. Фото остаётся в локальном IndexedDB и не записывается в базу нашего сервера. Не очищай данные браузера, если хочешь сохранить коллекцию.</p></div>
  <a href="../index.html" class="back-link">← Вернуться на полный сайт Elizabeth’s Elegance</a>
 </section>
 </main>
