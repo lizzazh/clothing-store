@@ -13,4 +13,4 @@ jobs:
         with:
           node-version: '22'
       - name: Check mobile PWA and Travel Capsule
-        run: node --test tests/travel-capsule.test.cjs tests/travel-capsule.ui.test.cjs tests/mobile-pwa.test.cjs
+        run: node --test tests/travel-capsule.test.cjs tests/travel-capsule.ui.test.cjs tests/mobile-pwa.test.cjs tests/mobile-vision.test.cjs tests/mobile-vision-ui.test.cjs
