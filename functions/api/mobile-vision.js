@@ -1,4 +1,5 @@
 import {authenticated,sameOrigin} from "../_lib/mobile-auth.js";
+import {tryPwaFallback,pwaFallbackEnabled} from "../_lib/mobile-ai-fallback.js";
 // Server-side image analysis for the mobile wardrobe.
 // Image is sent to Gemini for inference only; no database or image persistence.
 const OUT_HEADERS={"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff"};
@@ -37,6 +38,22 @@ function sanitize(data){
  const rawConf=typeof data.confidence==="number"&&Number.isFinite(data.confidence)?data.confidence:0.5;
  return {name:clip(data.name,80)||"Предмет одежды",category,color:clip(data.color,35),season:season.length?season:["all-season"],style,formality,confidence:Math.min(1,Math.max(0,rawConf)),warning:clip(data.warning,250)};
 }
+async function visionFallback(env,instruction,imageData,error,code,status){
+ if(pwaFallbackEnabled(env)){
+  const alternative=await tryPwaFallback({
+   env,task:"vision",instruction,imageData,
+   validator:data=>data&&typeof data.name==="string"&&!!data.name.trim()&&
+     CATEGORIES.includes(data.category)&&typeof data.color==="string"&&!!data.color.trim()&&
+     Array.isArray(data.style)&&Array.isArray(data.season)&&
+     Number.isFinite(data.formality)&&Number.isFinite(data.confidence)
+  });
+  if(alternative)return reply({item:sanitize(alternative.data),provider:alternative.provider,fallback:true});
+ }
+ const detail=code==="RATE_LIMIT"&&!pwaFallbackEnabled(env)?
+  " Добавь секрет PWA_OPENROUTER_API_KEY в Cloudflare Preview для бесплатного резерва.":"";
+ return reply({error:error+detail,code},status);
+}
+
 export async function onRequestPost({request,env}){
  try{
   const origin=request.headers.get("Origin");
@@ -87,19 +104,16 @@ export async function onRequestPost({request,env}){
    body:JSON.stringify({contents:[{parts:[{text:instruction},{inline_data:{mime_type:"image/jpeg",data:base64}}]}],
      generationConfig})
   });
-  if(!response.ok)return reply({
-    error:response.status===429?"Лимит запросов Gemini исчерпан. Попробуй позже.":response.status===404?
-      "Модель Gemini недоступна для этого ключа. Проверь PWA_GEMINI_MODEL.":"Gemini отклонил запрос (HTTP "+response.status+"). Попробуй позже.",
-    code:response.status===429?"RATE_LIMIT":"UPSTREAM_ERROR"
-   },response.status===429?429:502);
+  if(!response.ok)return visionFallback(env,instruction,imageData,
+   response.status===429?"Лимит Gemini исчерпан. Резервный AI тоже не ответил.":response.status===404?
+   "Модель Gemini недоступна. Резервный AI тоже не ответил.":"AI пока недоступен. Повтори запрос позже.",
+   response.status===429?"RATE_LIMIT":"UPSTREAM_ERROR",response.status===429?429:502);
   const result=await response.json();
   const candidate=result?.candidates?.[0];
   const reason=candidate?.finishReason||"";
   const raw=(candidate?.content?.parts||[]).map(p=>typeof p.text==="string"?p.text:"").join("");
-  if(reason==="MAX_TOKENS")return reply({
-   error:"Gemini не успел закончить описание (лимит ответа). Попробуй ещё раз.",
-   code:"OUTPUT_TRUNCATED"
-  },502);
+  if(reason==="MAX_TOKENS")return visionFallback(env,instruction,imageData,
+   "Gemini не успел закончить описание. Попробуй ещё раз.","OUTPUT_TRUNCATED",502);
   if(reason==="SAFETY"||reason==="PROHIBITED_CONTENT")return reply({
    error:"Gemini не смог обработать это фото из-за ограничений безопасности. Выбери другое.",
    code:"IMAGE_BLOCKED"
@@ -114,14 +128,13 @@ export async function onRequestPost({request,env}){
     outputTokens:result?.usageMetadata?.candidatesTokenCount||0,
     thinkingTokens:result?.usageMetadata?.thoughtsTokenCount||0
    });
-   return reply({
-     error:"Gemini не вернул полное описание вещи. Попробуй ещё раз или выбери другое фото.",
-     code:"INVALID_DESCRIPTION"
-   },502);
+   return visionFallback(env,instruction,imageData,
+    "AI не вернул полное описание вещи. Попробуй ещё раз.","INVALID_DESCRIPTION",502);
   }
   const metadata=sanitize(parsed);
-  return reply({item:metadata});
- }catch(error){return reply({error:error?.name==="AbortError"?"Распознавание заняло слишком много времени. Попробуй ещё раз.":"Не удалось связаться с AI. Заполни поля вручную."},504);}
+  return reply({item:metadata,provider:"Gemini",fallback:false});
+ }catch(error){return visionFallback(env,instruction,imageData,
+  error?.name==="AbortError"?"AI не ответил вовремя. Попробуй ещё раз.":"Нет соединения с AI. Попробуй позже.","UPSTREAM_ERROR",504);}
  finally{clearTimeout(timer);}
 }
 export function onRequestGet(){return reply({error:"Use POST"},405);}
