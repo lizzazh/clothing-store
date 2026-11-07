@@ -33,7 +33,7 @@ test("one-time sign-in sets secure 30-day HttpOnly cookie",async()=>{
  assert.deepEqual(await status.json(),{connected:true,configured:true});
 });
 test("accepts same TRAVEL_PWA_PASSCODE with trailing Cloudflare secret whitespace",async()=>{
- const copied={...env,TRAVEL_PWA_PASSCODE:"  "+env.TRAVEL_PWA_PASSCODE+"\\n"};
+ const copied={...env,TRAVEL_PWA_PASSCODE:"  "+env.TRAVEL_PWA_PASSCODE+"\n"};
  const login=await authApi.onRequestPost({request:request("POST",{passcode:env.TRAVEL_PWA_PASSCODE}),env:copied});
  assert.equal(login.status,200);
  const cookie=login.headers.get("set-cookie").split(";")[0];
