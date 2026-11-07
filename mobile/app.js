@@ -6,7 +6,7 @@ const STORAGE_PLANS = "ee_mobile_capsules_v1";
 const STORAGE_ACCESS = "ee_mobile_ai_passcode";
 const STORAGE_VISION_CONSENT = "ee_mobile_vision_consent_v1";
 const STYLES = ["classic","minimalist","romantic","elegant","streetwear","boho"];
-const state = { items:[], styleDNA:{}, selectedStyles:new Set(), plans:[], history:[], photo:null, photoEpoch:0, recognitionBusy:false, recognitionPrediction:null, busy:false, installPrompt:null };
+const state = { items:[], styleDNA:{}, selectedStyles:new Set(), plans:[], history:[], photo:null, photoEpoch:0, recognitionBusy:false, recognitionPrediction:null, aiConnected:false, aiConfigured:null, busy:false, installPrompt:null };
 let toastTimer=null;
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n;}
 function clear(node){node.replaceChildren();}
@@ -96,8 +96,11 @@ async function recognizePhoto(){
   $("vision-auto").checked=true;
   try{localStorage.setItem(STORAGE_VISION_CONSENT,"true");}catch(_){}
  }
- const passcode=getAccessCode();
- if(!passcode){visionStatus("Для AI нужен код. Введи его в поле выше и нажми «Код AI».",true);return;}
+ if(!state.aiConnected)await checkAiSession();
+ if(!state.aiConnected){
+  visionStatus(state.aiConfigured===false?"AI не настроен для этого адреса: проверь секреты Preview в Cloudflare.":"Подключи AI один раз с кодом доступа. После этого код вводить не придётся.",true);
+  return;
+ }
  if(state.recognitionBusy)return;
  const requestId=++state.photoEpoch;
  const imageData=state.photo;
@@ -110,15 +113,13 @@ async function recognizePhoto(){
  try{
   const response=await fetch("/api/mobile-vision",{
    method:"POST",
-   headers:{"Content-Type":"application/json","X-Travel-Passcode":passcode},
+   credentials:"same-origin",headers:{"Content-Type":"application/json"},
    body:JSON.stringify({imageData})
   });
   const data=await response.json();
   if(requestId!==state.photoEpoch||state.photo!==imageData)return; // discarded stale photo
   if(!response.ok){
-   if(data&&data.code==="ACCESS_DENIED"){
-    try{sessionStorage.removeItem(STORAGE_ACCESS);}catch(_){}
-   }
+   if(data&&data.code==="ACCESS_DENIED"){state.aiConnected=false;syncAuthUI();}
    throw Error((data&&data.error)||"Не удалось распознать вещь.");
   }
   const result=data&&data.item;
@@ -194,15 +195,17 @@ async function saveItem(event){
  }catch(error){toast("Не удалось сохранить вещь: "+(error.message||"ошибка"));}
  finally{$("save-item").disabled=false;}
 }
-function saveVisionAccess(){
+async function saveVisionAccess(){
  const code=$("vision-access-code").value.trim();
- if(!code){visionStatus("Введи код доступа к AI.",true);return;}
+ if(!code){visionStatus("Введи код только один раз для подключения AI.",true);return;}
+ $("vision-save-access").disabled=true;
  try{
-  sessionStorage.setItem(STORAGE_ACCESS,code);
+  await connectAi(code);
   $("vision-access-code").value="";
-  visionStatus("Код сохранён на время сессии. Можно распознавать вещи.");
+  visionStatus("✓ AI подключён на этом устройстве на 30 дней. Новые фотографии будут распознаваться автоматически.");
   if(state.photo&&$("vision-auto").checked)recognizePhoto();
- }catch(_){visionStatus("Не удалось сохранить код. Проверь настройки браузера.",true);}
+ }catch(error){visionStatus(error.message||"Не удалось подключить AI.",true);}
+ finally{$("vision-save-access").disabled=false;}
 }
 function readStyles(){
  const profile=getJSON("ai_profile",{});
@@ -234,12 +237,57 @@ function addBubble(kind,text){
 }
 function scrollMessages(){const box=$("messages");box.scrollTop=box.scrollHeight;}
 function setBusy(b){state.busy=b;$("send-button").disabled=b;$("prompt").disabled=b;$("send-button").textContent=b?"…":"➤";}
-function getAccessCode(){try{return sessionStorage.getItem(STORAGE_ACCESS)||"";}catch(_){return "";}}
-function saveAccess(){
- const code=$("access-code").value.trim();if(!code){toast("Введи код доступа.");return;}
- try{sessionStorage.setItem(STORAGE_ACCESS,code);$("access-code").value="";$("access-feedback").textContent="Код сохранён на время сессии.";$("access-panel").open=false;toast("AI-код сохранён.");}
- catch(_){toast("Не удалось сохранить код. Проверь настройки браузера.");}
+function syncAuthUI(){
+ const connected=state.aiConnected;
+ $("access-controls").hidden=connected;
+ $("disconnect-ai").hidden=!connected;
+ $("vision-access-row").hidden=connected;
+ $("access-feedback").textContent=connected
+  ?"✓ AI подключён. Доступ сохранён на этом устройстве на 30 дней."
+  :state.aiConfigured===false
+   ?"AI не настроен в этом окружении Cloudflare. На тестовой ссылке выбери Preview в настройках секретов."
+   :"Введи код один раз. Затем приложение запомнит подключение.";
+ $("vision-auth-status").textContent=connected
+  ?"✓ AI подключён. Для следующих фото вводить код не нужно."
+  :state.aiConfigured===false
+   ?"AI не настроен для Preview. Проверь Cloudflare → Settings → Variables and Secrets → Preview."
+   :"AI не подключён. Введи код один раз на этом устройстве.";
 }
+async function checkAiSession(){
+ try{
+  const response=await fetch("/api/mobile-auth",{credentials:"same-origin",cache:"no-store"});
+  const data=await response.json();
+  state.aiConfigured=data.configured===true;
+  state.aiConnected=response.ok&&data.connected===true;
+ }catch(_){state.aiConnected=false;state.aiConfigured=null;}
+ syncAuthUI();
+ return state.aiConnected;
+}
+async function connectAi(code){
+ const response=await fetch("/api/mobile-auth",{method:"POST",credentials:"same-origin",cache:"no-store",
+  headers:{"Content-Type":"application/json"},body:JSON.stringify({passcode:code})});
+ const data=await response.json();
+ if(!response.ok)throw Error(data.error||"Не удалось подключить AI.");
+ if(data.connected!==true)throw Error("Подключение не подтверждено.");
+ state.aiConnected=true;state.aiConfigured=true;
+ try{sessionStorage.removeItem(STORAGE_ACCESS);}catch(_){}
+ syncAuthUI();
+ toast("AI подключён на этом устройстве.");
+ return true;
+}
+async function saveAccess(){
+ const code=$("access-code").value.trim();if(!code){toast("Введи код один раз.");return;}
+ $("save-access").disabled=true;
+ try{await connectAi(code);$("access-code").value="";$("access-panel").open=false;}
+ catch(error){$("access-feedback").textContent=error.message||"Ошибка подключения.";}
+ finally{$("save-access").disabled=false;}
+}
+async function disconnectAi(){
+ try{await fetch("/api/mobile-auth",{method:"DELETE",credentials:"same-origin"});
+  state.aiConnected=false;syncAuthUI();toast("AI отключён на этом устройстве.");}
+ catch(_){toast("Не удалось отключить AI.");}
+}
+
 function cleanWardrobeForAI(){
  return state.items.slice(0,180).map(item=>({id:String(item.id),name:item.name||"",category:item.category||"Інше",
  color:item.color||"",style:item.style||[],season:item.season||[],formality:item.formality}));
@@ -311,16 +359,16 @@ async function askStylist(){
  $("prompt").value="";addBubble("user",query);setBusy(true);
  try{
   if(!state.items.length){addBubble("assistant","Сначала добавь несколько вещей в «Мой гардероб», чтобы я могла составлять реальные комплекты.");return;}
-  const passcode=getAccessCode();
-  if(!passcode){
+  if(!state.aiConnected)await checkAiSession();
+  if(!state.aiConnected){
    const local=localCapsule(query);addResponse(local,"local");savePlan(query,local,"local");
-   $("access-panel").open=true;toast("Локальная капсула готова. Для AI подключи код доступа.");
+   $("access-panel").open=true;toast("Локальная капсула готова. Для AI нужно подключение один раз.");
    return;
   }
   const history=state.history.slice(-4);
   let res;
   try{
-   const response=await fetch("/api/mobile-capsule",{method:"POST",headers:{"Content-Type":"application/json","X-Travel-Passcode":passcode},
+   const response=await fetch("/api/mobile-capsule",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},
     body:JSON.stringify({message:query,history,styleDNA:state.styleDNA,wardrobe:cleanWardrobeForAI()})});
    res=await response.json();
    if(!response.ok)throw Error(res.error||"Сервис недоступен.");
@@ -329,7 +377,7 @@ async function askStylist(){
   }catch(error){
    const local=localCapsule(query);local.message="AI сейчас недоступен ("+(error.message||"ошибка")+"). "+local.message;
    addResponse(local,"local");savePlan(query,local,"local");
-   if(res&&res.code==="ACCESS_DENIED"){$("access-panel").open=true;try{sessionStorage.removeItem(STORAGE_ACCESS);}catch(_){}}
+   if(res&&res.code==="ACCESS_DENIED"){state.aiConnected=false;syncAuthUI();$("access-panel").open=true;}
   }
  }catch(error){addBubble("assistant","Не удалось собрать капсулу: "+(error.message||"ошибка"));}
  finally{setBusy(false);}
@@ -397,6 +445,7 @@ async function boot(){
  $("send-button").addEventListener("click",askStylist);
  $("prompt").addEventListener("keydown",event=>{if(event.key==="Enter"&&(event.ctrlKey||event.metaKey)){event.preventDefault();askStylist();}});
  $("save-access").addEventListener("click",saveAccess);
+ $("disconnect-ai").addEventListener("click",disconnectAi);
  $("photo-input").addEventListener("change",onPhotoChange);
  $("recognize-photo").addEventListener("click",recognizePhoto);
  $("vision-save-access").addEventListener("click",saveVisionAccess);
@@ -416,7 +465,14 @@ async function boot(){
  state.plans=getJSON(STORAGE_PLANS,[]);if(!Array.isArray(state.plans))state.plans=[];
  readStyles();renderPlans();
  try{await refreshWardrobe();}catch(error){toast("Ошибка гардероба: "+(error.message||"IndexedDB недоступна"));}
- if(getAccessCode())$("access-feedback").textContent="Код AI уже сохранён на время сессии.";
+ await checkAiSession();
+ // Upgrade existing one-session login to a long-lived secure cookie without asking again.
+ if(!state.aiConnected&&state.aiConfigured){
+  let oldCode="";try{oldCode=sessionStorage.getItem(STORAGE_ACCESS)||"";}catch(_){}
+  if(oldCode)try{await connectAi(oldCode);}catch(_){}
+ }
+ try{sessionStorage.removeItem(STORAGE_ACCESS);}catch(_){}
+ syncAuthUI();
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
 })();
