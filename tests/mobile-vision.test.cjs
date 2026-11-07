@@ -5,21 +5,23 @@ const path=require("node:path");
 const vm=require("node:vm");
 const source=fs.readFileSync(path.join(__dirname,"../functions/api/mobile-vision.js"),"utf8");
 function apiWith(fetchMock){
- const context={Response,URL,fetch:fetchMock,AbortController,setTimeout,clearTimeout,JSON,Number,Math,String,Set,Array,Date,Object};
- return vm.runInNewContext(source.replace(/^export /gm,"")+"\n({onRequestPost})",context);
+ const context={Response,URL,fetch:fetchMock,AbortController,setTimeout,clearTimeout,JSON,Number,Math,String,Set,Array,Date,Object,
+  authenticated:async req=>req.headers.get("Cookie")==="signed-session",
+  sameOrigin:()=>true};
+ return vm.runInNewContext(source.replace(/^import .*$/gm,"").replace(/^export /gm,"")+"\n({onRequestPost})",context);
 }
 const imageData="data:image/jpeg;base64,AAAA";
-function request({code="correct",data=imageData,origin="https://app.example",extra={}}={}){
+function request({cookie="signed-session",data=imageData,origin="https://app.example",extra={}}={}){
  return {url:"https://app.example/api/mobile-vision",
-  headers:{get(name){return name==="Origin"?origin:name==="X-Travel-Passcode"?code:extra[name]||null;}},
+  headers:{get(name){return name==="Origin"?origin:name==="Cookie"?cookie:extra[name]||null;}},
   text:async()=>JSON.stringify({imageData:data})};
 }
 const env={TRAVEL_PWA_PASSCODE:"correct",PWA_GEMINI_API_KEY:"secret"};
 const response=(obj,status=200)=>({ok:status>=200&&status<300,status,json:async()=>obj});
-test("requires separate API secret and owner code before image leaves server",async()=>{
+test("requires separate API secret and signed session before image leaves server",async()=>{
  let calls=0;
  const api=apiWith(async()=>{calls++;throw Error("must not call")});
- assert.equal((await api.onRequestPost({request:request({code:"bad"}),env})).status,401);
+ assert.equal((await api.onRequestPost({request:request({cookie:"invalid"}),env})).status,401);
  assert.equal((await api.onRequestPost({request:request(),env:{TRAVEL_PWA_PASSCODE:"correct"}})).status,503);
  assert.equal(calls,0);
 });
