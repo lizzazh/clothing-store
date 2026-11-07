@@ -154,7 +154,7 @@ async function recognizePhoto(){
 async function onPhotoChange(event){
  const file=event.target.files&&event.target.files[0];if(!file)return;
  const token=++state.photoEpoch;
- state.photo=null;state.recognitionBusy=false;state.recognitionPrediction=null;visionReady();
+ state.photo=null;state.recognitionBusy=false;state.recognitionPrediction=null;$("save-item").disabled=false;visionReady();
  $("photo-preview").hidden=true;$("photo-label").textContent="Обрабатываю фото…";
  visionStatus("Фото будет сохранено локально. AI распознавание доступно после согласия.");
  try{
@@ -404,7 +404,7 @@ async function boot(){
  $("vision-auto").addEventListener("change",()=>{
    try{localStorage.setItem(STORAGE_VISION_CONSENT,$("vision-auto").checked?"true":"false");}catch(_){}
    if($("vision-auto").checked&&state.photo)recognizePhoto();
-   else if(!$("vision-auto").checked)visionStatus("Распознавание отключено. Фото остаётся на устройстве.");
+   else if(!$("vision-auto").checked){state.photoEpoch++;state.recognitionBusy=false;$("save-item").disabled=false;visionReady();visionStatus("Распознавание отключено. Фото остаётся на устройстве.");}
  });
  visionReady();
  $("add-item-form").addEventListener("submit",saveItem);
