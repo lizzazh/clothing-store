@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Travel Capsule: мінімальний дорожній гардероб із власних речей для кожного дня подорожі.">
+<title>Travel Capsule ✈ — Elizabeth's Elegance</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--muted:#c4bddb;--stroke:rgba(235,213,255,.18);--panel:rgba(255,255,255,.065);--pink:#f7a7ce;--lavender:#d0bcff;}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:#f8f5ff;font-family:'Outfit',sans-serif;background:radial-gradient(ellipse at 18% 8%,#3d2d66 0,transparent 48%),radial-gradient(ellipse at 85% 65%,#4b204d 0,transparent 50%),#100d25}
+a{color:inherit;text-decoration:none}
+header{padding:14px max(20px,calc((100vw - 1360px)/2));background:rgba(15,12,41,.76);border-bottom:1px solid var(--stroke);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font:32px 'Great Vibes',cursive}
+nav{display:flex;flex-wrap:wrap;gap:8px}
+nav a{font-size:13px;padding:8px 12px;border:1px solid var(--stroke);border-radius:100px;color:#e2dbea}
+nav a.active,nav a:hover{background:rgba(214,168,255,.18);border-color:#aa8fd1;color:white}
+main{max-width:1240px;margin:auto;padding:32px 20px 80px}
+.hero{text-align:center;margin:8px auto 30px;max-width:790px}
+.kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#f6afd6;font-weight:700}
+h1{font-size:clamp(32px,5vw,56px);margin:7px 0 10px;background:linear-gradient(120deg,#fff,#f4badc,#b9c5ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);line-height:1.65}
+.layout{display:grid;grid-template-columns:minmax(315px,410px) minmax(0,1fr);gap:20px;align-items:start}
+.panel{border:1px solid var(--stroke);background:var(--panel);border-radius:24px;padding:24px;box-shadow:0 16px 36px rgba(6,4,20,.12)}
+.input-panel{position:sticky;top:20px}
+h2{margin:0 0 17px;font-size:20px}h3{margin:0 0 8px}
+label{display:block;color:#ddd4ed;font-weight:600;font-size:13px;margin:15px 0 7px}
+input,textarea,select{width:100%;min-width:0;background:rgba(7,5,25,.43);border:1px solid var(--stroke);border-radius:12px;color:#fff;padding:11px 13px;font:inherit;outline:none}
+input:focus,textarea:focus,select:focus{border-color:#d3a9ef;box-shadow:0 0 0 3px rgba(211,169,239,.1)}
+input[type=checkbox]{width:auto;accent-color:#b484df}
+textarea{min-height:99px;resize:vertical;line-height:1.5}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.checkline{display:flex;align-items:center;gap:10px;font-size:13px;margin:15px 0;color:#e7dff1}
+button{font:inherit;cursor:pointer;border:0}
+.primary{background:linear-gradient(125deg,#aa73df,#e782b9);color:#180e2d;padding:13px 18px;border-radius:13px;font-weight:800}
+.secondary{background:rgba(255,255,255,.06);border:1px solid var(--stroke);border-radius:12px;padding:12px 15px;color:#e9e1f8;font-weight:600}
+button:disabled{opacity:.54;cursor:not-allowed}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.note{font-size:12px;line-height:1.55;color:var(--muted);margin:12px 0 0}
+.empty{text-align:center;padding:70px 24px;color:var(--muted)}
+.empty .emoji{font-size:54px;display:block;margin-bottom:16px}
+.summary{padding:17px 19px;background:linear-gradient(120deg,rgba(227,154,220,.16),rgba(154,173,253,.10));border:1px solid var(--stroke);border-radius:16px;margin-bottom:18px}
+.metrics{display:flex;gap:18px;flex-wrap:wrap}
+.metric{min-width:95px}.metric strong{display:block;color:#fff;font-size:24px}.metric small{color:#c9bedf;font-size:12px}
+.warning{background:rgba(246,195,116,.10);border:1px solid rgba(246,195,116,.23);border-radius:12px;margin:10px 0;padding:11px 14px;color:#ffe5b2;font-size:13px}
+.item-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(126px,1fr));gap:11px;margin:12px 0 25px}
+.item-card{min-width:0;border:1px solid var(--stroke);border-radius:16px;background:rgba(255,255,255,.045);overflow:hidden}
+.photo{height:112px;display:flex;align-items:center;justify-content:center;background:rgba(249,244,255,.04);font-size:36px}
+.photo img{height:100%;width:100%;object-fit:contain}
+.item-card .body{padding:10px 10px 13px}.item-card b{font-size:13px;display:block;overflow-wrap:anywhere}.item-card small{font-size:11px;color:#cabfdf}
+.day{border-top:1px solid var(--stroke);padding:15px 0}
+.day-head{font-size:15px;font-weight:700;margin-bottom:10px}
+.outfit{padding:11px 14px;border-radius:12px;background:rgba(255,255,255,.04);margin:9px 0}
+.outfit strong{display:block;color:#f5c0e2;margin-bottom:5px}
+.outfit .names{font-size:13px;line-height:1.5;color:#e8e2f5}
+.nodata{color:#ffc7b5}
+#results[hidden],#message[hidden]{display:none}
+.status{padding:13px 16px;background:rgba(238,166,190,.10);border:1px solid rgba(238,166,190,.24);border-radius:12px;margin-bottom:15px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.input-panel{position:static}}
+@media(max-width:520px){main{padding:24px 12px 48px}.panel{padding:17px}.twocol{grid-template-columns:1fr}header{padding:14px}.brand{font-size:28px}}
+</style>
+</head>
+<body>
+<header><a class="brand" href="index.html">Elizabeth's Elegance</a><nav aria-label="Навігація">
+<a href="index.html">Головна</a><a href="my-wardrobe.html">Мій гардероб</a>
+<a href="style-quiz.html">Style DNA</a><a href="ai-stylist.html">AI Stylist</a>
+<a class="active" href="travel-capsule.html" aria-current="page">✈ Travel Capsule</a></nav></header>
+<main>
+<div class="hero"><span class="kicker">Your suitcase, thoughtfully curated</span><h1>Travel Capsule ✈</h1>
+<p>Створи дорожню капсулу з речей, які вже є у твоєму гардеробі. Мінімум зайвого багажу, зрозумілий список пакування та образи на кожну подію.</p></div>
+<div class="layout">
+<section class="panel input-panel" aria-labelledby="trip-heading">
+<h2 id="trip-heading">Сплануй поїздку</h2>
+<label for="prompt">Розкажи про поїздку своїми словами</label>
+<textarea id="prompt" placeholder="Їду до Рима на 7 днів. Буду гуляти щодня, двічі піду в ресторан. Лише ручна поклажа."></textarea>
+<button class="secondary" id="parse" type="button" style="margin-top:9px">✨ Заповнити поля з тексту (AI)</button>
+<p class="note">Текст поїздки буде надіслано до AI Service лише після натискання кнопки. Фото й дані гардероба не передаються.</p>
+<label for="city">Місто поїздки</label><input id="city" type="text" placeholder="Roma / Рим" autocomplete="address-level2">
+<div class="twocol">
+<div><label for="start">Дата прибуття</label><input id="start" type="date" required></div>
+<div><label for="end">Дата повернення</label><input id="end" type="date" required></div>
+</div>
+<div class="twocol">
+<div><label for="dinners">Вечорів у ресторані</label><input id="dinners" type="number" min="0" max="30" value="2"></div>
+<div><label for="temp">Температура, °C (резерв)</label><input id="temp" type="number" min="-35" max="50" placeholder="Якщо немає прогнозу"></div>
+</div>
+<div class="twocol">
+<div><label for="maxItems">Максимум речей</label><input id="maxItems" type="number" min="3" max="100" value="12"></div>
+<div><label for="maxShoes">Максимум пар взуття</label><input id="maxShoes" type="number" min="1" max="8" value="2"></div>
+</div>
+<div class="twocol">
+<div><label for="weight">Ліміт ваги, кг</label><input id="weight" type="number" min="1" step="0.5" placeholder="Необов'язково"></div>
+<div><label for="luggage">Тип багажу</label><select id="luggage"><option value="cabin">Ручна поклажа</option><option value="checked">Валіза</option></select></div>
+</div>
+<label class="checkline"><input id="laundry" type="checkbox"> Під час поїздки можна прати речі</label>
+<div class="actions"><button class="primary" id="generate" type="button">✨ Зібрати капсулу</button><button class="secondary" id="restore" type="button">Відкрити останню</button></div>
+<p class="note">Для віддалених дат точного прогнозу ще немає: можна задати температуру вручну. Кількість речей контролюється, але об'єм ручної поклажі та вага без вимірів не гарантуються.</p>
+</section>
+<section class="panel" aria-live="polite">
+<div id="message" class="status" hidden></div>
+<div id="intro" class="empty"><span class="emoji">🧳</span><h2>Тут з’явиться твоя капсула</h2><p>Вибери дати й параметри поїздки. Ми використаємо тільки речі з Digital Wardrobe та врахуємо Style DNA.</p></div>
+<div id="results" hidden>
+<div class="summary"><h2 style="margin-bottom:12px">Твоя дорожня капсула</h2><div class="metrics" id="metrics"></div></div>
+<div id="warnings"></div>
+<div class="actions" style="margin-bottom:12px"><button class="secondary" id="copy" type="button">📋 Скопіювати список пакування</button><a class="secondary" href="my-wardrobe.html">+ Додати одяг</a></div>
+<h2>Що взяти із собою</h2><div class="item-grid" id="packing"></div>
+<h2>Образи за днями</h2><div id="calendar"></div>
+</div>
+</section>
+</div>
+</main>
+<script src="js/wardrobe-db.js"></script>
+<script src="js/ai-service.js"></script>
+<script src="js/travel-capsule.js"></script>
+<script>
+(function(){
+'use strict';
+var el=id=>document.getElementById(id), items=[], currentPlan=null;
+var saveKey='ee_travel_capsule_v1';
+function message(text){el('message').textContent=text;el('message').hidden=!text;}
+function escapeHtml(input){return String(input).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function validImage(value){return typeof value==='string' && (/^data:image\/(png|jpe?g|webp);base64,/i.test(value) || /^https:\/\//i.test(value));}
+function dayName(value){return new Intl.DateTimeFormat('uk-UA',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(value+'T00:00:00Z'));}
+function occasionName(value){return value==='dinner'?'Вечеря в ресторані':'Прогулянка / день';}
+function profile(){try{return JSON.parse(localStorage.getItem('ai_profile')||'{}')||{};}catch(_){return {};}}
+function intVal(name,fallback){var x=Number(el(name).value);return Number.isFinite(x)&&x>0?x:fallback;}
+async function readWardrobe(){
+  if(typeof WardrobeDB==='undefined')throw Error('Модуль WardrobeDB недоступний.');
+  var raw=await WardrobeDB.getAll();
+  if(!raw.length)throw Error('Гардероб порожній. Додайте свої речі на сторінці «Мій гардероб».');
+  return raw;
+}
+async function enrichWeather(days,city,manual){
+  var forecastCount=0;
+  if(city.trim()){
+    try{
+      var geo=await fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city.split(',')[0].trim())+'&count=1&language=uk');
+      if(!geo.ok)throw Error('Геокодування недоступне');
+      var g=await geo.json(), loc=g.results&&g.results[0];
+      if(loc){
+        var url='https://api.open-meteo.com/v1/forecast?latitude='+loc.latitude+'&longitude='+loc.longitude+'&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=16&timezone=auto';
+        var resp=await fetch(url);if(!resp.ok)throw Error('Прогноз недоступний');
+        var data=await resp.json(),daily=data.daily||{};
+        days.forEach(function(day){
+          var i=(daily.time||[]).indexOf(day.date);
+          if(i>=0&&Number.isFinite(daily.temperature_2m_min?.[i])&&Number.isFinite(daily.temperature_2m_max?.[i])){
+            day.temperature=Math.round((daily.temperature_2m_min[i]+daily.temperature_2m_max[i])/2);
+            day.rain=Number(daily.precipitation_probability_max?.[i])||0;
+            forecastCount++;
+          }
+        });
+      }
+    }catch(e){message('Open-Meteo недоступний або місто не знайдено. Використовую ручну температуру, якщо її вказано.');}
+  }
+  if(Number.isFinite(manual))days.forEach(function(day){if(day.temperature===null)day.temperature=manual;});
+  return forecastCount;
+}
+function snapshot(){return {city:el('city').value.trim(),startDate:el('start').value,endDate:el('end').value,
+ dinnerCount:Math.max(0,Number(el('dinners').value)||0),maxItems:intVal('maxItems',12),
+ maxShoes:intVal('maxShoes',2),laundry:el('laundry').checked,
+ maxWeightKg:el('weight').value?Number(el('weight').value):null,
+ manualTemperature:el('temp').value!==''?Number(el('temp').value):null,luggage:el('luggage').value};}
+function render(plan,settings){
+  currentPlan=plan;el('intro').hidden=true;el('results').hidden=false;
+  var covered=plan.days.reduce(function(sum,d){return sum+d.occasions.filter(x=>x.complete).length;},0);
+  var total=plan.days.reduce(function(sum,d){return sum+d.occasions.length;},0);
+  el('metrics').innerHTML='<div class="metric"><strong>'+plan.items.length+'</strong><small>унікальних речей</small></div>'+
+  '<div class="metric"><strong>'+covered+' / '+total+'</strong><small>образів зібрано</small></div>'+
+  '<div class="metric"><strong>'+(plan.weightKg===null?'невідомо':plan.weightKg+' кг')+'</strong><small>вага капсули</small></div>';
+  el('warnings').innerHTML=plan.warnings.map(function(w){return '<div class="warning">'+escapeHtml(w)+'</div>';}).join('');
+  if(!plan.covered)el('warnings').innerHTML+='<div class="warning">Частина образів не сформована: відсутні відповідні речі або обмеження надто суворі.</div>';
+  var originals=new Map(items.map(function(item){return [String(item.id),item];}));
+  el('packing').innerHTML=plan.items.map(function(item){
+    var raw=originals.get(item.id)||{},img=validImage(raw.img)?'<img alt="" src="'+escapeHtml(raw.img)+'" loading="lazy">':'👗';
+    return '<div class="item-card"><div class="photo">'+img+'</div><div class="body"><b>'+escapeHtml(item.name)+'</b><small>'+escapeHtml(item.category)+'</small></div></div>';
+  }).join('');
+  var mapped=new Map(plan.items.map(function(item){return [item.id,item.name];}));
+  el('calendar').innerHTML=plan.days.map(function(day){
+    return '<section class="day"><div class="day-head">'+dayName(day.date)+(day.temperature!==null?' · '+escapeHtml(day.temperature)+'°C':'')+'</div>'+
+    day.occasions.map(function(o){
+      return '<div class="outfit"><strong>'+occasionName(o.occasion)+'</strong><div class="names">'+
+        (o.complete?o.itemIds.map(function(id){return escapeHtml(mapped.get(id)||'Річ #'+id);}).join(' · '):'<span class="nodata">Не вдалося зібрати повний образ. Змініть обмеження або додайте відповідні речі.</span>')+
+      '</div></div>';
+    }).join('')+'</section>';
+  }).join('');
+}
+el('parse').addEventListener('click',async function(){
+  var prompt=el('prompt').value.trim();if(!prompt){message('Спочатку напиши, куди й на коли їдеш.');return;}
+  var btn=el('parse');btn.disabled=true;message('AI Service аналізує лише текст запиту...');
+  try{
+    var instruction='Перетвори повідомлення про подорож у JSON. Поля: city (рядок або порожній), startDate і endDate (YYYY-MM-DD або порожній), dinnerCount (ціле або null), maxItems (ціле або null), maxShoes (ціле або null), laundry (boolean або null). Не вигадуй дату чи місто. Відповідь тільки JSON. Повідомлення: '+prompt;
+    var data=await AIService.generateStructured(instruction,{validator:function(v){return v&&typeof v==='object'&&!Array.isArray(v);}});
+    if(typeof data.city==='string')el('city').value=data.city.slice(0,100);
+    ['startDate','endDate'].forEach(function(key){var name=key==='startDate'?'start':'end';if(typeof data[key]==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(data[key]))el(name).value=data[key];});
+    [['dinnerCount','dinners'],['maxItems','maxItems'],['maxShoes','maxShoes']].forEach(function(row){if(Number.isInteger(data[row[0]])&&data[row[0]]>=0)el(row[1]).value=data[row[0]];});
+    if(typeof data.laundry==='boolean')el('laundry').checked=data.laundry;
+    message('Поля заповнено. Перевір дати, місто та обмеження перед генерацією.');
+  }catch(e){message('AI-розбір зараз недоступний. Заповни поля вручну. ('+(e&&e.message?e.message:'помилка')+')');}
+  finally{btn.disabled=false;}
+});
+el('generate').addEventListener('click',async function(){
+  var btn=el('generate');btn.disabled=true;message('Завантажую гардероб і планую подорож...');
+  try{
+    var trip=snapshot();if(!trip.startDate||!trip.endDate)throw Error('Вибери дати поїздки.');
+    var days=TravelCapsule.defaultDays(trip.startDate,trip.endDate,trip.dinnerCount);
+    items=await readWardrobe();
+    var forecast=await enrichWeather(days,trip.city,trip.manualTemperature);
+    var plan=TravelCapsule.plan({items:items,days:days,maxItems:trip.maxItems,maxShoes:trip.maxShoes,maxWeightKg:trip.maxWeightKg,laundry:trip.laundry,profile:profile()});
+    render(plan,trip);
+    localStorage.setItem(saveKey,JSON.stringify({trip:trip,plan:plan,createdAt:new Date().toISOString()}));
+    message(forecast?'Готово. Для '+forecast+' днів використано доступний прогноз Open-Meteo.':'Готово. Без актуального прогнозу — використовуй ручну температуру й перевір погоду перед виїздом.');
+  }catch(e){message(e&&e.message?e.message:'Не вдалося скласти капсулу.');}
+  finally{btn.disabled=false;}
+});
+el('restore').addEventListener('click',async function(){
+  try{
+    var raw=localStorage.getItem(saveKey);if(!raw)throw Error('Збереженої капсули ще немає.');
+    var stored=JSON.parse(raw);items=await readWardrobe();
+    var ids=new Set(items.map(x=>String(x.id)));
+    if(!stored.plan.packingIds.every(id=>ids.has(String(id))))throw Error('Гардероб змінився після збереження. Перезбери капсулу.');
+    Object.keys({city:1,startDate:1,endDate:1,dinnerCount:1,maxItems:1,maxShoes:1,manualTemperature:1}).forEach(function(k){
+      var elementId={startDate:'start',endDate:'end',dinnerCount:'dinners',manualTemperature:'temp'}[k]||k;
+      var value=stored.trip[k];el(elementId).value=value==null?'':value;
+    });
+    el('laundry').checked=!!stored.trip.laundry;el('luggage').value=stored.trip.luggage||'cabin';
+    el('weight').value=stored.trip.maxWeightKg==null?'':stored.trip.maxWeightKg;
+    render(stored.plan,stored.trip);message('Завантажено останню збережену капсулу.');
+  }catch(e){message(e.message||'Не вдалося відкрити збережену капсулу.');}
+});
+el('copy').addEventListener('click',async function(){
+  if(!currentPlan)return;
+  var text='TRAVEL CAPSULE\n'+currentPlan.items.map((i,j)=>(j+1)+'. '+i.name).join('\n');
+  try{await navigator.clipboard.writeText(text);message('Список пакування скопійовано.');}
+  catch(e){message('Не вдалося скопіювати автоматично.');}
+});
+})();
+</script>
+</body>
+</html>
