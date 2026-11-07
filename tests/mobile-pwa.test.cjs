@@ -24,25 +24,39 @@ test("SW caches only the shell and excludes private API calls",()=>{
  const sw=read("mobile/sw.js");
  assert.match(sw,/ASSETS/);assert.match(sw,/\/api\//);assert.match(sw,/req.method!=="GET"/);
 });
-test("AI endpoint requires a separate secret and checks wardrobe IDs",async()=>{
+test("AI endpoint requires signed browser session and checks wardrobe IDs",async()=>{
  const code=read("functions/api/mobile-capsule.js");
  assert.match(code,/env.PWA_GEMINI_API_KEY/);
  assert.doesNotMatch(code,/env.GEMINI_API_KEY/);
- class Response{constructor(body,options){this.body=body;this.status=options.status;}async json(){return JSON.parse(this.body);}}
- class URL{constructor(input){this.host=String(input).match(/^https?:\/\/([^/]+)/)[1];}}
+ assert.doesNotMatch(code,/X-Travel-Passcode/);
  let calls=0,payload="";
- const fetch=async(url,options)=>{calls++;payload=options.body;return {ok:true,json:async()=>({candidates:[{content:{parts:[{text:JSON.stringify({message:"Образ готов",outfits:[{name:"Капсула",itemIds:["1","999"],reason:""}],missing:[]})}]}}]})};};
- const api=vm.runInNewContext(code.replace(/export /g,"")+"\n({onRequestPost})",{Response,URL,fetch,AbortController,setTimeout,clearTimeout,Date,JSON,Number,Math,Array,Set,RegExp,String,Object});
- const request=async(pass,env)=>{
-  const body={message:"Подбери одежду для поездки",wardrobe:[{id:1,name:"Сукня",category:"Сукня",img:"data:image/png;base64,secret-photo"}],styleDNA:{classic:100}};
-  return api.onRequestPost({request:{url:"https://example.com/api/mobile-capsule",headers:{get:k=>k==="X-Travel-Passcode"?pass:k==="Origin"?"https://example.com":null},text:async()=>JSON.stringify(body)},env});
+ const fetch=async(url,options)=>{
+  calls++;payload=options.body;
+  return {ok:true,json:async()=>({candidates:[{content:{parts:[{text:JSON.stringify({
+   message:"Образ готов",outfits:[{name:"Капсула",itemIds:["1","999"],reason:""}],missing:[]
+  })}]}}]})};
  };
- let r=await request("wrong",{TRAVEL_PWA_PASSCODE:"correct",PWA_GEMINI_API_KEY:"testkey"});
+ const fakeAuth=async req=>req.headers.get("Cookie")==="signed-session";
+ const api=vm.runInNewContext(
+  code.replace(/^import .*$/gm,"").replace(/^export /gm,"")+"\n({onRequestPost})",
+  {Response,URL,fetch,AbortController,setTimeout,clearTimeout,Date,JSON,Number,Math,Array,Set,RegExp,String,Object,
+   authenticated:fakeAuth,sameOrigin:()=>true});
+ const request=async(cookie,env)=>{
+  const body={message:"Подбери одежду для поездки",wardrobe:[
+   {id:1,name:"Сукня",category:"Сукня",img:"data:image/png;base64,secret-photo"}
+  ],styleDNA:{classic:100}};
+  return api.onRequestPost({request:{url:"https://example.com/api/mobile-capsule",
+   headers:{get:k=>k==="Cookie"?cookie:k==="Origin"?"https://example.com":null},
+   text:async()=>JSON.stringify(body)},env});
+ };
+ let r=await request(null,{TRAVEL_PWA_PASSCODE:"correct",PWA_GEMINI_API_KEY:"testkey"});
  assert.equal(r.status,401);assert.equal(calls,0);
- r=await request("correct",{TRAVEL_PWA_PASSCODE:"correct",PWA_GEMINI_API_KEY:"testkey"});
- assert.equal(r.status,200);const data=await r.json();assert.deepEqual([...data.packingIds],["1"]);
+ r=await request("signed-session",{TRAVEL_PWA_PASSCODE:"correct",PWA_GEMINI_API_KEY:"testkey"});
+ assert.equal(r.status,200);
+ const data=await r.json();assert.deepEqual([...data.packingIds],["1"]);
  assert.equal(payload.includes("secret-photo"),false);
- r=await request("correct",{TRAVEL_PWA_PASSCODE:"correct"});assert.equal(r.status,503);
+ r=await request("signed-session",{TRAVEL_PWA_PASSCODE:"correct"});
+ assert.equal(r.status,503);
 });
 test("mobile scripts parse as JavaScript without build tooling",()=>{
  new (require("node:vm").Script)(read("mobile/app.js"));
