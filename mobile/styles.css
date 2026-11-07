@@ -128,3 +128,11 @@ main{padding:0 19px calc(var(--nav-h) + 42px + env(safe-area-inset-bottom))}
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%);white-space:nowrap}
 @media(min-width:521px){.app-shell{box-shadow:0 0 90px rgba(0,0,0,.55)}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+.vision-panel{background:linear-gradient(135deg,rgba(174,117,220,.12),rgba(245,152,210,.055));border:1px solid rgba(224,174,240,.23);border-radius:15px;margin:14px 0 18px;padding:14px}
+.vision-switch{display:flex!important;align-items:flex-start;gap:10px;cursor:pointer;color:#f9e5f7!important;font-weight:700!important;font-size:13px!important;line-height:1.4;margin:0 0 7px!important}
+.vision-switch input[type=checkbox]{width:20px;height:20px;flex:none;min-height:20px;accent-color:#d9a2ee;margin:0}
+.vision-panel .micro{margin:6px 0 12px;color:#c7b4d5}
+.vision-panel .access-row input{min-width:0;font-size:12px}
+.recognize-button{width:100%;margin:11px 0 0;padding:12px;font-size:13px}
+.vision-status{font-size:12px;color:#d6c2e8;line-height:1.5;margin:10px 0 0;overflow-wrap:anywhere}
+.vision-status.vision-warning{color:#ffc9a8}
