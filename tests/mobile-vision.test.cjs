@@ -56,3 +56,34 @@ test("partial or malformed upstream answers never invent garment data",async()=>
  const out=await api.onRequestPost({request:request(),env});
  assert.equal(out.status,502);
 });
+
+test("gemini Flash disables thinking and requests schema with sufficient output budget",async()=>{
+ let config;
+ const api=apiWith(async(_url,options)=>{
+  const payload=JSON.parse(options.body);
+  config=payload.generationConfig;
+  return response({candidates:[{content:{parts:[{text:JSON.stringify({
+   name:"Голубые джинсы",category:"Брюки / Спідниця",color:"голубой",
+   season:["all-season"],style:["streetwear"],formality:0.5,confidence:0.9,warning:""
+  })}]}}]});
+ });
+ const out=await api.onRequestPost({request:request(),env});
+ assert.equal(out.status,200);
+ assert.equal(config.responseMimeType,"application/json");
+ assert.equal(config.maxOutputTokens,1536);
+ assert.equal(config.thinkingConfig.thinkingBudget,0);
+ assert.equal(config.responseSchema.type,"OBJECT");
+ assert.ok(config.responseSchema.required.includes("category"));
+});
+test("truncated Gemini JSON is reported as recoverable output error",async()=>{
+ const api=apiWith(async()=>response({candidates:[{finishReason:"MAX_TOKENS",content:{parts:[]}}],usageMetadata:{thoughtsTokenCount:500}}));
+ const out=await api.onRequestPost({request:request(),env});
+ assert.equal(out.status,502);
+ assert.equal((await out.json()).code,"OUTPUT_TRUNCATED");
+});
+test("Gemini returning empty or incomplete metadata is not saved",async()=>{
+ const api=apiWith(async()=>response({candidates:[{finishReason:"STOP",content:{parts:[{text:'{"foo":"bar"}'}]}}]}));
+ const out=await api.onRequestPost({request:request(),env});
+ assert.equal(out.status,502);
+ assert.equal((await out.json()).code,"INVALID_DESCRIPTION");
+});
