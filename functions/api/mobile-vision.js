@@ -1,3 +1,4 @@
+import {authenticated,sameOrigin} from "../_lib/mobile-auth.js";
 // Server-side image analysis for the mobile wardrobe.
 // Image is sent to Gemini for inference only; no database or image persistence.
 const OUT_HEADERS={"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff"};
@@ -25,10 +26,9 @@ export async function onRequestPost({request,env}){
   if(origin&&new URL(origin).origin!==new URL(request.url).origin)return reply({error:"Этот источник не разрешён."},403);
   if(request.headers.get("Sec-Fetch-Site")==="cross-site")return reply({error:"Этот источник не разрешён."},403);
  }catch(_){return reply({error:"Неверный Origin."},403);}
- const pass=env.TRAVEL_PWA_PASSCODE,key=env.PWA_GEMINI_API_KEY;
- if(!pass||!key)return reply({error:"AI ещё не подключён. Добавь PWA_GEMINI_API_KEY и TRAVEL_PWA_PASSCODE в Cloudflare."},503);
- const supplied=request.headers.get("X-Travel-Passcode")||"";
- if(!supplied||supplied.length>256||supplied!==pass)return reply({error:"Неверный код доступа к AI.",code:"ACCESS_DENIED"},401);
+ const key=env.PWA_GEMINI_API_KEY;
+ if(!env.TRAVEL_PWA_PASSCODE||!key)return reply({error:"AI не настроен в этом окружении Cloudflare.",code:"NOT_CONFIGURED"},503);
+ if(!await authenticated(request,env.TRAVEL_PWA_PASSCODE))return reply({error:"Войди в AI один раз в настройках приложения.",code:"ACCESS_DENIED"},401);
  if(Number(request.headers.get("Content-Length")||0)>2000000)return reply({error:"Фото слишком большое для анализа."},413);
  let imageData;
  try{
