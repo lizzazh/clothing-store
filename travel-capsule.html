@@ -156,6 +156,12 @@ async function enrichWeather(days,city,manual){
   if(Number.isFinite(manual))days.forEach(function(day){if(day.temperature===null)day.temperature=manual;});
   return forecastCount;
 }
+function wardrobeFingerprint(all){
+  var data=(all||[]).map(function(x){return {id:String(x.id),name:x.name||'',category:x.category||x.cat||'',color:x.color||'',style:x.style||[],season:x.season||[],formality:x.formality??null};}).sort(function(a,b){return a.id.localeCompare(b.id);});
+  var json=JSON.stringify(data),hash=2166136261;
+  for(var i=0;i<json.length;i++)hash=Math.imul(hash^json.charCodeAt(i),16777619)>>>0;
+  return data.length+':'+hash.toString(16);
+}
 function snapshot(){return {city:el('city').value.trim(),startDate:el('start').value,endDate:el('end').value,
  dinnerCount:Math.max(0,Number(el('dinners').value)||0),maxItems:intVal('maxItems',12),
  maxShoes:intVal('maxShoes',2),laundry:el('laundry').checked,
@@ -208,7 +214,7 @@ el('generate').addEventListener('click',async function(){
     var forecast=await enrichWeather(days,trip.city,trip.manualTemperature);
     var plan=TravelCapsule.plan({items:items,days:days,maxItems:trip.maxItems,maxShoes:trip.maxShoes,maxWeightKg:trip.maxWeightKg,laundry:trip.laundry,profile:profile()});
     render(plan,trip);
-    localStorage.setItem(saveKey,JSON.stringify({trip:trip,plan:plan,createdAt:new Date().toISOString()}));
+    localStorage.setItem(saveKey,JSON.stringify({trip:trip,plan:plan,wardrobeFingerprint:wardrobeFingerprint(items),createdAt:new Date().toISOString()}));
     message(forecast?'Готово. Для '+forecast+' днів використано доступний прогноз Open-Meteo.':'Готово. Без актуального прогнозу — використовуй ручну температуру й перевір погоду перед виїздом.');
   }catch(e){message(e&&e.message?e.message:'Не вдалося скласти капсулу.');}
   finally{btn.disabled=false;}
@@ -219,6 +225,7 @@ el('restore').addEventListener('click',async function(){
     var stored=JSON.parse(raw);items=await readWardrobe();
     var ids=new Set(items.map(x=>String(x.id)));
     if(!stored.plan.packingIds.every(id=>ids.has(String(id))))throw Error('Гардероб змінився після збереження. Перезбери капсулу.');
+    if(!stored.wardrobeFingerprint || stored.wardrobeFingerprint!==wardrobeFingerprint(items))throw Error('Вміст гардероба змінився або план створений у старій версії. Перезбери капсулу.');
     Object.keys({city:1,startDate:1,endDate:1,dinnerCount:1,maxItems:1,maxShoes:1,manualTemperature:1}).forEach(function(k){
       var elementId={startDate:'start',endDate:'end',dinnerCount:'dinners',manualTemperature:'temp'}[k]||k;
       var value=stored.trip[k];el(elementId).value=value==null?'':value;
