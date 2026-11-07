@@ -266,9 +266,15 @@ async function checkAiSession(){
 async function connectAi(code){
  const response=await fetch("/api/mobile-auth",{method:"POST",credentials:"same-origin",cache:"no-store",
   headers:{"Content-Type":"application/json"},body:JSON.stringify({passcode:code})});
+ const contentType=response.headers.get("content-type")||"";
+ if(!contentType.includes("application/json"))throw Error("Сервер Cloudflare не запустил /api/mobile-auth. Открой актуальный Preview deployment для PWA.");
  const data=await response.json();
- if(!response.ok)throw Error(data.error||"Не удалось подключить AI.");
- if(data.connected!==true)throw Error("Подключение не подтверждено.");
+ if(!response.ok){
+  if(response.status===401)throw Error("Код неверный для этого Preview. Введи значение TRAVEL_PWA_PASSCODE из Cloudflare, а не название переменной.");
+  if(response.status===503)throw Error("Секреты Preview не применились к текущей сборке Cloudflare. Требуется новое Preview-развёртывание.");
+  throw Error(data.error||"Не удалось подключить AI.");
+ }
+ if(data.connected!==true)throw Error("Сервер не подтвердил подключение AI.");
  state.aiConnected=true;state.aiConfigured=true;
  try{sessionStorage.removeItem(STORAGE_ACCESS);}catch(_){}
  syncAuthUI();
