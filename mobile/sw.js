@@ -1,5 +1,5 @@
 /* Offline shell for /mobile only. User photos and AI POST calls are never cached. */
-const CACHE="ee-pocket-shell-v2";
+const CACHE="ee-pocket-shell-v3";
 const ASSETS=["./","./index.html","./styles.css","./app.js","./manifest.webmanifest","./icon.svg","./icon-192.png","./icon-512.png","../js/wardrobe-db.js","../js/travel-capsule.js"];
 self.addEventListener("install",event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
