@@ -46,8 +46,8 @@
  <details class="secure-access" id="access-panel">
   <summary>AI-подключение <span aria-hidden="true">⌄</span></summary>
   <p>Подключи AI один раз на этом устройстве. После входа приложение запомнит доступ на 30 дней без хранения кода в браузере. В чат отправляются описания вещей; для отдельного распознавания выбранное фото передаётся Gemini после согласия.</p>
-  <label for="access-code">Код доступа к AI</label>
-  <div id="access-controls" class="access-row"><input id="access-code" type="password" autocomplete="off" placeholder="Код из Cloudflare" spellcheck="false"><button type="button" id="save-access" class="soft-button">Сохранить</button></div>
+  <label for="access-code">Код доступа — значение TRAVEL_PWA_PASSCODE</label>
+  <div id="access-controls" class="access-row"><input id="access-code" type="password" autocomplete="off" placeholder="Значение секрета из Cloudflare Preview" spellcheck="false"><button type="button" id="save-access" class="soft-button">Сохранить</button></div>
   <p class="micro" id="access-feedback">AI ещё не подключён на этом устройстве.</p><button id="disconnect-ai" type="button" class="soft-button" hidden>Отключить AI на этом устройстве</button>
  </details>
 </section>
@@ -61,7 +61,8 @@
    <div class="vision-panel">
     <label class="vision-switch" for="vision-auto"><input id="vision-auto" type="checkbox"> <span>✨ Автоматически распознавать фото с AI</span></label>
     <p class="micro">Если включить, выбранное фото отправится в Google Gemini для распознавания одежды. Фото не сохраняется на нашем сервере; обработка выполняется внешним AI-провайдером. Без согласия фото остаётся на устройстве.</p>
-    <div class="access-row" id="vision-access-row"><input id="vision-access-code" type="password" autocomplete="off" spellcheck="false" placeholder="Код доступа к AI (если ещё не ввела)" aria-label="Код доступа к AI"><button type="button" id="vision-save-access" class="soft-button">Подключить один раз</button></div>
+    <div class="access-row" id="vision-access-row"><input id="vision-access-code" type="password" autocomplete="off" spellcheck="false" placeholder="Значение TRAVEL_PWA_PASSCODE (Preview)" aria-label="Код доступа к AI"><button type="button" id="vision-save-access" class="soft-button">Подключить один раз</button></div>
+    <p class="micro">Нужен пароль, который ты сама сохранила как TRAVEL_PWA_PASSCODE в Cloudflare → Preview. Не вводи название переменной или Gemini API key.</p>
     <p class="micro" id="vision-auth-status">AI ещё не подключён.</p><button id="recognize-photo" class="soft-button recognize-button" type="button" disabled>✦ Распознать выбранное фото</button>
     <p class="vision-status" id="recognition-status" role="status" aria-live="polite">AI заполнит поля, но ты сможешь их изменить.</p>
    </div>
