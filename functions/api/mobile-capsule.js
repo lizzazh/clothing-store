@@ -65,10 +65,18 @@ export async function onRequestPost({request,env}){
     env,task:"capsule",instruction:sys,input:requestInput,
     validator:validResult
    });
-   if(alternative)return formatResult(alternative.data,alternative.provider);
+   if(alternative?.data)return formatResult(alternative.data,alternative.provider);
+   if(alternative?.failure){
+    const fail=alternative.failure;
+    return reply({
+     error:(code==="RATE_LIMIT"?"Gemini: лимит. ":"")+fail.error,
+     code:fail.code,provider:fail.provider,
+     geminiCode:code
+    },fail.status===429?429:fail.status===402?402:502);
+   }
   }
   const extra=code==="RATE_LIMIT"&&!pwaFallbackEnabled(env)?
-   " Для бесплатного резервного AI добавь PWA_OPENROUTER_API_KEY в Cloudflare Preview.":"";
+   " Резерв OpenRouter ещё не настроен для этого Preview.":"";
   return reply({error:errorMessage+extra,code},status);
  }
  const ac=new AbortController(),timeout=setTimeout(()=>ac.abort(),22000);
