@@ -59,8 +59,9 @@ test('generates clothing cards and calendar from existing IndexedDB-format items
   assert.ok(a.storage.has('ee_travel_capsule_v1'));
 });
 test('restores the same wardrobe and copies packing checklist',async()=>{
-  const a=setup();await a.click('generate');await a.click('restore');await a.click('copy');
+  const a=setup();await a.click('generate');await a.click('restore');
   assert.match(a.el('message').textContent,/Завантажено/);
+  await a.click('copy');
   assert.match(a.copied[0],/TRAVEL CAPSULE/);
 });
 test('rejects a cached outfit after an existing wardrobe item changes',async()=>{
