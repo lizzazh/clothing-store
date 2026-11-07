@@ -4,14 +4,14 @@ const fs=require("node:fs");
 const path=require("node:path");
 const vm=require("node:vm");
 const code=fs.readFileSync(path.join(__dirname,"../mobile/app.js"),"utf8");
-function setup(){
+function setup(authState={connected:false}){
  const nodes=new Map(),store=new Map(),session=new Map(),nav=[],styles=[],screens=[],requests=[];
  let domReady,items=[];
  const pwaIds=["install-button","messages","prompt","send-button","wardrobe-status","connection-status","photo-input",
  "photo-label","photo-preview","item-name","item-category","item-color","item-season","item-formality","item-style",
  "save-item","add-item-form","wardrobe-count","wardrobe-grid","wardrobe-summary","style-grid",
  "save-style","style-notice","capsules-list","access-code","access-feedback","access-panel",
- "save-access","vision-access-code","vision-save-access","vision-auto","recognize-photo","recognition-status",
+ "save-access","access-controls","disconnect-ai","vision-access-row","vision-auth-status","vision-access-code","vision-save-access","vision-auto","recognize-photo","recognition-status",
  "mic-button","ios-install-hint","dismiss-install","toast"];
  function node(name){
   const n={name,value:"",disabled:false,hidden:false,checked:false,open:false,src:"",textContent:"",
@@ -53,10 +53,20 @@ function setup(){
   async delete(id){items=items.filter(i=>i.id!==id);},markInitialized(){}
  };
  const TravelCapsule={plan(){return {days:[],packingIds:[],covered:false}}};
- const fetch=async(url,options)=>{
+ const fetch=async(url,options={})=>{
   requests.push({url,options});
+  if(url==="/api/mobile-auth"){
+   const method=options.method||"GET";
+   if(method==="GET")return {ok:true,status:200,json:async()=>({connected:authState.connected,configured:true})};
+   if(method==="DELETE"){authState.connected=false;return {ok:true,status:200,json:async()=>({connected:false})};}
+   if(method==="POST"){
+    if(JSON.parse(options.body).passcode!=="secret-passphrase")return {ok:false,status:401,json:async()=>({error:"Неверный код"})};
+    authState.connected=true;return {ok:true,status:200,json:async()=>({connected:true})};
+   }
+  }
   if(url!=="/api/mobile-vision")throw Error("Unexpected API URL "+url);
-  return {ok:true,json:async()=>({item:{name:"Бордовая юбка",category:"Брюки / Спідниця",color:"бордовый",
+  if(!authState.connected)return {ok:false,status:401,json:async()=>({error:"Unauthenticated",code:"ACCESS_DENIED"})};
+  return {ok:true,status:200,json:async()=>({item:{name:"Бордовая юбка",category:"Брюки / Спідниця",color:"бордовый",
    season:["spring","autumn"],style:["romantic","elegant"],formality:0.8,confidence:0.88,warning:""}})};
  };
  const createImageBitmap=async()=>({width:600,height:600,close(){}});
@@ -73,7 +83,7 @@ function setup(){
 test("no consent: photo stays local, manual fields save without AI call",async()=>{
  const a=setup();await a.boot();
  await a.photo();
- assert.equal(a.requests.length,0);
+ assert.equal(a.requests.filter(x=>x.url==="/api/mobile-vision").length,0);
  a.el("item-name").value="Моя юбка";
  await a.el("add-item-form").events.submit({preventDefault(){}});
  assert.equal(a.items().length,1);
@@ -88,9 +98,10 @@ test("after consent, selecting photo auto-detects name, category, colour, season
  a.el("vision-auto").checked=true;
  await a.el("vision-auto").events.change();
  await a.photo();
- assert.equal(a.requests.length,1);
- assert.equal(a.requests[0].url,"/api/mobile-vision");
- assert.equal(a.requests[0].options.headers["X-Travel-Passcode"],"secret-passphrase");
+ assert.equal(a.requests.filter(x=>x.url==="/api/mobile-vision").length,1);
+ assert.equal(a.requests.find(x=>x.url==="/api/mobile-vision").url,"/api/mobile-vision");
+ assert.equal(a.requests.find(x=>x.url==="/api/mobile-vision").options.credentials,"same-origin");
+ assert.equal(a.requests.find(x=>x.url==="/api/mobile-vision").options.headers["X-Travel-Passcode"],undefined);
  assert.equal(a.el("item-name").value,"Бордовая юбка");
  assert.equal(a.el("item-category").value,"Брюки / Спідниця");
  assert.equal(a.el("item-color").value,"бордовый");
@@ -113,4 +124,18 @@ test("manual user correction overrides AI suggestions",async()=>{
  assert.equal(a.items()[0].color,"синий");
  assert.deepEqual(Array.from(a.items()[0].style),["classic"]);
  assert.deepEqual(Array.from(a.items()[0].season),["winter"]);
+});
+
+test("AI session survives PWA restart without submitting passcode again",async()=>{
+ const authState={connected:false};
+ const first=setup(authState);await first.boot();
+ first.el("vision-access-code").value="secret-passphrase";
+ await first.el("vision-save-access").events.click();
+ assert.equal(authState.connected,true);
+ const second=setup(authState);await second.boot();
+ second.el("vision-auto").checked=true;
+ await second.photo();
+ assert.equal(second.requests.filter(x=>x.url==="/api/mobile-vision").length,1);
+ assert.equal(second.requests.filter(x=>x.url==="/api/mobile-auth"&&x.options.method==="POST").length,0);
+ assert.equal(second.el("vision-access-row").hidden,true);
 });
