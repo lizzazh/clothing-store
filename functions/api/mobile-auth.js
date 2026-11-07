@@ -16,7 +16,12 @@ export async function onRequestPost({request,env}){
  let code;
  try{const raw=await request.text();if(raw.length>1024)throw Error("size");code=JSON.parse(raw)?.passcode;}
  catch(_){return reply({error:"Неправильный запрос."},400);}
- if(typeof code!=="string"||!code||code.length>256||code!==env.TRAVEL_PWA_PASSCODE)return reply({error:"Неверный код доступа.",code:"ACCESS_DENIED"},401);
+ // Match the user's one-time PWA code with the Cloudflare Preview secret.
+ // Trim accidental whitespace around the value (including newlines copied into Secrets).
+ // Never send the passcode or the Gemini key to the browser.
+ const configuredPasscode=typeof env.TRAVEL_PWA_PASSCODE==="string"?env.TRAVEL_PWA_PASSCODE.trim():"";
+ if(typeof code!=="string"||!code.trim()||code.length>256||code.trim()!==configuredPasscode)
+  return reply({error:"Код не совпадает со значением TRAVEL_PWA_PASSCODE в этом Preview. Проверь именно значение секрета, не его название.",code:"ACCESS_DENIED"},401);
  return reply({connected:true},200,await sessionCookie(env.TRAVEL_PWA_PASSCODE));
 }
 export async function onRequestDelete({request}){
