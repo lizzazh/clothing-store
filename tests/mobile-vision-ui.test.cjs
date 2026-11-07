@@ -3,6 +3,7 @@ const assert=require("node:assert/strict");
 const fs=require("node:fs");
 const path=require("node:path");
 const vm=require("node:vm");
+const {webcrypto}=require("node:crypto");
 const code=fs.readFileSync(path.join(__dirname,"../mobile/app.js"),"utf8");
 function setup(authState={connected:false}){
  const nodes=new Map(),store=new Map(),session=new Map(),nav=[],styles=[],screens=[],requests=[];
@@ -70,7 +71,7 @@ function setup(authState={connected:false}){
    season:["spring","autumn"],style:["romantic","elegant"],formality:0.8,confidence:0.88,warning:""}})};
  };
  const createImageBitmap=async()=>({width:600,height:600,close(){}});
- const ctx={document,window,navigator,WardrobeDB,TravelCapsule,localStorage,sessionStorage,
+ const ctx={document,window,navigator,WardrobeDB,TravelCapsule,localStorage,sessionStorage,crypto:webcrypto,TextEncoder,
   fetch,createImageBitmap,URL:{},Date,Intl,Math,JSON,Number,Array,Set,Object,String,console,
   setTimeout:()=>1,clearTimeout:()=>{},confirm:()=>true};
  vm.runInNewContext(code,ctx,{filename:"mobile/app.js"});
@@ -138,4 +139,21 @@ test("AI session survives PWA restart without submitting passcode again",async()
  assert.equal(second.requests.filter(x=>x.url==="/api/mobile-vision").length,1);
  assert.equal(second.requests.filter(x=>x.url==="/api/mobile-auth"&&x.options.method==="POST").length,0);
  assert.equal(second.el("vision-access-row").hidden,true);
+});
+
+test("recognizing an identical photo twice reuses local metadata cache, not Gemini quota",async()=>{
+ const a=setup();await a.boot();
+ a.el("vision-access-code").value="secret-passphrase";
+ await a.el("vision-save-access").events.click();
+ a.el("vision-auto").checked=true;
+ await a.el("vision-auto").events.change();
+ await a.photo();
+ assert.equal(a.requests.filter(x=>x.url==="/api/mobile-vision").length,1);
+ await a.photo();
+ assert.equal(a.requests.filter(x=>x.url==="/api/mobile-vision").length,1);
+ assert.match(a.el("recognition-status").textContent,/локального кеша/);
+ const stored=JSON.parse(a.store.get("ee_mobile_vision_cache_v1"));
+ assert.equal(stored.length,1);
+ assert.equal(stored[0].item.name,"Бордовая юбка");
+ assert.equal(JSON.stringify(stored).includes("base64"),false);
 });
