@@ -1,4 +1,5 @@
 import {authenticated,sameOrigin} from "../_lib/mobile-auth.js";
+import {tryPwaFallback,pwaFallbackEnabled} from "../_lib/mobile-ai-fallback.js";
 // Mobile PWA AI proxy. Secrets remain server-side.
 const jsonHeaders = {"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff"};
 function reply(value,status=200){return new Response(JSON.stringify(value),{status,headers:jsonHeaders});}
@@ -45,27 +46,52 @@ export async function onRequestPost({request,env}){
  "Текущая дата "+today+". Если нет точных дат и актуального прогноза, уточни ограничения и не заявляй, что проверил погоду."
  ].join("\n");
  const model=limit(env.PWA_GEMINI_MODEL,60)||"gemini-2.5-flash";
+ const requestInput=JSON.stringify({request:message,inventory:wardrobe,styleDNA:dna,history:previous});
+ const validResult=value=>value&&typeof value==="object"&&!Array.isArray(value)&&
+   typeof value.message==="string"&&Array.isArray(value.outfits);
+ function formatResult(result,provider){
+  const outfits=result.outfits.slice(0,8).map(x=>({
+   name:limit(x?.name,70)||"Образ",
+   itemIds:[...new Set((Array.isArray(x?.itemIds)?x.itemIds:[]).map(String).filter(y=>allowed.has(y)))].slice(0,7),
+   reason:limit(x?.reason,250)
+  })).filter(x=>x.itemIds.length);
+  return reply({message:limit(result.message,1600),outfits,packingIds:[...new Set(outfits.flatMap(x=>x.itemIds))],
+   missing:Array.isArray(result.missing)?result.missing.slice(0,6).map(x=>limit(x,90)).filter(Boolean):[],
+   provider,fallback:provider!=="Gemini"});
+ }
+ async function backup(errorMessage,status=502,code="UPSTREAM_ERROR"){
+  if(pwaFallbackEnabled(env)){
+   const alternative=await tryPwaFallback({
+    env,task:"capsule",instruction:sys,input:requestInput,
+    validator:validResult
+   });
+   if(alternative)return formatResult(alternative.data,alternative.provider);
+  }
+  const extra=code==="RATE_LIMIT"&&!pwaFallbackEnabled(env)?
+   " Для бесплатного резервного AI добавь PWA_OPENROUTER_API_KEY в Cloudflare Preview.":"";
+  return reply({error:errorMessage+extra,code},status);
+ }
  const ac=new AbortController(),timeout=setTimeout(()=>ac.abort(),22000);
  try{
   const res=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(model)+":generateContent",{
    method:"POST",signal:ac.signal,headers:{"Content-Type":"application/json","X-goog-api-key":key},
    body:JSON.stringify({systemInstruction:{parts:[{text:sys}]},
-    contents:[{role:"user",parts:[{text:JSON.stringify({request:message,inventory:wardrobe,styleDNA:dna,history:previous})}]}],
-    generationConfig:{responseMimeType:"application/json",temperature:0.35,maxOutputTokens:1500}})
+    contents:[{role:"user",parts:[{text:requestInput}]}],
+    generationConfig:{responseMimeType:"application/json",temperature:0.35,maxOutputTokens:1500,
+     ...(/^gemini-2\.5-flash(?:-|$)/.test(model)?{thinkingConfig:{thinkingBudget:0}}:{})}})
   });
-  if(!res.ok)return reply({error:res.status===429?"Лимит AI-запросов исчерпан":"AI сейчас недоступен"},res.status===429?429:502);
+  if(!res.ok)return backup(res.status===429?"Лимит AI-запросов исчерпан, резервные провайдеры не ответили.":"AI сейчас недоступен.",
+   res.status===429?429:502,res.status===429?"RATE_LIMIT":"UPSTREAM_ERROR");
   const d=await res.json();
-  const text=((d.candidates||[])[0]||{}).content?.parts?.map(p=>p.text||"").join("")||"";
-  const result=parse(text);
-  if(!result||!Array.isArray(result.outfits))return reply({error:"AI вернул неполный ответ"},502);
-  const outfits=result.outfits.slice(0,8).map(x=>({
-   name:limit(x.name,70)||"Образ",
-   itemIds:[...new Set((Array.isArray(x.itemIds)?x.itemIds:[]).map(String).filter(y=>allowed.has(y)))].slice(0,7),
-   reason:limit(x.reason,250)
-  })).filter(x=>x.itemIds.length);
-  return reply({message:limit(result.message,1600),outfits,packingIds:[...new Set(outfits.flatMap(x=>x.itemIds))],
-   missing:Array.isArray(result.missing)?result.missing.slice(0,6).map(x=>limit(x,90)).filter(Boolean):[]});
- }catch(e){return reply({error:e.name==="AbortError"?"AI не ответил вовремя":"Нет соединения с AI"},504);}
+  const candidate=(d.candidates||[])[0]||{};
+  if(candidate.finishReason==="SAFETY"||candidate.finishReason==="PROHIBITED_CONTENT")
+   return reply({error:"AI отклонил запрос из соображений безопасности.",code:"BLOCKED"},422);
+  const raw=(candidate.content?.parts||[]).map(p=>p.text||"").join("");
+  const result=parse(raw);
+  if(!validResult(result))return backup("AI вернул неполный ответ. Попробуй ещё раз.",502,"INVALID_DESCRIPTION");
+  return formatResult(result,"Gemini");
+ }catch(e){return backup(e?.name==="AbortError"?"AI не ответил вовремя.":"Нет соединения с AI.",504,"UPSTREAM_ERROR");}
  finally{clearTimeout(timeout);}
+
 }
 export function onRequestGet(){return reply({error:"Use POST"},405);}
