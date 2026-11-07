@@ -6,6 +6,23 @@ const reply=(data,status=200)=>new Response(JSON.stringify(data),{status,headers
 const CATEGORIES=["Сукня","Топ / Блуза","Брюки / Спідниця","Куртка / Пальто","Взуття","Аксесуар","Інше"];
 const STYLES=["classic","boho","minimalist","romantic","streetwear","elegant"];
 const SEASONS=["spring","summer","autumn","winter","all-season"];
+
+const GARMENT_SCHEMA={
+ type:"OBJECT",
+ properties:{
+  name:{type:"STRING",description:"Short specific Russian name of main garment"},
+  category:{type:"STRING",enum:CATEGORIES},
+  color:{type:"STRING",description:"Observed main visible color in Russian"},
+  season:{type:"ARRAY",items:{type:"STRING",enum:SEASONS}},
+  style:{type:"ARRAY",items:{type:"STRING",enum:STYLES}},
+  formality:{type:"NUMBER",minimum:0,maximum:1},
+  confidence:{type:"NUMBER",minimum:0,maximum:1},
+  warning:{type:"STRING",description:"Explain uncertainty in Russian or return empty string"}
+ },
+ required:["name","category","color","season","style","formality","confidence","warning"],
+ propertyOrdering:["name","category","color","season","style","formality","confidence","warning"]
+};
+
 const clip=(x,n)=>typeof x==="string"?x.trim().slice(0,n):"";
 function extractJSON(raw){
  const text=clip(raw,15000).replace(/^\x60\x60\x60(?:json)?/i,"").replace(/\x60\x60\x60$/,"").trim();
@@ -51,19 +68,58 @@ export async function onRequestPost({request,env}){
   "formality numeric 0..1; 0=sportswear, 0.5=casual, 1=very formal.",
   "confidence number 0..1 indicating uncertainty. If image is unclear or contains multiple garments, set warning in Russian and lower confidence. Never claim certainty."
  ].join("\n");
+ // 2.5 Flash uses dynamic thinking by default. Thinking tokens count against
+ // maxOutputTokens; a 500-token cap can leave no visible JSON output.
+ // This is classification, so disable thinking for 2.5 Flash and provide
+ // enough room for a complete structured response.
+ const generationConfig={
+  responseMimeType:"application/json",
+  responseSchema:GARMENT_SCHEMA,
+  temperature:0.15,
+  maxOutputTokens:1536
+ };
+ if(/^gemini-2\.5-flash(?:-|$)/.test(model))generationConfig.thinkingConfig={thinkingBudget:0};
  const controller=new AbortController();
  const timer=setTimeout(()=>controller.abort(),25000);
  try{
   const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(model)+":generateContent",{
    method:"POST",signal:controller.signal,headers:{"Content-Type":"application/json","X-goog-api-key":key},
    body:JSON.stringify({contents:[{parts:[{text:instruction},{inline_data:{mime_type:"image/jpeg",data:base64}}]}],
-     generationConfig:{responseMimeType:"application/json",temperature:0.15,maxOutputTokens:500}})
+     generationConfig})
   });
-  if(!response.ok)return reply({error:response.status===429?"Лимит AI-запросов исчерпан. Заполни поля вручную или попробуй позже.":"AI не смог распознать фото. Можно заполнить поля вручную."},response.status===429?429:502);
+  if(!response.ok)return reply({
+    error:response.status===429?"Лимит запросов Gemini исчерпан. Попробуй позже.":response.status===404?
+      "Модель Gemini недоступна для этого ключа. Проверь PWA_GEMINI_MODEL.":"Gemini отклонил запрос (HTTP "+response.status+"). Попробуй позже.",
+    code:response.status===429?"RATE_LIMIT":"UPSTREAM_ERROR"
+   },response.status===429?429:502);
   const result=await response.json();
-  const raw=(result?.candidates?.[0]?.content?.parts||[]).map(p=>p.text||"").join("");
-  const metadata=sanitize(extractJSON(raw));
-  if(!metadata)return reply({error:"AI не вернул корректное описание. Заполни поля вручную."},502);
+  const candidate=result?.candidates?.[0];
+  const reason=candidate?.finishReason||"";
+  const raw=(candidate?.content?.parts||[]).map(p=>typeof p.text==="string"?p.text:"").join("");
+  if(reason==="MAX_TOKENS")return reply({
+   error:"Gemini не успел закончить описание (лимит ответа). Попробуй ещё раз.",
+   code:"OUTPUT_TRUNCATED"
+  },502);
+  if(reason==="SAFETY"||reason==="PROHIBITED_CONTENT")return reply({
+   error:"Gemini не смог обработать это фото из-за ограничений безопасности. Выбери другое.",
+   code:"IMAGE_BLOCKED"
+  },422);
+  const parsed=extractJSON(raw);
+  if(!parsed||typeof parsed.name!=="string"||!parsed.name.trim()||
+     typeof parsed.category!=="string"||!CATEGORIES.includes(parsed.category)||
+     typeof parsed.color!=="string"||!parsed.color.trim()) {
+   // Log only the finish reason, never the photo, answer text or keys.
+   console.warn("[PWA vision] No valid garment metadata",{
+    finishReason:reason||"missing",candidates:result?.candidates?.length||0,
+    outputTokens:result?.usageMetadata?.candidatesTokenCount||0,
+    thinkingTokens:result?.usageMetadata?.thoughtsTokenCount||0
+   });
+   return reply({
+     error:"Gemini не вернул полное описание вещи. Попробуй ещё раз или выбери другое фото.",
+     code:"INVALID_DESCRIPTION"
+   },502);
+  }
+  const metadata=sanitize(parsed);
   return reply({item:metadata});
  }catch(error){return reply({error:error?.name==="AbortError"?"Распознавание заняло слишком много времени. Попробуй ещё раз.":"Не удалось связаться с AI. Заполни поля вручную."},504);}
  finally{clearTimeout(timer);}
