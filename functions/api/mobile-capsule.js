@@ -10,8 +10,8 @@ export async function onRequestPost({request,env}){
  const url=new URL(request.url);
  const origin=request.headers.get("Origin");
  if(origin && new URL(origin).host!==url.host)return reply({error:"Origin not allowed"},403);
- const pass=env.TRAVEL_PWA_PASSCODE,key=env.GEMINI_API_KEY;
- if(!pass||!key)return reply({error:"AI недоступен: в Cloudflare нужно настроить GEMINI_API_KEY и TRAVEL_PWA_PASSCODE."},503);
+ const pass=env.TRAVEL_PWA_PASSCODE,key=env.PWA_GEMINI_API_KEY;
+ if(!pass||!key)return reply({error:"AI недоступен: в Cloudflare нужно настроить PWA_GEMINI_API_KEY и TRAVEL_PWA_PASSCODE."},503);
  const supplied=request.headers.get("X-Travel-Passcode")||"";
  if(!supplied||supplied.length>256||supplied!==pass)return reply({error:"Неверный код доступа к AI.",code:"ACCESS_DENIED"},401);
  if(Number(request.headers.get("Content-Length")||0)>40000)return reply({error:"Запрос слишком большой"},413);
