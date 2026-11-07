@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#151126">
+<meta name="description" content="Elizabeth’s Elegance — личный карманный стилист, умный гардероб и AI-капсулы для поездок и событий.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Elegance">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="./icon.svg">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="stylesheet" href="./styles.css">
+<title>Elizabeth’s Elegance — Pocket Stylist</title>
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar">
+ <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><div><div class="brand-script">Elizabeth’s Elegance</div><small>POCKET STYLIST</small></div></div>
+ <button class="icon-button" id="install-button" type="button" aria-label="Установить приложение" title="Установить">↓</button>
+</header>
+<main id="main">
+<section class="screen active" id="screen-chat" aria-labelledby="chat-title">
+ <div class="hero">
+  <div class="eyebrow"><span class="sparkle">✦</span> YOUR PERSONAL STYLIST</div>
+  <h1 id="chat-title">Твой стиль.<br><em>Твои правила.</em></h1>
+  <p>Расскажи, куда едешь или что планируешь. Я соберу капсулу из <strong>твоих</strong> вещей.</p>
+  <div class="feature-mini"><span>✦ Travel capsule</span><span>✦ На мероприятие</span><span>✦ На каждый день</span></div>
+ </div>
+ <div class="messages" id="messages" role="log" aria-label="Чат со стилистом" aria-live="polite">
+  <article class="bubble assistant"><div class="bubble-label">ELEGANCE AI</div>Привет! Добавь одежду в «Мой гардероб», выбери свой стиль и напиши, какой образ тебе нужен. Фото останутся на телефоне.</article>
+ </div>
+ <div id="suggestions" class="suggestions" aria-label="Примеры запросов">
+  <button class="suggestion" type="button" data-prompt="Я еду в Париж на 7 дней только с ручной кладью. Подбери небольшую стильную капсулу из моей одежды.">✈ Париж, 7 дней</button>
+  <button class="suggestion" type="button" data-prompt="Собери элегантный и удобный образ на свидание вечером из моего гардероба.">♡ Свидание</button>
+  <button class="suggestion" type="button" data-prompt="Собери капсулу из моей одежды на рабочую неделю, чтобы вещи красиво сочетались.">◷ На неделю</button>
+ </div>
+ <div class="composer">
+   <label class="sr-only" for="prompt">Твой запрос стилисту</label>
+   <textarea id="prompt" maxlength="1800" rows="2" placeholder="Например: еду в Рим на 5 дней, нужна ручная кладь…"></textarea>
+   <button id="send-button" type="button" class="send-button" aria-label="Отправить запрос">➤</button>
+ </div>
+ <div class="composer-footer"><span id="wardrobe-status">Гардероб: 0 вещей</span><span id="connection-status">● Локально</span></div>
+ <details class="secure-access" id="access-panel">
+  <summary>Настроить подключение AI <span aria-hidden="true">⌄</span></summary>
+  <p>Для защиты AI нужен код доступа. Он хранится только до закрытия сессии. Фотографии гардероба не отправляются.</p>
+  <label for="access-code">Код доступа к AI</label>
+  <div class="access-row"><input id="access-code" type="password" autocomplete="off" placeholder="Код из Cloudflare" spellcheck="false"><button type="button" id="save-access" class="soft-button">Сохранить</button></div>
+  <p class="micro" id="access-feedback"></p>
+ </details>
+</section>
+
+<section class="screen" id="screen-wardrobe" aria-labelledby="wardrobe-title" hidden>
+ <div class="section-head"><div><div class="eyebrow">YOUR COLLECTION</div><h1 id="wardrobe-title">Мой гардероб</h1><p>Добавляй вещи с камеры или из галереи. Всё сохраняется на этом устройстве.</p></div><span class="counter" id="wardrobe-count">0</span></div>
+ <div class="panel add-panel">
+  <h2>✦ Добавить вещь</h2>
+  <form id="add-item-form">
+   <label for="photo-input" class="photo-drop" id="photo-drop"><span class="camera-icon">＋</span><strong id="photo-label">Выбрать фото</strong><small>Камера или галерея · JPEG, PNG, HEIC*</small><img id="photo-preview" alt="Предпросмотр вещи" hidden><input id="photo-input" type="file" accept="image/*"></label>
+   <label for="item-name">Название вещи</label><input id="item-name" required maxlength="80" placeholder="Например, чёрное платье">
+   <div class="two-col">
+    <div><label for="item-category">Категория</label><select id="item-category"><option>Топ / Блуза</option><option>Брюки / Спідниця</option><option>Сукня</option><option>Куртка / Пальто</option><option>Взуття</option><option>Аксесуар</option><option>Інше</option></select></div>
+    <div><label for="item-color">Цвет</label><input id="item-color" maxlength="35" placeholder="чёрный"></div>
+   </div>
+   <div class="two-col">
+    <div><label for="item-season">Сезон</label><select id="item-season"><option value="all-season">Любой</option><option value="spring">Весна</option><option value="summer">Лето</option><option value="autumn">Осень</option><option value="winter">Зима</option></select></div>
+    <div><label for="item-formality">Стиль вещи</label><select id="item-formality"><option value="0.5">Повседневный</option><option value="0.85">Нарядный</option><option value="0.2">Спортивный</option></select></div>
+   </div>
+   <button class="primary full" type="submit" id="save-item">Сохранить в гардероб ✦</button>
+  </form>
+  <p class="micro">*Некоторые форматы HEIC могут не открываться в конкретном браузере. В таком случае выбери JPEG.</p>
+ </div>
+ <div class="list-heading"><h2>Мои вещи</h2><span id="wardrobe-summary">0 вещей</span></div>
+ <div class="wardrobe-grid" id="wardrobe-grid"><p class="empty">Пока нет вещей. Начни с любимых.</p></div>
+</section>
+
+<section class="screen" id="screen-style" aria-labelledby="style-title" hidden>
+ <div class="section-head"><div><div class="eyebrow">YOUR STYLE DNA</div><h1 id="style-title">Мой стиль</h1><p>Выбери один или несколько направлений. Мы учтём их при составлении капсул.</p></div></div>
+ <div class="style-grid" id="style-grid">
+  <button type="button" class="style-card" data-style="classic"><span class="style-symbol">♛</span><strong>Classic</strong><small>Вневременная элегантность</small></button>
+  <button type="button" class="style-card" data-style="minimalist"><span class="style-symbol">◇</span><strong>Minimalist</strong><small>Чистые линии</small></button>
+  <button type="button" class="style-card" data-style="romantic"><span class="style-symbol">♡</span><strong>Romantic</strong><small>Мягкость и детали</small></button>
+  <button type="button" class="style-card" data-style="elegant"><span class="style-symbol">✧</span><strong>Elegant</strong><small>Сдержанный шик</small></button>
+  <button type="button" class="style-card" data-style="streetwear"><span class="style-symbol">✦</span><strong>Streetwear</strong><small>Современный город</small></button>
+  <button type="button" class="style-card" data-style="boho"><span class="style-symbol">☼</span><strong>Boho</strong><small>Свобода и фактуры</small></button>
+ </div>
+ <button class="primary full" id="save-style" type="button">Сохранить Style DNA</button>
+ <div class="notice" id="style-notice">Можно выбрать несколько направлений, а позже изменить выбор.</div>
+ <div class="panel style-tip"><div class="eyebrow">PERSONAL STYLING</div><h2>Как это работает?</h2><p>Мы используем твои предпочтения вместе с реальными вещами из гардероба. AI может предложить сочетания и объяснить выбор, но не создаёт несуществующую одежду.</p></div>
+</section>
+
+<section class="screen" id="screen-capsules" aria-labelledby="capsules-title" hidden>
+ <div class="section-head"><div><div class="eyebrow">SAVED CAPSULES</div><h1 id="capsules-title">Мои капсулы</h1><p>Сохраняем последние подборки на этом устройстве, чтобы ты могла вернуться к ним.</p></div></div>
+ <div id="capsules-list" class="saved-list"><p class="empty">Сначала попроси AI собрать капсулу.</p></div>
+ <div class="panel note-panel"><strong>Приватность</strong><p>Фото и гардероб остаются в IndexedDB браузера. В AI отправляются только названия, категории, цвета и стилистические характеристики вещей при отправке запроса. Не удаляй данные браузера, если хочешь сохранить коллекцию.</p></div>
+ <a href="../index.html" class="back-link">← Вернуться на полный сайт Elizabeth’s Elegance</a>
+</section>
+</main>
+<nav class="bottom-nav" aria-label="Основные разделы">
+ <button type="button" class="nav-tab active" data-tab="chat" aria-current="page"><span class="nav-icon">✦</span><span>Стилист</span></button>
+ <button type="button" class="nav-tab" data-tab="wardrobe"><span class="nav-icon">▦</span><span>Гардероб</span></button>
+ <button type="button" class="nav-tab" data-tab="style"><span class="nav-icon">♡</span><span>Мой стиль</span></button>
+ <button type="button" class="nav-tab" data-tab="capsules"><span class="nav-icon">♧</span><span>Капсулы</span></button>
+</nav>
+<div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
+<div class="install-hint" id="ios-install-hint" hidden>Чтобы установить приложение на iPhone: открой меню «Поделиться» → «На экран Домой». <button type="button" id="dismiss-install" aria-label="Закрыть">×</button></div>
+</div>
+<script src="../js/wardrobe-db.js"></script>
+<script src="../js/travel-capsule.js"></script>
+<script src="./app.js" defer></script>
+</body>
+</html>
