@@ -28,12 +28,9 @@ export async function tryPwaFallback({env,task,instruction,input,imageData=null,
   key:env.PWA_GROQ_API_KEY,model:task==="vision"?"qwen/qwen3.8-27b":"openai/gpt-oss-20b"
  });
  const content=task==="vision"
-  ? [{type:"text",text:instruction+"
-Return ONLY JSON, with all requested fields and no markdown."},
+  ? [{type:"text",text:instruction+String.fromCharCode(10)+"Return ONLY JSON, with all requested fields and no markdown."},
      {type:"image_url",image_url:{url:imageData}}]
-  : instruction+"
-Return ONLY a valid JSON object, without markdown.
-"+input;
+  : instruction+String.fromCharCode(10)+"Return ONLY a valid JSON object, without markdown."+String.fromCharCode(10)+input;
  for(const selected of providers){
   const controller=new AbortController();
   const timeout=setTimeout(()=>controller.abort(),timeoutMs);
