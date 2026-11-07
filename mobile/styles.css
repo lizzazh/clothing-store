@@ -56,6 +56,9 @@ main{padding:0 19px calc(var(--nav-h) + 42px + env(safe-area-inset-bottom))}
 .suggestions::-webkit-scrollbar{display:none}
 .suggestion{border:1px solid rgba(227,194,246,.24);background:rgba(253,185,230,.07);color:#f0daef;border-radius:13px;padding:9px 13px;font-size:12px;white-space:nowrap}
 .composer{display:flex;gap:10px;align-items:flex-end;background:rgba(31,24,52,.72);border:1px solid rgba(228,202,246,.2);border-radius:19px;padding:7px 7px 7px 12px}
+.mic-button{flex:0 0 35px;height:42px;min-height:42px;border:1px solid var(--stroke);border-radius:13px;background:rgba(255,255,255,.05);color:#edc2dd;font-size:20px}
+.mic-button.recording{background:rgba(237,105,169,.28);border-color:#ed9bca;animation:micPulse 1.1s ease-in-out infinite}
+@keyframes micPulse{50%{opacity:.55}}
 .composer textarea{border:0;background:transparent;box-shadow:none;resize:none;padding:6px 3px;max-height:115px;min-height:42px;line-height:1.5}
 .composer textarea:focus{box-shadow:none}
 .send-button{flex:0 0 42px;width:42px;height:42px;min-height:42px;border:0;border-radius:14px;color:#1b1331;background:linear-gradient(140deg,#f4acdc,#bbaaee);font-size:21px;font-weight:700}
