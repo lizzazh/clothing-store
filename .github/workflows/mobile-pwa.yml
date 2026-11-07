@@ -1,0 +1,16 @@
+name: Mobile PWA checks
+on:
+  pull_request:
+  push:
+    branches:
+      - feat/mobile-pwa-style-capsules
+jobs:
+  mobile-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check mobile PWA and Travel Capsule
+        run: node --test tests/travel-capsule.test.cjs tests/travel-capsule.ui.test.cjs tests/mobile-pwa.test.cjs
