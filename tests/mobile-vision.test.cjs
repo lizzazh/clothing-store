@@ -8,6 +8,9 @@ function apiWith(fetchMock){
  const context={Response,URL,fetch:fetchMock,AbortController,setTimeout,clearTimeout,JSON,Number,Math,String,Set,Array,Date,Object,
   authenticated:async req=>req.headers.get("Cookie")==="signed-session",
   sameOrigin:()=>true};
+ const fallbackSource=fs.readFileSync(path.join(__dirname,"../functions/_lib/mobile-ai-fallback.js"),"utf8");
+ const fallback=vm.runInNewContext(fallbackSource.replace(/^export /gm,"")+"\n({tryPwaFallback,pwaFallbackEnabled})",context);
+ Object.assign(context,fallback);
  return vm.runInNewContext(source.replace(/^import .*$/gm,"").replace(/^export /gm,"")+"\n({onRequestPost})",context);
 }
 const imageData="data:image/jpeg;base64,AAAA";
