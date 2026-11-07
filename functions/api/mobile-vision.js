@@ -47,10 +47,18 @@ async function visionFallback(env,instruction,imageData,error,code,status){
      Array.isArray(data.style)&&Array.isArray(data.season)&&
      Number.isFinite(data.formality)&&Number.isFinite(data.confidence)
   });
-  if(alternative)return reply({item:sanitize(alternative.data),provider:alternative.provider,fallback:true});
+  if(alternative?.data)return reply({item:sanitize(alternative.data),provider:alternative.provider,fallback:true});
+  if(alternative?.failure){
+   const fail=alternative.failure;
+   return reply({
+    error:(code==="RATE_LIMIT"?"Gemini: дневной лимит. ":"")+fail.error,
+    code:fail.code,provider:fail.provider,
+    geminiCode:code
+   },fail.status===429?429:fail.status===402?402:502);
+  }
  }
  const detail=code==="RATE_LIMIT"&&!pwaFallbackEnabled(env)?
-  " Добавь секрет PWA_OPENROUTER_API_KEY в Cloudflare Preview для бесплатного резерва.":"";
+  " Резерв OpenRouter ещё не настроен для этого Preview.":"";
  return reply({error:error+detail,code},status);
 }
 
